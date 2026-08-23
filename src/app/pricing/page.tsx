@@ -9,6 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { buttonVariants } from "@/components/ui/button";
+import { MarketingHeader } from "@/components/layout/MarketingHeader";
 
 interface PlanRow {
   label: string;
@@ -44,7 +45,9 @@ export default function PricingPage() {
   const paymentLink = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK;
 
   return (
-    <div className="mx-auto w-full max-w-2xl flex-1 space-y-8 px-4 py-12">
+    <>
+      <MarketingHeader />
+      <div className="mx-auto w-full max-w-2xl flex-1 space-y-8 px-4 py-12">
       <div className="space-y-2 text-center">
         <h1 className="text-2xl font-semibold">Pricing</h1>
         <p className="text-muted-foreground">
@@ -93,6 +96,7 @@ export default function PricingPage() {
           </p>
         )}
       </div>
-    </div>
+      </div>
+    </>
   );
 }

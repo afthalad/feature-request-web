@@ -6,6 +6,7 @@ import { signInWithPopup } from "firebase/auth";
 import { toast } from "sonner";
 import { auth, googleAuthProvider } from "@/lib/firebase/client";
 import { Button } from "@/components/ui/button";
+import { MarketingHeader } from "@/components/layout/MarketingHeader";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -33,16 +34,19 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex flex-1 items-center justify-center px-4">
-      <div className="w-full max-w-sm space-y-6 text-center">
-        <div className="space-y-1">
-          <h1 className="text-2xl font-semibold">Sign in</h1>
-          <p className="text-muted-foreground text-sm">Use your Google account to continue.</p>
+    <>
+      <MarketingHeader />
+      <div className="flex flex-1 items-center justify-center px-4">
+        <div className="w-full max-w-sm space-y-6 text-center">
+          <div className="space-y-1">
+            <h1 className="text-2xl font-semibold">Sign in</h1>
+            <p className="text-muted-foreground text-sm">Use your Google account to continue.</p>
+          </div>
+          <Button onClick={handleSignIn} disabled={isSigningIn} className="w-full">
+            {isSigningIn ? "Signing in..." : "Sign in with Google"}
+          </Button>
         </div>
-        <Button onClick={handleSignIn} disabled={isSigningIn} className="w-full">
-          {isSigningIn ? "Signing in..." : "Sign in with Google"}
-        </Button>
       </div>
-    </div>
+    </>
   );
 }

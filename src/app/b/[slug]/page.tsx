@@ -63,7 +63,7 @@ export default async function PublicBoardPage({
       <footer className="mt-10 border-t pt-4 text-center text-xs text-muted-foreground">
         Powered by{" "}
         <Link href="/" className="underline underline-offset-2">
-          Feature Request
+          Fewchurs
         </Link>
       </footer>
     </div>

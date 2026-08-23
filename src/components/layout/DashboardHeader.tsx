@@ -18,8 +18,11 @@ export function DashboardHeader() {
   return (
     <header className="border-b">
       <div className="mx-auto flex h-14 max-w-4xl items-center justify-between px-4">
-        <Link href="/dashboard" className="font-semibold">
-          Feature Request
+        <Link href="/dashboard" className="flex items-center gap-2 font-semibold tracking-tight">
+          <span className="flex size-6 shrink-0 items-center justify-center rounded-md bg-primary text-xs font-bold text-primary-foreground">
+            F
+          </span>
+          Fewchurs
         </Link>
         <div className="flex items-center gap-1">
           <Link href="/pricing" className="text-muted-foreground px-3 text-sm hover:text-foreground">

@@ -10,7 +10,7 @@ const SAMPLE_ROWS: { title: string; votes: number; status: FeatureStatus }[] = [
 
 export function PhoneMockup() {
   return (
-    <div className="mx-auto w-[260px] rounded-[2.5rem] border-8 border-foreground/90 bg-background p-2 shadow-none">
+    <div className="mx-auto w-[260px] rounded-[2.5rem] border-8 border-foreground/90 bg-background p-2 shadow-sm">
       <div className="h-5 w-full">
         <div className="mx-auto h-4 w-24 rounded-b-xl bg-foreground/90" />
       </div>
@@ -21,9 +21,9 @@ export function PhoneMockup() {
             key={row.title}
             className="flex items-center gap-2 rounded-lg border bg-background p-2"
           >
-            <div className="flex w-8 shrink-0 flex-col items-center text-muted-foreground">
+            <div className="text-primary flex w-8 shrink-0 flex-col items-center">
               <ChevronUp className="size-3" />
-              <span className="text-xs font-medium text-foreground">{row.votes}</span>
+              <span className="text-xs font-medium">{row.votes}</span>
             </div>
             <p className="min-w-0 flex-1 truncate text-xs font-medium">{row.title}</p>
             <StatusBadge status={row.status} />

@@ -1,4 +1,4 @@
-# Feature Request
+# Fewchurs
 
 A feature-request platform for indie iOS developers. Sign in with Google, create an app, get an
 API key, embed it in your iOS app, and let your users submit and upvote feature requests. See
