@@ -64,6 +64,7 @@ export function StatusSelect({
         body: JSON.stringify({ appId, status: nextStatus, notify: shouldNotify }),
       });
       if (!response.ok) throw new Error("Failed to update status.");
+      toast.success("Status updated");
     } catch (error) {
       onStatusChange(previousStatus);
       toast.error(error instanceof Error ? error.message : "Failed to update status.");

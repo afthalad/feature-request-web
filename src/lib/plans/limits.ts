@@ -3,10 +3,11 @@ import { adminDb } from "@/lib/firebase/admin";
 
 export const PLAN_LIMITS = {
   free: { maxApps: 1, maxFeaturesPerApp: 50, maxEmailsPerMonth: 100 },
+  starter: { maxApps: 3, maxFeaturesPerApp: 200, maxEmailsPerMonth: 500 },
   pro: { maxApps: 5, maxFeaturesPerApp: Infinity, maxEmailsPerMonth: 2000 },
 } as const;
 
-export type Plan = "free" | "pro";
+export type Plan = "free" | "starter" | "pro";
 export type PlanLimitType = "app" | "feature" | "email";
 
 export interface PlanLimitResult {
@@ -16,7 +17,8 @@ export interface PlanLimitResult {
 
 async function getPlan(uid: string): Promise<Plan> {
   const userSnap = await adminDb.collection("users").doc(uid).get();
-  return userSnap.data()?.plan === "pro" ? "pro" : "free";
+  const plan = userSnap.data()?.plan;
+  return plan === "pro" || plan === "starter" ? plan : "free";
 }
 
 export async function checkPlanLimit(
@@ -26,7 +28,7 @@ export async function checkPlanLimit(
 ): Promise<PlanLimitResult> {
   const plan = await getPlan(uid);
   const limits = PLAN_LIMITS[plan];
-  const upgradeHint = plan === "free" ? " Upgrade at /pricing for more." : "";
+  const upgradeHint = plan !== "pro" ? " Upgrade at /pricing for more." : "";
 
   if (type === "app") {
     const appsSnap = await adminDb.collection("apps").where("ownerUid", "==", uid).get();

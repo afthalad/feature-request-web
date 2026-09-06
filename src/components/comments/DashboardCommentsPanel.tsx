@@ -4,6 +4,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { toast } from "sonner";
 import { auth } from "@/lib/firebase/client";
 import { CommentItem } from "@/components/comments/CommentItem";
+import { CommentsSkeleton } from "@/components/comments/CommentsSkeleton";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import type { Comment } from "@/types";
@@ -51,6 +52,7 @@ export function DashboardCommentsPanel({
       setComments((prev) => [...(prev ?? []), data]);
       setText("");
       onCountChange(1);
+      toast.success("Reply posted");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Failed to post reply.");
     } finally {
@@ -70,6 +72,7 @@ export function DashboardCommentsPanel({
 
       setComments((prev) => (prev ?? []).filter((c) => c.id !== commentId));
       onCountChange(-1);
+      toast.success("Comment deleted");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Failed to delete comment.");
     }
@@ -78,7 +81,7 @@ export function DashboardCommentsPanel({
   return (
     <div className="space-y-3 border-t pt-3">
       {comments === null ? (
-        <p className="text-muted-foreground text-xs">Loading comments...</p>
+        <CommentsSkeleton />
       ) : comments.length === 0 ? (
         <p className="text-muted-foreground text-xs">No comments yet.</p>
       ) : (

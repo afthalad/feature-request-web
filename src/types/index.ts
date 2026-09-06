@@ -8,7 +8,7 @@ export const FEATURE_STATUSES: FeatureStatus[] = [
   "declined",
 ];
 
-export type Plan = "free" | "pro";
+export type Plan = "free" | "starter" | "pro";
 
 export interface AppUser {
   email: string;
@@ -16,6 +16,11 @@ export interface AppUser {
   photoURL: string;
   plan: Plan;
   createdAt: string;
+  dodoCustomerId?: string;
+  subscriptionId?: string;
+  subscriptionStatus?: string;
+  billingPeriod?: "monthly" | "yearly" | null;
+  nextBillingDate?: string | null;
 }
 
 export interface App {

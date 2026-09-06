@@ -8,7 +8,7 @@ export async function GET(req: NextRequest) {
   if (!keyInfo) return errorResponse("invalid_key", "Invalid or inactive API key.");
 
   const userSnap = await adminDb.collection("users").doc(keyInfo.ownerUid).get();
-  const plan = userSnap.data()?.plan === "pro" ? "pro" : "free";
+  const plan = userSnap.data()?.plan;
 
-  return ok({ showBranding: plan === "free" });
+  return ok({ showBranding: plan !== "pro" });
 }

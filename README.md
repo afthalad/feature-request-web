@@ -32,13 +32,36 @@ firebase-admin for all server-side data access, Resend for email, zod for valida
    verify a domain at [resend.com/domains](https://resend.com/domains) and point `EMAIL_FROM` at
    an address on that domain to send anywhere.
 
-### 3. Stripe Payment Link (optional, for Pro upgrades)
+### 3. Payment links (optional, for Starter/Pro upgrades)
 
-No billing integration is built — the `/pricing` page's upgrade button just links to a
-[Stripe Payment Link](https://dashboard.stripe.com/payment-links) you create by hand and paste
-into `NEXT_PUBLIC_STRIPE_PAYMENT_LINK`. When Stripe emails you about a payment, set that user's
-`plan` field to `"pro"` in Firestore directly. Leave the env var empty to show a "not open yet"
-placeholder instead of the button.
+No billing integration is built — `/pricing` shows three plans (Free, Starter, Pro) with a
+Monthly/Yearly toggle. Starter and Pro each link to a hosted checkout link you create by hand —
+one per price point — pasted into:
+
+- `NEXT_PUBLIC_PAYMENT_LINK_STARTER_MONTHLY` ($5/month)
+- `NEXT_PUBLIC_PAYMENT_LINK_STARTER_YEARLY` ($50/year)
+- `NEXT_PUBLIC_PAYMENT_LINK_PRO_MONTHLY` (Pro, $9/month)
+- `NEXT_PUBLIC_PAYMENT_LINK_PRO_YEARLY` (Pro, $90/year)
+
+Stripe doesn't support Sri Lankan merchant accounts, so this project targets
+[PayHere](https://www.payhere.lk/) instead — it's Central Bank of Sri Lanka approved, settles
+directly to a Sri Lankan bank account, and its "PayHere Links" feature is a no-code hosted
+checkout link, the same drop-in shape as a Stripe Payment Link. Recurring billing needs the PLUS
+(LKR 3,990/mo) or PREMIUM (LKR 9,990/mo) plan — the free LITE tier doesn't support recurring
+charges. When a payment notification comes in, set that user's `plan` field to `"starter"` or
+`"pro"` in Firestore directly (billing cycle isn't tracked — both links for a tier grant the same
+limits). Leave any of these env vars empty to show a "Not open yet" placeholder on that card
+instead of a live link. Every new user gets `plan: "free"` automatically on first sign-in —
+there's no way to register directly into a paid tier.
+
+Plan limits (enforced by `checkPlanLimit()` in `src/lib/plans/limits.ts`):
+
+| | Free | Starter | Pro |
+|---|---|---|---|
+| Apps | 1 | 3 | 5 |
+| Feature requests per app | 50 | 200 | Unlimited |
+| Notification emails/month | 100 | 500 | 2,000 |
+| "Powered by" badge | Shown | Shown | Removed |
 
 ### 4. Environment variables
 

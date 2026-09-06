@@ -4,6 +4,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { toast } from "sonner";
 import { getStoredDisplayName, setStoredDisplayName } from "@/lib/device/displayName";
 import { CommentItem } from "@/components/comments/CommentItem";
+import { CommentsSkeleton } from "@/components/comments/CommentsSkeleton";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import type { Comment } from "@/types";
@@ -60,7 +61,7 @@ export function PublicCommentsPanel({
   return (
     <div className="space-y-3 border-t pt-3">
       {comments === null ? (
-        <p className="text-muted-foreground text-xs">Loading comments...</p>
+        <CommentsSkeleton />
       ) : comments.length === 0 ? (
         <p className="text-muted-foreground text-xs">No comments yet.</p>
       ) : (

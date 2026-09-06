@@ -61,7 +61,7 @@ export default async function AppPage({
           </Link>
         </div>
       </div>
-      <FeatureList appId={appId} initialFeatures={features} />
+      <FeatureList appId={appId} slug={app.slug ?? ""} initialFeatures={features} />
     </div>
   );
 }

@@ -1,7 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { buttonVariants } from "@/components/ui/button";
 import { FeatureRow } from "@/components/features/FeatureRow";
 import { RoadmapBoard } from "@/components/features/RoadmapBoard";
 import type { Feature, FeatureStatus } from "@/types";
@@ -10,10 +12,11 @@ type BoardTab = "top" | "new" | "roadmap";
 
 interface FeatureListProps {
   appId: string;
+  slug: string;
   initialFeatures: Feature[];
 }
 
-export function FeatureList({ appId, initialFeatures }: FeatureListProps) {
+export function FeatureList({ appId, slug, initialFeatures }: FeatureListProps) {
   const [features, setFeatures] = useState(initialFeatures);
   const [tab, setTab] = useState<BoardTab>("new");
 
@@ -38,7 +41,16 @@ export function FeatureList({ appId, initialFeatures }: FeatureListProps) {
   }
 
   if (features.length === 0) {
-    return <p className="text-muted-foreground text-sm">No feature requests yet.</p>;
+    return (
+      <div className="flex flex-col items-center gap-3 rounded-lg border border-dashed py-16 text-center">
+        <p className="text-muted-foreground text-sm">No feature requests yet.</p>
+        {slug && (
+          <Link href={`/b/${slug}`} target="_blank" className={buttonVariants({ variant: "outline" })}>
+            Share your public board
+          </Link>
+        )}
+      </div>
+    );
   }
 
   return (

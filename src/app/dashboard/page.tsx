@@ -1,19 +1,24 @@
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { getSessionUser } from "@/lib/auth/requireUser";
 import { adminDb } from "@/lib/firebase/admin";
 import { AppCard } from "@/components/apps/AppCard";
+import { BillingSummary } from "@/components/billing/BillingSummary";
+import { CheckoutStatusRefresher } from "@/components/billing/CheckoutStatusRefresher";
 import { buttonVariants } from "@/components/ui/button";
-import type { App } from "@/types";
+import type { App, Plan } from "@/types";
 
 export default async function DashboardPage() {
   const user = await getSessionUser();
   if (!user) redirect("/login");
 
-  const appsSnapshot = await adminDb
-    .collection("apps")
-    .where("ownerUid", "==", user.uid)
-    .get();
+  const [appsSnapshot, userSnapshot] = await Promise.all([
+    adminDb.collection("apps").where("ownerUid", "==", user.uid).get(),
+    adminDb.collection("users").doc(user.uid).get(),
+  ]);
+  const userData = userSnapshot.data();
+  const plan: Plan = userData?.plan === "pro" || userData?.plan === "starter" ? userData.plan : "free";
 
   const apps: App[] = appsSnapshot.docs
     .map((doc) => {
@@ -35,6 +40,15 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-6">
+      <Suspense fallback={null}>
+        <CheckoutStatusRefresher plan={plan} />
+      </Suspense>
+      <BillingSummary
+        plan={plan}
+        subscriptionStatus={userData?.subscriptionStatus}
+        billingPeriod={userData?.billingPeriod ?? null}
+        nextBillingDate={userData?.nextBillingDate ?? null}
+      />
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-semibold">Your apps</h1>
         <Link href="/dashboard/apps/new" className={buttonVariants()}>
@@ -42,7 +56,12 @@ export default async function DashboardPage() {
         </Link>
       </div>
       {apps.length === 0 ? (
-        <p className="text-muted-foreground text-sm">You haven&apos;t created any apps yet.</p>
+        <div className="flex flex-col items-center gap-3 rounded-lg border border-dashed py-16 text-center">
+          <p className="text-muted-foreground text-sm">You haven&apos;t created any apps yet.</p>
+          <Link href="/dashboard/apps/new" className={buttonVariants()}>
+            Create your first app
+          </Link>
+        </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2">
           {apps.map((app) => (

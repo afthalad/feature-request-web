@@ -89,7 +89,7 @@ export default function SwiftUIDocsPage() {
           <PlatformPills activeId="swiftui" />
         </div>
 
-        <nav className="rounded-lg border p-4">
+        <nav className="rounded-2xl border border-border bg-card p-5 shadow-soft">
           <p className="mb-2 text-xs font-medium tracking-wide text-muted-foreground uppercase">
             On this page
           </p>
@@ -102,13 +102,14 @@ export default function SwiftUIDocsPage() {
               </li>
             ))}
           </ul>
+          <p className="text-muted-foreground mt-3 border-t border-border pt-3 text-xs">
+            Requires iOS 16+ and Swift 5.9+.
+          </p>
         </nav>
 
         <section id="installation" className="scroll-mt-20 space-y-3">
           <h2 className="text-xl font-semibold tracking-tight">Installation</h2>
-          <p className="text-muted-foreground text-sm">
-            Requires iOS 16+ and Swift 5.9+. Add the package through Xcode:
-          </p>
+          <p className="text-muted-foreground text-sm">Add the package through Xcode:</p>
           <CodeBlock code={INSTALL_CODE} />
           <p className="text-muted-foreground text-sm">Or add it directly to your Package.swift:</p>
           <CodeBlock code={PACKAGE_SWIFT_CODE} />
@@ -158,6 +159,14 @@ export default function SwiftUIDocsPage() {
             .
           </p>
         </section>
+
+        <div className="bg-primary-soft space-y-2 rounded-2xl border border-border p-6">
+          <h2 className="text-lg font-semibold">Stuck on something?</h2>
+          <p className="text-muted-foreground text-sm">
+            Most integration issues come down to a missing API key or an app that hasn&apos;t been
+            created yet in the dashboard — double check those first.
+          </p>
+        </div>
       </div>
     </>
   );
