@@ -1,11 +1,13 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { LayoutGrid } from "lucide-react";
 import { getSessionUser } from "@/lib/auth/requireUser";
 import { adminDb } from "@/lib/firebase/admin";
 import { AppCard } from "@/components/apps/AppCard";
 import { BillingSummary } from "@/components/billing/BillingSummary";
 import { CheckoutStatusRefresher } from "@/components/billing/CheckoutStatusRefresher";
+import { EmptyState } from "@/components/ui/empty-state";
 import { buttonVariants } from "@/components/ui/button";
 import type { App, Plan } from "@/types";
 
@@ -56,12 +58,16 @@ export default async function DashboardPage() {
         </Link>
       </div>
       {apps.length === 0 ? (
-        <div className="flex flex-col items-center gap-3 rounded-lg border border-dashed py-16 text-center">
-          <p className="text-muted-foreground text-sm">You haven&apos;t created any apps yet.</p>
-          <Link href="/dashboard/apps/new" className={buttonVariants()}>
-            Create your first app
-          </Link>
-        </div>
+        <EmptyState
+          icon={LayoutGrid}
+          title="No apps yet"
+          description="Create your first app to get an API key and start collecting feature requests."
+          action={
+            <Link href="/dashboard/apps/new" className={buttonVariants()}>
+              Create your first app
+            </Link>
+          }
+        />
       ) : (
         <div className="grid gap-4 sm:grid-cols-2">
           {apps.map((app) => (

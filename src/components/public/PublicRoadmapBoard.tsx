@@ -53,7 +53,9 @@ export function PublicRoadmapBoard({
               <h3 className="text-muted-foreground text-sm font-medium">{label}</h3>
               <div className="space-y-3">
                 {columnFeatures.length === 0 ? (
-                  <p className="text-muted-foreground text-xs">Nothing here yet.</p>
+                  <div className="text-muted-foreground rounded-lg border border-dashed py-8 text-center text-xs">
+                    Nothing here yet.
+                  </div>
                 ) : (
                   columnFeatures.map((feature) => (
                     <PublicFeatureRow

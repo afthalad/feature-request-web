@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type FormEvent } from "react";
 import { toast } from "sonner";
+import { MessageCircle } from "lucide-react";
 import { getStoredDisplayName, setStoredDisplayName } from "@/lib/device/displayName";
 import { CommentItem } from "@/components/comments/CommentItem";
 import { CommentsSkeleton } from "@/components/comments/CommentsSkeleton";
@@ -63,7 +64,10 @@ export function PublicCommentsPanel({
       {comments === null ? (
         <CommentsSkeleton />
       ) : comments.length === 0 ? (
-        <p className="text-muted-foreground text-xs">No comments yet.</p>
+        <div className="text-muted-foreground flex items-center gap-1.5 py-2 text-xs">
+          <MessageCircle className="size-3.5" />
+          <span>No comments yet.</span>
+        </div>
       ) : (
         <div className="divide-y">
           {comments.map((comment) => (

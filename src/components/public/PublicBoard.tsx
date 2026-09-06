@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { Lightbulb } from "lucide-react";
 import { getOrCreateDeviceId } from "@/lib/device/deviceId";
 import { PublicFeatureRow } from "@/components/public/PublicFeatureRow";
 import { PublicRoadmapBoard } from "@/components/public/PublicRoadmapBoard";
 import { SubmitRequestForm } from "@/components/public/SubmitRequestForm";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import type { FeatureWithVote } from "@/types";
 
 type BoardTab = "top" | "new" | "roadmap";
@@ -119,7 +121,18 @@ export function PublicBoard({ slug, initialFeatures }: PublicBoardProps) {
         <SubmitRequestForm slug={slug} deviceId={deviceId} onCreated={handleCreated} />
       )}
       {features.length === 0 ? (
-        <p className="text-muted-foreground text-sm">No feature requests yet. Be the first!</p>
+        <EmptyState
+          icon={Lightbulb}
+          title="No feature requests yet"
+          description="Be the first to suggest something for this app."
+          action={
+            !showForm && (
+              <Button size="sm" onClick={() => setShowForm(true)}>
+                New request
+              </Button>
+            )
+          }
+        />
       ) : tab === "roadmap" ? (
         <PublicRoadmapBoard
           slug={slug}
