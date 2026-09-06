@@ -9,17 +9,41 @@ export class NotFoundError extends Error {}
 const MAX_COMMENTS_PER_DEVICE_PER_DAY = 10;
 const DEFAULT_AUTHOR_NAME = "App User";
 
-export async function listCommentsForFeature(appId: string, featureId: string): Promise<Comment[]> {
-  const snapshot = await adminDb
+interface ListCommentsParams {
+  appId: string;
+  featureId: string;
+  limit: number;
+  cursor: string | null;
+}
+
+export async function listCommentsForFeature({
+  appId,
+  featureId,
+  limit,
+  cursor,
+}: ListCommentsParams): Promise<{ comments: Comment[]; nextCursor: string | null }> {
+  const commentsRef = adminDb
     .collection("apps")
     .doc(appId)
     .collection("features")
     .doc(featureId)
-    .collection("comments")
-    .where("isDeleted", "==", false)
-    .get();
+    .collection("comments");
 
-  return snapshot.docs
+  // Ordered by createdAt only (no isDeleted filter) so this never needs a composite index —
+  // deleted comments are filtered out in memory after the page is fetched.
+  let query = commentsRef.orderBy("createdAt", "asc").limit(limit + 1);
+  if (cursor) {
+    const cursorSnap = await commentsRef.doc(cursor).get();
+    if (cursorSnap.exists) query = query.startAfter(cursorSnap);
+  }
+
+  const snapshot = await query.get();
+  const docs = snapshot.docs.slice(0, limit);
+  const hasMore = snapshot.docs.length > limit;
+  const nextCursor = hasMore ? docs[docs.length - 1].id : null;
+
+  const comments = docs
+    .filter((doc) => doc.data().isDeleted !== true)
     .map((doc) => {
       const data = doc.data();
       return {
@@ -30,8 +54,9 @@ export async function listCommentsForFeature(appId: string, featureId: string): 
         isDeveloper: data.isDeveloper as boolean,
         createdAt: data.createdAt.toDate().toISOString() as string,
       };
-    })
-    .sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+    });
+
+  return { comments, nextCursor };
 }
 
 interface CreateCommentParams {

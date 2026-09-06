@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Lightbulb } from "lucide-react";
 import { getOrCreateDeviceId } from "@/lib/device/deviceId";
 import { PublicFeatureRow } from "@/components/public/PublicFeatureRow";
@@ -12,41 +12,69 @@ import { EmptyState } from "@/components/ui/empty-state";
 import type { FeatureWithVote } from "@/types";
 
 type BoardTab = "top" | "new" | "roadmap";
+type FetchableSort = "top" | "new";
+const PAGE_SIZE = 20;
 
 interface PublicBoardProps {
   slug: string;
   initialFeatures: FeatureWithVote[];
+  initialCursor: string | null;
 }
 
-export function PublicBoard({ slug, initialFeatures }: PublicBoardProps) {
+export function PublicBoard({ slug, initialFeatures, initialCursor }: PublicBoardProps) {
   const [features, setFeatures] = useState(initialFeatures);
+  const [cursor, setCursor] = useState(initialCursor);
   const [tab, setTab] = useState<BoardTab>("new");
   const [showForm, setShowForm] = useState(false);
   const [deviceId, setDeviceId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const id = getOrCreateDeviceId();
-    setDeviceId(id);
+    setDeviceId(getOrCreateDeviceId());
+  }, []);
 
-    fetch(`/api/public/board/${slug}/features?sort=new&limit=50`, {
-      headers: { "X-Device-Id": id },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (Array.isArray(data.features)) setFeatures(data.features);
-      })
-      .catch(() => {});
-  }, [slug]);
+  useEffect(() => {
+    if (!deviceId) return;
+    // Refetch page 1 with the real device id so hasVoted/isFollowing (unknown during SSR) are accurate.
+    fetchPage("new", deviceId, null, false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [deviceId]);
 
-  const sortedFeatures = useMemo(() => {
-    const copy = [...features];
-    if (tab === "top") {
-      copy.sort((a, b) => b.upvoteCount - a.upvoteCount);
-    } else {
-      copy.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  async function fetchPage(
+    sort: FetchableSort,
+    currentDeviceId: string,
+    cursorParam: string | null,
+    append: boolean
+  ) {
+    setIsLoading(true);
+    try {
+      const params = new URLSearchParams({ sort, limit: String(PAGE_SIZE) });
+      if (cursorParam) params.set("cursor", cursorParam);
+
+      const response = await fetch(`/api/public/board/${slug}/features?${params}`, {
+        headers: { "X-Device-Id": currentDeviceId },
+      });
+      const data = await response.json();
+      if (Array.isArray(data.features)) {
+        setFeatures((prev) => (append ? [...prev, ...data.features] : data.features));
+        setCursor(data.nextCursor ?? null);
+      }
+    } finally {
+      setIsLoading(false);
     }
-    return copy;
-  }, [features, tab]);
+  }
+
+  function handleTabChange(nextTab: BoardTab) {
+    setTab(nextTab);
+    if (nextTab !== "roadmap" && deviceId) {
+      fetchPage(nextTab, deviceId, null, false);
+    }
+  }
+
+  function handleLoadMore() {
+    if (!deviceId || tab === "roadmap") return;
+    fetchPage(tab, deviceId, cursor, true);
+  }
 
   async function handleVote(featureId: string, hasVoted: boolean) {
     if (!deviceId) return;
@@ -106,7 +134,7 @@ export function PublicBoard({ slug, initialFeatures }: PublicBoardProps) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <Tabs value={tab} onValueChange={(value) => setTab(value as BoardTab)}>
+        <Tabs value={tab} onValueChange={(value) => handleTabChange(value as BoardTab)}>
           <TabsList>
             <TabsTrigger value="top">Top</TabsTrigger>
             <TabsTrigger value="new">New</TabsTrigger>
@@ -120,7 +148,7 @@ export function PublicBoard({ slug, initialFeatures }: PublicBoardProps) {
       {showForm && deviceId && (
         <SubmitRequestForm slug={slug} deviceId={deviceId} onCreated={handleCreated} />
       )}
-      {features.length === 0 ? (
+      {features.length === 0 && !cursor && !isLoading ? (
         <EmptyState
           icon={Lightbulb}
           title="No feature requests yet"
@@ -143,19 +171,28 @@ export function PublicBoard({ slug, initialFeatures }: PublicBoardProps) {
           onFollowChange={handleFollowChange}
         />
       ) : (
-        <div className="space-y-3">
-          {sortedFeatures.map((feature) => (
-            <PublicFeatureRow
-              key={feature.id}
-              slug={slug}
-              deviceId={deviceId}
-              feature={feature}
-              onVote={handleVote}
-              onCommentCountChange={handleCommentCountChange}
-              onFollowChange={handleFollowChange}
-            />
-          ))}
-        </div>
+        <>
+          <div className="space-y-3">
+            {features.map((feature) => (
+              <PublicFeatureRow
+                key={feature.id}
+                slug={slug}
+                deviceId={deviceId}
+                feature={feature}
+                onVote={handleVote}
+                onCommentCountChange={handleCommentCountChange}
+                onFollowChange={handleFollowChange}
+              />
+            ))}
+          </div>
+          {cursor && (
+            <div className="flex justify-center">
+              <Button variant="outline" size="sm" onClick={handleLoadMore} disabled={isLoading}>
+                {isLoading ? "Loading..." : "Load more"}
+              </Button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

@@ -1,10 +1,11 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { adminDb } from "@/lib/firebase/admin";
 import { resolveAppBySlug } from "@/lib/slug";
+import { listFeaturesForApp } from "@/lib/features/service";
 import { PublicBoard } from "@/components/public/PublicBoard";
-import type { FeatureWithVote } from "@/types";
+
+const FEATURES_PAGE_SIZE = 20;
 
 export async function generateMetadata({
   params,
@@ -30,35 +31,26 @@ export default async function PublicBoardPage({
   const app = await resolveAppBySlug(slug);
   if (!app) notFound();
 
-  const featuresSnapshot = await adminDb
-    .collection("apps")
-    .doc(app.id)
-    .collection("features")
-    .get();
-
-  const initialFeatures: FeatureWithVote[] = featuresSnapshot.docs.map((doc) => {
-    const data = doc.data();
-    return {
-      id: doc.id,
-      title: data.title,
-      description: data.description ?? "",
-      status: data.status,
-      upvoteCount: data.upvoteCount,
-      commentCount: data.commentCount ?? 0,
-      followerCount: data.followerCount ?? 0,
-      authorDeviceId: data.authorDeviceId,
-      createdAt: data.createdAt.toDate().toISOString(),
-      updatedAt: data.updatedAt.toDate().toISOString(),
-      hasVoted: false,
-      isFollowing: false,
-    };
+  // No real device id exists yet on the server, so votes/follows render as false here — the
+  // client refetches this same first page once it has a device id to correct that. The
+  // placeholder id below is never a real device, so it just never matches a vote/follow doc.
+  const { features: initialFeatures, nextCursor: initialCursor } = await listFeaturesForApp({
+    appId: app.id,
+    deviceId: "ssr-render-placeholder",
+    sort: "new",
+    limit: FEATURES_PAGE_SIZE,
+    cursor: null,
   });
 
   return (
     <div className="mx-auto flex min-h-full w-full max-w-2xl flex-1 flex-col px-4 py-10">
       <div className="flex-1 space-y-6">
         <h1 className="text-2xl font-semibold">{app.name}</h1>
-        <PublicBoard slug={slug} initialFeatures={initialFeatures} />
+        <PublicBoard
+          slug={slug}
+          initialFeatures={initialFeatures}
+          initialCursor={initialCursor}
+        />
       </div>
       <footer className="mt-10 border-t pt-4 text-center text-xs text-muted-foreground">
         Powered by{" "}

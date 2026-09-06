@@ -23,15 +23,19 @@ export async function GET(
   if (!user) return errorResponse("unauthorized", "Sign in required.");
 
   const { featureId } = await params;
-  const appId = new URL(req.url).searchParams.get("appId");
+  const { searchParams } = new URL(req.url);
+  const appId = searchParams.get("appId");
   if (!appId) return errorResponse("validation_failed", "appId is required.");
 
   if (!(await verifyOwnership(appId, user.uid))) {
     return errorResponse("forbidden", "You do not own this app.");
   }
 
-  const comments = await listCommentsForFeature(appId, featureId);
-  return ok({ comments });
+  const limit = Math.min(Math.max(Number(searchParams.get("limit")) || 20, 1), 100);
+  const cursor = searchParams.get("cursor");
+
+  const result = await listCommentsForFeature({ appId, featureId, limit, cursor });
+  return ok(result);
 }
 
 export async function POST(

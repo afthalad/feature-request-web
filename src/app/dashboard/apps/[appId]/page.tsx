@@ -2,9 +2,11 @@ import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { getSessionUser } from "@/lib/auth/requireUser";
 import { adminDb } from "@/lib/firebase/admin";
+import { listFeaturesForOwner } from "@/lib/features/service";
 import { FeatureList } from "@/components/features/FeatureList";
 import { buttonVariants } from "@/components/ui/button";
-import type { Feature } from "@/types";
+
+const FEATURES_PAGE_SIZE = 20;
 
 export default async function AppPage({
   params,
@@ -19,21 +21,11 @@ export default async function AppPage({
   if (!appSnap.exists || appSnap.data()!.ownerUid !== user.uid) notFound();
 
   const app = appSnap.data()!;
-  const featuresSnapshot = await appSnap.ref.collection("features").get();
-  const features: Feature[] = featuresSnapshot.docs.map((doc) => {
-    const data = doc.data();
-    return {
-      id: doc.id,
-      title: data.title,
-      description: data.description ?? "",
-      status: data.status,
-      upvoteCount: data.upvoteCount,
-      commentCount: data.commentCount ?? 0,
-      followerCount: data.followerCount ?? 0,
-      authorDeviceId: data.authorDeviceId,
-      createdAt: data.createdAt.toDate().toISOString(),
-      updatedAt: data.updatedAt.toDate().toISOString(),
-    };
+  const { features, nextCursor } = await listFeaturesForOwner({
+    appId,
+    sort: "new",
+    limit: FEATURES_PAGE_SIZE,
+    cursor: null,
   });
 
   return (
@@ -61,7 +53,12 @@ export default async function AppPage({
           </Link>
         </div>
       </div>
-      <FeatureList appId={appId} slug={app.slug ?? ""} initialFeatures={features} />
+      <FeatureList
+        appId={appId}
+        slug={app.slug ?? ""}
+        initialFeatures={features}
+        initialCursor={nextCursor}
+      />
     </div>
   );
 }

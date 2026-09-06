@@ -10,6 +10,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import type { Comment } from "@/types";
 
+const PAGE_SIZE = 20;
+
 interface PublicCommentsPanelProps {
   slug: string;
   featureId: string;
@@ -24,17 +26,36 @@ export function PublicCommentsPanel({
   onCountChange,
 }: PublicCommentsPanelProps) {
   const [comments, setComments] = useState<Comment[] | null>(null);
+  const [cursor, setCursor] = useState<string | null>(null);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [text, setText] = useState("");
   const [authorName, setAuthorName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     setAuthorName(getStoredDisplayName());
-    fetch(`/api/public/board/${slug}/features/${featureId}/comments`)
+    fetch(`/api/public/board/${slug}/features/${featureId}/comments?limit=${PAGE_SIZE}`)
       .then((res) => res.json())
-      .then((data) => setComments(data.comments ?? []))
+      .then((data) => {
+        setComments(data.comments ?? []);
+        setCursor(data.nextCursor ?? null);
+      })
       .catch(() => setComments([]));
   }, [slug, featureId]);
+
+  async function handleLoadMore() {
+    setIsLoadingMore(true);
+    try {
+      const response = await fetch(
+        `/api/public/board/${slug}/features/${featureId}/comments?limit=${PAGE_SIZE}&cursor=${cursor}`
+      );
+      const data = await response.json();
+      setComments((prev) => [...(prev ?? []), ...(data.comments ?? [])]);
+      setCursor(data.nextCursor ?? null);
+    } finally {
+      setIsLoadingMore(false);
+    }
+  }
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -73,6 +94,19 @@ export function PublicCommentsPanel({
           {comments.map((comment) => (
             <CommentItem key={comment.id} comment={comment} />
           ))}
+        </div>
+      )}
+      {cursor && (
+        <div className="flex justify-center">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={handleLoadMore}
+            disabled={isLoadingMore}
+          >
+            {isLoadingMore ? "Loading..." : "Load more comments"}
+          </Button>
         </div>
       )}
       <form onSubmit={handleSubmit} className="space-y-2">

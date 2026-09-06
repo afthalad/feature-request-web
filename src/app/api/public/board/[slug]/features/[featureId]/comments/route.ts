@@ -11,15 +11,19 @@ import {
 } from "@/lib/comments/service";
 
 export async function GET(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ slug: string; featureId: string }> }
 ) {
   const { slug, featureId } = await params;
   const app = await resolveAppBySlug(slug);
   if (!app) return errorResponse("not_found", "Board not found.");
 
-  const comments = await listCommentsForFeature(app.id, featureId);
-  return ok({ comments });
+  const { searchParams } = new URL(req.url);
+  const limit = Math.min(Math.max(Number(searchParams.get("limit")) || 20, 1), 100);
+  const cursor = searchParams.get("cursor");
+
+  const result = await listCommentsForFeature({ appId: app.id, featureId, limit, cursor });
+  return ok(result);
 }
 
 export async function POST(

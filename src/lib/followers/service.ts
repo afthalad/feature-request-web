@@ -63,14 +63,33 @@ export async function isFollowing(
   return followerSnap.exists;
 }
 
+const FOLLOWER_BATCH_SIZE = 500;
+
+// Notifications must reach every follower, so this can't truncate — it walks the collection in
+// bounded batches instead of one unbounded read, to avoid a single oversized query.
 export async function getFollowerEmails(appId: string, featureId: string): Promise<string[]> {
-  const snapshot = await adminDb
+  const followersRef = adminDb
     .collection("apps")
     .doc(appId)
     .collection("features")
     .doc(featureId)
-    .collection("followers")
-    .get();
+    .collection("followers");
 
-  return snapshot.docs.map((doc) => doc.data().email as string);
+  const emails: string[] = [];
+  let query = followersRef.orderBy("createdAt").limit(FOLLOWER_BATCH_SIZE);
+
+  for (;;) {
+    const snapshot = await query.get();
+    if (snapshot.empty) break;
+
+    emails.push(...snapshot.docs.map((doc) => doc.data().email as string));
+    if (snapshot.docs.length < FOLLOWER_BATCH_SIZE) break;
+
+    query = followersRef
+      .orderBy("createdAt")
+      .startAfter(snapshot.docs[snapshot.docs.length - 1])
+      .limit(FOLLOWER_BATCH_SIZE);
+  }
+
+  return emails;
 }

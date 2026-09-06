@@ -11,6 +11,10 @@ export async function GET(
   if (!keyInfo) return errorResponse("invalid_key", "Invalid or inactive API key.");
 
   const { featureId } = await params;
-  const comments = await listCommentsForFeature(keyInfo.appId, featureId);
-  return ok({ comments });
+  const { searchParams } = new URL(req.url);
+  const limit = Math.min(Math.max(Number(searchParams.get("limit")) || 20, 1), 100);
+  const cursor = searchParams.get("cursor");
+
+  const result = await listCommentsForFeature({ appId: keyInfo.appId, featureId, limit, cursor });
+  return ok(result);
 }

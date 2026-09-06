@@ -4,7 +4,7 @@ import { adminDb } from "@/lib/firebase/admin";
 import { sendNewFeatureRequestEmail } from "@/lib/email/send";
 import { followFeature } from "@/lib/followers/service";
 import { checkPlanLimit } from "@/lib/plans/limits";
-import type { FeatureStatus, FeatureWithVote } from "@/types";
+import type { Feature, FeatureStatus, FeatureWithVote } from "@/types";
 
 export class RateLimitError extends Error {}
 export class NotFoundError extends Error {}
@@ -68,6 +68,53 @@ export async function listFeaturesForApp({
       updatedAt: data.updatedAt.toDate().toISOString(),
       hasVoted: votedIds.has(doc.id),
       isFollowing: followedIds.has(doc.id),
+    };
+  });
+
+  return { features, nextCursor };
+}
+
+interface ListFeaturesForOwnerParams {
+  appId: string;
+  sort: "top" | "new";
+  limit: number;
+  cursor: string | null;
+}
+
+// Owner-facing listing (dashboard): no per-device vote/follow lookups, since the dashboard never
+// shows "did I vote on this" — that saves two extra reads per feature vs. listFeaturesForApp.
+export async function listFeaturesForOwner({
+  appId,
+  sort,
+  limit,
+  cursor,
+}: ListFeaturesForOwnerParams): Promise<{ features: Feature[]; nextCursor: string | null }> {
+  const featuresRef = adminDb.collection("apps").doc(appId).collection("features");
+  let query = featuresRef.orderBy(sort === "top" ? "upvoteCount" : "createdAt", "desc").limit(limit + 1);
+
+  if (cursor) {
+    const cursorSnap = await featuresRef.doc(cursor).get();
+    if (cursorSnap.exists) query = query.startAfter(cursorSnap);
+  }
+
+  const snapshot = await query.get();
+  const docs = snapshot.docs.slice(0, limit);
+  const hasMore = snapshot.docs.length > limit;
+  const nextCursor = hasMore ? docs[docs.length - 1].id : null;
+
+  const features: Feature[] = docs.map((doc) => {
+    const data = doc.data();
+    return {
+      id: doc.id,
+      title: data.title,
+      description: data.description ?? "",
+      status: data.status,
+      upvoteCount: data.upvoteCount,
+      commentCount: data.commentCount ?? 0,
+      followerCount: data.followerCount ?? 0,
+      authorDeviceId: data.authorDeviceId,
+      createdAt: data.createdAt.toDate().toISOString(),
+      updatedAt: data.updatedAt.toDate().toISOString(),
     };
   });
 

@@ -10,6 +10,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import type { Comment } from "@/types";
 
+const PAGE_SIZE = 20;
+
 interface DashboardCommentsPanelProps {
   appId: string;
   featureId: string;
@@ -22,6 +24,8 @@ export function DashboardCommentsPanel({
   onCountChange,
 }: DashboardCommentsPanelProps) {
   const [comments, setComments] = useState<Comment[] | null>(null);
+  const [cursor, setCursor] = useState<string | null>(null);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [text, setText] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -29,13 +33,30 @@ export function DashboardCommentsPanel({
     (async () => {
       const idToken = await auth.currentUser?.getIdToken();
       const response = await fetch(
-        `/api/internal/features/${featureId}/comments?appId=${appId}`,
+        `/api/internal/features/${featureId}/comments?appId=${appId}&limit=${PAGE_SIZE}`,
         { headers: { Authorization: `Bearer ${idToken}` } }
       );
       const data = await response.json();
       setComments(data.comments ?? []);
+      setCursor(data.nextCursor ?? null);
     })();
   }, [appId, featureId]);
+
+  async function handleLoadMore() {
+    setIsLoadingMore(true);
+    try {
+      const idToken = await auth.currentUser?.getIdToken();
+      const response = await fetch(
+        `/api/internal/features/${featureId}/comments?appId=${appId}&limit=${PAGE_SIZE}&cursor=${cursor}`,
+        { headers: { Authorization: `Bearer ${idToken}` } }
+      );
+      const data = await response.json();
+      setComments((prev) => [...(prev ?? []), ...(data.comments ?? [])]);
+      setCursor(data.nextCursor ?? null);
+    } finally {
+      setIsLoadingMore(false);
+    }
+  }
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -93,6 +114,19 @@ export function DashboardCommentsPanel({
           {comments.map((comment) => (
             <CommentItem key={comment.id} comment={comment} onDelete={handleDelete} />
           ))}
+        </div>
+      )}
+      {cursor && (
+        <div className="flex justify-center">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={handleLoadMore}
+            disabled={isLoadingMore}
+          >
+            {isLoadingMore ? "Loading..." : "Load more comments"}
+          </Button>
         </div>
       )}
       <form onSubmit={handleSubmit} className="flex gap-2">
