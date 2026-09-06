@@ -29,7 +29,7 @@ export function PublicFeatureRow({
   const [showComments, setShowComments] = useState(false);
 
   return (
-    <Card className="p-4">
+    <Card className="bg-muted p-4 ring-0">
       <div className="flex items-center gap-4">
         <button
           type="button"
@@ -38,7 +38,7 @@ export function PublicFeatureRow({
             "flex w-12 shrink-0 flex-col items-center rounded-md border py-1 transition-colors",
             feature.hasVoted
               ? "border-primary bg-primary/10 text-primary"
-              : "border-border text-muted-foreground hover:bg-muted"
+              : "border-border text-muted-foreground hover:bg-background"
           )}
         >
           <ChevronUp className="size-4" />

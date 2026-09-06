@@ -7,10 +7,9 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { buttonVariants } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { FeatureRow } from "@/components/features/FeatureRow";
-import { RoadmapBoard } from "@/components/features/RoadmapBoard";
 import type { Feature, FeatureStatus } from "@/types";
 
-type BoardTab = "top" | "new" | "roadmap";
+type BoardTab = "top" | "new";
 
 interface FeatureListProps {
   appId: string;
@@ -69,29 +68,19 @@ export function FeatureList({ appId, slug, initialFeatures }: FeatureListProps) 
         <TabsList>
           <TabsTrigger value="top">Top</TabsTrigger>
           <TabsTrigger value="new">New</TabsTrigger>
-          <TabsTrigger value="roadmap">Roadmap</TabsTrigger>
         </TabsList>
       </Tabs>
-      {tab === "roadmap" ? (
-        <RoadmapBoard
-          appId={appId}
-          features={features}
-          onStatusChange={handleStatusChange}
-          onCommentCountChange={handleCommentCountChange}
-        />
-      ) : (
-        <div className="space-y-3">
-          {sortedFeatures.map((feature) => (
-            <FeatureRow
-              key={feature.id}
-              appId={appId}
-              feature={feature}
-              onStatusChange={(status) => handleStatusChange(feature.id, status)}
-              onCommentCountChange={handleCommentCountChange}
-            />
-          ))}
-        </div>
-      )}
+      <div className="space-y-3">
+        {sortedFeatures.map((feature) => (
+          <FeatureRow
+            key={feature.id}
+            appId={appId}
+            feature={feature}
+            onStatusChange={(status) => handleStatusChange(feature.id, status)}
+            onCommentCountChange={handleCommentCountChange}
+          />
+        ))}
+      </div>
     </div>
   );
 }

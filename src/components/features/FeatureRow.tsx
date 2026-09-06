@@ -18,7 +18,7 @@ export function FeatureRow({ appId, feature, onStatusChange, onCommentCountChang
   const [showComments, setShowComments] = useState(false);
 
   return (
-    <Card className="p-4">
+    <Card className="bg-muted p-4 ring-0">
       <div className="flex items-center gap-4">
         <div className="flex w-12 shrink-0 flex-col items-center text-muted-foreground">
           <ChevronUp className="size-4" />
