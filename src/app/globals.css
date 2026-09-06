@@ -176,12 +176,12 @@
     transform: translateX(0);
   }
   100% {
-    transform: translateX(-50%);
+    transform: translateX(var(--scroll-distance, -50%));
   }
 }
 @keyframes scroll-horizontal-reverse {
   0% {
-    transform: translateX(-50%);
+    transform: translateX(var(--scroll-distance, -50%));
   }
   100% {
     transform: translateX(0);

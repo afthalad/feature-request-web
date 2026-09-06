@@ -1,4 +1,4 @@
-import { siSwift, siFlutter, siNextdotjs, siKotlin } from "simple-icons";
+import { siSwift, siFlutter, siNextdotjs, siKotlin, siReact, siLaravel } from "simple-icons";
 
 export interface Platform {
   id: string;
@@ -28,7 +28,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: "nextjs",
     name: "Next.js",
-    tagline: "A drop-in React component for web apps, coming soon.",
+    tagline: "A server-rendered board for Next.js apps, coming soon.",
     iconPath: siNextdotjs.path,
     iconColor: `#${siNextdotjs.hex}`,
   },
@@ -38,5 +38,19 @@ export const PLATFORMS: Platform[] = [
     tagline: "A Jetpack Compose board for Android, coming soon.",
     iconPath: siKotlin.path,
     iconColor: `#${siKotlin.hex}`,
+  },
+  {
+    id: "react",
+    name: "React",
+    tagline: "A drop-in React component for web apps, coming soon.",
+    iconPath: siReact.path,
+    iconColor: `#${siReact.hex}`,
+  },
+  {
+    id: "laravel",
+    name: "Laravel",
+    tagline: "A Blade component and PHP SDK, coming soon.",
+    iconPath: siLaravel.path,
+    iconColor: `#${siLaravel.hex}`,
   },
 ];

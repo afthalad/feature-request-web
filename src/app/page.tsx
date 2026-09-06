@@ -187,7 +187,7 @@ export default function Home() {
             Works with your stack
           </p>
           <div className="space-y-3">
-            <Marquee durationSeconds={32}>
+            <Marquee durationSeconds={32} repeat={3}>
               {PLATFORMS.map((platform) => (
                 <span
                   key={platform.id}
@@ -198,7 +198,7 @@ export default function Home() {
                 </span>
               ))}
             </Marquee>
-            <Marquee reverse durationSeconds={36}>
+            <Marquee reverse durationSeconds={36} repeat={3}>
               {[...PLATFORMS].reverse().map((platform) => (
                 <span
                   key={platform.id}
