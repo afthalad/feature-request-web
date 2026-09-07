@@ -9,9 +9,8 @@ import {
   Smartphone,
 } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
-import { PhoneMockup } from "@/components/landing/PhoneMockup";
+import { PlatformShowcase } from "@/components/landing/PlatformShowcase";
 import { MarketingHeader } from "@/components/layout/MarketingHeader";
-import { CodeBlock } from "@/components/docs/CodeBlock";
 import { PlatformPills } from "@/components/docs/PlatformPills";
 import { BrandIcon } from "@/components/marketing/BrandIcon";
 import { Marquee } from "@/components/marketing/Marquee";
@@ -19,11 +18,6 @@ import { BorderGrid, BorderGridCell } from "@/components/marketing/BorderGrid";
 import { PricingPlans } from "@/components/pricing/PricingPlans";
 import { Badge } from "@/components/ui/badge";
 import { PLATFORMS } from "@/lib/platforms";
-
-const CODE_SNIPPET = `import Fewchurs
-
-Fewchurs.configure(apiKey: "fr_live_xxx")
-Fewchurs.showBoard()`;
 
 const CHAPTERS = [
   {
@@ -171,12 +165,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="space-y-6">
-            <div className="rounded-xl border border-border bg-card p-5 shadow-soft">
-              <PhoneMockup />
-            </div>
-            <CodeBlock code={CODE_SNIPPET} filename="ContentView.swift" />
-          </div>
+          <PlatformShowcase />
         </div>
       </section>
 
