@@ -8,7 +8,7 @@ import { useGoogleSignIn } from "@/lib/auth/useGoogleSignIn";
 
 const PREVIEW_ROWS = [
   { title: "Add dark mode", votes: 8, status: "Planned" },
-  { title: "Sync with calendar", votes: 4, status: "Open" },
+  { title: "Sync with calendar", votes: 4, status: "Pending" },
   { title: "Export to CSV", votes: 2, status: "Done" },
 ];
 

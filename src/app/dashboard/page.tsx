@@ -4,9 +4,17 @@ import Link from "next/link";
 import { LayoutGrid } from "lucide-react";
 import { getSessionUser } from "@/lib/auth/requireUser";
 import { adminDb } from "@/lib/firebase/admin";
+import {
+  getDashboardStats,
+  listRecentPendingFeatures,
+} from "@/lib/features/service";
+import { PLAN_LIMITS } from "@/lib/plans/limits";
 import { AppCard } from "@/components/apps/AppCard";
-import { BillingSummary } from "@/components/billing/BillingSummary";
+import { RecentPendingFeatures } from "@/components/apps/RecentPendingFeatures";
+
 import { CheckoutStatusRefresher } from "@/components/billing/CheckoutStatusRefresher";
+import { DashboardStatsGrid } from "@/components/billing/DashboardStatsGrid";
+import { UpgradeBanner } from "@/components/billing/UpgradeBanner";
 import { EmptyState } from "@/components/ui/empty-state";
 import { buttonVariants } from "@/components/ui/button";
 import type { App, Plan } from "@/types";
@@ -20,7 +28,10 @@ export default async function DashboardPage() {
     adminDb.collection("users").doc(user.uid).get(),
   ]);
   const userData = userSnapshot.data();
-  const plan: Plan = userData?.plan === "pro" || userData?.plan === "starter" ? userData.plan : "free";
+  const plan: Plan =
+    userData?.plan === "pro" || userData?.plan === "starter"
+      ? userData.plan
+      : "free";
 
   const apps: App[] = appsSnapshot.docs
     .map((doc) => {
@@ -36,24 +47,31 @@ export default async function DashboardPage() {
         emailOnNewRequest: data.emailOnNewRequest,
         featureCount: data.featureCount,
         createdAt: data.createdAt.toDate().toISOString(),
+        featuresLastViewedAt: data.featuresLastViewedAt
+          ? data.featuresLastViewedAt.toDate().toISOString()
+          : null,
       };
     })
     .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+
+  const [stats, recentPendingFeatures] = await Promise.all([
+    getDashboardStats(apps),
+    listRecentPendingFeatures(apps, PLAN_LIMITS[plan].recentPendingLimit),
+  ]);
 
   return (
     <div className="space-y-6">
       <Suspense fallback={null}>
         <CheckoutStatusRefresher plan={plan} />
       </Suspense>
-      <BillingSummary
-        plan={plan}
-        subscriptionStatus={userData?.subscriptionStatus}
-        billingPeriod={userData?.billingPeriod ?? null}
-        nextBillingDate={userData?.nextBillingDate ?? null}
-      />
+
+      <DashboardStatsGrid stats={stats} />
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-semibold">Your apps</h1>
-        <Link href="/dashboard/apps/new" className={buttonVariants()}>
+        <Link
+          href="/dashboard/apps/new"
+          className={buttonVariants({ variant: "default" })}
+        >
           New App
         </Link>
       </div>
@@ -75,6 +93,10 @@ export default async function DashboardPage() {
           ))}
         </div>
       )}
+      {plan === "free" && (
+        <UpgradeBanner message="Upgrade for more apps, higher feature limits, and more monthly emails." />
+      )}
+      <RecentPendingFeatures features={recentPendingFeatures} />
     </div>
   );
 }

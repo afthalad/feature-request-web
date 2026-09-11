@@ -2,12 +2,19 @@
 
 import { useEffect, useState, type FormEvent } from "react";
 import { toast } from "sonner";
-import { MessageCircle } from "lucide-react";
+import { MessageCircle, Send } from "lucide-react";
 import { getStoredDisplayName, setStoredDisplayName } from "@/lib/device/displayName";
 import { CommentItem } from "@/components/comments/CommentItem";
-import { CommentsSkeleton } from "@/components/comments/CommentsSkeleton";
+import { AvatarListSkeleton } from "@/components/ui/avatar-list-skeleton";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import type { Comment } from "@/types";
 
 const PAGE_SIZE = 20;
@@ -15,14 +22,20 @@ const PAGE_SIZE = 20;
 interface PublicCommentsPanelProps {
   slug: string;
   featureId: string;
+  featureTitle: string;
   deviceId: string;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
   onCountChange: (delta: number) => void;
 }
 
 export function PublicCommentsPanel({
   slug,
   featureId,
+  featureTitle,
   deviceId,
+  open,
+  onOpenChange,
   onCountChange,
 }: PublicCommentsPanelProps) {
   const [comments, setComments] = useState<Comment[] | null>(null);
@@ -33,6 +46,7 @@ export function PublicCommentsPanel({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
+    if (!open) return;
     setAuthorName(getStoredDisplayName());
     fetch(`/api/public/board/${slug}/features/${featureId}/comments?limit=${PAGE_SIZE}`)
       .then((res) => res.json())
@@ -41,7 +55,7 @@ export function PublicCommentsPanel({
         setCursor(data.nextCursor ?? null);
       })
       .catch(() => setComments([]));
-  }, [slug, featureId]);
+  }, [open, slug, featureId]);
 
   async function handleLoadMore() {
     setIsLoadingMore(true);
@@ -81,54 +95,67 @@ export function PublicCommentsPanel({
   }
 
   return (
-    <div className="space-y-3 border-t pt-3">
-      {comments === null ? (
-        <CommentsSkeleton />
-      ) : comments.length === 0 ? (
-        <div className="text-muted-foreground flex items-center gap-1.5 py-2 text-xs">
-          <MessageCircle className="size-3.5" />
-          <span>No comments yet.</span>
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent>
+        <SheetHeader>
+          <SheetTitle className="line-clamp-2">{featureTitle}</SheetTitle>
+          <SheetDescription>Comments</SheetDescription>
+        </SheetHeader>
+
+        <div className="flex-1 space-y-3 overflow-y-auto">
+          {comments === null ? (
+            <AvatarListSkeleton />
+          ) : comments.length === 0 ? (
+            <div className="flex flex-col items-center gap-2 rounded-lg border border-dashed py-6 text-center">
+              <div className="bg-muted text-muted-foreground flex size-8 items-center justify-center rounded-full">
+                <MessageCircle className="size-4" />
+              </div>
+              <p className="text-muted-foreground text-xs">No comments yet. Be the first to reply.</p>
+            </div>
+          ) : (
+            <div className="divide-y">
+              {comments.map((comment) => (
+                <CommentItem key={comment.id} comment={comment} />
+              ))}
+            </div>
+          )}
+          {cursor && (
+            <div className="flex justify-center">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handleLoadMore}
+                disabled={isLoadingMore}
+              >
+                {isLoadingMore ? "Loading..." : "Load more comments"}
+              </Button>
+            </div>
+          )}
         </div>
-      ) : (
-        <div className="divide-y">
-          {comments.map((comment) => (
-            <CommentItem key={comment.id} comment={comment} />
-          ))}
-        </div>
-      )}
-      {cursor && (
-        <div className="flex justify-center">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={handleLoadMore}
-            disabled={isLoadingMore}
-          >
-            {isLoadingMore ? "Loading..." : "Load more comments"}
-          </Button>
-        </div>
-      )}
-      <form onSubmit={handleSubmit} className="space-y-2">
-        <Input
-          value={authorName}
-          onChange={(event) => setAuthorName(event.target.value)}
-          placeholder="Your name (optional)"
-          maxLength={60}
-        />
-        <div className="flex gap-2">
+
+        <form onSubmit={handleSubmit} className="space-y-2 border-t pt-3">
           <Input
-            value={text}
-            onChange={(event) => setText(event.target.value)}
-            placeholder="Add a comment"
-            maxLength={1000}
-            required
+            value={authorName}
+            onChange={(event) => setAuthorName(event.target.value)}
+            placeholder="Your name (optional)"
+            maxLength={60}
           />
-          <Button type="submit" size="sm" disabled={isSubmitting}>
-            Post
-          </Button>
-        </div>
-      </form>
-    </div>
+          <div className="flex gap-2">
+            <Input
+              value={text}
+              onChange={(event) => setText(event.target.value)}
+              placeholder="Add a comment"
+              maxLength={1000}
+              required
+            />
+            <Button type="submit" size="sm" disabled={isSubmitting}>
+              <Send className="size-3.5" />
+              Post
+            </Button>
+          </div>
+        </form>
+      </SheetContent>
+    </Sheet>
   );
 }

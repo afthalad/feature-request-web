@@ -20,7 +20,8 @@ import {
 } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { StatusBadge, STATUS_LABEL } from "@/components/features/StatusBadge";
+import { StatusBadge, STATUS_DOT_CLASS, STATUS_LABEL } from "@/components/features/StatusBadge";
+import { cn } from "@/lib/utils";
 import { FEATURE_STATUSES, NOTIFIABLE_STATUSES, type FeatureStatus } from "@/types";
 
 interface StatusSelectProps {
@@ -103,7 +104,10 @@ export function StatusSelect({
         <SelectContent>
           {FEATURE_STATUSES.map((option) => (
             <SelectItem key={option} value={option}>
-              {STATUS_LABEL[option]}
+              <span className="flex items-center gap-1.5">
+                <span className={cn("size-2 shrink-0 rounded-full", STATUS_DOT_CLASS[option])} />
+                {STATUS_LABEL[option]}
+              </span>
             </SelectItem>
           ))}
         </SelectContent>

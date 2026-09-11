@@ -16,6 +16,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Button } from "../ui/button";
 
 export function MarketingHeader() {
   const router = useRouter();
@@ -29,7 +30,7 @@ export function MarketingHeader() {
         setUser(nextUser);
         setAuthResolved(true);
       }),
-    []
+    [],
   );
 
   async function handleSignOut() {
@@ -43,37 +44,50 @@ export function MarketingHeader() {
   return (
     <header className="border-b">
       <div className="mx-auto flex h-14 max-w-[1100px] items-center justify-between px-4">
-        <Logo />
+        <Logo href={authResolved && user ? "/dashboard" : "/"} />
         <div className="flex items-center gap-1">
-          <Link href="/docs" className="text-muted-foreground px-3 text-sm hover:text-foreground">
+          <Link
+            href="/docs"
+            className="text-muted-foreground px-3 text-sm hover:text-foreground"
+          >
             Docs
           </Link>
-          <Link href="/pricing" className="text-muted-foreground px-3 text-sm hover:text-foreground">
+          <Link
+            href="/pricing"
+            className="text-muted-foreground px-3 text-sm hover:text-foreground"
+          >
             Pricing
           </Link>
           {authResolved && user ? (
             <DropdownMenu>
               <DropdownMenuTrigger className="ml-1 rounded-full outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
                 <Avatar>
-                  <AvatarImage src={user.photoURL ?? undefined} alt={user.displayName ?? "Account"} />
+                  <AvatarImage
+                    src={user.photoURL ?? undefined}
+                    alt={user.displayName ?? "Account"}
+                  />
                   <AvatarFallback>{initial.toUpperCase()}</AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem render={<Link href="/dashboard" />}>Dashboard</DropdownMenuItem>
+                <DropdownMenuItem render={<Link href="/dashboard" />}>
+                  Dashboard
+                </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleSignOut}>Sign out</DropdownMenuItem>
+                <DropdownMenuItem onClick={handleSignOut}>
+                  Sign out
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <button
+            <Button
               type="button"
               onClick={signIn}
               disabled={isSigningIn}
-              className="text-muted-foreground px-3 text-sm hover:text-foreground disabled:opacity-50"
+              variant="default"
             >
               {isSigningIn ? "Signing in..." : "Sign in"}
-            </button>
+            </Button>
           )}
           <ThemeToggle />
         </div>

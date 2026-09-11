@@ -1,5 +1,9 @@
+import { Trash2 } from "lucide-react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { formatDate } from "@/lib/date";
+import { cn } from "@/lib/utils";
 import type { Comment } from "@/types";
 
 interface CommentItemProps {
@@ -8,26 +12,39 @@ interface CommentItemProps {
 }
 
 export function CommentItem({ comment, onDelete }: CommentItemProps) {
+  const initial = (comment.authorName || "?").charAt(0).toUpperCase();
+
   return (
-    <div className="flex items-start justify-between gap-2 py-2 text-sm">
-      <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-2">
-          <span className="font-medium">{comment.authorName}</span>
+    <div className="group/comment flex items-start gap-2.5 py-2.5">
+      <Avatar size="sm">
+        <AvatarFallback
+          className={cn(comment.isDeveloper && "bg-primary/10 text-primary")}
+        >
+          {initial}
+        </AvatarFallback>
+      </Avatar>
+      <div className="min-w-0 flex-1 space-y-1">
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span className="text-sm font-medium">{comment.authorName}</span>
           {comment.isDeveloper && (
-            <Badge className="bg-blue-500/10 text-blue-600 dark:text-blue-400">Developer</Badge>
+            <Badge className="bg-primary/10 text-primary">Developer</Badge>
           )}
+          <span className="text-muted-foreground text-xs">{formatDate(comment.createdAt)}</span>
         </div>
-        <p className="text-muted-foreground whitespace-pre-wrap break-words">{comment.text}</p>
+        <p className="bg-muted w-fit max-w-full rounded-lg px-3 py-1.5 text-sm break-words whitespace-pre-wrap">
+          {comment.text}
+        </p>
       </div>
       {onDelete && (
         <Button
           type="button"
           variant="ghost"
-          size="sm"
+          size="icon-xs"
           onClick={() => onDelete(comment.id)}
-          className="text-muted-foreground shrink-0"
+          className="text-muted-foreground hover:text-destructive shrink-0"
         >
-          Delete
+          <Trash2 />
+          <span className="sr-only">Delete comment</span>
         </Button>
       )}
     </div>

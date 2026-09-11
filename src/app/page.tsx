@@ -101,24 +101,50 @@ const TESTIMONIALS = [
 ];
 
 const FAQ_ROW_1 = [
-  { q: "Do I need a backend?", a: "No — Fewchurs is the backend. Add the SDK and you're done." },
-  { q: "What's on the free plan?", a: "One app, 50 requests, unlimited votes and comments — free forever." },
-  { q: "Can users vote without an account?", a: "Yes, anonymously by device. No login required for anyone but you." },
-  { q: "Do I need to build the UI?", a: "No — the SDK renders the whole board, or link to your public board instead." },
+  {
+    q: "Do I need a backend?",
+    a: "No — Fewchurs is the backend. Add the SDK and you're done.",
+  },
+  {
+    q: "What's on the free plan?",
+    a: "One app, 50 requests, unlimited votes and comments — free forever.",
+  },
+  {
+    q: "Can users vote without an account?",
+    a: "Yes, anonymously by device. No login required for anyone but you.",
+  },
+  {
+    q: "Do I need to build the UI?",
+    a: "No — the SDK renders the whole board, or link to your public board instead.",
+  },
 ];
 
 const FAQ_ROW_2 = [
-  { q: "How do I get notified?", a: "Turn on \"Email on new request\" in settings and you'll hear about every submission." },
-  { q: "Can I remove the badge?", a: "Yes, on the Pro plan — the \"Powered by\" badge only shows on Free." },
-  { q: "What if I have more than one app?", a: "Free covers 1 app, Pro covers 5. Each gets its own board and API key." },
-  { q: "Is there a link I can share?", a: "Every app gets a public board at /b/your-app-name — no login needed to view or vote." },
+  {
+    q: "How do I get notified?",
+    a: 'Turn on "Email on new request" in settings and you\'ll hear about every submission.',
+  },
+  {
+    q: "Can I remove the badge?",
+    a: 'Yes, on the Pro plan — the "Powered by" badge only shows on Free.',
+  },
+  {
+    q: "What if I have more than one app?",
+    a: "Free covers 1 app, Pro covers 5. Each gets its own board and API key.",
+  },
+  {
+    q: "Is there a link I can share?",
+    a: "Every app gets a public board at /b/your-app-name — no login needed to view or vote.",
+  },
 ];
 
 function FaqCard({ q, a }: { q: string; a: string }) {
   return (
     <div className="w-[320px] shrink-0 rounded-lg border border-border bg-card p-5 sm:w-[380px]">
       <p className="font-semibold">{q}</p>
-      <p className="text-muted-foreground mt-1.5 text-sm leading-relaxed">{a}</p>
+      <p className="text-muted-foreground mt-1.5 text-sm leading-relaxed">
+        {a}
+      </p>
     </div>
   );
 }
@@ -133,23 +159,30 @@ export default function Home() {
         <div className="mx-auto grid w-full max-w-6xl gap-12 px-5 lg:grid-cols-[1.05fr_1fr] lg:items-center">
           <div className="space-y-6">
             <span className="text-primary text-xs font-semibold tracking-[0.2em] uppercase">
-              Built for indie iOS apps
+              get rid of guessings
             </span>
             <h1 className="text-4xl leading-[1.08] font-bold text-balance sm:text-5xl">
               Let your app&apos;s users tell you what to build next.
             </h1>
             <p className="text-muted-foreground max-w-lg text-lg text-balance">
-              Drop the Fewchurs SDK into your app and turn scattered feedback into a ranked,
-              shippable roadmap.
+              Drop the Fewchurs SDK into your app and turn scattered feedback
+              into a ranked shippable roadmap.
             </p>
             <div className="flex flex-wrap items-center gap-3">
-              <Link href="/login" className={buttonVariants({ size: "lg", className: "px-6" })}>
+              <Link
+                href="/login"
+                className={buttonVariants({ size: "lg", className: "px-6" })}
+              >
                 Start free
                 <ArrowRight className="size-4" />
               </Link>
               <Link
                 href="/docs"
-                className={buttonVariants({ variant: "outline", size: "lg", className: "px-6" })}
+                className={buttonVariants({
+                  variant: "outline",
+                  size: "lg",
+                  className: "px-6",
+                })}
               >
                 Read the docs
               </Link>
@@ -157,15 +190,15 @@ export default function Home() {
             <p className="text-muted-foreground text-sm">
               Free forever for one app. No credit card.
             </p>
-            <div className="space-y-3 border-t border-border pt-6">
+            {/* <div className="space-y-3 border-t border-border pt-6">
               <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
                 Available for
               </p>
               <PlatformPills />
-            </div>
+            </div> */}
           </div>
 
-          <PlatformShowcase />
+          {/* <PlatformShowcase /> */}
         </div>
       </section>
 
@@ -182,7 +215,11 @@ export default function Home() {
                   key={platform.id}
                   className="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm"
                 >
-                  <BrandIcon path={platform.iconPath} color={platform.iconColor} className="size-4" />
+                  <BrandIcon
+                    path={platform.iconPath}
+                    color={platform.iconColor}
+                    className="size-4"
+                  />
                   {platform.name}
                 </span>
               ))}
@@ -193,7 +230,11 @@ export default function Home() {
                   key={platform.id}
                   className="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm"
                 >
-                  <BrandIcon path={platform.iconPath} color={platform.iconColor} className="size-4" />
+                  <BrandIcon
+                    path={platform.iconPath}
+                    color={platform.iconColor}
+                    className="size-4"
+                  />
                   {platform.name}
                 </span>
               ))}
@@ -207,8 +248,8 @@ export default function Home() {
         <div className="mx-auto w-full max-w-6xl px-5">
           <div className="max-w-2xl">
             <h2 className="text-3xl font-bold sm:text-4xl">
-              From &ldquo;I think people want this&rdquo; to &ldquo;they told me, so I built
-              it.&rdquo;
+              From &ldquo;I think people want this&rdquo; to &ldquo;they told
+              me, so I built it.&rdquo;
             </h2>
           </div>
           <div className="mt-14">
@@ -217,10 +258,14 @@ export default function Home() {
                 <BorderGridCell key={c.step}>
                   <div className="text-muted-foreground flex items-center gap-3">
                     <c.icon className="size-5" strokeWidth={1.6} />
-                    <span className="text-xs font-medium tracking-[0.2em]">{c.step}</span>
+                    <span className="text-xs font-medium tracking-[0.2em]">
+                      {c.step}
+                    </span>
                   </div>
                   <h3 className="mt-5 text-xl font-semibold">{c.title}</h3>
-                  <p className="text-muted-foreground mt-3 text-sm leading-relaxed">{c.body}</p>
+                  <p className="text-muted-foreground mt-3 text-sm leading-relaxed">
+                    {c.body}
+                  </p>
                 </BorderGridCell>
               ))}
             </BorderGrid>
@@ -240,7 +285,9 @@ export default function Home() {
                 <div className="space-y-3">
                   <Icon className="text-primary size-5" />
                   <h3 className="text-base font-semibold">{title}</h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">{body}</p>
+                  <p className="text-muted-foreground text-sm leading-relaxed">
+                    {body}
+                  </p>
                 </div>
               </BorderGridCell>
             ))}
@@ -254,12 +301,16 @@ export default function Home() {
           <div className="mx-auto max-w-2xl space-y-2">
             <h2 className="text-3xl font-bold sm:text-4xl">Simple pricing</h2>
             <p className="text-muted-foreground">
-              Free forever for a hobby project. Upgrade once you&apos;re shipping.
+              Free forever for a hobby project. Upgrade once you&apos;re
+              shipping.
             </p>
           </div>
           <PricingPlans />
           <p className="text-muted-foreground text-sm">
-            <Link href="/pricing" className="hover:text-foreground underline underline-offset-4">
+            <Link
+              href="/pricing"
+              className="hover:text-foreground underline underline-offset-4"
+            >
               See the full plan comparison
             </Link>
           </p>
@@ -270,7 +321,9 @@ export default function Home() {
       <section className="border-b border-border py-24">
         <div className="mx-auto w-full max-w-6xl space-y-10 px-5">
           <div className="flex items-center gap-3">
-            <h2 className="text-3xl font-bold sm:text-4xl">What indie developers say</h2>
+            <h2 className="text-3xl font-bold sm:text-4xl">
+              What indie developers say
+            </h2>
             <Badge variant="secondary" className="text-[10px]">
               Sample quotes
             </Badge>
@@ -279,7 +332,9 @@ export default function Home() {
             {TESTIMONIALS.map(({ quote, name, role }) => (
               <BorderGridCell key={name}>
                 <figure className="flex h-full flex-col justify-between gap-6">
-                  <p className="text-[15px] leading-relaxed">&ldquo;{quote}&rdquo;</p>
+                  <p className="text-[15px] leading-relaxed">
+                    &ldquo;{quote}&rdquo;
+                  </p>
                   <figcaption>
                     <p className="text-sm font-semibold">{name}</p>
                     <p className="text-muted-foreground text-xs">{role}</p>
@@ -296,7 +351,9 @@ export default function Home() {
         <div className="mx-auto w-full max-w-6xl space-y-10 px-5">
           <div className="mx-auto max-w-2xl space-y-2 text-center">
             <h2 className="text-3xl font-bold sm:text-4xl">Questions</h2>
-            <p className="text-muted-foreground">The short answers, before you ask.</p>
+            <p className="text-muted-foreground">
+              The short answers, before you ask.
+            </p>
           </div>
           <div className="space-y-4">
             <Marquee durationSeconds={45}>
@@ -316,18 +373,28 @@ export default function Home() {
       {/* Closing CTA */}
       <section className="py-24">
         <div className="mx-auto w-full max-w-3xl space-y-6 px-5 text-center">
-          <h2 className="text-3xl font-bold sm:text-4xl">Ship what your users actually want.</h2>
+          <h2 className="text-3xl font-bold sm:text-4xl">
+            Ship what your users actually want.
+          </h2>
           <p className="text-muted-foreground">
-            Free forever for your first app — takes less time to set up than a coffee break.
+            Free forever for your first app — takes less time to set up than a
+            coffee break.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
-            <Link href="/login" className={buttonVariants({ size: "lg", className: "px-6" })}>
+            <Link
+              href="/login"
+              className={buttonVariants({ size: "lg", className: "px-6" })}
+            >
               Start free
               <ArrowRight className="size-4" />
             </Link>
             <Link
               href="/docs"
-              className={buttonVariants({ variant: "outline", size: "lg", className: "px-6" })}
+              className={buttonVariants({
+                variant: "outline",
+                size: "lg",
+                className: "px-6",
+              })}
             >
               Read the docs
             </Link>

@@ -1,6 +1,7 @@
 import "server-only";
 import { FieldValue } from "firebase-admin/firestore";
 import { adminDb } from "@/lib/firebase/admin";
+import type { Follower } from "@/types";
 
 export class NotFoundError extends Error {}
 
@@ -61,6 +62,46 @@ export async function isFollowing(
     .doc(deviceId)
     .get();
   return followerSnap.exists;
+}
+
+interface ListFollowersParams {
+  appId: string;
+  featureId: string;
+  limit: number;
+  cursor: string | null;
+}
+
+export async function listFollowersForFeature({
+  appId,
+  featureId,
+  limit,
+  cursor,
+}: ListFollowersParams): Promise<{ followers: Follower[]; nextCursor: string | null }> {
+  const followersRef = adminDb
+    .collection("apps")
+    .doc(appId)
+    .collection("features")
+    .doc(featureId)
+    .collection("followers");
+
+  let query = followersRef.orderBy("createdAt", "desc").limit(limit + 1);
+  if (cursor) {
+    const cursorSnap = await followersRef.doc(cursor).get();
+    if (cursorSnap.exists) query = query.startAfter(cursorSnap);
+  }
+
+  const snapshot = await query.get();
+  const docs = snapshot.docs.slice(0, limit);
+  const hasMore = snapshot.docs.length > limit;
+  const nextCursor = hasMore ? docs[docs.length - 1].id : null;
+
+  const followers: Follower[] = docs.map((doc) => ({
+    id: doc.id,
+    email: doc.data().email as string,
+    createdAt: doc.data().createdAt.toDate().toISOString() as string,
+  }));
+
+  return { followers, nextCursor };
 }
 
 const FOLLOWER_BATCH_SIZE = 500;

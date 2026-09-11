@@ -11,11 +11,12 @@ export default async function AppSettingsPage({
 }: {
   params: Promise<{ appId: string }>;
 }) {
-  const user = await getSessionUser();
-  if (!user) redirect("/login");
-
   const { appId } = await params;
-  const appSnap = await adminDb.collection("apps").doc(appId).get();
+  const [user, appSnap] = await Promise.all([
+    getSessionUser(),
+    adminDb.collection("apps").doc(appId).get(),
+  ]);
+  if (!user) redirect("/login");
   if (!appSnap.exists || appSnap.data()!.ownerUid !== user.uid) notFound();
 
   const app = appSnap.data()!;

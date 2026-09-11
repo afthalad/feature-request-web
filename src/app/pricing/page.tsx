@@ -19,13 +19,43 @@ interface PlanRow {
 
 const ROWS: PlanRow[] = [
   { label: "Apps", free: "1", starter: "3", pro: "5" },
-  { label: "Feature requests per app", free: "50", starter: "200", pro: "Unlimited" },
+  {
+    label: "Feature requests per app",
+    free: "50",
+    starter: "200",
+    pro: "Unlimited",
+  },
   { label: "Votes", free: "Unlimited", starter: "Unlimited", pro: "Unlimited" },
-  { label: "Comments", free: "Unlimited", starter: "Unlimited", pro: "Unlimited" },
-  { label: "Notification emails", free: "100/month", starter: "500/month", pro: "2,000/month" },
-  { label: '"Powered by" badge in the SDK', free: "Shown", starter: "Shown", pro: "Removed" },
-  { label: "Custom colours in the SDK", free: false, starter: false, pro: true },
-  { label: "Public board link", free: "Yes", starter: "Yes", pro: "Yes, custom name" },
+  {
+    label: "Comments",
+    free: "Unlimited",
+    starter: "Unlimited",
+    pro: "Unlimited",
+  },
+  {
+    label: "Notification emails",
+    free: "100/month",
+    starter: "500/month",
+    pro: "2,000/month",
+  },
+  {
+    label: '"Powered by" badge in the SDK',
+    free: "Shown",
+    starter: "Shown",
+    pro: "Removed",
+  },
+  {
+    label: "Custom colours in the SDK",
+    free: false,
+    starter: false,
+    pro: true,
+  },
+  {
+    label: "Public board link",
+    free: "Yes",
+    starter: "Yes",
+    pro: "Yes, custom name",
+  },
   { label: "Export to CSV", free: false, starter: false, pro: true },
   { label: "Slack / Discord alerts", free: false, starter: false, pro: true },
 ];
@@ -33,9 +63,9 @@ const ROWS: PlanRow[] = [
 function Cell({ value }: { value: string | boolean }) {
   if (typeof value === "boolean") {
     return value ? (
-      <Check className="size-4 text-foreground" />
+      <Check className="mx-auto size-4 text-emerald-500 dark:text-emerald-400" />
     ) : (
-      <X className="text-muted-foreground size-4" />
+      <X className="mx-auto size-4 text-rose-500 dark:text-rose-400" />
     );
   }
   return <span>{value}</span>;
@@ -58,26 +88,36 @@ export default function PricingPage() {
         <div className="overflow-hidden rounded-lg border">
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead></TableHead>
-                <TableHead className="text-center">Free</TableHead>
-                <TableHead className="text-center">Starter</TableHead>
-                <TableHead className="text-center">Pro</TableHead>
+              <TableRow className="bg-muted/40 hover:bg-muted/40">
+                <TableHead className="w-[40%]">Feature</TableHead>
+                <TableHead className="w-[20%] text-center font-medium">
+                  Free
+                </TableHead>
+                <TableHead className="w-[20%] text-center font-medium">
+                  Starter
+                </TableHead>
+                <TableHead className="w-[20%] text-center font-medium">
+                  Pro
+                </TableHead>
               </TableRow>
             </TableHeader>
+
             <TableBody>
               {ROWS.map((row) => (
                 <TableRow key={row.label}>
-                  <TableCell className="text-muted-foreground whitespace-normal">
+                  <TableCell className="whitespace-normal py-4 font-medium">
                     {row.label}
                   </TableCell>
-                  <TableCell className="text-center">
+
+                  <TableCell className="w-[20%] py-4 text-center">
                     <Cell value={row.free} />
                   </TableCell>
-                  <TableCell className="text-center">
+
+                  <TableCell className="w-[20%] py-4 text-center">
                     <Cell value={row.starter} />
                   </TableCell>
-                  <TableCell className="text-center">
+
+                  <TableCell className="w-[20%] py-4 text-center">
                     <Cell value={row.pro} />
                   </TableCell>
                 </TableRow>

@@ -47,3 +47,20 @@ export async function addUnsubscribe(email: string): Promise<void> {
     .doc(emailHash(email))
     .set({ createdAt: FieldValue.serverTimestamp() });
 }
+
+export async function removeUnsubscribe(email: string): Promise<boolean> {
+  const ref = adminDb.collection("unsubscribes").doc(emailHash(email));
+  const snap = await ref.get();
+  if (!snap.exists) return false;
+  await ref.delete();
+  return true;
+}
+
+export async function lookupUnsubscribe(
+  email: string
+): Promise<{ email: string; createdAt: string } | null> {
+  const snap = await adminDb.collection("unsubscribes").doc(emailHash(email)).get();
+  if (!snap.exists) return null;
+  const data = snap.data()!;
+  return { email: normalize(email), createdAt: data.createdAt.toDate().toISOString() };
+}

@@ -68,19 +68,27 @@ export function FollowButton({
 
   if (isFollowing) {
     return (
-      <Button type="button" variant="outline" size="sm" onClick={handleUnfollow}>
+      <button
+        type="button"
+        onClick={handleUnfollow}
+        className="text-primary hover:text-primary/80 inline-flex items-center gap-1.5 text-xs transition-colors"
+      >
         <Bell className="size-3.5" />
         Following
-      </Button>
+      </button>
     );
   }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <Button type="button" variant="outline" size="sm" onClick={() => setOpen(true)}>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1.5 text-xs transition-colors"
+      >
         <BellOff className="size-3.5" />
         Follow
-      </Button>
+      </button>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Get notified</DialogTitle>

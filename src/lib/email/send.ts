@@ -11,7 +11,7 @@ const MAX_EMAILS_PER_APP_PER_DAY = 20;
 const BATCH_THRESHOLD = 20;
 
 const STATUS_LABEL: Record<FeatureStatus, string> = {
-  open: "Open",
+  open: "Pending",
   planned: "Planned",
   in_progress: "In Progress",
   done: "Done",

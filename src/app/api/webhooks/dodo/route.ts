@@ -45,7 +45,12 @@ export async function POST(req: NextRequest) {
 
       await applySubscriptionEvent(tx, event.type, event.data as unknown as SubscriptionEventData);
 
-      tx.set(eventRef, { type: event.type, receivedAt: FieldValue.serverTimestamp() });
+      const data = event.data as unknown as SubscriptionEventData;
+      tx.set(eventRef, {
+        type: event.type,
+        customerId: data.customer?.customer_id ?? null,
+        receivedAt: FieldValue.serverTimestamp(),
+      });
     });
   } catch (error) {
     console.error("Failed to process Dodo webhook", error);

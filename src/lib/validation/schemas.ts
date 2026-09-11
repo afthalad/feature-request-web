@@ -43,3 +43,21 @@ export const createCommentSchema = z.object({
 export const createSdkCommentSchema = createCommentSchema.extend({
   featureId: z.string().trim().min(1),
 });
+
+export const adminUpdateUserPlanSchema = z.object({
+  plan: z.enum(["free", "starter", "pro"]),
+  subscriptionStatus: z.string().trim().max(60).optional(),
+});
+
+export const adminUpdateAppSchema = z.object({
+  name: z.string().trim().min(1).max(100).optional(),
+  notificationEmail: z.string().trim().email().optional(),
+  emailOnNewRequest: z.boolean().optional(),
+  disabled: z.boolean().optional(),
+});
+
+export const adminUpdateFeatureSchema = z.object({
+  title: z.string().trim().min(3).max(100).optional(),
+  description: z.string().trim().max(1000).optional(),
+  status: z.enum(["open", "planned", "in_progress", "done", "declined"]).optional(),
+});

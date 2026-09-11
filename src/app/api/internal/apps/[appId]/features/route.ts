@@ -19,10 +19,11 @@ export async function GET(
   }
 
   const { searchParams } = new URL(req.url);
-  const sort = searchParams.get("sort") === "top" ? "top" : "new";
+  const tabParam = searchParams.get("tab");
+  const tab = tabParam === "top" || tabParam === "approved" ? tabParam : "pending";
   const limit = Math.min(Math.max(Number(searchParams.get("limit")) || 20, 1), 100);
   const cursor = searchParams.get("cursor");
 
-  const result = await listFeaturesForOwner({ appId, sort, limit, cursor });
+  const result = await listFeaturesForOwner({ appId, tab, limit, cursor });
   return ok(result);
 }

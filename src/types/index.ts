@@ -21,6 +21,12 @@ export interface AppUser {
   subscriptionStatus?: string;
   billingPeriod?: "monthly" | "yearly" | null;
   nextBillingDate?: string | null;
+  emailsSentMonth?: string;
+  emailsSentMonthCount?: number;
+}
+
+export interface AdminUser extends AppUser {
+  uid: string;
 }
 
 export interface App {
@@ -34,6 +40,9 @@ export interface App {
   emailOnNewRequest: boolean;
   featureCount: number;
   createdAt: string;
+  disabled?: boolean;
+  disabledSlug?: string | null;
+  featuresLastViewedAt?: string | null;
 }
 
 export const NOTIFIABLE_STATUSES: FeatureStatus[] = ["planned", "in_progress", "done", "declined"];
@@ -56,6 +65,24 @@ export interface FeatureWithVote extends Feature {
   isFollowing: boolean;
 }
 
+export interface Follower {
+  id: string;
+  email: string;
+  createdAt: string;
+}
+
+export interface RecentFeature extends Feature {
+  appId: string;
+  appName: string;
+  isNew: boolean;
+}
+
+export interface DashboardStats {
+  totalApps: number;
+  totalFeatures: number;
+  totalUpvotes: number;
+}
+
 export interface Comment {
   id: string;
   text: string;
@@ -63,6 +90,36 @@ export interface Comment {
   deviceId: string;
   isDeveloper: boolean;
   createdAt: string;
+}
+
+export interface AdminComment extends Comment {
+  isDeleted: boolean;
+}
+
+export interface AdminApiKey {
+  hash: string;
+  appId: string;
+  appName: string;
+  ownerUid: string;
+  active: boolean;
+  createdAt: string;
+}
+
+export interface AdminWebhookEvent {
+  id: string;
+  type: string;
+  receivedAt: string;
+}
+
+export interface AdminAuditLogEntry {
+  id: string;
+  adminUid: string;
+  action: string;
+  targetType: string;
+  targetId: string;
+  before: unknown;
+  after: unknown;
+  at: string;
 }
 
 export type ApiErrorCode =

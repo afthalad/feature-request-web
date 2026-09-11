@@ -2,9 +2,9 @@ import "server-only";
 import { adminDb } from "@/lib/firebase/admin";
 
 export const PLAN_LIMITS = {
-  free: { maxApps: 1, maxFeaturesPerApp: 50, maxEmailsPerMonth: 100 },
-  starter: { maxApps: 3, maxFeaturesPerApp: 200, maxEmailsPerMonth: 500 },
-  pro: { maxApps: 5, maxFeaturesPerApp: Infinity, maxEmailsPerMonth: 2000 },
+  free: { maxApps: 1, maxFeaturesPerApp: 50, maxEmailsPerMonth: 100, recentPendingLimit: 3 },
+  starter: { maxApps: 3, maxFeaturesPerApp: 200, maxEmailsPerMonth: 500, recentPendingLimit: 5 },
+  pro: { maxApps: 5, maxFeaturesPerApp: Infinity, maxEmailsPerMonth: 2000, recentPendingLimit: 10 },
 } as const;
 
 export type Plan = "free" | "starter" | "pro";

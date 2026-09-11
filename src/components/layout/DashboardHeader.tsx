@@ -33,7 +33,7 @@ export function DashboardHeader() {
   return (
     <header className="border-b">
       <div className="mx-auto flex h-14 max-w-[1100px] items-center justify-between px-4">
-        <Logo />
+        <Logo href="/dashboard" />
         <div className="flex items-center gap-1">
           <ThemeToggle />
           <DropdownMenu>

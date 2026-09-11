@@ -1,16 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
-import { Inbox } from "lucide-react";
+import { Inbox, Loader2Icon } from "lucide-react";
 import { auth } from "@/lib/firebase/client";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
+import { Skeleton } from "@/components/ui/skeleton";
 import { FeatureRow } from "@/components/features/FeatureRow";
 import type { Feature, FeatureStatus } from "@/types";
 
-type BoardTab = "top" | "new";
+type BoardTab = "top" | "pending" | "approved";
 const PAGE_SIZE = 20;
 
 interface FeatureListProps {
@@ -18,31 +19,58 @@ interface FeatureListProps {
   slug: string;
   initialFeatures: Feature[];
   initialCursor: string | null;
+  newSinceIso: string | null;
 }
 
-export function FeatureList({ appId, slug, initialFeatures, initialCursor }: FeatureListProps) {
-  const [tab, setTab] = useState<BoardTab>("new");
+export function FeatureList({
+  appId,
+  slug,
+  initialFeatures,
+  initialCursor,
+  newSinceIso,
+}: FeatureListProps) {
+  const [tab, setTab] = useState<BoardTab>("pending");
   const [features, setFeatures] = useState(initialFeatures);
   const [cursor, setCursor] = useState(initialCursor);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSwitchingTab, setIsSwitchingTab] = useState(false);
+  const requestIdRef = useRef(0);
 
-  async function fetchPage(sort: BoardTab, cursorParam: string | null, append: boolean) {
+  async function fetchPage(
+    boardTab: BoardTab,
+    cursorParam: string | null,
+    append: boolean,
+  ) {
+    const requestId = ++requestIdRef.current;
     setIsLoading(true);
+    if (!append) setIsSwitchingTab(true);
     try {
       const idToken = await auth.currentUser?.getIdToken();
-      const params = new URLSearchParams({ sort, limit: String(PAGE_SIZE) });
+      const params = new URLSearchParams({ tab: boardTab, limit: String(PAGE_SIZE) });
       if (cursorParam) params.set("cursor", cursorParam);
 
-      const response = await fetch(`/api/internal/apps/${appId}/features?${params}`, {
-        headers: { Authorization: `Bearer ${idToken}` },
-      });
+      const response = await fetch(
+        `/api/internal/apps/${appId}/features?${params}`,
+        {
+          headers: { Authorization: `Bearer ${idToken}` },
+        },
+      );
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error?.message ?? "Failed to load feature requests.");
+      if (!response.ok)
+        throw new Error(
+          data.error?.message ?? "Failed to load feature requests.",
+        );
 
-      setFeatures((prev) => (append ? [...prev, ...data.features] : data.features));
+      if (requestId !== requestIdRef.current) return;
+      setFeatures((prev) =>
+        append ? [...prev, ...data.features] : data.features,
+      );
       setCursor(data.nextCursor);
     } finally {
-      setIsLoading(false);
+      if (requestId === requestIdRef.current) {
+        setIsLoading(false);
+        setIsSwitchingTab(false);
+      }
     }
   }
 
@@ -52,56 +80,77 @@ export function FeatureList({ appId, slug, initialFeatures, initialCursor }: Fea
   }
 
   function handleStatusChange(featureId: string, status: FeatureStatus) {
-    setFeatures((prev) => prev.map((f) => (f.id === featureId ? { ...f, status } : f)));
+    setFeatures((prev) =>
+      prev.map((f) => (f.id === featureId ? { ...f, status } : f)),
+    );
   }
 
   function handleCommentCountChange(featureId: string, delta: number) {
     setFeatures((prev) =>
-      prev.map((f) => (f.id === featureId ? { ...f, commentCount: f.commentCount + delta } : f))
-    );
-  }
-
-  if (features.length === 0 && !cursor && !isLoading) {
-    return (
-      <EmptyState
-        icon={Inbox}
-        title="No feature requests yet"
-        description="Share your public board so users can start submitting ideas."
-        action={
-          slug && (
-            <Link
-              href={`/b/${slug}`}
-              target="_blank"
-              className={buttonVariants({ variant: "outline" })}
-            >
-              Share your public board
-            </Link>
-          )
-        }
-      />
+      prev.map((f) =>
+        f.id === featureId ? { ...f, commentCount: f.commentCount + delta } : f,
+      ),
     );
   }
 
   return (
     <div className="space-y-4">
-      <Tabs value={tab} onValueChange={(value) => handleTabChange(value as BoardTab)}>
+      <Tabs
+        value={tab}
+        onValueChange={(value) => handleTabChange(value as BoardTab)}
+      >
         <TabsList>
           <TabsTrigger value="top">Top</TabsTrigger>
-          <TabsTrigger value="new">New</TabsTrigger>
+          <TabsTrigger value="pending">Pending</TabsTrigger>
+          <TabsTrigger value="approved">Approved</TabsTrigger>
         </TabsList>
       </Tabs>
-      <div className="space-y-3">
-        {features.map((feature) => (
-          <FeatureRow
-            key={feature.id}
-            appId={appId}
-            feature={feature}
-            onStatusChange={(status) => handleStatusChange(feature.id, status)}
-            onCommentCountChange={handleCommentCountChange}
-          />
-        ))}
-      </div>
-      {cursor && (
+
+      {isSwitchingTab ? (
+        <div className="divide-y rounded-lg border">
+          {[0, 1, 2].map((row) => (
+            <div key={row} className="flex items-start gap-3 px-4 py-4">
+              <Skeleton className="size-10 shrink-0 rounded-lg" />
+              <div className="flex-1 space-y-2">
+                <Skeleton className="h-4 w-1/3" />
+                <Skeleton className="h-3 w-2/3" />
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : features.length === 0 ? (
+        <EmptyState
+          icon={Inbox}
+          title="No feature requests here"
+          description="Share your public board so users can start submitting ideas."
+          action={
+            slug && (
+              <Link
+                href={`/b/${slug}`}
+                target="_blank"
+                className={buttonVariants({ variant: "outline" })}
+              >
+                Share your public board
+              </Link>
+            )
+          }
+        />
+      ) : (
+        <div className="divide-y rounded-lg border">
+          {features.map((feature) => (
+            <FeatureRow
+              key={feature.id}
+              appId={appId}
+              feature={feature}
+              isNew={!newSinceIso || feature.createdAt > newSinceIso}
+              onStatusChange={(status) => handleStatusChange(feature.id, status)}
+              onCommentCountChange={handleCommentCountChange}
+            />
+          ))}
+        </div>
+      )}
+
+      {cursor && !isSwitchingTab && (
         <div className="flex justify-center">
           <Button
             variant="outline"
@@ -109,7 +158,14 @@ export function FeatureList({ appId, slug, initialFeatures, initialCursor }: Fea
             onClick={() => fetchPage(tab, cursor, true)}
             disabled={isLoading}
           >
-            {isLoading ? "Loading..." : "Load more"}
+            {isLoading ? (
+              <>
+                <Loader2Icon className="size-4 animate-spin" />
+                Loading...
+              </>
+            ) : (
+              "Load more"
+            )}
           </Button>
         </div>
       )}

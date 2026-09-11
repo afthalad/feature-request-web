@@ -30,6 +30,18 @@ export function PublicRoadmapBoard({
     .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
     .slice(0, 5);
 
+  const hasRoadmapItems = COLUMNS.some(
+    ({ status }) => features.filter((f) => f.status === status).length > 0
+  );
+
+  if (!hasRoadmapItems) {
+    return (
+      <p className="text-muted-foreground py-8 text-center text-sm">
+        Nothing on the roadmap yet.
+      </p>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {recentlyShipped.length > 0 && (
@@ -45,30 +57,25 @@ export function PublicRoadmapBoard({
           </div>
         </div>
       )}
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="space-y-6">
         {COLUMNS.map(({ status, label }) => {
           const columnFeatures = features.filter((f) => f.status === status);
+          if (columnFeatures.length === 0) return null;
           return (
             <div key={status} className="space-y-3">
               <h3 className="text-muted-foreground text-sm font-medium">{label}</h3>
-              <div className="space-y-3">
-                {columnFeatures.length === 0 ? (
-                  <div className="text-muted-foreground rounded-lg border border-dashed py-8 text-center text-xs">
-                    Nothing here yet.
-                  </div>
-                ) : (
-                  columnFeatures.map((feature) => (
-                    <PublicFeatureRow
-                      key={feature.id}
-                      slug={slug}
-                      deviceId={deviceId}
-                      feature={feature}
-                      onVote={onVote}
-                      onCommentCountChange={onCommentCountChange}
-                      onFollowChange={onFollowChange}
-                    />
-                  ))
-                )}
+              <div className="divide-y rounded-lg border">
+                {columnFeatures.map((feature) => (
+                  <PublicFeatureRow
+                    key={feature.id}
+                    slug={slug}
+                    deviceId={deviceId}
+                    feature={feature}
+                    onVote={onVote}
+                    onCommentCountChange={onCommentCountChange}
+                    onFollowChange={onFollowChange}
+                  />
+                ))}
               </div>
             </div>
           );

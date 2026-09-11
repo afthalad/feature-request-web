@@ -172,7 +172,7 @@ export function PublicBoard({ slug, initialFeatures, initialCursor }: PublicBoar
         />
       ) : (
         <>
-          <div className="space-y-3">
+          <div className="divide-y rounded-lg border">
             {features.map((feature) => (
               <PublicFeatureRow
                 key={feature.id}
