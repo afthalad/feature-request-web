@@ -7,6 +7,7 @@ interface FeatureVoteIndicatorProps {
   upvoteCount: number;
   hasVoted?: boolean;
   onClick?: () => void;
+  hideCount?: boolean;
 }
 
 export function FeatureVoteIndicator({
@@ -14,6 +15,7 @@ export function FeatureVoteIndicator({
   upvoteCount,
   hasVoted,
   onClick,
+  hideCount,
 }: FeatureVoteIndicatorProps) {
   if (status === "done") {
     const className = "flex size-10 shrink-0 items-center justify-center rounded-lg bg-emerald-500 text-white";
@@ -37,7 +39,7 @@ export function FeatureVoteIndicator({
   const content = (
     <>
       <ChevronUp className="size-3.5" />
-      <span className="leading-none">{upvoteCount}</span>
+      {!hideCount && <span className="leading-none">{upvoteCount}</span>}
     </>
   );
 

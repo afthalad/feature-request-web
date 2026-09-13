@@ -6,7 +6,7 @@ import { generateApiKey, hashApiKey, apiKeyDisplayPrefix } from "@/lib/auth/apiK
 import { generateUniqueSlug } from "@/lib/slug";
 import { createAppSchema } from "@/lib/validation/schemas";
 import { ok, errorResponse } from "@/lib/api/response";
-import { checkPlanLimit } from "@/lib/plans/limits";
+import { checkAppLimit } from "@/lib/plans/limits";
 
 export async function POST(req: NextRequest) {
   const user = await getUserFromAuthHeader(req);
@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
     return errorResponse("validation_failed", parsed.error.issues[0]?.message ?? "Invalid input.");
   }
 
-  const limitCheck = await checkPlanLimit(user.uid, "app");
+  const limitCheck = await checkAppLimit(user.uid);
   if (!limitCheck.allowed) {
     return errorResponse("limit_reached", limitCheck.message!);
   }

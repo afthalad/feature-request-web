@@ -38,11 +38,18 @@ export interface App {
   apiKeyPrefix: string;
   notificationEmail: string;
   emailOnNewRequest: boolean;
+  hideVoteCounts?: boolean;
   featureCount: number;
   createdAt: string;
   disabled?: boolean;
   disabledSlug?: string | null;
   featuresLastViewedAt?: string | null;
+}
+
+export interface FeatureTranslation {
+  lang: string;
+  title: string;
+  description: string;
 }
 
 export const NOTIFIABLE_STATUSES: FeatureStatus[] = ["planned", "in_progress", "done", "declined"];
@@ -56,6 +63,8 @@ export interface Feature {
   commentCount: number;
   followerCount: number;
   authorDeviceId: string;
+  authorIsSubscriber: boolean;
+  translation: FeatureTranslation | null;
   createdAt: string;
   updatedAt: string;
 }

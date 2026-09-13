@@ -26,7 +26,11 @@ export default async function AppSettingsPage({
       <h1 className="text-xl font-semibold">Settings</h1>
       <ApiKeySection appId={appId} apiKeyPrefix={app.apiKeyPrefix} />
       <Separator />
-      <PublicBoardSettings appId={appId} initialSlug={app.slug ?? ""} />
+      <PublicBoardSettings
+        appId={appId}
+        initialSlug={app.slug ?? ""}
+        initialHideVoteCounts={app.hideVoteCounts ?? false}
+      />
       <Separator />
       <AppSettingsForm
         appId={appId}

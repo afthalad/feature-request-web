@@ -11,16 +11,17 @@ import {
 
 interface UpgradeBannerProps {
   message: string;
+  title?: string;
 }
 
-export function UpgradeBanner({ message }: UpgradeBannerProps) {
+export function UpgradeBanner({ message, title = "You're on the Free plan" }: UpgradeBannerProps) {
   return (
     <Item variant="muted" className=" bg-primary/5">
       <ItemMedia variant="icon">
         <Sparkles className="size-5 text-primary" />
       </ItemMedia>
       <ItemContent>
-        <ItemTitle>You&apos;re on the Free plan</ItemTitle>
+        <ItemTitle>{title}</ItemTitle>
         <ItemDescription>{message}</ItemDescription>
       </ItemContent>
       <Link

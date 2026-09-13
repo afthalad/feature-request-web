@@ -3,6 +3,7 @@ import { adminDb } from "@/lib/firebase/admin";
 import { getUserFromAuthHeader } from "@/lib/auth/requireUser";
 import { ok, errorResponse } from "@/lib/api/response";
 import { listFollowersForFeature } from "@/lib/followers/service";
+import { maskEmail } from "@/lib/email/mask";
 
 async function verifyOwnership(appId: string, uid: string) {
   const appSnap = await adminDb.collection("apps").doc(appId).get();
@@ -30,5 +31,11 @@ export async function GET(
   const cursor = searchParams.get("cursor");
 
   const result = await listFollowersForFeature({ appId, featureId, limit, cursor });
-  return ok(result);
+  return ok({
+    ...result,
+    followers: result.followers.map((follower) => ({
+      ...follower,
+      email: maskEmail(follower.email),
+    })),
+  });
 }

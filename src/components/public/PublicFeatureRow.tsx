@@ -15,6 +15,7 @@ interface PublicFeatureRowProps {
   onVote: (featureId: string, hasVoted: boolean) => void;
   onCommentCountChange: (featureId: string, delta: number) => void;
   onFollowChange: (featureId: string, isFollowing: boolean) => void;
+  hideVoteCounts?: boolean;
 }
 
 export function PublicFeatureRow({
@@ -24,6 +25,7 @@ export function PublicFeatureRow({
   onVote,
   onCommentCountChange,
   onFollowChange,
+  hideVoteCounts,
 }: PublicFeatureRowProps) {
   const [showComments, setShowComments] = useState(false);
 
@@ -35,6 +37,7 @@ export function PublicFeatureRow({
           upvoteCount={feature.upvoteCount}
           hasVoted={feature.hasVoted}
           onClick={() => onVote(feature.id, feature.hasVoted)}
+          hideCount={hideVoteCounts}
         />
       </div>
       <div className="min-w-0 flex-1 space-y-1.5">

@@ -31,7 +31,7 @@ async function handleVote(
 
   try {
     const result = await voteOnFeature(app.id, params.featureId, deviceId, action);
-    return ok(result);
+    return ok(app.hideVoteCounts ? { ...result, upvoteCount: 0 } : result);
   } catch (error) {
     if (error instanceof NotFoundError) {
       return errorResponse("not_found", "Feature not found.");

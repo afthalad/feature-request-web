@@ -4,6 +4,7 @@ export const createFeatureSchema = z.object({
   title: z.string().trim().min(3).max(100),
   description: z.string().trim().max(1000).optional().default(""),
   email: z.string().trim().email().optional(),
+  isSubscriber: z.boolean().optional().default(false),
 });
 
 export const createAppSchema = z.object({
@@ -22,7 +23,19 @@ export const slugSchema = z
 export const updateAppSchema = z.object({
   notificationEmail: z.string().trim().email().optional(),
   emailOnNewRequest: z.boolean().optional(),
+  hideVoteCounts: z.boolean().optional(),
   slug: slugSchema.optional(),
+});
+
+export const translateFeatureSchema = z.object({
+  appId: z.string().trim().min(1),
+  targetLang: z
+    .string()
+    .trim()
+    .min(2)
+    .max(10)
+    .optional()
+    .default("en"),
 });
 
 export const updateFeatureStatusSchema = z.object({

@@ -9,6 +9,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
 import { FeatureRow } from "@/components/features/FeatureRow";
+import { UpgradeBanner } from "@/components/billing/UpgradeBanner";
 import type { Feature, FeatureStatus } from "@/types";
 
 type BoardTab = "top" | "pending" | "approved";
@@ -19,6 +20,7 @@ interface FeatureListProps {
   slug: string;
   initialFeatures: Feature[];
   initialCursor: string | null;
+  initialHiddenCount: number;
   newSinceIso: string | null;
 }
 
@@ -27,11 +29,13 @@ export function FeatureList({
   slug,
   initialFeatures,
   initialCursor,
+  initialHiddenCount,
   newSinceIso,
 }: FeatureListProps) {
   const [tab, setTab] = useState<BoardTab>("pending");
   const [features, setFeatures] = useState(initialFeatures);
   const [cursor, setCursor] = useState(initialCursor);
+  const [hiddenCount, setHiddenCount] = useState(initialHiddenCount);
   const [isLoading, setIsLoading] = useState(false);
   const [isSwitchingTab, setIsSwitchingTab] = useState(false);
   const requestIdRef = useRef(0);
@@ -40,13 +44,18 @@ export function FeatureList({
     boardTab: BoardTab,
     cursorParam: string | null,
     append: boolean,
+    servedCount: number,
   ) {
     const requestId = ++requestIdRef.current;
     setIsLoading(true);
     if (!append) setIsSwitchingTab(true);
     try {
       const idToken = await auth.currentUser?.getIdToken();
-      const params = new URLSearchParams({ tab: boardTab, limit: String(PAGE_SIZE) });
+      const params = new URLSearchParams({
+        tab: boardTab,
+        limit: String(PAGE_SIZE),
+        served: String(servedCount),
+      });
       if (cursorParam) params.set("cursor", cursorParam);
 
       const response = await fetch(
@@ -66,6 +75,7 @@ export function FeatureList({
         append ? [...prev, ...data.features] : data.features,
       );
       setCursor(data.nextCursor);
+      if (boardTab === "pending") setHiddenCount(data.hiddenCount ?? 0);
     } finally {
       if (requestId === requestIdRef.current) {
         setIsLoading(false);
@@ -76,7 +86,12 @@ export function FeatureList({
 
   function handleTabChange(nextTab: BoardTab) {
     setTab(nextTab);
-    fetchPage(nextTab, null, false);
+    fetchPage(nextTab, null, false, 0);
+  }
+
+  function handleLoadMore() {
+    if (!cursor) return;
+    fetchPage(tab, cursor, true, features.length);
   }
 
   function handleStatusChange(featureId: string, status: FeatureStatus) {
@@ -105,6 +120,13 @@ export function FeatureList({
           <TabsTrigger value="approved">Approved</TabsTrigger>
         </TabsList>
       </Tabs>
+
+      {tab === "pending" && hiddenCount > 0 && !isSwitchingTab && (
+        <UpgradeBanner
+          title="Some feature requests are hidden"
+          message={`This app has ${hiddenCount} more pending request${hiddenCount === 1 ? "" : "s"} than your plan shows. Upgrade to see them all.`}
+        />
+      )}
 
       {isSwitchingTab ? (
         <div className="divide-y rounded-lg border">
@@ -155,7 +177,7 @@ export function FeatureList({
           <Button
             variant="outline"
             size="sm"
-            onClick={() => fetchPage(tab, cursor, true)}
+            onClick={handleLoadMore}
             disabled={isLoading}
           >
             {isLoading ? (

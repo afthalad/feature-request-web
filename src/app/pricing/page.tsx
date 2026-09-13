@@ -20,7 +20,7 @@ interface PlanRow {
 const ROWS: PlanRow[] = [
   { label: "Apps", free: "1", starter: "3", pro: "5" },
   {
-    label: "Feature requests per app",
+    label: "Visible feature requests per app",
     free: "50",
     starter: "200",
     pro: "Unlimited",
@@ -34,9 +34,9 @@ const ROWS: PlanRow[] = [
   },
   {
     label: "Notification emails",
-    free: "100/month",
-    starter: "500/month",
-    pro: "2,000/month",
+    free: "Unlimited",
+    starter: "Unlimited",
+    pro: "Unlimited",
   },
   {
     label: '"Powered by" badge in the SDK',
@@ -85,45 +85,50 @@ export default function PricingPage() {
 
         <PricingPlans />
 
-        <div className="overflow-hidden rounded-lg border">
-          <Table>
-            <TableHeader>
-              <TableRow className="bg-muted/40 hover:bg-muted/40">
-                <TableHead className="w-[40%]">Feature</TableHead>
-                <TableHead className="w-[20%] text-center font-medium">
-                  Free
-                </TableHead>
-                <TableHead className="w-[20%] text-center font-medium">
-                  Starter
-                </TableHead>
-                <TableHead className="w-[20%] text-center font-medium">
-                  Pro
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-
-            <TableBody>
-              {ROWS.map((row) => (
-                <TableRow key={row.label}>
-                  <TableCell className="whitespace-normal py-4 font-medium">
-                    {row.label}
-                  </TableCell>
-
-                  <TableCell className="w-[20%] py-4 text-center">
-                    <Cell value={row.free} />
-                  </TableCell>
-
-                  <TableCell className="w-[20%] py-4 text-center">
-                    <Cell value={row.starter} />
-                  </TableCell>
-
-                  <TableCell className="w-[20%] py-4 text-center">
-                    <Cell value={row.pro} />
-                  </TableCell>
+        <div className="space-y-2">
+          <p className="text-muted-foreground text-center text-xs sm:hidden">
+            Swipe to compare all plans →
+          </p>
+          <div className="overflow-hidden rounded-lg border">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-muted/40 hover:bg-muted/40">
+                  <TableHead className="w-[40%] min-w-[140px]">Feature</TableHead>
+                  <TableHead className="w-[20%] min-w-[90px] text-center font-medium">
+                    Free
+                  </TableHead>
+                  <TableHead className="w-[20%] min-w-[90px] text-center font-medium">
+                    Starter
+                  </TableHead>
+                  <TableHead className="w-[20%] min-w-[90px] text-center font-medium">
+                    Pro
+                  </TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+
+              <TableBody>
+                {ROWS.map((row) => (
+                  <TableRow key={row.label}>
+                    <TableCell className="min-w-[140px] py-4 font-medium whitespace-normal">
+                      {row.label}
+                    </TableCell>
+
+                    <TableCell className="w-[20%] min-w-[90px] py-4 text-center">
+                      <Cell value={row.free} />
+                    </TableCell>
+
+                    <TableCell className="w-[20%] min-w-[90px] py-4 text-center">
+                      <Cell value={row.starter} />
+                    </TableCell>
+
+                    <TableCell className="w-[20%] min-w-[90px] py-4 text-center">
+                      <Cell value={row.pro} />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </div>
       </div>
     </>

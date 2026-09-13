@@ -9,22 +9,22 @@ import { cn } from "@/lib/utils";
 
 const FREE_FEATURES = [
   "1 app",
-  "50 feature requests per app",
+  "50 visible feature requests per app",
   "Unlimited votes & comments",
-  "100 notification emails/month",
+  "Unlimited notification emails",
 ];
 
 const STARTER_FEATURES = [
   "3 apps",
-  "200 feature requests per app",
+  "200 visible feature requests per app",
   "Unlimited votes & comments",
-  "500 notification emails/month",
+  "Unlimited notification emails",
 ];
 
 const PRO_FEATURES = [
   "5 apps",
-  "Unlimited feature requests per app",
-  "2,000 notification emails/month",
+  "Unlimited visible feature requests",
+  "Unlimited notification emails",
   "No \"Powered by\" badge",
   "Custom SDK colours, CSV export, Slack/Discord alerts",
 ];
@@ -96,7 +96,7 @@ export function PricingPlans() {
         </div>
       </div>
 
-      <div className="mx-auto grid max-w-5xl gap-4 lg:grid-cols-3">
+      <div className="mx-auto grid max-w-5xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <PlanCard
           name="Free"
           price="$0"

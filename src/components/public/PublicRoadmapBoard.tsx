@@ -9,6 +9,7 @@ interface PublicRoadmapBoardProps {
   onVote: (featureId: string, hasVoted: boolean) => void;
   onCommentCountChange: (featureId: string, delta: number) => void;
   onFollowChange: (featureId: string, isFollowing: boolean) => void;
+  hideVoteCounts?: boolean;
 }
 
 const COLUMNS: { status: FeatureStatus; label: string }[] = [
@@ -24,6 +25,7 @@ export function PublicRoadmapBoard({
   onVote,
   onCommentCountChange,
   onFollowChange,
+  hideVoteCounts,
 }: PublicRoadmapBoardProps) {
   const recentlyShipped = features
     .filter((f) => f.status === "done")
@@ -74,6 +76,7 @@ export function PublicRoadmapBoard({
                     onVote={onVote}
                     onCommentCountChange={onCommentCountChange}
                     onFollowChange={onFollowChange}
+                    hideVoteCounts={hideVoteCounts}
                   />
                 ))}
               </div>

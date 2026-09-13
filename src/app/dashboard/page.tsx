@@ -10,6 +10,7 @@ import {
 } from "@/lib/features/service";
 import { PLAN_LIMITS } from "@/lib/plans/limits";
 import { AppCard } from "@/components/apps/AppCard";
+import { NewAppButton } from "@/components/apps/NewAppButton";
 import { RecentPendingFeatures } from "@/components/apps/RecentPendingFeatures";
 
 import { CheckoutStatusRefresher } from "@/components/billing/CheckoutStatusRefresher";
@@ -59,6 +60,10 @@ export default async function DashboardPage() {
     listRecentPendingFeatures(apps, PLAN_LIMITS[plan].recentPendingLimit),
   ]);
 
+  const maxApps = PLAN_LIMITS[plan].maxApps;
+  const atAppLimit = apps.length >= maxApps;
+  const appLimitMessage = `You've reached the ${maxApps}-app limit on the ${plan} plan. Upgrade to create more apps.`;
+
   return (
     <div className="space-y-6">
       <Suspense fallback={null}>
@@ -66,14 +71,15 @@ export default async function DashboardPage() {
       </Suspense>
 
       <DashboardStatsGrid stats={stats} />
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-xl font-semibold">Your apps</h1>
-        <Link
-          href="/dashboard/apps/new"
+        <NewAppButton
+          atLimit={atAppLimit}
+          limitMessage={appLimitMessage}
           className={buttonVariants({ variant: "default" })}
         >
           New App
-        </Link>
+        </NewAppButton>
       </div>
       {apps.length === 0 ? (
         <EmptyState

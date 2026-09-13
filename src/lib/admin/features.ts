@@ -22,6 +22,8 @@ export async function getFeature(appId: string, featureId: string): Promise<Feat
     commentCount: data.commentCount ?? 0,
     followerCount: data.followerCount ?? 0,
     authorDeviceId: data.authorDeviceId,
+    authorIsSubscriber: data.authorIsSubscriber ?? false,
+    translation: data.translation ?? null,
     createdAt: data.createdAt.toDate().toISOString(),
     updatedAt: data.updatedAt.toDate().toISOString(),
   };

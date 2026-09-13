@@ -3,7 +3,7 @@ import { Resend } from "resend";
 import { adminDb } from "@/lib/firebase/admin";
 import { getFollowerEmails } from "@/lib/followers/service";
 import { filterUnsubscribed, unsubscribeUrl } from "@/lib/email/unsubscribe";
-import { checkPlanLimit } from "@/lib/plans/limits";
+import { trackEmailsSent } from "@/lib/plans/limits";
 import type { FeatureStatus } from "@/types";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -50,9 +50,6 @@ export async function sendNewFeatureRequestEmail(params: NewFeatureRequestEmailP
 
   if (!recipient) return;
 
-  const planCheck = await checkPlanLimit(recipient.ownerUid, "email");
-  if (!planCheck.allowed) return;
-
   const appUrl = process.env.NEXT_PUBLIC_APP_URL;
   await resend.emails.send({
     from: process.env.EMAIL_FROM!,
@@ -65,6 +62,7 @@ export async function sendNewFeatureRequestEmail(params: NewFeatureRequestEmailP
       <p><a href="${appUrl}/dashboard/apps/${params.appId}">View in dashboard</a></p>
     `,
   });
+  await trackEmailsSent(recipient.ownerUid, 1);
 }
 
 interface StatusChangeEmailParams {
@@ -88,9 +86,6 @@ export async function sendStatusChangeEmails({
   const allEmails = await getFollowerEmails(appId, featureId);
   const emails = await filterUnsubscribed(allEmails);
   if (emails.length === 0) return;
-
-  const planCheck = await checkPlanLimit(ownerUid, "email", { count: emails.length });
-  if (!planCheck.allowed) return;
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL;
   const buildHtml = (email: string) => `
@@ -124,6 +119,8 @@ export async function sendStatusChangeEmails({
       )
     );
   }
+
+  await trackEmailsSent(ownerUid, emails.length);
 }
 
 function escapeHtml(value: string): string {

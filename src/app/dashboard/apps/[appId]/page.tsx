@@ -6,6 +6,7 @@ import { adminDb } from "@/lib/firebase/admin";
 import { listFeaturesForOwner } from "@/lib/features/service";
 import { FeatureList } from "@/components/features/FeatureList";
 import { UpgradeBanner } from "@/components/billing/UpgradeBanner";
+import { ExportReportButton } from "@/components/apps/ExportReportButton";
 import { buttonVariants } from "@/components/ui/button";
 import type { Plan } from "@/types";
 
@@ -30,22 +31,30 @@ export default async function AppPage({
     ? app.featuresLastViewedAt.toDate().toISOString()
     : null;
 
-  const [userSnap, { features, nextCursor }] = await Promise.all([
-    adminDb.collection("users").doc(user.uid).get(),
-    listFeaturesForOwner({ appId, tab: "pending", limit: FEATURES_PAGE_SIZE, cursor: null }),
-    adminDb.collection("apps").doc(appId).update({ featuresLastViewedAt: FieldValue.serverTimestamp() }),
-  ]);
+  const userSnap = await adminDb.collection("users").doc(user.uid).get();
   const userPlan = userSnap.data()?.plan;
   const plan: Plan = userPlan === "pro" || userPlan === "starter" ? userPlan : "free";
 
+  const [{ features, nextCursor, hiddenCount }] = await Promise.all([
+    listFeaturesForOwner({
+      appId,
+      tab: "pending",
+      limit: FEATURES_PAGE_SIZE,
+      cursor: null,
+      plan,
+      served: 0,
+    }),
+    adminDb.collection("apps").doc(appId).update({ featuresLastViewedAt: FieldValue.serverTimestamp() }),
+  ]);
+
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-semibold">{app.name}</h1>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="min-w-0">
+          <h1 className="truncate text-xl font-semibold">{app.name}</h1>
           <p className="text-muted-foreground text-sm">{app.bundleId}</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           {app.slug && (
             <Link
               href={`/b/${app.slug}`}
@@ -55,6 +64,7 @@ export default async function AppPage({
               Public board
             </Link>
           )}
+          <ExportReportButton appId={appId} plan={plan} />
           <Link
             href={`/dashboard/apps/${appId}/settings`}
             className={buttonVariants({ variant: "outline" })}
@@ -71,6 +81,7 @@ export default async function AppPage({
         slug={app.slug ?? ""}
         initialFeatures={features}
         initialCursor={nextCursor}
+        initialHiddenCount={hiddenCount}
         newSinceIso={newSinceIso}
       />
     </div>

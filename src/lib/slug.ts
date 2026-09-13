@@ -31,11 +31,16 @@ export async function slugExists(slug: string, excludeAppId?: string): Promise<b
 
 export async function resolveAppBySlug(
   slug: string
-): Promise<{ id: string; name: string; slug: string } | null> {
+): Promise<{ id: string; name: string; slug: string; hideVoteCounts: boolean } | null> {
   const snapshot = await adminDb.collection("apps").where("slug", "==", slug).limit(1).get();
   if (snapshot.empty) return null;
 
   const doc = snapshot.docs[0];
   const data = doc.data();
-  return { id: doc.id, name: data.name, slug: data.slug };
+  return {
+    id: doc.id,
+    name: data.name,
+    slug: data.slug,
+    hideVoteCounts: data.hideVoteCounts ?? false,
+  };
 }

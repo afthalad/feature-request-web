@@ -6,6 +6,8 @@ import { auth } from "@/lib/firebase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { UpgradeDialog } from "@/components/billing/UpgradeDialog";
+import type { ApiErrorBody } from "@/types";
 
 interface CreateAppFormProps {
   onCreated: (apiKey: string) => void;
@@ -15,6 +17,7 @@ export function CreateAppForm({ onCreated }: CreateAppFormProps) {
   const [name, setName] = useState("");
   const [bundleId, setBundleId] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [limitMessage, setLimitMessage] = useState<string | null>(null);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -31,10 +34,16 @@ export function CreateAppForm({ onCreated }: CreateAppFormProps) {
         },
         body: JSON.stringify({ name, bundleId }),
       });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error?.message ?? "Failed to create app.");
+      const data: { apiKey?: string } & Partial<ApiErrorBody> = await response.json();
+      if (!response.ok) {
+        if (data.error?.code === "limit_reached") {
+          setLimitMessage(data.error.message);
+          return;
+        }
+        throw new Error(data.error?.message ?? "Failed to create app.");
+      }
 
-      onCreated(data.apiKey);
+      onCreated(data.apiKey!);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Failed to create app.");
     } finally {
@@ -43,31 +52,39 @@ export function CreateAppForm({ onCreated }: CreateAppFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="space-y-2">
-        <Label htmlFor="name">App name</Label>
-        <Input
-          id="name"
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-          maxLength={100}
-          required
-        />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="bundleId">Bundle ID</Label>
-        <Input
-          id="bundleId"
-          value={bundleId}
-          onChange={(event) => setBundleId(event.target.value)}
-          placeholder="com.yourcompany.app"
-          maxLength={200}
-          required
-        />
-      </div>
-      <Button type="submit" disabled={isSubmitting} className="w-full">
-        {isSubmitting ? "Creating..." : "Create app"}
-      </Button>
-    </form>
+    <>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="name">App name</Label>
+          <Input
+            id="name"
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+            maxLength={100}
+            required
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="bundleId">Bundle ID</Label>
+          <Input
+            id="bundleId"
+            value={bundleId}
+            onChange={(event) => setBundleId(event.target.value)}
+            placeholder="com.yourcompany.app"
+            maxLength={200}
+            required
+          />
+        </div>
+        <Button type="submit" disabled={isSubmitting} className="w-full">
+          {isSubmitting ? "Creating..." : "Create app"}
+        </Button>
+      </form>
+      <UpgradeDialog
+        open={limitMessage !== null}
+        onOpenChange={(open) => !open && setLimitMessage(null)}
+        title="You've hit your app limit"
+        description={limitMessage ?? ""}
+      />
+    </>
   );
 }

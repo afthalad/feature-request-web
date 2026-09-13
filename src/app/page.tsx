@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import {
   ArrowRight,
   Inbox,
@@ -8,6 +9,7 @@ import {
   MessageSquare,
   Smartphone,
 } from "lucide-react";
+import { getSessionUser } from "@/lib/auth/requireUser";
 import { buttonVariants } from "@/components/ui/button";
 import { PlatformShowcase } from "@/components/landing/PlatformShowcase";
 import { MarketingHeader } from "@/components/layout/MarketingHeader";
@@ -107,7 +109,7 @@ const FAQ_ROW_1 = [
   },
   {
     q: "What's on the free plan?",
-    a: "One app, 50 requests, unlimited votes and comments — free forever.",
+    a: "One app, 50 visible feature requests, unlimited votes and comments — free forever.",
   },
   {
     q: "Can users vote without an account?",
@@ -149,7 +151,10 @@ function FaqCard({ q, a }: { q: string; a: string }) {
   );
 }
 
-export default function Home() {
+export default async function Home() {
+  const user = await getSessionUser();
+  if (user) redirect("/dashboard");
+
   return (
     <>
       <MarketingHeader />

@@ -63,7 +63,8 @@ const SUBMIT_CODE = `Task {
     do {
         let feature = try await Fewchurs.submitFeature(
             title: "Add dark mode",
-            description: "Would love a dark theme."
+            description: "Would love a dark theme.",
+            isSubscriber: currentUser.hasActiveSubscription
         )
         print(feature.id, feature.status)
     } catch {
@@ -145,6 +146,13 @@ export default function SwiftUIDocsPage() {
             To collect a request from your own custom UI instead of the bundled board:
           </p>
           <CodeBlock code={SUBMIT_CODE} />
+          <p className="text-muted-foreground text-sm">
+            <code className="rounded bg-muted px-1 py-0.5">isSubscriber</code> is optional and
+            defaults to <code className="rounded bg-muted px-1 py-0.5">false</code>. Pass{" "}
+            <code className="rounded bg-muted px-1 py-0.5">true</code> when the submitter is a
+            paying customer of your app (from StoreKit, RevenueCat, etc.) and a &quot;Subscriber&quot;
+            badge will show up on that request in your dashboard.
+          </p>
         </section>
 
         <section id="branding" className="scroll-mt-20 space-y-3">

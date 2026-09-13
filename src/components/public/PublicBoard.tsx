@@ -19,9 +19,15 @@ interface PublicBoardProps {
   slug: string;
   initialFeatures: FeatureWithVote[];
   initialCursor: string | null;
+  hideVoteCounts?: boolean;
 }
 
-export function PublicBoard({ slug, initialFeatures, initialCursor }: PublicBoardProps) {
+export function PublicBoard({
+  slug,
+  initialFeatures,
+  initialCursor,
+  hideVoteCounts,
+}: PublicBoardProps) {
   const [features, setFeatures] = useState(initialFeatures);
   const [cursor, setCursor] = useState(initialCursor);
   const [tab, setTab] = useState<BoardTab>("new");
@@ -133,7 +139,7 @@ export function PublicBoard({ slug, initialFeatures, initialCursor }: PublicBoar
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <Tabs value={tab} onValueChange={(value) => handleTabChange(value as BoardTab)}>
           <TabsList>
             <TabsTrigger value="top">Top</TabsTrigger>
@@ -169,6 +175,7 @@ export function PublicBoard({ slug, initialFeatures, initialCursor }: PublicBoar
           onVote={handleVote}
           onCommentCountChange={handleCommentCountChange}
           onFollowChange={handleFollowChange}
+          hideVoteCounts={hideVoteCounts}
         />
       ) : (
         <>
@@ -182,6 +189,7 @@ export function PublicBoard({ slug, initialFeatures, initialCursor }: PublicBoar
                 onVote={handleVote}
                 onCommentCountChange={handleCommentCountChange}
                 onFollowChange={handleFollowChange}
+                hideVoteCounts={hideVoteCounts}
               />
             ))}
           </div>

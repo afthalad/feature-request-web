@@ -44,6 +44,7 @@ export async function POST(req: NextRequest) {
       title: parsed.data.title,
       description: parsed.data.description,
       email: parsed.data.email,
+      isSubscriber: parsed.data.isSubscriber,
     });
     return ok(feature, 201);
   } catch (error) {
