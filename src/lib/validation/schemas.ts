@@ -1,4 +1,9 @@
 import { z } from "zod";
+import { APP_PLATFORM_IDS } from "@/types";
+
+const platformsSchema = z
+  .array(z.enum(APP_PLATFORM_IDS as [string, ...string[]]))
+  .max(APP_PLATFORM_IDS.length);
 
 export const createFeatureSchema = z.object({
   title: z.string().trim().min(3).max(100),
@@ -10,6 +15,7 @@ export const createFeatureSchema = z.object({
 export const createAppSchema = z.object({
   name: z.string().trim().min(1).max(100),
   bundleId: z.string().trim().min(1).max(200),
+  platforms: platformsSchema.optional().default([]),
 });
 
 export const slugSchema = z
@@ -24,6 +30,7 @@ export const updateAppSchema = z.object({
   notificationEmail: z.string().trim().email().optional(),
   emailOnNewRequest: z.boolean().optional(),
   hideVoteCounts: z.boolean().optional(),
+  platforms: platformsSchema.optional(),
   slug: slugSchema.optional(),
 });
 

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { MessageSquare, Users, Languages, Crown } from "lucide-react";
+import { MessageSquare, Users, Languages, Crown, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { auth } from "@/lib/firebase/client";
 import { FeatureVoteIndicator } from "@/components/features/FeatureVoteIndicator";
@@ -10,6 +10,15 @@ import { StatusSelect } from "@/components/features/StatusSelect";
 import { DashboardCommentsPanel } from "@/components/comments/DashboardCommentsPanel";
 import { FollowersPanel } from "@/components/followers/FollowersPanel";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import type { Feature, FeatureTranslation } from "@/types";
 
 interface FeatureRowProps {
@@ -19,6 +28,7 @@ interface FeatureRowProps {
   isNew?: boolean;
   onStatusChange: (status: Feature["status"]) => void;
   onCommentCountChange: (featureId: string, delta: number) => void;
+  onDelete?: (featureId: string) => void;
 }
 
 function browserLang(): string {
@@ -33,14 +43,42 @@ export function FeatureRow({
   isNew,
   onStatusChange,
   onCommentCountChange,
+  onDelete,
 }: FeatureRowProps) {
   const [showComments, setShowComments] = useState(false);
   const [showFollowers, setShowFollowers] = useState(false);
   const [translation, setTranslation] = useState<FeatureTranslation | null>(feature.translation);
   const [showTranslation, setShowTranslation] = useState(false);
   const [isTranslating, setIsTranslating] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const targetLang = browserLang();
+
+  async function handleDelete() {
+    setIsDeleting(true);
+    try {
+      const idToken = await auth.currentUser?.getIdToken();
+      if (!idToken) throw new Error("Not signed in.");
+
+      const response = await fetch(
+        `/api/internal/features/${feature.id}?appId=${appId}`,
+        { method: "DELETE", headers: { Authorization: `Bearer ${idToken}` } }
+      );
+      if (!response.ok) {
+        const data = await response.json().catch(() => null);
+        throw new Error(data?.error?.message ?? "Failed to delete feature request.");
+      }
+
+      setShowDeleteConfirm(false);
+      onDelete?.(feature.id);
+      toast.success("Feature request deleted");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Failed to delete feature request.");
+    } finally {
+      setIsDeleting(false);
+    }
+  }
 
   async function handleTranslate() {
     if (translation && translation.lang === targetLang) {
@@ -142,7 +180,7 @@ export function FeatureRow({
           )}
         </div>
       </div>
-      <div className="shrink-0 self-center">
+      <div className="flex shrink-0 items-center gap-1 self-center">
         <StatusSelect
           appId={appId}
           featureId={feature.id}
@@ -150,7 +188,36 @@ export function FeatureRow({
           followerCount={feature.followerCount}
           onStatusChange={onStatusChange}
         />
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon-sm"
+          onClick={() => setShowDeleteConfirm(true)}
+          className="text-muted-foreground hover:text-destructive"
+        >
+          <Trash2 className="size-4" />
+          <span className="sr-only">Delete feature request</span>
+        </Button>
       </div>
+      <Dialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete this feature request?</DialogTitle>
+            <DialogDescription>
+              &quot;{feature.title}&quot; and all its votes, comments, and followers will be
+              permanently deleted. This can&apos;t be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowDeleteConfirm(false)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleDelete} disabled={isDeleting}>
+              {isDeleting ? "Deleting..." : "Delete"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
       <DashboardCommentsPanel
         appId={appId}
         featureId={feature.id}

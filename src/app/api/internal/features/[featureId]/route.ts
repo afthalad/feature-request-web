@@ -5,6 +5,7 @@ import { getUserFromAuthHeader } from "@/lib/auth/requireUser";
 import { updateFeatureStatusSchema } from "@/lib/validation/schemas";
 import { ok, errorResponse } from "@/lib/api/response";
 import { sendStatusChangeEmails } from "@/lib/email/send";
+import { deleteFeature, NotFoundError } from "@/lib/features/service";
 import { NOTIFIABLE_STATUSES } from "@/types";
 
 export async function PATCH(
@@ -43,4 +44,34 @@ export async function PATCH(
   }
 
   return ok({ id: featureId, status });
+}
+
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: Promise<{ featureId: string }> }
+) {
+  const user = await getUserFromAuthHeader(req);
+  if (!user) return errorResponse("unauthorized", "Sign in required.");
+
+  const { featureId } = await params;
+  const { searchParams } = new URL(req.url);
+  const appId = searchParams.get("appId");
+  if (!appId) return errorResponse("validation_failed", "appId is required.");
+
+  const appSnap = await adminDb.collection("apps").doc(appId).get();
+  if (!appSnap.exists) return errorResponse("not_found", "App not found.");
+  if (appSnap.data()!.ownerUid !== user.uid) {
+    return errorResponse("forbidden", "You do not own this app.");
+  }
+
+  try {
+    await deleteFeature(appId, featureId);
+    return ok({ id: featureId });
+  } catch (error) {
+    if (error instanceof NotFoundError) {
+      return errorResponse("not_found", "Feature not found.");
+    }
+    console.error("Failed to delete feature", error);
+    return errorResponse("internal", "Failed to delete feature.");
+  }
 }

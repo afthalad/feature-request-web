@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { UpgradeDialog } from "@/components/billing/UpgradeDialog";
-import type { ApiErrorBody } from "@/types";
+import { PlatformPicker } from "@/components/apps/PlatformPicker";
+import type { ApiErrorBody, AppPlatformId } from "@/types";
 
 interface CreateAppFormProps {
   onCreated: (apiKey: string) => void;
@@ -16,6 +17,7 @@ interface CreateAppFormProps {
 export function CreateAppForm({ onCreated }: CreateAppFormProps) {
   const [name, setName] = useState("");
   const [bundleId, setBundleId] = useState("");
+  const [platforms, setPlatforms] = useState<AppPlatformId[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [limitMessage, setLimitMessage] = useState<string | null>(null);
 
@@ -32,7 +34,7 @@ export function CreateAppForm({ onCreated }: CreateAppFormProps) {
           "Content-Type": "application/json",
           Authorization: `Bearer ${idToken}`,
         },
-        body: JSON.stringify({ name, bundleId }),
+        body: JSON.stringify({ name, bundleId, platforms }),
       });
       const data: { apiKey?: string } & Partial<ApiErrorBody> = await response.json();
       if (!response.ok) {
@@ -74,6 +76,10 @@ export function CreateAppForm({ onCreated }: CreateAppFormProps) {
             maxLength={200}
             required
           />
+        </div>
+        <div className="space-y-2">
+          <Label>Platforms (optional)</Label>
+          <PlatformPicker value={platforms} onChange={setPlatforms} disabled={isSubmitting} />
         </div>
         <Button type="submit" disabled={isSubmitting} className="w-full">
           {isSubmitting ? "Creating..." : "Create app"}

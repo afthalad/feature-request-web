@@ -295,6 +295,7 @@ export async function createFeatureForApp({
     title: data.title,
     description: data.description,
     upvoteCount: data.upvoteCount,
+    submitterEmail: email,
   }).catch(console.error);
 
   return {
@@ -394,4 +395,17 @@ export async function translateFeature({
 
   await featureRef.update({ translation });
   return translation;
+}
+
+// Recursively removes the feature doc plus its votes/followers/comments subcollections, and
+// decrements the app's featureCount. Irreversible — the caller is expected to confirm first.
+export async function deleteFeature(appId: string, featureId: string): Promise<void> {
+  const appRef = adminDb.collection("apps").doc(appId);
+  const featureRef = appRef.collection("features").doc(featureId);
+
+  const featureSnap = await featureRef.get();
+  if (!featureSnap.exists) throw new NotFoundError();
+
+  await adminDb.recursiveDelete(featureRef);
+  await appRef.update({ featureCount: FieldValue.increment(-1) });
 }

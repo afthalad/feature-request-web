@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
     return errorResponse("limit_reached", limitCheck.message!);
   }
 
-  const { name, bundleId } = parsed.data;
+  const { name, bundleId, platforms } = parsed.data;
   const apiKey = generateApiKey();
   const appRef = adminDb.collection("apps").doc();
   const apiKeyRef = adminDb.collection("apiKeys").doc(hashApiKey(apiKey));
@@ -38,6 +38,7 @@ export async function POST(req: NextRequest) {
       apiKeyPrefix: apiKeyDisplayPrefix(apiKey),
       notificationEmail: user.email ?? "",
       emailOnNewRequest: true,
+      platforms,
       featureCount: 0,
       createdAt: FieldValue.serverTimestamp(),
     });
@@ -64,6 +65,7 @@ export async function POST(req: NextRequest) {
           apiKeyPrefix: appData.apiKeyPrefix,
           notificationEmail: appData.notificationEmail,
           emailOnNewRequest: appData.emailOnNewRequest,
+          platforms: appData.platforms ?? [],
           featureCount: appData.featureCount,
           createdAt: appData.createdAt.toDate().toISOString(),
         },

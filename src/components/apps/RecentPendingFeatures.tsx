@@ -23,6 +23,10 @@ export function RecentPendingFeatures({ features: initialFeatures }: { features:
     );
   }
 
+  function handleDelete(featureId: string) {
+    setFeatures((prev) => prev.filter((f) => f.id !== featureId));
+  }
+
   return (
     <div className="space-y-3">
       <h2 className="text-muted-foreground text-sm font-medium">Recent pending requests</h2>
@@ -36,6 +40,7 @@ export function RecentPendingFeatures({ features: initialFeatures }: { features:
             isNew={feature.isNew}
             onStatusChange={(status) => handleStatusChange(feature.id, status)}
             onCommentCountChange={handleCommentCountChange}
+            onDelete={handleDelete}
           />
         ))}
       </div>

@@ -73,6 +73,7 @@ export async function listAppsForUser(uid: string): Promise<App[]> {
       apiKeyPrefix: data.apiKeyPrefix,
       notificationEmail: data.notificationEmail,
       emailOnNewRequest: data.emailOnNewRequest,
+      platforms: data.platforms ?? [],
       featureCount: data.featureCount,
       createdAt: data.createdAt.toDate().toISOString(),
       disabled: data.disabled ?? false,

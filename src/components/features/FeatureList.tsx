@@ -114,6 +114,13 @@ export function FeatureList({
     );
   }
 
+  function handleDelete(featureId: string) {
+    setFeatures((prev) => prev.filter((f) => f.id !== featureId));
+    if (tab === "pending") {
+      setTotalCount((prev) => (prev !== null ? Math.max(0, prev - 1) : prev));
+    }
+  }
+
   return (
     <div className="space-y-4">
       <Tabs
@@ -173,6 +180,7 @@ export function FeatureList({
               isNew={!newSinceIso || feature.createdAt > newSinceIso}
               onStatusChange={(status) => handleStatusChange(feature.id, status)}
               onCommentCountChange={handleCommentCountChange}
+              onDelete={handleDelete}
             />
           ))}
         </div>

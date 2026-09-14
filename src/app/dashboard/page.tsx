@@ -46,6 +46,7 @@ export default async function DashboardPage() {
         apiKeyPrefix: data.apiKeyPrefix,
         notificationEmail: data.notificationEmail,
         emailOnNewRequest: data.emailOnNewRequest,
+        platforms: data.platforms ?? [],
         featureCount: data.featureCount,
         createdAt: data.createdAt.toDate().toISOString(),
         featuresLastViewedAt: data.featuresLastViewedAt

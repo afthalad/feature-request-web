@@ -7,6 +7,7 @@ import { listFeaturesForOwner } from "@/lib/features/service";
 import { FeatureList } from "@/components/features/FeatureList";
 import { UpgradeBanner } from "@/components/billing/UpgradeBanner";
 import { ExportReportButton } from "@/components/apps/ExportReportButton";
+import { PlatformIcons } from "@/components/apps/PlatformIcons";
 import { buttonVariants } from "@/components/ui/button";
 import type { Plan } from "@/types";
 
@@ -51,7 +52,10 @@ export default async function AppPage({
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="min-w-0">
-          <h1 className="truncate text-xl font-semibold">{app.name}</h1>
+          <h1 className="flex items-center gap-2 truncate text-xl font-semibold">
+            {app.name}
+            <PlatformIcons platforms={app.platforms ?? []} />
+          </h1>
           <p className="text-muted-foreground text-sm">{app.bundleId}</p>
         </div>
         <div className="flex flex-wrap gap-2">

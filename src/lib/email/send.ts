@@ -3,8 +3,13 @@ import { Resend } from "resend";
 import { adminDb } from "@/lib/firebase/admin";
 import { getFollowerEmails } from "@/lib/followers/service";
 import { filterUnsubscribed, unsubscribeUrl } from "@/lib/email/unsubscribe";
-import { trackEmailsSent } from "@/lib/plans/limits";
-import type { FeatureStatus } from "@/types";
+import { trackEmailsSent, PLAN_LIMITS } from "@/lib/plans/limits";
+import { escapeHtml } from "@/lib/email/escapeHtml";
+import {
+  newFeatureRequestEmailFull,
+  newFeatureRequestEmailLimitReached,
+} from "@/lib/email/templates";
+import type { FeatureStatus, Plan } from "@/types";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const MAX_EMAILS_PER_APP_PER_DAY = 20;
@@ -23,6 +28,7 @@ interface NewFeatureRequestEmailParams {
   title: string;
   description: string;
   upvoteCount: number;
+  submitterEmail?: string;
 }
 
 export async function sendNewFeatureRequestEmail(params: NewFeatureRequestEmailParams) {
@@ -50,7 +56,31 @@ export async function sendNewFeatureRequestEmail(params: NewFeatureRequestEmailP
 
   if (!recipient) return;
 
+  const ownerSnap = await adminDb.collection("users").doc(recipient.ownerUid).get();
+  const ownerPlan = ownerSnap.data()?.plan;
+  const plan: Plan = ownerPlan === "pro" || ownerPlan === "starter" ? ownerPlan : "free";
+
+  // Same limit the dashboard's "Pending" tab enforces (PLAN_LIMITS.maxFeaturesPerApp) — once an
+  // app has collected more pending requests than its plan shows, new notification emails switch
+  // to the masked/limit-reached version instead of the full one.
+  const visibleLimit = PLAN_LIMITS[plan].maxFeaturesPerApp;
+  let isOverLimit = false;
+  if (Number.isFinite(visibleLimit)) {
+    const pendingCountSnap = await appRef.collection("features").where("status", "==", "open").count().get();
+    isOverLimit = pendingCountSnap.data().count > visibleLimit;
+  }
+
   const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+  const emailContent = {
+    appName: recipient.name,
+    title: params.title,
+    description: params.description,
+    upvoteCount: params.upvoteCount,
+    submitterEmail: params.submitterEmail,
+    dashboardUrl: `${appUrl}/dashboard/apps/${params.appId}`,
+    pricingUrl: `${appUrl}/pricing`,
+  };
+
   // resend.emails.send() resolves with { error } on an API-level rejection — it does NOT throw —
   // so this must be checked explicitly, or a rejected send (e.g. a sandbox-domain restriction)
   // silently looks like success.
@@ -58,12 +88,9 @@ export async function sendNewFeatureRequestEmail(params: NewFeatureRequestEmailP
     from: process.env.EMAIL_FROM!,
     to: recipient.notificationEmail,
     subject: `New feature request for ${recipient.name}`,
-    html: `
-      <p><strong>${escapeHtml(params.title)}</strong></p>
-      ${params.description ? `<p>${escapeHtml(params.description)}</p>` : ""}
-      <p>Current votes: ${params.upvoteCount}</p>
-      <p><a href="${appUrl}/dashboard/apps/${params.appId}">View in dashboard</a></p>
-    `,
+    html: isOverLimit
+      ? newFeatureRequestEmailLimitReached(emailContent)
+      : newFeatureRequestEmailFull(emailContent),
   });
 
   if (error) {
@@ -175,13 +202,4 @@ export async function sendTestEmail(appId: string): Promise<{ ok: true } | { ok:
   }
 
   return { ok: true };
-}
-
-function escapeHtml(value: string): string {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
 }

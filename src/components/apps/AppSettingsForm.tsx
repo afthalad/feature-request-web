@@ -7,24 +7,35 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
+import { PlatformPicker } from "@/components/apps/PlatformPicker";
+import type { AppPlatformId } from "@/types";
 
 interface AppSettingsFormProps {
   appId: string;
   initialNotificationEmail: string;
   initialEmailOnNewRequest: boolean;
+  initialPlatforms: AppPlatformId[];
 }
 
 export function AppSettingsForm({
   appId,
   initialNotificationEmail,
   initialEmailOnNewRequest,
+  initialPlatforms,
 }: AppSettingsFormProps) {
   const [notificationEmail, setNotificationEmail] = useState(initialNotificationEmail);
   const [emailOnNewRequest, setEmailOnNewRequest] = useState(initialEmailOnNewRequest);
+  const [platforms, setPlatforms] = useState(initialPlatforms);
   const [isSaving, setIsSaving] = useState(false);
   const [isSendingTest, setIsSendingTest] = useState(false);
 
-  async function save(patch: Partial<{ notificationEmail: string; emailOnNewRequest: boolean }>) {
+  async function save(
+    patch: Partial<{
+      notificationEmail: string;
+      emailOnNewRequest: boolean;
+      platforms: AppPlatformId[];
+    }>
+  ) {
     setIsSaving(true);
     try {
       const idToken = await auth.currentUser?.getIdToken();
@@ -52,6 +63,11 @@ export function AppSettingsForm({
   function handleEmailSubmit(event: FormEvent) {
     event.preventDefault();
     save({ notificationEmail });
+  }
+
+  function handlePlatformsChange(next: AppPlatformId[]) {
+    setPlatforms(next);
+    save({ platforms: next });
   }
 
   async function handleSendTestEmail() {
@@ -91,6 +107,10 @@ export function AppSettingsForm({
           </Button>
         </div>
       </form>
+      <div className="space-y-2">
+        <p className="text-sm font-medium">Platforms</p>
+        <PlatformPicker value={platforms} onChange={handlePlatformsChange} disabled={isSaving} />
+      </div>
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm font-medium">Email on new request</p>

@@ -36,6 +36,7 @@ export default async function AppSettingsPage({
         appId={appId}
         initialNotificationEmail={app.notificationEmail}
         initialEmailOnNewRequest={app.emailOnNewRequest}
+        initialPlatforms={app.platforms ?? []}
       />
     </div>
   );
