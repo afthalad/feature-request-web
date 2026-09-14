@@ -21,6 +21,7 @@ interface FeatureListProps {
   initialFeatures: Feature[];
   initialCursor: string | null;
   initialHiddenCount: number;
+  initialTotalCount: number | null;
   newSinceIso: string | null;
 }
 
@@ -30,12 +31,14 @@ export function FeatureList({
   initialFeatures,
   initialCursor,
   initialHiddenCount,
+  initialTotalCount,
   newSinceIso,
 }: FeatureListProps) {
   const [tab, setTab] = useState<BoardTab>("pending");
   const [features, setFeatures] = useState(initialFeatures);
   const [cursor, setCursor] = useState(initialCursor);
   const [hiddenCount, setHiddenCount] = useState(initialHiddenCount);
+  const [totalCount, setTotalCount] = useState(initialTotalCount);
   const [isLoading, setIsLoading] = useState(false);
   const [isSwitchingTab, setIsSwitchingTab] = useState(false);
   const requestIdRef = useRef(0);
@@ -75,7 +78,10 @@ export function FeatureList({
         append ? [...prev, ...data.features] : data.features,
       );
       setCursor(data.nextCursor);
-      if (boardTab === "pending") setHiddenCount(data.hiddenCount ?? 0);
+      if (boardTab === "pending") {
+        setHiddenCount(data.hiddenCount ?? 0);
+        setTotalCount(data.totalCount ?? null);
+      }
     } finally {
       if (requestId === requestIdRef.current) {
         setIsLoading(false);
@@ -124,7 +130,7 @@ export function FeatureList({
       {tab === "pending" && hiddenCount > 0 && !isSwitchingTab && (
         <UpgradeBanner
           title="Some feature requests are hidden"
-          message={`This app has ${hiddenCount} more pending request${hiddenCount === 1 ? "" : "s"} than your plan shows. Upgrade to see them all.`}
+          message={`This project has ${totalCount ?? hiddenCount} feature request${(totalCount ?? hiddenCount) === 1 ? "" : "s"}. Upgrade to view all.`}
         />
       )}
 

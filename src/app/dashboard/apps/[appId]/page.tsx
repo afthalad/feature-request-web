@@ -35,7 +35,7 @@ export default async function AppPage({
   const userPlan = userSnap.data()?.plan;
   const plan: Plan = userPlan === "pro" || userPlan === "starter" ? userPlan : "free";
 
-  const [{ features, nextCursor, hiddenCount }] = await Promise.all([
+  const [{ features, nextCursor, hiddenCount, totalCount }] = await Promise.all([
     listFeaturesForOwner({
       appId,
       tab: "pending",
@@ -82,6 +82,7 @@ export default async function AppPage({
         initialFeatures={features}
         initialCursor={nextCursor}
         initialHiddenCount={hiddenCount}
+        initialTotalCount={totalCount}
         newSinceIso={newSinceIso}
       />
     </div>
