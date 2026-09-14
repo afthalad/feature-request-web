@@ -27,7 +27,6 @@ export function AppSettingsForm({
   const [emailOnNewRequest, setEmailOnNewRequest] = useState(initialEmailOnNewRequest);
   const [platforms, setPlatforms] = useState(initialPlatforms);
   const [isSaving, setIsSaving] = useState(false);
-  const [isSendingTest, setIsSendingTest] = useState(false);
 
   async function save(
     patch: Partial<{
@@ -70,27 +69,6 @@ export function AppSettingsForm({
     save({ platforms: next });
   }
 
-  async function handleSendTestEmail() {
-    setIsSendingTest(true);
-    try {
-      const idToken = await auth.currentUser?.getIdToken();
-      if (!idToken) throw new Error("Not signed in.");
-
-      const response = await fetch(`/api/internal/apps/${appId}/test-email`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${idToken}` },
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error?.message ?? "Failed to send test email.");
-
-      toast.success(`Test email sent to ${notificationEmail}`);
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Failed to send test email.");
-    } finally {
-      setIsSendingTest(false);
-    }
-  }
-
   return (
     <div className="space-y-6">
       <form onSubmit={handleEmailSubmit} className="space-y-2">
@@ -119,24 +97,6 @@ export function AppSettingsForm({
           </p>
         </div>
         <Switch checked={emailOnNewRequest} onCheckedChange={handleToggle} disabled={isSaving} />
-      </div>
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm font-medium">Test notifications</p>
-          <p className="text-muted-foreground text-sm">
-            Send a test email to {notificationEmail || "your notification email"} to confirm it
-            actually arrives.
-          </p>
-        </div>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={handleSendTestEmail}
-          disabled={isSendingTest || !notificationEmail}
-        >
-          {isSendingTest ? "Sending..." : "Send test email"}
-        </Button>
       </div>
     </div>
   );

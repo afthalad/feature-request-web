@@ -5,15 +5,14 @@ import { getFollowerEmails } from "@/lib/followers/service";
 import { filterUnsubscribed, unsubscribeUrl } from "@/lib/email/unsubscribe";
 import { trackEmailsSent, PLAN_LIMITS } from "@/lib/plans/limits";
 import { escapeHtml } from "@/lib/email/escapeHtml";
-import {
-  newFeatureRequestEmailFull,
-  newFeatureRequestEmailLimitReached,
-} from "@/lib/email/templates";
+import { maskText } from "@/lib/email/mask";
 import type { FeatureStatus, Plan } from "@/types";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const MAX_EMAILS_PER_APP_PER_DAY = 20;
 const BATCH_THRESHOLD = 20;
+
+const NEW_FEATURE_FULL_TEMPLATE_ID = process.env.RESEND_TEMPLATE_NEW_FEATURE_FULL!;
+const NEW_FEATURE_LIMIT_TEMPLATE_ID = process.env.RESEND_TEMPLATE_NEW_FEATURE_LIMIT!;
 
 const STATUS_LABEL: Record<FeatureStatus, string> = {
   open: "Pending",
@@ -33,28 +32,17 @@ interface NewFeatureRequestEmailParams {
 
 export async function sendNewFeatureRequestEmail(params: NewFeatureRequestEmailParams) {
   const appRef = adminDb.collection("apps").doc(params.appId);
-  const today = new Date().toISOString().slice(0, 10);
+  const appSnap = await appRef.get();
+  if (!appSnap.exists) return;
 
-  const recipient = await adminDb.runTransaction(async (tx) => {
-    const appSnap = await tx.get(appRef);
-    if (!appSnap.exists) return null;
+  const app = appSnap.data()!;
+  if (!app.emailOnNewRequest || !app.notificationEmail) return;
 
-    const app = appSnap.data()!;
-    if (!app.emailOnNewRequest || !app.notificationEmail) return null;
-
-    const emailsSentToday = app.emailsSentDay === today ? app.emailsSentCount : 0;
-    if (emailsSentToday >= MAX_EMAILS_PER_APP_PER_DAY) return null;
-
-    tx.set(appRef, { emailsSentDay: today, emailsSentCount: emailsSentToday + 1 }, { merge: true });
-
-    return {
-      name: app.name as string,
-      notificationEmail: app.notificationEmail as string,
-      ownerUid: app.ownerUid as string,
-    };
-  });
-
-  if (!recipient) return;
+  const recipient = {
+    name: app.name as string,
+    notificationEmail: app.notificationEmail as string,
+    ownerUid: app.ownerUid as string,
+  };
 
   const ownerSnap = await adminDb.collection("users").doc(recipient.ownerUid).get();
   const ownerPlan = ownerSnap.data()?.plan;
@@ -62,7 +50,7 @@ export async function sendNewFeatureRequestEmail(params: NewFeatureRequestEmailP
 
   // Same limit the dashboard's "Pending" tab enforces (PLAN_LIMITS.maxFeaturesPerApp) — once an
   // app has collected more pending requests than its plan shows, new notification emails switch
-  // to the masked/limit-reached version instead of the full one.
+  // to the masked/limit-reached Resend template instead of the full one.
   const visibleLimit = PLAN_LIMITS[plan].maxFeaturesPerApp;
   let isOverLimit = false;
   if (Number.isFinite(visibleLimit)) {
@@ -71,27 +59,42 @@ export async function sendNewFeatureRequestEmail(params: NewFeatureRequestEmailP
   }
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL;
-  const emailContent = {
-    appName: recipient.name,
-    title: params.title,
-    description: params.description,
-    upvoteCount: params.upvoteCount,
-    submitterEmail: params.submitterEmail,
-    dashboardUrl: `${appUrl}/dashboard/apps/${params.appId}`,
-    pricingUrl: `${appUrl}/pricing`,
-  };
 
   // resend.emails.send() resolves with { error } on an API-level rejection — it does NOT throw —
   // so this must be checked explicitly, or a rejected send (e.g. a sandbox-domain restriction)
   // silently looks like success.
-  const { error } = await resend.emails.send({
-    from: process.env.EMAIL_FROM!,
-    to: recipient.notificationEmail,
-    subject: `New feature request for ${recipient.name}`,
-    html: isOverLimit
-      ? newFeatureRequestEmailLimitReached(emailContent)
-      : newFeatureRequestEmailFull(emailContent),
-  });
+  const { error } = isOverLimit
+    ? await resend.emails.send({
+        from: process.env.EMAIL_FROM!,
+        to: recipient.notificationEmail,
+        template: {
+          id: NEW_FEATURE_LIMIT_TEMPLATE_ID,
+          variables: {
+            APP_NAME: recipient.name,
+            MASKED_TITLE: maskText(escapeHtml(params.title)),
+            PRICING_URL: `${appUrl}/pricing`,
+          },
+        },
+      })
+    : await resend.emails.send({
+        from: process.env.EMAIL_FROM!,
+        to: recipient.notificationEmail,
+        template: {
+          id: NEW_FEATURE_FULL_TEMPLATE_ID,
+          variables: {
+            APP_NAME: recipient.name,
+            TITLE: escapeHtml(params.title),
+            DESCRIPTION_HTML: params.description
+              ? `<p style="font-size: 14px; line-height: 1.6; color: #71717a; margin: 8px 0 0; white-space: pre-wrap;">${escapeHtml(params.description)}</p>`
+              : "",
+            UPVOTE_COUNT: params.upvoteCount,
+            SUBMITTER_LINE: params.submitterEmail
+              ? `Submitted by <a href="mailto:${escapeHtml(params.submitterEmail)}" style="color: #18181b; text-decoration: underline;">${escapeHtml(params.submitterEmail)}</a>`
+              : "Submitted anonymously",
+            DASHBOARD_URL: `${appUrl}/dashboard/apps/${params.appId}`,
+          },
+        },
+      });
 
   if (error) {
     console.error("Failed to send new-feature-request email:", error);
@@ -174,32 +177,4 @@ export async function sendStatusChangeEmails({
   if (sentCount > 0) {
     await trackEmailsSent(ownerUid, sentCount);
   }
-}
-
-// Lets an app owner verify their notification email is actually reachable, surfacing the real
-// provider error (e.g. Resend's sandbox-sender restriction) instead of a silent no-op.
-export async function sendTestEmail(appId: string): Promise<{ ok: true } | { ok: false; message: string }> {
-  const appSnap = await adminDb.collection("apps").doc(appId).get();
-  if (!appSnap.exists) return { ok: false, message: "App not found." };
-
-  const app = appSnap.data()!;
-  if (!app.notificationEmail) {
-    return { ok: false, message: "Set a notification email first." };
-  }
-
-  const { error } = await resend.emails.send({
-    from: process.env.EMAIL_FROM!,
-    to: app.notificationEmail,
-    subject: `Test email for ${app.name}`,
-    html: `
-      <p>This is a test email from Fewchurs for <strong>${escapeHtml(app.name as string)}</strong>.</p>
-      <p>If you received this, notification emails are set up correctly.</p>
-    `,
-  });
-
-  if (error) {
-    return { ok: false, message: error.message };
-  }
-
-  return { ok: true };
 }
