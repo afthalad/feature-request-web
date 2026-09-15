@@ -337,6 +337,7 @@ export async function createFeatureForApp({
   // Fire-and-forget alone isn't safe on Vercel — the serverless function can freeze right after
   // the response is sent, killing this promise before the Resend API call completes. after()
   // keeps the function alive until it settles.
+  console.log(`[email] queuing new-feature-request email for app ${appId}, feature ${featureRef.id}`);
   after(() =>
     sendNewFeatureRequestEmail({
       appId,
@@ -344,7 +345,9 @@ export async function createFeatureForApp({
       description: data.description,
       upvoteCount: data.upvoteCount,
       submitterEmail: email,
-    }).catch(console.error),
+    })
+      .then(() => console.log(`[email] new-feature-request email settled for app ${appId}, feature ${featureRef.id}`))
+      .catch((error) => console.error(`[email] new-feature-request email FAILED for app ${appId}, feature ${featureRef.id}:`, error)),
   );
 
   return {

@@ -33,10 +33,18 @@ interface NewFeatureRequestEmailParams {
 export async function sendNewFeatureRequestEmail(params: NewFeatureRequestEmailParams) {
   const appRef = adminDb.collection("apps").doc(params.appId);
   const appSnap = await appRef.get();
-  if (!appSnap.exists) return;
+  if (!appSnap.exists) {
+    console.log(`[email] skipped new-feature-request email: app ${params.appId} not found`);
+    return;
+  }
 
   const app = appSnap.data()!;
-  if (!app.emailOnNewRequest || !app.notificationEmail) return;
+  if (!app.emailOnNewRequest || !app.notificationEmail) {
+    console.log(
+      `[email] skipped new-feature-request email for app ${params.appId}: emailOnNewRequest=${!!app.emailOnNewRequest} notificationEmail=${!!app.notificationEmail}`
+    );
+    return;
+  }
 
   const recipient = {
     name: app.name as string,
@@ -102,10 +110,11 @@ export async function sendNewFeatureRequestEmail(params: NewFeatureRequestEmailP
       });
 
   if (error) {
-    console.error("Failed to send new-feature-request email:", error);
+    console.error(`[email] Resend rejected new-feature-request email for app ${params.appId}:`, error);
     return;
   }
 
+  console.log(`[email] sent new-feature-request email for app ${params.appId} to ${recipient.notificationEmail}`);
   await trackEmailsSent(recipient.ownerUid, 1);
 }
 
