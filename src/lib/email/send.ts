@@ -13,6 +13,7 @@ const BATCH_THRESHOLD = 20;
 
 const NEW_FEATURE_FULL_TEMPLATE_ID = process.env.RESEND_TEMPLATE_NEW_FEATURE_FULL!;
 const NEW_FEATURE_LIMIT_TEMPLATE_ID = process.env.RESEND_TEMPLATE_NEW_FEATURE_LIMIT!;
+const STATUS_UPDATE_TEMPLATE_ID = process.env.RESEND_TEMPLATE_STATUS_UPDATE!;
 
 const STATUS_LABEL: Record<FeatureStatus, string> = {
   open: "Pending",
@@ -20,6 +21,14 @@ const STATUS_LABEL: Record<FeatureStatus, string> = {
   in_progress: "In Progress",
   done: "Done",
   declined: "Declined",
+};
+
+const STATUS_COLOR: Record<FeatureStatus, string> = {
+  open: "#71717a",
+  planned: "#3b82f6",
+  in_progress: "#f97316",
+  done: "#16a34a",
+  declined: "#71717a",
 };
 
 interface NewFeatureRequestEmailParams {
@@ -141,15 +150,18 @@ export async function sendStatusChangeEmails({
   if (emails.length === 0) return;
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL;
-  const buildHtml = (email: string) => `
-    <p>An update on <strong>${escapeHtml(appName)}</strong>:</p>
-    <p><strong>${escapeHtml(featureTitle)}</strong> is now <strong>${STATUS_LABEL[status]}</strong>.</p>
-    <p><a href="${appUrl}/b/${appSnap.data()!.slug}">View the board</a></p>
-    <p style="color:#888;font-size:12px;margin-top:24px;">
-      <a href="${unsubscribeUrl(email)}">Unsubscribe</a> from status updates.
-    </p>
-  `;
+  const boardUrl = `${appUrl}/b/${appSnap.data()!.slug}`;
+  const buildVariables = (email: string) => ({
+    APP_NAME: escapeHtml(appName),
+    FEATURE_TITLE: escapeHtml(featureTitle),
+    STATUS_LABEL: STATUS_LABEL[status],
+    STATUS_COLOR: STATUS_COLOR[status],
+    BOARD_URL: boardUrl,
+    UNSUBSCRIBE_URL: unsubscribeUrl(email),
+  });
   const subject = `${appName}: ${featureTitle} is now ${STATUS_LABEL[status]}`;
+
+  console.log(`[email] queuing status-change email (${status}) for app ${appId}, feature ${featureId}, ${emails.length} recipient(s)`);
 
   let sentCount = 0;
 
@@ -159,11 +171,14 @@ export async function sendStatusChangeEmails({
         from: process.env.EMAIL_FROM!,
         to: email,
         subject,
-        html: buildHtml(email),
+        template: {
+          id: STATUS_UPDATE_TEMPLATE_ID,
+          variables: buildVariables(email),
+        },
       }))
     );
     if (error) {
-      console.error("Failed to send batch status-change emails:", error);
+      console.error(`[email] Resend rejected batch status-change emails for app ${appId}:`, error);
     } else {
       sentCount = data?.data?.length ?? emails.length;
     }
@@ -174,19 +189,24 @@ export async function sendStatusChangeEmails({
           from: process.env.EMAIL_FROM!,
           to: email,
           subject,
-          html: buildHtml(email),
+          template: {
+            id: STATUS_UPDATE_TEMPLATE_ID,
+            variables: buildVariables(email),
+          },
         })
       )
     );
     const failed = results.filter((result) => result.error);
     if (failed.length > 0) {
       console.error(
-        `Failed to send ${failed.length}/${emails.length} status-change email(s):`,
+        `[email] Resend rejected ${failed.length}/${emails.length} status-change email(s) for app ${appId}:`,
         failed[0].error
       );
     }
     sentCount = results.length - failed.length;
   }
+
+  console.log(`[email] status-change email settled for app ${appId}, feature ${featureId}: ${sentCount}/${emails.length} sent`);
 
   if (sentCount > 0) {
     await trackEmailsSent(ownerUid, sentCount);
