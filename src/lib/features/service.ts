@@ -1,4 +1,5 @@
 import "server-only";
+import { after } from "next/server";
 import {
   AggregateField,
   FieldValue,
@@ -290,13 +291,18 @@ export async function createFeatureForApp({
   const featureSnap = await featureRef.get();
   const data = featureSnap.data()!;
 
-  void sendNewFeatureRequestEmail({
-    appId,
-    title: data.title,
-    description: data.description,
-    upvoteCount: data.upvoteCount,
-    submitterEmail: email,
-  }).catch(console.error);
+  // Fire-and-forget alone isn't safe on Vercel — the serverless function can freeze right after
+  // the response is sent, killing this promise before the Resend API call completes. after()
+  // keeps the function alive until it settles.
+  after(() =>
+    sendNewFeatureRequestEmail({
+      appId,
+      title: data.title,
+      description: data.description,
+      upvoteCount: data.upvoteCount,
+      submitterEmail: email,
+    }).catch(console.error)
+  );
 
   return {
     id: featureRef.id,

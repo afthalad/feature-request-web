@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server";
+import { NextRequest, after } from "next/server";
 import { FieldValue } from "firebase-admin/firestore";
 import { adminDb } from "@/lib/firebase/admin";
 import { getUserFromAuthHeader } from "@/lib/auth/requireUser";
@@ -35,12 +35,15 @@ export async function PATCH(
   await featureRef.update({ status, updatedAt: FieldValue.serverTimestamp() });
 
   if (notify && NOTIFIABLE_STATUSES.includes(status)) {
-    void sendStatusChangeEmails({
-      appId,
-      featureId,
-      featureTitle: featureSnap.data()!.title,
-      status,
-    }).catch(console.error);
+    // See src/lib/features/service.ts — fire-and-forget needs after() to survive on Vercel.
+    after(() =>
+      sendStatusChangeEmails({
+        appId,
+        featureId,
+        featureTitle: featureSnap.data()!.title,
+        status,
+      }).catch(console.error)
+    );
   }
 
   return ok({ id: featureId, status });
