@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { auth } from "@/lib/firebase/client";
 import { Input } from "@/components/ui/input";
@@ -23,6 +24,7 @@ export function AppSettingsForm({
   initialEmailOnNewRequest,
   initialPlatforms,
 }: AppSettingsFormProps) {
+  const router = useRouter();
   const [notificationEmail, setNotificationEmail] = useState(initialNotificationEmail);
   const [emailOnNewRequest, setEmailOnNewRequest] = useState(initialEmailOnNewRequest);
   const [platforms, setPlatforms] = useState(initialPlatforms);
@@ -47,6 +49,7 @@ export function AppSettingsForm({
       });
       if (!response.ok) throw new Error("Failed to save settings.");
       toast.success("Settings saved");
+      router.refresh();
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Failed to save settings.");
     } finally {

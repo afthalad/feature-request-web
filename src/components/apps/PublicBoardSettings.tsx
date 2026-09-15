@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { auth } from "@/lib/firebase/client";
 import { Input } from "@/components/ui/input";
@@ -19,6 +20,7 @@ export function PublicBoardSettings({
   initialSlug,
   initialHideVoteCounts,
 }: PublicBoardSettingsProps) {
+  const router = useRouter();
   const [slug, setSlug] = useState(initialSlug);
   const [savedSlug, setSavedSlug] = useState(initialSlug);
   const [isSaving, setIsSaving] = useState(false);
@@ -45,6 +47,7 @@ export function PublicBoardSettings({
 
       setSavedSlug(slug);
       toast.success("Public board URL updated");
+      router.refresh();
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Failed to save.");
     } finally {
@@ -71,6 +74,7 @@ export function PublicBoardSettings({
       });
       if (!response.ok) throw new Error("Failed to save.");
       toast.success("Settings saved");
+      router.refresh();
     } catch (error) {
       setHideVoteCounts(!checked);
       toast.error(error instanceof Error ? error.message : "Failed to save.");

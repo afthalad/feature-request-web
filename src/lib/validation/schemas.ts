@@ -27,6 +27,8 @@ export const slugSchema = z
   .regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "Lowercase letters, numbers, and hyphens only.");
 
 export const updateAppSchema = z.object({
+  name: z.string().trim().min(1).max(100).optional(),
+  bundleId: z.string().trim().min(1).max(200).optional(),
   notificationEmail: z.string().trim().email().optional(),
   emailOnNewRequest: z.boolean().optional(),
   hideVoteCounts: z.boolean().optional(),

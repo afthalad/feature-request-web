@@ -2,6 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/auth/requireUser";
 import { adminDb } from "@/lib/firebase/admin";
 import { AppSettingsForm } from "@/components/apps/AppSettingsForm";
+import { AppDetailsForm } from "@/components/apps/AppDetailsForm";
 import { ApiKeySection } from "@/components/apps/ApiKeySection";
 import { PublicBoardSettings } from "@/components/apps/PublicBoardSettings";
 import { Separator } from "@/components/ui/separator";
@@ -24,6 +25,8 @@ export default async function AppSettingsPage({
   return (
     <div className="max-w-lg space-y-8">
       <h1 className="text-xl font-semibold">Settings</h1>
+      <AppDetailsForm appId={appId} initialName={app.name} initialBundleId={app.bundleId} />
+      <Separator />
       <ApiKeySection appId={appId} apiKeyPrefix={app.apiKeyPrefix} />
       <Separator />
       <PublicBoardSettings
