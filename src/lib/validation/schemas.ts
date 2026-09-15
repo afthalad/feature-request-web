@@ -83,3 +83,30 @@ export const adminUpdateFeatureSchema = z.object({
   description: z.string().trim().max(1000).optional(),
   status: z.enum(["open", "planned", "in_progress", "done", "declined"]).optional(),
 });
+
+export const adminCreateAppSchema = z.object({
+  ownerUid: z.string().trim().min(1),
+  name: z.string().trim().min(1).max(100),
+  bundleId: z.string().trim().min(1).max(200),
+  platforms: platformsSchema.optional().default([]),
+  notificationEmail: z.string().trim().email().optional(),
+});
+
+export const adminCreateFeatureSchema = z.object({
+  title: z.string().trim().min(3).max(100),
+  description: z.string().trim().max(1000).optional().default(""),
+  status: z.enum(["open", "planned", "in_progress", "done", "declined"]).optional().default("open"),
+});
+
+export const adminCreateCommentSchema = z.object({
+  text: z.string().trim().min(1).max(1000),
+  authorName: z.string().trim().max(60).optional(),
+});
+
+export const adminUpdateCommentSchema = z.object({
+  text: z.string().trim().min(1).max(1000),
+});
+
+export const adminAddFollowerSchema = z.object({
+  email: z.string().trim().email(),
+});

@@ -1,6 +1,7 @@
 import "server-only";
 import { FieldValue, type QueryDocumentSnapshot } from "firebase-admin/firestore";
-import { adminDb } from "@/lib/firebase/admin";
+import { adminDb, adminAuth } from "@/lib/firebase/admin";
+import { deleteApp } from "@/lib/admin/apps";
 import type { AdminUser, AdminWebhookEvent, App, Plan } from "@/types";
 
 interface ListUsersParams {
@@ -104,4 +105,21 @@ export async function updateUserPlan(
   const patch: Record<string, unknown> = { plan, updatedAt: FieldValue.serverTimestamp() };
   if (subscriptionStatus !== undefined) patch.subscriptionStatus = subscriptionStatus;
   await adminDb.collection("users").doc(uid).set(patch, { merge: true });
+}
+
+// Permanently removes a user: every app they own (cascading, via deleteApp — features, votes,
+// followers, comments, API keys), their Firestore profile doc, and their Firebase Auth account.
+// Irreversible. Returns the ids of the apps that were deleted along with the account, for the
+// audit log.
+export async function deleteUser(uid: string): Promise<{ deletedAppIds: string[] }> {
+  const apps = await listAppsForUser(uid);
+  for (const app of apps) await deleteApp(app.id);
+
+  await adminDb.collection("users").doc(uid).delete();
+  await adminAuth.deleteUser(uid).catch(() => {
+    // The Firestore profile can outlive the Auth account (e.g. already removed there) —
+    // deleting the profile is what matters for admin visibility, so don't fail the request.
+  });
+
+  return { deletedAppIds: apps.map((app) => app.id) };
 }

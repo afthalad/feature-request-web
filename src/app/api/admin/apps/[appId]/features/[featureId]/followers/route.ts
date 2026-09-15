@@ -1,8 +1,9 @@
 import { NextRequest } from "next/server";
 import { getAdminFromAuthHeader } from "@/lib/auth/requireAdmin";
-import { createCommentAdmin, listCommentsForAdmin } from "@/lib/admin/features";
+import { listFollowersForFeature } from "@/lib/followers/service";
+import { addFollowerAdmin } from "@/lib/admin/followers";
 import { logAdminAction } from "@/lib/admin/audit";
-import { adminCreateCommentSchema } from "@/lib/validation/schemas";
+import { adminAddFollowerSchema } from "@/lib/validation/schemas";
 import { ok, errorResponse } from "@/lib/api/response";
 
 export async function GET(
@@ -13,8 +14,12 @@ export async function GET(
   if (!admin) return errorResponse("forbidden", "Admin access required.");
 
   const { appId, featureId } = await params;
-  const comments = await listCommentsForAdmin(appId, featureId);
-  return ok({ comments });
+  const { searchParams } = new URL(req.url);
+  const limit = Math.min(Math.max(Number(searchParams.get("limit")) || 20, 1), 100);
+  const cursor = searchParams.get("cursor");
+
+  const result = await listFollowersForFeature({ appId, featureId, limit, cursor });
+  return ok(result);
 }
 
 export async function POST(
@@ -25,25 +30,25 @@ export async function POST(
   if (!admin) return errorResponse("forbidden", "Admin access required.");
 
   const { appId, featureId } = await params;
-  const parsed = adminCreateCommentSchema.safeParse(await req.json().catch(() => null));
+  const parsed = adminAddFollowerSchema.safeParse(await req.json().catch(() => null));
   if (!parsed.success) {
     return errorResponse("validation_failed", parsed.error.issues[0]?.message ?? "Invalid input.");
   }
 
-  let comment;
+  let follower;
   try {
-    comment = await createCommentAdmin({ appId, featureId, adminUid: admin.uid, ...parsed.data });
+    follower = await addFollowerAdmin(appId, featureId, parsed.data.email);
   } catch {
     return errorResponse("not_found", "Feature not found.");
   }
 
   await logAdminAction({
     adminUid: admin.uid,
-    action: "comment.create",
-    targetType: "comment",
-    targetId: `${appId}/${featureId}/${comment.id}`,
-    after: parsed.data,
+    action: "follower.create",
+    targetType: "follower",
+    targetId: `${appId}/${featureId}/${follower.id}`,
+    after: { email: parsed.data.email },
   });
 
-  return ok({ comment }, 201);
+  return ok({ follower }, 201);
 }

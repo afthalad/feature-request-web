@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { getAdminFromAuthHeader } from "@/lib/auth/requireAdmin";
-import { getApp, setAppDisabled, updateApp } from "@/lib/admin/apps";
+import { deleteApp, getApp, setAppDisabled, updateApp } from "@/lib/admin/apps";
 import { logAdminAction } from "@/lib/admin/audit";
 import { adminUpdateAppSchema } from "@/lib/validation/schemas";
 import { ok, errorResponse } from "@/lib/api/response";
@@ -50,4 +50,28 @@ export async function PATCH(
 
   const after = await getApp(appId);
   return ok({ app: after });
+}
+
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: Promise<{ appId: string }> }
+) {
+  const admin = await getAdminFromAuthHeader(req);
+  if (!admin) return errorResponse("forbidden", "Admin access required.");
+
+  const { appId } = await params;
+  const before = await getApp(appId);
+  if (!before) return errorResponse("not_found", "App not found.");
+
+  await deleteApp(appId);
+
+  await logAdminAction({
+    adminUid: admin.uid,
+    action: "app.delete",
+    targetType: "app",
+    targetId: appId,
+    before,
+  });
+
+  return ok({ id: appId });
 }

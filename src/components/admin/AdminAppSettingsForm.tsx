@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { auth } from "@/lib/firebase/client";
 import { Input } from "@/components/ui/input";
@@ -19,12 +20,15 @@ import {
 import type { App } from "@/types";
 
 export function AdminAppSettingsForm({ app }: { app: App }) {
+  const router = useRouter();
   const [name, setName] = useState(app.name);
   const [notificationEmail, setNotificationEmail] = useState(app.notificationEmail);
   const [emailOnNewRequest, setEmailOnNewRequest] = useState(app.emailOnNewRequest);
   const [disabled, setDisabled] = useState(app.disabled ?? false);
   const [isSaving, setIsSaving] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   async function patch(body: Record<string, unknown>) {
     const idToken = await auth.currentUser?.getIdToken();
@@ -62,6 +66,24 @@ export function AdminAppSettingsForm({ app }: { app: App }) {
       toast.error(error instanceof Error ? error.message : "Failed to update app.");
     } finally {
       setIsSaving(false);
+    }
+  }
+
+  async function handleDelete() {
+    setIsDeleting(true);
+    try {
+      const idToken = await auth.currentUser?.getIdToken();
+      const response = await fetch(`/api/admin/apps/${app.id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${idToken}` },
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error?.message ?? "Failed to delete app.");
+      toast.success("App permanently deleted");
+      router.push("/admin/apps");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Failed to delete app.");
+      setIsDeleting(false);
     }
   }
 
@@ -126,6 +148,36 @@ export function AdminAppSettingsForm({ app }: { app: App }) {
                 disabled={isSaving}
               >
                 {isSaving ? "Saving..." : disabled ? "Re-enable" : "Disable"}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
+
+      <div className="flex items-center justify-between border-t pt-4">
+        <div>
+          <p className="text-sm font-medium">Delete app permanently</p>
+          <p className="text-muted-foreground text-sm">
+            Removes the app, its feature requests, comments, votes, followers, and API keys.
+            This cannot be undone.
+          </p>
+        </div>
+        <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+          <DialogTrigger render={<Button variant="destructive" />}>Delete</DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Permanently delete &ldquo;{app.name}&rdquo;?</DialogTitle>
+              <DialogDescription>
+                This deletes the app and everything under it — feature requests, comments,
+                votes, followers, and API keys. This cannot be undone.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setDeleteOpen(false)} disabled={isDeleting}>
+                Cancel
+              </Button>
+              <Button variant="destructive" onClick={handleDelete} disabled={isDeleting}>
+                {isDeleting ? "Deleting..." : "Delete permanently"}
               </Button>
             </DialogFooter>
           </DialogContent>

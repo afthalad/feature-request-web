@@ -6,6 +6,7 @@ import { auth } from "@/lib/firebase/client";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/features/StatusBadge";
+import { AdminCreateFeatureDialog } from "@/components/admin/AdminCreateFeatureDialog";
 import type { Feature } from "@/types";
 
 type SortTab = "top" | "new";
@@ -50,12 +51,18 @@ export function AdminFeatureList({ appId, initialFeatures, initialCursor }: Admi
 
   return (
     <div className="space-y-4">
-      <Tabs value={tab} onValueChange={(value) => handleTabChange(value as SortTab)}>
-        <TabsList>
-          <TabsTrigger value="top">Top</TabsTrigger>
-          <TabsTrigger value="new">New</TabsTrigger>
-        </TabsList>
-      </Tabs>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <Tabs value={tab} onValueChange={(value) => handleTabChange(value as SortTab)}>
+          <TabsList>
+            <TabsTrigger value="top">Top</TabsTrigger>
+            <TabsTrigger value="new">New</TabsTrigger>
+          </TabsList>
+        </Tabs>
+        <AdminCreateFeatureDialog
+          appId={appId}
+          onCreated={(feature) => setFeatures((prev) => [feature, ...prev])}
+        />
+      </div>
       {features.length === 0 ? (
         <p className="text-muted-foreground text-sm">No feature requests yet.</p>
       ) : (

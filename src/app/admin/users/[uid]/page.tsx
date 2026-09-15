@@ -4,6 +4,7 @@ import { getUser, listAppsForUser, listWebhookEventsForUser } from "@/lib/admin/
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { PlanOverrideForm } from "@/components/admin/PlanOverrideForm";
+import { AdminDeleteUserSection } from "@/components/admin/AdminDeleteUserSection";
 
 export default async function AdminUserDetailPage({
   params,
@@ -105,6 +106,10 @@ export default async function AdminUserDetailPage({
             ))}
           </ul>
         )}
+      </Card>
+
+      <Card className="p-5">
+        <AdminDeleteUserSection uid={uid} email={user.email} appCount={apps.length} />
       </Card>
     </div>
   );

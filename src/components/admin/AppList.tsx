@@ -14,6 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { AdminCreateAppDialog } from "@/components/admin/AdminCreateAppDialog";
 import type { App } from "@/types";
 
 const PAGE_SIZE = 20;
@@ -62,22 +63,25 @@ export function AppList({ initialApps, initialCursor }: AppListProps) {
 
   return (
     <div className="space-y-4">
-      <form onSubmit={handleSearch} className="flex gap-2">
-        <Input
-          placeholder="Search by exact slug or bundle ID..."
-          value={search}
-          onChange={(event) => setSearch(event.target.value)}
-          className="max-w-xs"
-        />
-        <Button type="submit" variant="outline" disabled={isLoading}>
-          Search
-        </Button>
-        {search && (
-          <Button type="button" variant="ghost" onClick={handleClear}>
-            Clear
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <form onSubmit={handleSearch} className="flex gap-2">
+          <Input
+            placeholder="Search by exact slug or bundle ID..."
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            className="max-w-xs"
+          />
+          <Button type="submit" variant="outline" disabled={isLoading}>
+            Search
           </Button>
-        )}
-      </form>
+          {search && (
+            <Button type="button" variant="ghost" onClick={handleClear}>
+              Clear
+            </Button>
+          )}
+        </form>
+        <AdminCreateAppDialog onCreated={(app) => setApps((prev) => [app, ...prev])} />
+      </div>
       <Table>
         <TableHeader>
           <TableRow>
