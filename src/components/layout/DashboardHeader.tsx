@@ -19,13 +19,19 @@ import {
 export function DashboardHeader() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
+  const [isSigningOut, setIsSigningOut] = useState(false);
 
   useEffect(() => onAuthStateChanged(auth, setUser), []);
 
   async function handleSignOut() {
-    await signOut(auth);
-    await fetch("/api/auth/session", { method: "DELETE" });
-    router.push("/login");
+    setIsSigningOut(true);
+    try {
+      await signOut(auth);
+      await fetch("/api/auth/session", { method: "DELETE" });
+      router.push("/login");
+    } catch {
+      setIsSigningOut(false);
+    }
   }
 
   const initial = user?.displayName?.[0] ?? user?.email?.[0] ?? "?";
@@ -46,7 +52,9 @@ export function DashboardHeader() {
             <DropdownMenuContent align="end">
               <DropdownMenuItem render={<Link href="/pricing" />}>Pricing</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleSignOut}>Sign out</DropdownMenuItem>
+              <DropdownMenuItem onClick={handleSignOut} disabled={isSigningOut}>
+                {isSigningOut ? "Signing out..." : "Sign out"}
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

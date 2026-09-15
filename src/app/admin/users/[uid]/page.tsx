@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { PlanOverrideForm } from "@/components/admin/PlanOverrideForm";
 import { AdminDeleteUserSection } from "@/components/admin/AdminDeleteUserSection";
+import { LinkPendingSpinner } from "@/components/admin/LinkPendingSpinner";
 
 export default async function AdminUserDetailPage({
   params,
@@ -12,13 +13,14 @@ export default async function AdminUserDetailPage({
   params: Promise<{ uid: string }>;
 }) {
   const { uid } = await params;
-  const user = await getUser(uid);
+  // apps only needs uid, not the user doc, so it starts alongside getUser instead of waiting
+  // on it. webhookEvents genuinely depends on user.dodoCustomerId and has to follow.
+  const [user, apps] = await Promise.all([getUser(uid), listAppsForUser(uid)]);
   if (!user) notFound();
 
-  const [apps, webhookEvents] = await Promise.all([
-    listAppsForUser(uid),
-    user.dodoCustomerId ? listWebhookEventsForUser(user.dodoCustomerId) : Promise.resolve([]),
-  ]);
+  const webhookEvents = user.dodoCustomerId
+    ? await listWebhookEventsForUser(user.dodoCustomerId)
+    : [];
 
   return (
     <div className="space-y-6">
@@ -76,8 +78,12 @@ export default async function AdminUserDetailPage({
           <ul className="space-y-2">
             {apps.map((app) => (
               <li key={app.id} className="flex items-center justify-between text-sm">
-                <Link href={`/admin/apps/${app.id}`} className="underline underline-offset-2">
+                <Link
+                  href={`/admin/apps/${app.id}`}
+                  className="inline-flex items-center gap-1.5 underline underline-offset-2"
+                >
                   {app.name}
+                  <LinkPendingSpinner />
                 </Link>
                 <span className="text-muted-foreground">
                   {app.featureCount} requests{app.disabled ? " · disabled" : ""}

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { signOut } from "firebase/auth";
@@ -7,7 +8,7 @@ import { auth } from "@/lib/firebase/client";
 import { Logo } from "@/components/layout/Logo";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { AdminNavLink } from "@/components/admin/AdminNavLink";
 
 const NAV_ITEMS = [
   { href: "/admin", label: "Overview" },
@@ -20,11 +21,17 @@ const NAV_ITEMS = [
 export function AdminNav() {
   const pathname = usePathname();
   const router = useRouter();
+  const [isSigningOut, setIsSigningOut] = useState(false);
 
   async function handleSignOut() {
-    await signOut(auth);
-    await fetch("/api/auth/session", { method: "DELETE" });
-    router.push("/login");
+    setIsSigningOut(true);
+    try {
+      await signOut(auth);
+      await fetch("/api/auth/session", { method: "DELETE" });
+      router.push("/login");
+    } catch {
+      setIsSigningOut(false);
+    }
   }
 
   return (
@@ -41,8 +48,8 @@ export function AdminNav() {
             Dashboard
           </Link>
           <ThemeToggle />
-          <Button variant="ghost" size="sm" onClick={handleSignOut}>
-            Sign out
+          <Button variant="ghost" size="sm" onClick={handleSignOut} disabled={isSigningOut}>
+            {isSigningOut ? "Signing out..." : "Sign out"}
           </Button>
         </div>
       </div>
@@ -51,18 +58,9 @@ export function AdminNav() {
           const isActive =
             item.href === "/admin" ? pathname === "/admin" : pathname.startsWith(item.href);
           return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "shrink-0 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors",
-                isActive
-                  ? "bg-muted text-foreground"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
-              )}
-            >
+            <AdminNavLink key={item.href} href={item.href} isActive={isActive}>
               {item.label}
-            </Link>
+            </AdminNavLink>
           );
         })}
       </nav>

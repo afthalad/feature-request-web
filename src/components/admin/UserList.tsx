@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
+import { Users } from "lucide-react";
 import { auth } from "@/lib/firebase/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -14,6 +15,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { EmptyState } from "@/components/ui/empty-state";
+import { LinkPendingSpinner } from "@/components/admin/LinkPendingSpinner";
 import type { AdminUser } from "@/types";
 
 const PAGE_SIZE = 20;
@@ -78,41 +81,48 @@ export function UserList({ initialUsers, initialCursor }: UserListProps) {
           </Button>
         )}
       </form>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Email</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Plan</TableHead>
-            <TableHead>Joined</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {users.map((user) => (
-            <TableRow key={user.uid}>
-              <TableCell>
-                <Link href={`/admin/users/${user.uid}`} className="underline underline-offset-2">
-                  {user.email || user.uid}
-                </Link>
-              </TableCell>
-              <TableCell>{user.displayName || "—"}</TableCell>
-              <TableCell>
-                <Badge variant="outline" className="capitalize">
-                  {user.plan}
-                </Badge>
-              </TableCell>
-              <TableCell>{new Date(user.createdAt).toLocaleDateString()}</TableCell>
-            </TableRow>
-          ))}
-          {users.length === 0 && (
-            <TableRow>
-              <TableCell colSpan={4} className="text-muted-foreground text-center">
-                No users found.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+      {users.length === 0 ? (
+        <EmptyState
+          icon={Users}
+          title="No users found"
+          description={search ? "Try a different email." : "Users will show up here once they sign in."}
+        />
+      ) : (
+        <div className="overflow-hidden rounded-xl border">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Email</TableHead>
+                <TableHead>Name</TableHead>
+                <TableHead>Plan</TableHead>
+                <TableHead>Joined</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {users.map((user) => (
+                <TableRow key={user.uid}>
+                  <TableCell>
+                    <Link
+                      href={`/admin/users/${user.uid}`}
+                      className="inline-flex items-center gap-1.5 underline underline-offset-2"
+                    >
+                      {user.email || user.uid}
+                      <LinkPendingSpinner />
+                    </Link>
+                  </TableCell>
+                  <TableCell>{user.displayName || "—"}</TableCell>
+                  <TableCell>
+                    <Badge variant="outline" className="capitalize">
+                      {user.plan}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>{new Date(user.createdAt).toLocaleDateString()}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      )}
       {cursor && (
         <div className="flex justify-center">
           <Button

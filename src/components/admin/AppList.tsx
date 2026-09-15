@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
+import { LayoutGrid } from "lucide-react";
 import { auth } from "@/lib/firebase/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -14,7 +15,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { EmptyState } from "@/components/ui/empty-state";
 import { AdminCreateAppDialog } from "@/components/admin/AdminCreateAppDialog";
+import { LinkPendingSpinner } from "@/components/admin/LinkPendingSpinner";
 import type { App } from "@/types";
 
 const PAGE_SIZE = 20;
@@ -82,45 +85,52 @@ export function AppList({ initialApps, initialCursor }: AppListProps) {
         </form>
         <AdminCreateAppDialog onCreated={(app) => setApps((prev) => [app, ...prev])} />
       </div>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>Bundle ID</TableHead>
-            <TableHead>Features</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Created</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {apps.map((app) => (
-            <TableRow key={app.id}>
-              <TableCell>
-                <Link href={`/admin/apps/${app.id}`} className="underline underline-offset-2">
-                  {app.name}
-                </Link>
-              </TableCell>
-              <TableCell className="text-muted-foreground">{app.bundleId}</TableCell>
-              <TableCell>{app.featureCount}</TableCell>
-              <TableCell>
-                {app.disabled ? (
-                  <Badge variant="destructive">Disabled</Badge>
-                ) : (
-                  <Badge variant="outline">Active</Badge>
-                )}
-              </TableCell>
-              <TableCell>{new Date(app.createdAt).toLocaleDateString()}</TableCell>
-            </TableRow>
-          ))}
-          {apps.length === 0 && (
-            <TableRow>
-              <TableCell colSpan={5} className="text-muted-foreground text-center">
-                No apps found.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+      {apps.length === 0 ? (
+        <EmptyState
+          icon={LayoutGrid}
+          title="No apps found"
+          description={search ? "Try a different slug or bundle ID." : "Apps created by users will show up here."}
+        />
+      ) : (
+        <div className="overflow-hidden rounded-xl border">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Name</TableHead>
+                <TableHead>Bundle ID</TableHead>
+                <TableHead>Features</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Created</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {apps.map((app) => (
+                <TableRow key={app.id}>
+                  <TableCell>
+                    <Link
+                      href={`/admin/apps/${app.id}`}
+                      className="inline-flex items-center gap-1.5 underline underline-offset-2"
+                    >
+                      {app.name}
+                      <LinkPendingSpinner />
+                    </Link>
+                  </TableCell>
+                  <TableCell className="text-muted-foreground">{app.bundleId}</TableCell>
+                  <TableCell>{app.featureCount}</TableCell>
+                  <TableCell>
+                    {app.disabled ? (
+                      <Badge variant="destructive">Disabled</Badge>
+                    ) : (
+                      <Badge variant="outline">Active</Badge>
+                    )}
+                  </TableCell>
+                  <TableCell>{new Date(app.createdAt).toLocaleDateString()}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      )}
       {cursor && (
         <div className="flex justify-center">
           <Button

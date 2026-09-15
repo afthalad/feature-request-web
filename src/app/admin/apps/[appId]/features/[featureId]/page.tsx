@@ -11,13 +11,13 @@ export default async function AdminFeatureDetailPage({
   params: Promise<{ appId: string; featureId: string }>;
 }) {
   const { appId, featureId } = await params;
-  const feature = await getFeature(appId, featureId);
-  if (!feature) notFound();
-
-  const [comments, followersResult] = await Promise.all([
+  // All three only need appId/featureId, not each other's result, so they run concurrently.
+  const [feature, comments, followersResult] = await Promise.all([
+    getFeature(appId, featureId),
     listCommentsForAdmin(appId, featureId),
     listFollowersForFeature({ appId, featureId, limit: FOLLOWERS_PAGE_SIZE, cursor: null }),
   ]);
+  if (!feature) notFound();
 
   return (
     <div className="space-y-6">

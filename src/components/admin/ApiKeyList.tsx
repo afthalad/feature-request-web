@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { KeyRound } from "lucide-react";
 import { toast } from "sonner";
 import { auth } from "@/lib/firebase/client";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -14,6 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { EmptyState } from "@/components/ui/empty-state";
 import {
   Dialog,
   DialogContent,
@@ -98,49 +100,48 @@ export function ApiKeyList({ initialKeys, initialCursor }: ApiKeyListProps) {
           <TabsTrigger value="revoked">Revoked</TabsTrigger>
         </TabsList>
       </Tabs>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>App</TableHead>
-            <TableHead>Key hash</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Created</TableHead>
-            <TableHead />
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {keys.map((key) => (
-            <TableRow key={key.hash}>
-              <TableCell>{key.appName}</TableCell>
-              <TableCell className="text-muted-foreground font-mono text-xs">
-                {key.hash.slice(0, 16)}…
-              </TableCell>
-              <TableCell>
-                {key.active ? (
-                  <Badge variant="outline">Active</Badge>
-                ) : (
-                  <Badge variant="destructive">Revoked</Badge>
-                )}
-              </TableCell>
-              <TableCell>{new Date(key.createdAt).toLocaleDateString()}</TableCell>
-              <TableCell>
-                {key.active && (
-                  <Button variant="ghost" size="sm" onClick={() => setPendingHash(key.hash)}>
-                    Revoke
-                  </Button>
-                )}
-              </TableCell>
-            </TableRow>
-          ))}
-          {keys.length === 0 && (
-            <TableRow>
-              <TableCell colSpan={5} className="text-muted-foreground text-center">
-                No API keys found.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+      {keys.length === 0 ? (
+        <EmptyState icon={KeyRound} title="No API keys found" description="Keys are created when a user sets up an app." />
+      ) : (
+        <div className="overflow-hidden rounded-xl border">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>App</TableHead>
+                <TableHead>Key hash</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Created</TableHead>
+                <TableHead />
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {keys.map((key) => (
+                <TableRow key={key.hash}>
+                  <TableCell>{key.appName}</TableCell>
+                  <TableCell className="text-muted-foreground font-mono text-xs">
+                    {key.hash.slice(0, 16)}…
+                  </TableCell>
+                  <TableCell>
+                    {key.active ? (
+                      <Badge variant="outline">Active</Badge>
+                    ) : (
+                      <Badge variant="destructive">Revoked</Badge>
+                    )}
+                  </TableCell>
+                  <TableCell>{new Date(key.createdAt).toLocaleDateString()}</TableCell>
+                  <TableCell>
+                    {key.active && (
+                      <Button variant="ghost" size="sm" onClick={() => setPendingHash(key.hash)}>
+                        Revoke
+                      </Button>
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      )}
       {cursor && (
         <div className="flex justify-center">
           <Button

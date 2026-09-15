@@ -2,11 +2,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { Inbox } from "lucide-react";
 import { auth } from "@/lib/firebase/client";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { StatusBadge } from "@/components/features/StatusBadge";
 import { AdminCreateFeatureDialog } from "@/components/admin/AdminCreateFeatureDialog";
+import { LinkPendingSpinner } from "@/components/admin/LinkPendingSpinner";
 import type { Feature } from "@/types";
 
 type SortTab = "top" | "new";
@@ -64,7 +67,12 @@ export function AdminFeatureList({ appId, initialFeatures, initialCursor }: Admi
         />
       </div>
       {features.length === 0 ? (
-        <p className="text-muted-foreground text-sm">No feature requests yet.</p>
+        <EmptyState
+          icon={Inbox}
+          title="No feature requests yet"
+          description="Requests submitted on the public board, or created here, will show up in this list."
+          className="py-10"
+        />
       ) : (
         <div className="space-y-2">
           {features.map((feature) => (
@@ -78,6 +86,7 @@ export function AdminFeatureList({ appId, initialFeatures, initialCursor }: Admi
                 <span>{feature.upvoteCount} votes</span>
                 <span>{feature.commentCount} comments</span>
                 <StatusBadge status={feature.status} />
+                <LinkPendingSpinner />
               </span>
             </Link>
           ))}

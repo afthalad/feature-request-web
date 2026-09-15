@@ -5,6 +5,7 @@ import { listFeaturesForOwner } from "@/lib/features/service";
 import { Card } from "@/components/ui/card";
 import { AdminAppSettingsForm } from "@/components/admin/AdminAppSettingsForm";
 import { AdminFeatureList } from "@/components/admin/AdminFeatureList";
+import { LinkPendingSpinner } from "@/components/admin/LinkPendingSpinner";
 
 const FEATURES_PAGE_SIZE = 20;
 
@@ -14,23 +15,25 @@ export default async function AdminAppDetailPage({
   params: Promise<{ appId: string }>;
 }) {
   const { appId } = await params;
-  const app = await getApp(appId);
+  // Independent reads — listFeaturesForOwner only needs the appId, not the app doc — so they
+  // run concurrently instead of paying two sequential Firestore round trips.
+  const [app, { features, nextCursor }] = await Promise.all([
+    getApp(appId),
+    listFeaturesForOwner({ appId, tab: "new", limit: FEATURES_PAGE_SIZE, cursor: null }),
+  ]);
   if (!app) notFound();
-
-  const { features, nextCursor } = await listFeaturesForOwner({
-    appId,
-    tab: "new",
-    limit: FEATURES_PAGE_SIZE,
-    cursor: null,
-  });
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-xl font-semibold">{app.name}</h1>
         <p className="text-muted-foreground text-sm">
-          <Link href={`/admin/users/${app.ownerUid}`} className="underline underline-offset-2">
+          <Link
+            href={`/admin/users/${app.ownerUid}`}
+            className="inline-flex items-center gap-1.5 underline underline-offset-2"
+          >
             Owner
+            <LinkPendingSpinner />
           </Link>
           {" · "}
           {app.bundleId}

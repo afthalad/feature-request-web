@@ -21,12 +21,16 @@ async function getPlan(uid: string): Promise<Plan> {
 }
 
 export async function checkAppLimit(uid: string): Promise<PlanLimitResult> {
-  const plan = await getPlan(uid);
+  // Both reads only need `uid`, so they run concurrently. The app count uses a server-side
+  // count() aggregate instead of fetching every app doc — we only need `.size`, not the data.
+  const [plan, countSnap] = await Promise.all([
+    getPlan(uid),
+    adminDb.collection("apps").where("ownerUid", "==", uid).count().get(),
+  ]);
   const limits = PLAN_LIMITS[plan];
   const upgradeHint = plan !== "pro" ? " Upgrade at /pricing for more." : "";
 
-  const appsSnap = await adminDb.collection("apps").where("ownerUid", "==", uid).get();
-  if (appsSnap.size >= limits.maxApps) {
+  if (countSnap.data().count >= limits.maxApps) {
     return {
       allowed: false,
       message: `You've reached the ${limits.maxApps}-app limit on the ${plan} plan.${upgradeHint}`,
