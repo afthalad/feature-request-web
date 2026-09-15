@@ -59,14 +59,18 @@ export async function sendNewFeatureRequestEmail(params: NewFeatureRequestEmailP
   }
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+  const subject = `New feature request for ${recipient.name}`;
 
   // resend.emails.send() resolves with { error } on an API-level rejection — it does NOT throw —
   // so this must be checked explicitly, or a rejected send (e.g. a sandbox-domain restriction)
-  // silently looks like success.
+  // silently looks like success. Subject is passed explicitly here (rather than relying on the
+  // template's own Subject field in the Resend dashboard) so a blank/misconfigured template
+  // subject can't silently break sending.
   const { error } = isOverLimit
     ? await resend.emails.send({
         from: process.env.EMAIL_FROM!,
         to: recipient.notificationEmail,
+        subject,
         template: {
           id: NEW_FEATURE_LIMIT_TEMPLATE_ID,
           variables: {
@@ -79,6 +83,7 @@ export async function sendNewFeatureRequestEmail(params: NewFeatureRequestEmailP
     : await resend.emails.send({
         from: process.env.EMAIL_FROM!,
         to: recipient.notificationEmail,
+        subject,
         template: {
           id: NEW_FEATURE_FULL_TEMPLATE_ID,
           variables: {
@@ -87,7 +92,7 @@ export async function sendNewFeatureRequestEmail(params: NewFeatureRequestEmailP
             DESCRIPTION_HTML: params.description
               ? `<p style="font-size: 14px; line-height: 1.6; color: #71717a; margin: 8px 0 0; white-space: pre-wrap;">${escapeHtml(params.description)}</p>`
               : "",
-            UPVOTE_COUNT: params.upvoteCount,
+            UPVOTE_COUNT: String(params.upvoteCount),
             SUBMITTER_LINE: params.submitterEmail
               ? `Submitted by <a href="mailto:${escapeHtml(params.submitterEmail)}" style="color: #18181b; text-decoration: underline;">${escapeHtml(params.submitterEmail)}</a>`
               : "Submitted anonymously",
