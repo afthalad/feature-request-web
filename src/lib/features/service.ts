@@ -26,7 +26,7 @@ export class RateLimitError extends Error {}
 export class NotFoundError extends Error {}
 export class LimitExceededError extends Error {}
 
-const MAX_SUBMITS_PER_DEVICE_PER_DAY = 5;
+const MAX_SUBMITS_PER_DEVICE_PER_DAY = 15;
 const APPROVED_STATUSES: FeatureStatus[] = ["planned", "in_progress", "done"];
 
 function mapFeature(doc: QueryDocumentSnapshot): Feature {
@@ -61,9 +61,17 @@ export async function listFeaturesForApp({
   sort,
   limit,
   cursor,
-}: ListFeaturesParams): Promise<{ features: FeatureWithVote[]; nextCursor: string | null }> {
-  const featuresRef = adminDb.collection("apps").doc(appId).collection("features");
-  let query = featuresRef.orderBy(sort === "top" ? "upvoteCount" : "createdAt", "desc").limit(limit + 1);
+}: ListFeaturesParams): Promise<{
+  features: FeatureWithVote[];
+  nextCursor: string | null;
+}> {
+  const featuresRef = adminDb
+    .collection("apps")
+    .doc(appId)
+    .collection("features");
+  let query = featuresRef
+    .orderBy(sort === "top" ? "upvoteCount" : "createdAt", "desc")
+    .limit(limit + 1);
 
   if (cursor) {
     const cursorSnap = await featuresRef.doc(cursor).get();
@@ -76,16 +84,25 @@ export async function listFeaturesForApp({
   const nextCursor = hasMore ? docs[docs.length - 1].id : null;
 
   const voteRefs = docs.map((doc) => doc.ref.collection("votes").doc(deviceId));
-  const followerRefs = docs.map((doc) => doc.ref.collection("followers").doc(deviceId));
+  const followerRefs = docs.map((doc) =>
+    doc.ref.collection("followers").doc(deviceId),
+  );
   const [voteSnaps, followerSnaps] =
     docs.length > 0
-      ? await Promise.all([adminDb.getAll(...voteRefs), adminDb.getAll(...followerRefs)])
+      ? await Promise.all([
+          adminDb.getAll(...voteRefs),
+          adminDb.getAll(...followerRefs),
+        ])
       : [[], []];
   const votedIds = new Set(
-    voteSnaps.filter((snap) => snap.exists).map((snap) => snap.ref.parent.parent!.id)
+    voteSnaps
+      .filter((snap) => snap.exists)
+      .map((snap) => snap.ref.parent.parent!.id),
   );
   const followedIds = new Set(
-    followerSnaps.filter((snap) => snap.exists).map((snap) => snap.ref.parent.parent!.id)
+    followerSnaps
+      .filter((snap) => snap.exists)
+      .map((snap) => snap.ref.parent.parent!.id),
   );
 
   const features: FeatureWithVote[] = docs.map((doc) => ({
@@ -132,15 +149,20 @@ export async function listFeaturesForOwner({
   plan = "pro",
   served = 0,
 }: ListFeaturesForOwnerParams): Promise<ListFeaturesForOwnerResult> {
-  const featuresRef = adminDb.collection("apps").doc(appId).collection("features");
+  const featuresRef = adminDb
+    .collection("apps")
+    .doc(appId)
+    .collection("features");
   let query: Query = featuresRef;
 
   if (tab === "pending") query = query.where("status", "==", "open");
-  else if (tab === "approved") query = query.where("status", "in", APPROVED_STATUSES);
+  else if (tab === "approved")
+    query = query.where("status", "in", APPROVED_STATUSES);
 
   let totalCount: number | null = null;
   let hiddenCount = 0;
-  const visibleLimit = tab === "pending" ? PLAN_LIMITS[plan].maxFeaturesPerApp : Infinity;
+  const visibleLimit =
+    tab === "pending" ? PLAN_LIMITS[plan].maxFeaturesPerApp : Infinity;
 
   if (tab === "pending") {
     const countSnap = await query.count().get();
@@ -156,7 +178,9 @@ export async function listFeaturesForOwner({
     }
   }
 
-  query = query.orderBy(tab === "top" ? "upvoteCount" : "createdAt", "desc").limit(limit + 1);
+  query = query
+    .orderBy(tab === "top" ? "upvoteCount" : "createdAt", "desc")
+    .limit(limit + 1);
 
   if (cursor) {
     const cursorSnap = await featuresRef.doc(cursor).get();
@@ -168,17 +192,26 @@ export async function listFeaturesForOwner({
   const hasMore = snapshot.docs.length > limit;
   let nextCursor = hasMore ? docs[docs.length - 1].id : null;
 
-  if (nextCursor && Number.isFinite(visibleLimit) && served + docs.length >= visibleLimit) {
+  if (
+    nextCursor &&
+    Number.isFinite(visibleLimit) &&
+    served + docs.length >= visibleLimit
+  ) {
     nextCursor = null;
   }
 
-  return { features: docs.map(mapFeature), nextCursor, totalCount, hiddenCount };
+  return {
+    features: docs.map(mapFeature),
+    nextCursor,
+    totalCount,
+    hiddenCount,
+  };
 }
 
 // Newest pending (unreviewed) features across all of an owner's apps, for the dashboard preview.
 export async function listRecentPendingFeatures(
   apps: App[],
-  limit: number
+  limit: number,
 ): Promise<RecentFeature[]> {
   if (apps.length === 0) return [];
 
@@ -191,8 +224,8 @@ export async function listRecentPendingFeatures(
         .where("status", "==", "open")
         .orderBy("createdAt", "desc")
         .limit(limit)
-        .get()
-    )
+        .get(),
+    ),
   );
 
   const features = perAppSnapshots.flatMap((snapshot, index) => {
@@ -203,16 +236,23 @@ export async function listRecentPendingFeatures(
         ...feature,
         appId: app.id,
         appName: app.name,
-        isNew: !app.featuresLastViewedAt || feature.createdAt > app.featuresLastViewedAt,
+        isNew:
+          !app.featuresLastViewedAt ||
+          feature.createdAt > app.featuresLastViewedAt,
       };
     });
   });
 
-  return features.sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, limit);
+  return features
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+    .slice(0, limit);
 }
 
 export async function getDashboardStats(apps: App[]): Promise<DashboardStats> {
-  const totalFeatures = apps.reduce((sum, app) => sum + (app.featureCount ?? 0), 0);
+  const totalFeatures = apps.reduce(
+    (sum, app) => sum + (app.featureCount ?? 0),
+    0,
+  );
 
   const upvoteTotals = await Promise.all(
     apps.map((app) =>
@@ -221,11 +261,14 @@ export async function getDashboardStats(apps: App[]): Promise<DashboardStats> {
         .doc(app.id)
         .collection("features")
         .aggregate({ upvotes: AggregateField.sum("upvoteCount") })
-        .get()
-    )
+        .get(),
+    ),
   );
 
-  const totalUpvotes = upvoteTotals.reduce((sum, snap) => sum + (snap.data().upvotes ?? 0), 0);
+  const totalUpvotes = upvoteTotals.reduce(
+    (sum, snap) => sum + (snap.data().upvotes ?? 0),
+    0,
+  );
 
   return { totalApps: apps.length, totalFeatures, totalUpvotes };
 }
@@ -301,7 +344,7 @@ export async function createFeatureForApp({
       description: data.description,
       upvoteCount: data.upvoteCount,
       submitterEmail: email,
-    }).catch(console.error)
+    }).catch(console.error),
   );
 
   return {
@@ -324,13 +367,20 @@ export async function voteOnFeature(
   appId: string,
   featureId: string,
   deviceId: string,
-  action: "add" | "remove"
+  action: "add" | "remove",
 ): Promise<{ upvoteCount: number; hasVoted: boolean }> {
-  const featureRef = adminDb.collection("apps").doc(appId).collection("features").doc(featureId);
+  const featureRef = adminDb
+    .collection("apps")
+    .doc(appId)
+    .collection("features")
+    .doc(featureId);
   const voteRef = featureRef.collection("votes").doc(deviceId);
 
   const upvoteCount = await adminDb.runTransaction(async (tx) => {
-    const [featureSnap, voteSnap] = await Promise.all([tx.get(featureRef), tx.get(voteRef)]);
+    const [featureSnap, voteSnap] = await Promise.all([
+      tx.get(featureRef),
+      tx.get(voteRef),
+    ]);
     if (!featureSnap.exists) throw new NotFoundError();
 
     const currentCount: number = featureSnap.data()!.upvoteCount;
@@ -359,7 +409,10 @@ export async function exportFeaturesForApp({
   appId: string;
   since: Date;
 }): Promise<Feature[]> {
-  const featuresRef = adminDb.collection("apps").doc(appId).collection("features");
+  const featuresRef = adminDb
+    .collection("apps")
+    .doc(appId)
+    .collection("features");
   const snapshot = await featuresRef
     .where("createdAt", ">=", Timestamp.fromDate(since))
     .orderBy("createdAt", "desc")
@@ -380,7 +433,11 @@ export async function translateFeature({
   featureId: string;
   targetLang: string;
 }): Promise<FeatureTranslation> {
-  const featureRef = adminDb.collection("apps").doc(appId).collection("features").doc(featureId);
+  const featureRef = adminDb
+    .collection("apps")
+    .doc(appId)
+    .collection("features")
+    .doc(featureId);
   const featureSnap = await featureRef.get();
   if (!featureSnap.exists) throw new NotFoundError();
 
@@ -405,7 +462,10 @@ export async function translateFeature({
 
 // Recursively removes the feature doc plus its votes/followers/comments subcollections, and
 // decrements the app's featureCount. Irreversible — the caller is expected to confirm first.
-export async function deleteFeature(appId: string, featureId: string): Promise<void> {
+export async function deleteFeature(
+  appId: string,
+  featureId: string,
+): Promise<void> {
   const appRef = adminDb.collection("apps").doc(appId);
   const featureRef = appRef.collection("features").doc(featureId);
 
