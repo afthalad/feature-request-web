@@ -1,4 +1,11 @@
-import { siSwift, siFlutter, siNextdotjs, siKotlin, siReact, siLaravel } from "simple-icons";
+import {
+  siSwift,
+  siFlutter,
+  siNextdotjs,
+  siKotlin,
+  siReact,
+  siLaravel,
+} from "simple-icons";
 
 export interface Platform {
   id: string;
@@ -17,7 +24,7 @@ export interface Platform {
 export const PLATFORMS: Platform[] = [
   {
     id: "swiftui",
-    name: "SwiftUI",
+    name: "SwiftUII",
     tagline: "A native board view, dropped into any SwiftUI app.",
     iconPath: siSwift.path,
     iconColor: `#${siSwift.hex}`,
@@ -42,7 +49,8 @@ Fewchurs.showBoard()`,
   {
     id: "nextjs",
     name: "Next.js",
-    tagline: "A server-rendered board, with your API key staying on the server.",
+    tagline:
+      "A server-rendered board, with your API key staying on the server.",
     iconPath: siNextdotjs.path,
     iconColor: `#${siNextdotjs.hex}`,
     href: "/docs/nextjs",
