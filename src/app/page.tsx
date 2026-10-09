@@ -12,6 +12,7 @@ import {
 import { getSessionUser } from "@/lib/auth/requireUser";
 import { buttonVariants } from "@/components/ui/button";
 import { PlatformShowcase } from "@/components/landing/PlatformShowcase";
+import { HeroVideo } from "@/components/landing/HeroVideo";
 import { MarketingHeader } from "@/components/layout/MarketingHeader";
 import { PlatformPills } from "@/components/docs/PlatformPills";
 import { BrandIcon } from "@/components/marketing/BrandIcon";
@@ -204,6 +205,7 @@ export default async function Home() {
           </div>
 
           {/* <PlatformShowcase /> */}
+          <HeroVideo />
         </div>
       </section>
 
