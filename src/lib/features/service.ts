@@ -53,6 +53,8 @@ interface ListFeaturesParams {
   sort: "top" | "new";
   limit: number;
   cursor: string | null;
+  /** Roadmap views ask for a subset; omitted means every status. */
+  statuses?: FeatureStatus[];
 }
 
 export async function listFeaturesForApp({
@@ -61,6 +63,7 @@ export async function listFeaturesForApp({
   sort,
   limit,
   cursor,
+  statuses,
 }: ListFeaturesParams): Promise<{
   features: FeatureWithVote[];
   nextCursor: string | null;
@@ -69,7 +72,10 @@ export async function listFeaturesForApp({
     .collection("apps")
     .doc(appId)
     .collection("features");
-  let query = featuresRef
+  let query: Query = statuses?.length
+    ? featuresRef.where("status", "in", statuses)
+    : featuresRef;
+  query = query
     .orderBy(sort === "top" ? "upvoteCount" : "createdAt", "desc")
     .limit(limit + 1);
 
@@ -105,13 +111,51 @@ export async function listFeaturesForApp({
       .map((snap) => snap.ref.parent.parent!.id),
   );
 
-  const features: FeatureWithVote[] = docs.map((doc) => ({
-    ...mapFeature(doc),
-    hasVoted: votedIds.has(doc.id),
-    isFollowing: followedIds.has(doc.id),
-  }));
+  const features: FeatureWithVote[] = docs.map((doc) => {
+    const feature = mapFeature(doc);
+    return {
+      ...feature,
+      hasVoted: votedIds.has(doc.id),
+      isFollowing: followedIds.has(doc.id),
+      isMine: feature.authorDeviceId === deviceId,
+    };
+  });
 
   return { features, nextCursor };
+}
+
+// Single feature for SDK deep links and per-request pages, with the same vote/follow state
+// the list gives, so a detail view does not have to page the list to find one row.
+export async function getFeatureForApp({
+  appId,
+  featureId,
+  deviceId,
+}: {
+  appId: string;
+  featureId: string;
+  deviceId: string;
+}): Promise<FeatureWithVote> {
+  const featureRef = adminDb
+    .collection("apps")
+    .doc(appId)
+    .collection("features")
+    .doc(featureId);
+
+  const [featureSnap, voteSnap, followerSnap] = await Promise.all([
+    featureRef.get(),
+    featureRef.collection("votes").doc(deviceId).get(),
+    featureRef.collection("followers").doc(deviceId).get(),
+  ]);
+
+  if (!featureSnap.exists) throw new NotFoundError();
+
+  const feature = mapFeature(featureSnap as QueryDocumentSnapshot);
+  return {
+    ...feature,
+    hasVoted: voteSnap.exists,
+    isFollowing: followerSnap.exists,
+    isMine: feature.authorDeviceId === deviceId,
+  };
 }
 
 export type OwnerFeatureTab = "top" | "new" | "pending" | "approved";

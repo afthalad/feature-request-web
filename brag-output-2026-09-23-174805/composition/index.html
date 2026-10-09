@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fewchurs Tech Stack Brag Video</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #ffffff;
+        }
+
+        body.dark {
+            background: #0f0f0f;
+        }
+
+        #root {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            background: #ffffff;
+        }
+
+        body.dark #root {
+            background: #0f0f0f;
+        }
+
+        .clip {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        /* Scene 1: Hook */
+        .hook-card {
+            position: absolute;
+            width: 400px;
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .hook-title {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .hook-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .upvote-count {
+            font-size: 48px;
+            font-weight: 700;
+        }
+
+        .upvote-icon {
+            font-size: 32px;
+        }
+
+        /* Scene 2: Dashboard */
+        .dashboard-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, #f8f9fa, #ffffff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        body.dark .dashboard-container {
+            background: linear-gradient(to bottom, #1a1a1a, #0f0f0f);
+        }
+
+        .dashboard-frame {
+            width: 90%;
+            height: 90%;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15);
+            display: flex;
+            overflow: hidden;
+        }
+
+        body.dark .dashboard-frame {
+            background: #1a1a1a;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+        }
+
+        .dashboard-sidebar {
+            width: 220px;
+            background: #f5f5f5;
+            padding: 20px;
+            border-right: 1px solid #e0e0e0;
+        }
+
+        body.dark .dashboard-sidebar {
+            background: #262626;
+            border-right: 1px solid #404040;
+        }
+
+        .sidebar-item {
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #666;
+            background: transparent;
+        }
+
+        body.dark .sidebar-item {
+            color: #aaa;
+        }
+
+        .sidebar-item.active {
+            background: white;
+            color: #333;
+            font-weight: 600;
+        }
+
+        body.dark .sidebar-item.active {
+            background: #333;
+            color: #fff;
+        }
+
+        .dashboard-content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        .content-header {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #1a1a1a;
+        }
+
+        body.dark .content-header {
+            color: #fff;
+        }
+
+        .feature-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .feature-card {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        body.dark .feature-card {
+            background: #262626;
+            border: 1px solid #404040;
+        }
+
+        .feature-info {
+            flex: 1;
+        }
+
+        .feature-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+
+        body.dark .feature-title {
+            color: #fff;
+        }
+
+        .feature-meta {
+            font-size: 12px;
+            color: #999;
+        }
+
+        body.dark .feature-meta {
+            color: #777;
+        }
+
+        .feature-stats {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        body.dark .stat {
+            color: #aaa;
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .badge-planned {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        body.dark .badge-planned {
+            background: #1a3a52;
+            color: #64b5f6;
+        }
+
+        .badge-in-progress {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        body.dark .badge-in-progress {
+            background: #4d3400;
+            color: #ffb74d;
+        }
+
+        .badge-shipped {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+
+        body.dark .badge-shipped {
+            background: #1b3a1b;
+            color: #66bb6a;
+        }
+
+        /* Tech stack section */
+        .tech-stack-section {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+        }
+
+        .section-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: #1a1a1a;
+            text-align: center;
+        }
+
+        body.dark .section-title {
+            color: #fff;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 120px);
+            gap: 30px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tech-logo {
+            width: 120px;
+            height: 120px;
+            background: #f5f5f5;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            opacity: 0;
+        }
+
+        body.dark .tech-logo {
+            background: #262626;
+        }
+
+        .tech-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            text-align: center;
+            margin-top: 8px;
+        }
+
+        body.dark .tech-label {
+            color: #aaa;
+        }
+
+        .logo-nextjs::before { content: "⚛️"; }
+        .logo-react::before { content: "⚛️"; }
+        .logo-typescript::before { content: "TS"; font-weight: 700; color: #2d7dd2; }
+        .logo-tailwind::before { content: "🎨"; }
+        .logo-shadcn::before { content: "✓"; font-size: 56px; color: #000; }
+        .logo-lucide::before { content: "🎯"; }
+        .logo-zod::before { content: "Z"; font-weight: 700; font-size: 56px; }
+        .logo-firebase::before { content: "🔥"; }
+        .logo-firestore::before { content: "📊"; }
+        .logo-oauth::before { content: "🔐"; }
+        .logo-resend::before { content: "📧"; }
+        .logo-payhere::before { content: "💳"; }
+        .logo-vercel::before { content: "▲"; font-weight: 700; }
+
+        body.dark .logo-shadcn::before { color: #fff; }
+
+        .tech-item {
+            text-align: center;
+        }
+
+        /* Pricing section */
+        .pricing-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            padding: 40px;
+            background: linear-gradient(to bottom, #f8f9fa, #ffffff);
+        }
+
+        body.dark .pricing-container {
+            background: linear-gradient(to bottom, #1a1a1a, #0f0f0f);
+        }
+
+        .pricing-card {
+            width: 280px;
+            background: white;
+            border-radius: 12px;
+            padding: 32px 24px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+        }
+
+        body.dark .pricing-card {
+            background: #1a1a1a;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        .pricing-card.featured {
+            border: 2px solid #667eea;
+            transform: scale(1.05);
+        }
+
+        .pricing-plan {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+        }
+
+        body.dark .pricing-plan {
+            color: #fff;
+        }
+
+        .pricing-price {
+            font-size: 32px;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+
+        .pricing-note {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 20px;
+        }
+
+        body.dark .pricing-note {
+            color: #777;
+        }
+
+        .pricing-list {
+            text-align: left;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        body.dark .pricing-list {
+            color: #aaa;
+        }
+
+        .pricing-item {
+            padding: 6px 0;
+        }
+
+        /* Outro */
+        .outro-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .outro-logo {
+            font-size: 72px;
+            font-weight: 700;
+            color: white;
+            letter-spacing: -2px;
+        }
+
+        .outro-tagline {
+            font-size: 24px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 20px;
+        }
+
+        .outro-cta {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+        }
+
+        /* Overlay text for hook */
+        .overlay-text {
+            position: absolute;
+            left: 50%;
+            top: 20%;
+            transform: translateX(-50%);
+            font-size: 48px;
+            font-weight: 700;
+            color: #1a1a1a;
+            text-align: center;
+            max-width: 800px;
+            opacity: 0;
+        }
+
+        body.dark .overlay-text {
+            color: #fff;
+        }
+
+        .overlay-subtext {
+            font-size: 24px;
+            color: #666;
+            font-weight: 500;
+            opacity: 0;
+        }
+
+        body.dark .overlay-subtext {
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+    <div id="root" data-composition-id="fewchurs-tech-brag" data-width="1920" data-height="1080" data-duration="38">
+        <!-- Scene 1: Hook (0-3s) -->
+        <div class="clip" data-start="0" data-duration="3">
+            <div class="hook-card" id="hook-card">
+                <div class="hook-title">Dark Mode Request</div>
+                <div class="hook-stats">
+                    <div>
+                        <div class="upvote-count" id="upvote-count">23</div>
+                        <div class="upvote-icon">👆</div>
+                    </div>
+                    <div style="flex: 1; text-align: right;">
+                        <div style="font-size: 14px;">Feature request votes</div>
+                    </div>
+                </div>
+            </div>
+            <div class="overlay-text" id="hook-text">Users want features.</div>
+        </div>
+
+        <!-- Scene 2: Dashboard Reveal (3-8s) -->
+        <div class="clip" data-start="3" data-duration="5">
+            <div class="dashboard-container">
+                <div class="dashboard-frame" id="dashboard">
+                    <div class="dashboard-sidebar">
+                        <div class="sidebar-item active">Apps</div>
+                        <div class="sidebar-item">Settings</div>
+                        <div class="sidebar-item">Pricing</div>
+                    </div>
+                    <div class="dashboard-content">
+                        <div class="content-header">Feature Requests</div>
+                        <div class="feature-list">
+                            <div class="feature-card">
+                                <div class="feature-info">
+                                    <div class="feature-title">Dark Mode Support</div>
+                                    <div class="feature-meta">2 comments</div>
+                                </div>
+                                <div class="feature-stats">
+                                    <div class="stat">👆 23</div>
+                                    <span class="badge badge-planned">Planned</span>
+                                </div>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-info">
+                                    <div class="feature-title">Export to CSV</div>
+                                    <div class="feature-meta">5 comments</div>
+                                </div>
+                                <div class="feature-stats">
+                                    <div class="stat">👆 18</div>
+                                    <span class="badge badge-in-progress">In Progress</span>
+                                </div>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-info">
+                                    <div class="feature-title">Webhook Support</div>
+                                    <div class="feature-meta">1 comment</div>
+                                </div>
+                                <div class="feature-stats">
+                                    <div class="stat">👆 12</div>
+                                    <span class="badge badge-shipped">Shipped</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="overlay-text" id="dashboard-text" style="top: 5%;">Meet Fewchurs</div>
+            <div class="overlay-text" id="dashboard-subtext" style="top: 15%; font-size: 28px; color: #666;">Feature requests, organized.</div>
+        </div>
+
+        <!-- Scene 3a: Frontend Foundations (8-10.5s) -->
+        <div class="clip" data-start="8" data-duration="2.5">
+            <div class="tech-stack-section">
+                <div class="section-title">Modern Frontend Stack</div>
+                <div class="tech-grid" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="tech-item" id="tech-nextjs">
+                        <div class="tech-logo logo-nextjs"></div>
+                        <div class="tech-label">Next.js 15</div>
+                    </div>
+                    <div class="tech-item" id="tech-react">
+                        <div class="tech-logo logo-react"></div>
+                        <div class="tech-label">React 19</div>
+                    </div>
+                    <div class="tech-item" id="tech-typescript">
+                        <div class="tech-logo logo-typescript"></div>
+                        <div class="tech-label">TypeScript</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 3b: Styling & UI (10.5-13s) -->
+        <div class="clip" data-start="10.5" data-duration="2.5">
+            <div class="tech-stack-section">
+                <div class="section-title">Beautiful UI Components</div>
+                <div class="tech-grid" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="tech-item" id="tech-tailwind">
+                        <div class="tech-logo logo-tailwind"></div>
+                        <div class="tech-label">Tailwind CSS 4</div>
+                    </div>
+                    <div class="tech-item" id="tech-shadcn">
+                        <div class="tech-logo logo-shadcn"></div>
+                        <div class="tech-label">shadcn/ui</div>
+                    </div>
+                    <div class="tech-item" id="tech-lucide">
+                        <div class="tech-logo logo-lucide"></div>
+                        <div class="tech-label">Lucide Icons</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 3c: Validation (13-16s) -->
+        <div class="clip" data-start="13" data-duration="3">
+            <div class="tech-stack-section">
+                <div class="section-title">Type-Safe Validation</div>
+                <div class="tech-grid" style="grid-template-columns: 1fr;">
+                    <div class="tech-item" id="tech-zod">
+                        <div class="tech-logo logo-zod"></div>
+                        <div class="tech-label">Zod</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 4a: Backend (16-18.5s) -->
+        <div class="clip" data-start="16" data-duration="2.5">
+            <div class="tech-stack-section">
+                <div class="section-title">Secure Backend</div>
+                <div class="tech-grid" style="grid-template-columns: 1fr;">
+                    <div class="tech-item" id="tech-firebase-admin">
+                        <div class="tech-logo logo-firebase"></div>
+                        <div class="tech-label">firebase-admin</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 4b: Database (18.5-21s) -->
+        <div class="clip" data-start="18.5" data-duration="2.5">
+            <div class="tech-stack-section">
+                <div class="section-title">Real-Time Database</div>
+                <div class="tech-grid" style="grid-template-columns: 1fr;">
+                    <div class="tech-item" id="tech-firestore">
+                        <div class="tech-logo logo-firestore"></div>
+                        <div class="tech-label">Firestore</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 4c: Auth (21-23s) -->
+        <div class="clip" data-start="21" data-duration="2">
+            <div class="tech-stack-section">
+                <div class="section-title">One-Click Auth</div>
+                <div class="tech-grid" style="grid-template-columns: 1fr;">
+                    <div class="tech-item" id="tech-oauth">
+                        <div class="tech-logo logo-oauth"></div>
+                        <div class="tech-label">Google OAuth</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 4d: Email & Payments (23-25s) -->
+        <div class="clip" data-start="23" data-duration="2">
+            <div class="tech-stack-section">
+                <div class="section-title">Notifications & Payments</div>
+                <div class="tech-grid" style="grid-template-columns: repeat(2, 1fr);">
+                    <div class="tech-item" id="tech-resend">
+                        <div class="tech-logo logo-resend"></div>
+                        <div class="tech-label">Resend</div>
+                    </div>
+                    <div class="tech-item" id="tech-payhere">
+                        <div class="tech-logo logo-payhere"></div>
+                        <div class="tech-label">PayHere</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 5: Monitoring (25-28s) -->
+        <div class="clip" data-start="25" data-duration="3">
+            <div class="tech-stack-section">
+                <div class="section-title">Monitoring & Analytics</div>
+                <div class="tech-grid" style="grid-template-columns: 1fr;">
+                    <div class="tech-item" id="tech-vercel">
+                        <div class="tech-logo logo-vercel"></div>
+                        <div class="tech-label">Vercel Analytics</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 6: SDK & API (28-32s) -->
+        <div class="clip" data-start="28" data-duration="4">
+            <div class="tech-stack-section">
+                <div style="text-align: center; max-width: 900px;">
+                    <div class="section-title" style="margin-bottom: 40px;">Developer-First SDK</div>
+                    <div style="background: #f5f5f5; border-radius: 12px; padding: 30px; font-family: monospace; text-align: left; color: #d63384;">
+                        <code style="color: #1a1a1a; display: block; margin-bottom: 10px;">curl -X POST "https://api.fewchurs.dev/v1/features" \</code>
+                        <code style="color: #1a1a1a; display: block; margin-bottom: 10px;">  -H "Authorization: Bearer fr_live_xxx" \</code>
+                        <code style="color: #1a1a1a; display: block;">  -d '{"title":"Add dark mode"}'</code>
+                    </div>
+                    <div style="margin-top: 30px; font-size: 20px; color: #666; font-family: system-ui;">
+                        Embed in your iOS app. One line.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 7: Pricing (32-35s) -->
+        <div class="clip" data-start="32" data-duration="3">
+            <div class="pricing-container">
+                <div class="pricing-card" id="pricing-free">
+                    <div class="pricing-plan">Free</div>
+                    <div class="pricing-price">$0</div>
+                    <div class="pricing-note">Forever</div>
+                    <div class="pricing-list">
+                        <div class="pricing-item">✓ 1 App</div>
+                        <div class="pricing-item">✓ 50 Requests</div>
+                        <div class="pricing-item">✓ 100 Emails/mo</div>
+                    </div>
+                </div>
+                <div class="pricing-card featured" id="pricing-starter">
+                    <div class="pricing-plan">Starter</div>
+                    <div class="pricing-price">$5</div>
+                    <div class="pricing-note">/month</div>
+                    <div class="pricing-list">
+                        <div class="pricing-item">✓ 3 Apps</div>
+                        <div class="pricing-item">✓ 200 Requests</div>
+                        <div class="pricing-item">✓ 500 Emails/mo</div>
+                    </div>
+                </div>
+                <div class="pricing-card" id="pricing-pro">
+                    <div class="pricing-plan">Pro</div>
+                    <div class="pricing-price">$9</div>
+                    <div class="pricing-note">/month</div>
+                    <div class="pricing-list">
+                        <div class="pricing-item">✓ 5 Apps</div>
+                        <div class="pricing-item">✓ Unlimited</div>
+                        <div class="pricing-item">✓ 2K Emails/mo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 8: Outro (35-38s) -->
+        <div class="clip" data-start="35" data-duration="3">
+            <div class="outro-container">
+                <div class="outro-logo" id="outro-logo">Fewchurs</div>
+                <div class="outro-tagline">Feature requests, organized</div>
+                <div class="outro-cta">Get started free at fewchurs.dev</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Wait for fonts and images to load
+        document.fonts.ready.then(() => {
+            const tl = gsap.timeline({ paused: true });
+            const duration = 38;
+
+            // Scene 1: Hook (0-3s)
+            tl.from("#hook-card", { scale: 0.8, opacity: 0, duration: 0.6 }, 0);
+            tl.to("#upvote-count", { textContent: "23", duration: 2.4, ease: "power2.out", snap: { textContent: 1 } }, 0.2);
+            tl.from("#hook-text", { opacity: 0, y: 30, duration: 0.8 }, 0.5);
+
+            // Scene 2: Dashboard (3-8s)
+            tl.from("#dashboard", { opacity: 0, scale: 0.95, duration: 0.8 }, 3);
+            tl.from("#dashboard-text", { opacity: 0, y: 20, duration: 0.6 }, 3.2);
+            tl.from("#dashboard-subtext", { opacity: 0, y: 20, duration: 0.6, delay: 0.3 }, 3.2);
+
+            // Scene 3a: Frontend (8-10.5s)
+            tl.from("#tech-nextjs .tech-logo", { opacity: 0, y: 20, duration: 0.4 }, 8);
+            tl.from("#tech-react .tech-logo", { opacity: 0, y: 20, duration: 0.4 }, 8.2);
+            tl.from("#tech-typescript .tech-logo", { opacity: 0, y: 20, duration: 0.4 }, 8.4);
+
+            // Scene 3b: Styling (10.5-13s)
+            tl.from("#tech-tailwind .tech-logo", { opacity: 0, y: 20, duration: 0.4 }, 10.5);
+            tl.from("#tech-shadcn .tech-logo", { opacity: 0, y: 20, duration: 0.4 }, 10.7);
+            tl.from("#tech-lucide .tech-logo", { opacity: 0, y: 20, duration: 0.4 }, 10.9);
+
+            // Scene 3c: Validation (13-16s)
+            tl.from("#tech-zod .tech-logo", { opacity: 0, scale: 0.8, duration: 0.5 }, 13.2);
+
+            // Scene 4a: Backend (16-18.5s)
+            tl.from("#tech-firebase-admin .tech-logo", { opacity: 0, scale: 0.8, duration: 0.5 }, 16.2);
+
+            // Scene 4b: Database (18.5-21s)
+            tl.from("#tech-firestore .tech-logo", { opacity: 0, scale: 0.8, duration: 0.5 }, 18.7);
+
+            // Scene 4c: Auth (21-23s)
+            tl.from("#tech-oauth .tech-logo", { opacity: 0, scale: 0.8, duration: 0.5 }, 21.2);
+
+            // Scene 4d: Email & Payments (23-25s)
+            tl.from("#tech-resend .tech-logo", { opacity: 0, y: 20, duration: 0.4 }, 23.2);
+            tl.from("#tech-payhere .tech-logo", { opacity: 0, y: 20, duration: 0.4 }, 23.4);
+
+            // Scene 5: Monitoring (25-28s)
+            tl.from("#tech-vercel .tech-logo", { opacity: 0, scale: 0.8, duration: 0.5 }, 25.2);
+
+            // Scene 7: Pricing (32-35s)
+            tl.from("#pricing-free", { opacity: 0, y: 30, duration: 0.5 }, 32.2);
+            tl.from("#pricing-starter", { opacity: 0, y: 30, duration: 0.5 }, 32.4);
+            tl.from("#pricing-pro", { opacity: 0, y: 30, duration: 0.5 }, 32.6);
+
+            // Scene 8: Outro (35-38s)
+            tl.from("#outro-logo", { opacity: 0, scale: 0.8, duration: 0.6 }, 35.2);
+            tl.from(".outro-tagline", { opacity: 0, y: 20, duration: 0.5 }, 35.6);
+            tl.from(".outro-cta", { opacity: 0, y: 20, duration: 0.5 }, 36);
+
+            window.__timelines = window.__timelines || {};
+            window.__timelines["fewchurs-tech-brag"] = tl;
+        });
+    </script>
+</body>
+</html>

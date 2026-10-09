@@ -77,6 +77,8 @@ export interface Feature {
 export interface FeatureWithVote extends Feature {
   hasVoted: boolean;
   isFollowing: boolean;
+  /** Whether the requesting device submitted this, so SDKs need not compare device ids. */
+  isMine: boolean;
 }
 
 export interface Follower {
@@ -104,6 +106,8 @@ export interface Comment {
   deviceId: string;
   isDeveloper: boolean;
   createdAt: string;
+  /** Set on the SDK path, where the caller knows which device is asking. */
+  isMine?: boolean;
 }
 
 export interface AdminComment extends Comment {

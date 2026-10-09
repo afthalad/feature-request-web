@@ -1,0 +1,1 @@
+Your users already know what to build next. Fewchurs is a feature-request board you drop into your app with a few lines of code — they vote, the loudest person stops winning, and everyone who followed a request gets an email the day it ships. Free forever for one app.

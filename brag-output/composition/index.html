@@ -1,0 +1,771 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Fewchurs — brag</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Be Vietnam Pro";
+        font-weight: 400;
+        font-style: normal;
+        font-display: block;
+        src: url("assets/fonts/BeVietnamPro-400.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "Be Vietnam Pro";
+        font-weight: 500;
+        font-style: normal;
+        font-display: block;
+        src: url("assets/fonts/BeVietnamPro-500.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "Be Vietnam Pro";
+        font-weight: 600;
+        font-style: normal;
+        font-display: block;
+        src: url("assets/fonts/BeVietnamPro-600.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "Be Vietnam Pro";
+        font-weight: 700;
+        font-style: normal;
+        font-display: block;
+        src: url("assets/fonts/BeVietnamPro-700.woff2") format("woff2");
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #171614;
+      }
+
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #171614;
+        font-family: "Be Vietnam Pro", system-ui, sans-serif;
+        color: #ffffff;
+      }
+
+      .clip {
+        position: absolute;
+        inset: 0;
+      }
+
+      /* ---------- ambient accent ---------- */
+      #glow {
+        position: absolute;
+        left: 260px;
+        top: 90px;
+        width: 1400px;
+        height: 900px;
+        opacity: 0;
+      }
+      #glow-core {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: radial-gradient(
+          closest-side,
+          rgba(237, 95, 24, 0.5),
+          rgba(237, 95, 24, 0.14) 55%,
+          rgba(237, 95, 24, 0) 78%
+        );
+      }
+
+      /* ---------- scene 1: scattered requests ---------- */
+      #chips {
+        position: absolute;
+        inset: 0;
+      }
+      .chip {
+        position: absolute;
+        display: block;
+        width: 372px;
+        padding: 22px 26px;
+        border-radius: 14px;
+        background: #242220;
+        border: 1px solid #332f2c;
+        color: #e8e3de;
+        font-size: 28px;
+        font-weight: 500;
+        opacity: 0;
+      }
+      .chip span {
+        display: block;
+        margin-top: 8px;
+        font-size: 20px;
+        font-weight: 400;
+        color: #8f8883;
+      }
+
+      #headline {
+        position: absolute;
+        left: 310px;
+        top: 468px;
+        width: 1300px;
+        text-align: center;
+        font-size: 96px;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        line-height: 1.05;
+        opacity: 0;
+      }
+
+      /* ---------- captions above the board ---------- */
+      .caption {
+        position: absolute;
+        left: 360px;
+        top: 132px;
+        width: 1200px;
+        text-align: center;
+        font-size: 62px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+        opacity: 0;
+      }
+      .caption-sub {
+        position: absolute;
+        left: 360px;
+        top: 216px;
+        width: 1200px;
+        text-align: center;
+        font-size: 34px;
+        font-weight: 400;
+        color: #c9c3bd;
+        opacity: 0;
+      }
+
+      /* ---------- the board ---------- */
+      #board {
+        position: absolute;
+        left: 372px;
+        top: 316px;
+        width: 1176px;
+        background: #ffffff;
+        border-radius: 20px;
+        padding: 30px 32px 34px;
+        opacity: 0;
+        box-shadow: 0 40px 90px rgba(0, 0, 0, 0.45);
+      }
+      .board-head {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding-bottom: 22px;
+        border-bottom: 1px solid #e7e4e0;
+      }
+      .board-mark {
+        display: block;
+        width: 40px;
+        height: 40px;
+      }
+      .board-title {
+        font-size: 30px;
+        font-weight: 600;
+        color: #1c1a18;
+        letter-spacing: -0.01em;
+      }
+      .board-count {
+        margin-left: auto;
+        font-size: 24px;
+        font-weight: 400;
+        color: #6c6865;
+      }
+
+      .tabs {
+        display: flex;
+        gap: 34px;
+        padding: 22px 0 8px;
+      }
+      .tab {
+        display: block;
+        font-size: 26px;
+        font-weight: 500;
+        color: #6c6865;
+        padding-bottom: 10px;
+      }
+      .tab.is-active {
+        color: #1c1a18;
+        font-weight: 600;
+        border-bottom: 3px solid #ed5f18;
+      }
+
+      .rows {
+        position: relative;
+        margin-top: 14px;
+        height: 386px;
+      }
+      .row {
+        position: absolute;
+        left: 0;
+        width: 1112px;
+        height: 118px;
+        display: flex;
+        align-items: center;
+        gap: 26px;
+        padding: 0 24px;
+        border: 1px solid #e7e4e0;
+        border-radius: 14px;
+        background: #ffffff;
+        opacity: 0;
+      }
+      #row-dark {
+        top: 134px;
+      }
+      #row-sync {
+        top: 0px;
+      }
+      #row-csv {
+        top: 268px;
+      }
+
+      .vote {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+        width: 92px;
+        height: 84px;
+        border-radius: 12px;
+        border: 1px solid #e7e4e0;
+        background: #ffffff;
+        flex: none;
+      }
+      .vote svg {
+        display: block;
+        width: 24px;
+        height: 14px;
+      }
+      .vote-count {
+        font-size: 30px;
+        font-weight: 700;
+        color: #d14300;
+        line-height: 1.1;
+      }
+      .vote.is-voted {
+        background: #ed5f18;
+        border-color: #ed5f18;
+      }
+      .vote.is-voted .vote-count {
+        color: #ffffff;
+      }
+
+      .row-main {
+        flex: 1 1 auto;
+        min-width: 0;
+      }
+      .row-title {
+        font-size: 32px;
+        font-weight: 600;
+        color: #1c1a18;
+        letter-spacing: -0.01em;
+      }
+      .row-meta {
+        margin-top: 8px;
+        font-size: 22px;
+        font-weight: 400;
+        color: #6c6865;
+      }
+
+      .status-wrap {
+        position: relative;
+        width: 168px;
+        height: 48px;
+        flex: none;
+      }
+      .status {
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 168px;
+        height: 48px;
+        border-radius: 999px;
+        font-size: 22px;
+        font-weight: 600;
+      }
+      .status-open {
+        background: #f5f4f2;
+        color: #57534e;
+      }
+      .status-planned {
+        background: #eff6ff;
+        color: #1d4ed8;
+      }
+      .status-done {
+        background: #dcfce7;
+        color: #166534;
+        opacity: 0;
+      }
+
+      /* ---------- shipped email ---------- */
+      #email {
+        position: absolute;
+        left: 1108px;
+        top: 792px;
+        width: 560px;
+        padding: 26px 30px;
+        border-radius: 18px;
+        background: #ffffff;
+        border: 1px solid #e7e4e0;
+        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.4);
+        opacity: 0;
+      }
+      .email-top {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .email-mark {
+        display: block;
+        width: 26px;
+        height: 26px;
+      }
+      .email-from {
+        font-size: 21px;
+        font-weight: 500;
+        color: #6c6865;
+      }
+      .email-subject {
+        margin-top: 14px;
+        font-size: 30px;
+        font-weight: 700;
+        color: #1c1a18;
+        letter-spacing: -0.01em;
+      }
+      .email-body {
+        margin-top: 8px;
+        font-size: 24px;
+        font-weight: 400;
+        color: #57534e;
+      }
+
+      /* ---------- outro ---------- */
+      #outro {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0;
+      }
+      #lockup {
+        display: flex;
+        align-items: center;
+        gap: 26px;
+      }
+      #logo {
+        display: block;
+        width: 132px;
+        height: 132px;
+      }
+      #logo path {
+        opacity: 0;
+      }
+      #wordmark {
+        display: block;
+        font-size: 104px;
+        font-weight: 700;
+        letter-spacing: -0.035em;
+        color: #ffffff;
+        opacity: 0;
+      }
+      #tagline {
+        display: block;
+        width: 1500px;
+        margin-top: 44px;
+        text-align: center;
+        font-size: 52px;
+        font-weight: 500;
+        color: #efeae5;
+        letter-spacing: -0.015em;
+        opacity: 0;
+      }
+      #freeline {
+        display: block;
+        margin-top: 30px;
+        text-align: center;
+        font-size: 30px;
+        font-weight: 600;
+        color: #ed5f18;
+        letter-spacing: 0.01em;
+        opacity: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-width="1920"
+      data-height="1080"
+      data-duration="20.5"
+      data-fps="30"
+    >
+      <div id="glow"><div id="glow-core"></div></div>
+
+      <!-- ============ stage: scattered → board → votes → shipped ============ -->
+      <section id="stage" class="clip" data-start="0" data-duration="16.98" data-track-index="0">
+        <div id="chips">
+          <div class="chip" id="chip-1" style="left: 176px; top: 168px">
+            Add dark mode<span>App Store review · 2★</span>
+          </div>
+          <div class="chip" id="chip-2" style="left: 1316px; top: 138px">
+            iPad app please<span>Support inbox</span>
+          </div>
+          <div class="chip" id="chip-3" style="left: 268px; top: 784px">
+            Widget when??<span>DM</span>
+          </div>
+          <div class="chip" id="chip-4" style="left: 1188px; top: 824px">
+            Export to CSV<span>Email</span>
+          </div>
+          <div class="chip" id="chip-5" style="left: 764px; top: 108px">
+            Sync across devices<span>Reddit thread</span>
+          </div>
+          <div class="chip" id="chip-6" style="left: 120px; top: 646px">
+            Dark mode!!<span>App Store review · 1★</span>
+          </div>
+        </div>
+
+        <div id="headline">Feature requests get lost.</div>
+
+        <div class="caption" id="cap-land">Ideas land in one place.</div>
+        <div class="caption" id="cap-votes">Votes settle the argument.</div>
+        <div class="caption-sub" id="cap-votes-sub">The loudest person stops winning.</div>
+        <div class="caption" id="cap-ship">They hear back when it ships.</div>
+
+        <div id="board">
+          <div class="board-head">
+            <svg class="board-mark" viewBox="325 324 620 620" aria-hidden="true">
+              <defs>
+                <linearGradient id="bm-top" gradientUnits="userSpaceOnUse" x1="355" y1="500" x2="925" y2="350">
+                  <stop offset="0" stop-color="#FF530A" />
+                  <stop offset="1" stop-color="#FFAA00" />
+                </linearGradient>
+                <linearGradient id="bm-mid" gradientUnits="userSpaceOnUse" x1="345" y1="700" x2="630" y2="560">
+                  <stop offset="0" stop-color="#F7820F" />
+                  <stop offset="1" stop-color="#FFA800" />
+                </linearGradient>
+                <linearGradient id="bm-bot" gradientUnits="userSpaceOnUse" x1="345" y1="780" x2="525" y2="900">
+                  <stop offset="0" stop-color="#FFA800" />
+                  <stop offset="1" stop-color="#FF560A" />
+                </linearGradient>
+              </defs>
+              <path fill="url(#bm-top)" d="M530 343H905Q925 343 921 360C900 440 835 512 755 512H368Q352 512 357 496C385 405 450 343 530 343Z" />
+              <path fill="url(#bm-mid)" d="M475 553H742Q762 553 758 572C740 650 680 713 610 713H360Q345 713 345 698V680C345 610 400 553 475 553Z" />
+              <path fill="url(#bm-bot)" d="M415 755H510Q525 755 522 770C510 850 445 925 368 925H360Q345 925 345 910V825C345 785 375 755 415 755Z" />
+            </svg>
+            <div class="board-title">Feature requests</div>
+            <div class="board-count" id="board-count">3 open</div>
+          </div>
+
+          <div class="tabs">
+            <div class="tab is-active">Top</div>
+            <div class="tab">New</div>
+            <div class="tab">Roadmap</div>
+          </div>
+
+          <div class="rows">
+            <div class="row" id="row-sync">
+              <div class="vote">
+                <svg viewBox="0 0 24 14" aria-hidden="true">
+                  <path d="M12 0 24 14 0 14Z" fill="#D14300" />
+                </svg>
+                <div class="vote-count" id="count-sync">22</div>
+              </div>
+              <div class="row-main">
+                <div class="row-title">Sync across devices</div>
+                <div class="row-meta">8 comments · opened 6 days ago</div>
+              </div>
+              <div class="status-wrap">
+                <div class="status status-planned">Planned</div>
+              </div>
+            </div>
+
+            <div class="row" id="row-dark">
+              <div class="vote" id="vote-dark">
+                <svg viewBox="0 0 24 14" aria-hidden="true">
+                  <path id="arrow-dark" d="M12 0 24 14 0 14Z" fill="#D14300" />
+                </svg>
+                <div class="vote-count" id="count-dark">14</div>
+              </div>
+              <div class="row-main">
+                <div class="row-title">Add dark mode</div>
+                <div class="row-meta">12 comments · opened 3 days ago</div>
+              </div>
+              <div class="status-wrap">
+                <div class="status status-open" id="status-open-dark">Open</div>
+                <div class="status status-done" id="status-done-dark">Done</div>
+              </div>
+            </div>
+
+            <div class="row" id="row-csv">
+              <div class="vote">
+                <svg viewBox="0 0 24 14" aria-hidden="true">
+                  <path d="M12 0 24 14 0 14Z" fill="#D14300" />
+                </svg>
+                <div class="vote-count" id="count-csv">9</div>
+              </div>
+              <div class="row-main">
+                <div class="row-title">Export requests to CSV</div>
+                <div class="row-meta">3 comments · opened yesterday</div>
+              </div>
+              <div class="status-wrap">
+                <div class="status status-open" data-layout-allow-overlap>Open</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="email" data-layout-allow-overlap>
+          <div class="email-top">
+            <svg class="email-mark" viewBox="325 324 620 620" aria-hidden="true">
+              <path fill="#ED5F18" d="M530 343H905Q925 343 921 360C900 440 835 512 755 512H368Q352 512 357 496C385 405 450 343 530 343Z" />
+              <path fill="#F7820F" d="M475 553H742Q762 553 758 572C740 650 680 713 610 713H360Q345 713 345 698V680C345 610 400 553 475 553Z" />
+              <path fill="#FFA800" d="M415 755H510Q525 755 522 770C510 850 445 925 368 925H360Q345 925 345 910V825C345 785 375 755 415 755Z" />
+            </svg>
+            <div class="email-from">Fewchurs · to everyone who followed</div>
+          </div>
+          <div class="email-subject">Your request shipped</div>
+          <div class="email-body">“Add dark mode” is now live.</div>
+        </div>
+      </section>
+
+      <!-- ============ outro ============ -->
+      <section id="outro" class="clip" data-start="16.86" data-duration="3.64" data-track-index="1">
+        <div id="lockup">
+          <svg id="logo" viewBox="325 324 620 620" aria-hidden="true">
+            <defs>
+              <linearGradient id="lg-top" gradientUnits="userSpaceOnUse" x1="355" y1="500" x2="925" y2="350">
+                <stop offset="0" stop-color="#FF530A" />
+                <stop offset="1" stop-color="#FFAA00" />
+              </linearGradient>
+              <linearGradient id="lg-mid" gradientUnits="userSpaceOnUse" x1="345" y1="700" x2="630" y2="560">
+                <stop offset="0" stop-color="#F7820F" />
+                <stop offset="1" stop-color="#FFA800" />
+              </linearGradient>
+              <linearGradient id="lg-bot" gradientUnits="userSpaceOnUse" x1="345" y1="780" x2="525" y2="900">
+                <stop offset="0" stop-color="#FFA800" />
+                <stop offset="1" stop-color="#FF560A" />
+              </linearGradient>
+            </defs>
+            <path id="bar-top" fill="url(#lg-top)" d="M530 343H905Q925 343 921 360C900 440 835 512 755 512H368Q352 512 357 496C385 405 450 343 530 343Z" />
+            <path id="bar-mid" fill="url(#lg-mid)" d="M475 553H742Q762 553 758 572C740 650 680 713 610 713H360Q345 713 345 698V680C345 610 400 553 475 553Z" />
+            <path id="bar-bot" fill="url(#lg-bot)" d="M415 755H510Q525 755 522 770C510 850 445 925 368 925H360Q345 925 345 910V825C345 785 375 755 415 755Z" />
+          </svg>
+          <div id="wordmark">fewchurs</div>
+        </div>
+        <div id="tagline">Let your app’s users tell you what to build next.</div>
+        <div id="freeline">Free forever for one app.</div>
+      </section>
+
+      <!-- ============ audio ============ -->
+      <audio
+        id="bed"
+        src="assets/music/happy-beats-business-moves-vol-11-by-ende-dot-app.mp3"
+        data-start="0"
+        data-duration="20.5"
+        data-track-index="10"
+        data-automation='{"version":1,"lanes":[{"target":"volume","points":[{"t":0,"v":0},{"t":0.6,"v":0.35},{"t":16.6,"v":0.35},{"t":17.2,"v":0.22},{"t":19.3,"v":0.16},{"t":20.5,"v":0}]}]}'
+      ></audio>
+
+      <audio id="sfx-chip-1" src="assets/sfx/rollover2.ogg" data-start="0.34" data-track-index="11" data-volume="0.28"></audio>
+      <audio id="sfx-chip-2" src="assets/sfx/rollover2.ogg" data-start="0.62" data-track-index="12" data-volume="0.24"></audio>
+      <audio id="sfx-chip-3" src="assets/sfx/rollover2.ogg" data-start="0.9" data-track-index="13" data-volume="0.2"></audio>
+
+      <!-- beat-locked: 3.18s strong cue — the convergence -->
+      <audio id="sfx-converge" src="assets/sfx/impactSoft_medium_001.ogg" data-start="3.18" data-track-index="14" data-volume="0.55"></audio>
+
+      <!-- beat-grid: rows at 4.23 / 5.28 / 6.34 -->
+      <audio id="sfx-row-1" src="assets/sfx/card-slide-1.ogg" data-start="4.23" data-track-index="15" data-volume="0.3"></audio>
+      <audio id="sfx-row-2" src="assets/sfx/card-slide-1.ogg" data-start="5.28" data-track-index="16" data-volume="0.3"></audio>
+      <audio id="sfx-row-3" src="assets/sfx/card-slide-1.ogg" data-start="6.34" data-track-index="17" data-volume="0.3"></audio>
+
+      <audio id="sfx-tick-1" src="assets/sfx/click_003.ogg" data-start="8.6" data-track-index="18" data-volume="0.22"></audio>
+      <audio id="sfx-tick-2" src="assets/sfx/click_003.ogg" data-start="9.0" data-track-index="19" data-volume="0.22"></audio>
+      <audio id="sfx-tick-3" src="assets/sfx/click_003.ogg" data-start="9.4" data-track-index="20" data-volume="0.22"></audio>
+      <audio id="sfx-swap" src="assets/sfx/impactSoft_medium_004.ogg" data-start="10.2" data-track-index="21" data-volume="0.4"></audio>
+
+      <!-- beat-locked: 12.65s strong cue — status flips to Done -->
+      <audio id="sfx-done" src="assets/sfx/switch_007.ogg" data-start="12.65" data-track-index="22" data-volume="0.4"></audio>
+      <audio id="sfx-email" src="assets/sfx/bong_001.ogg" data-start="13.3" data-track-index="23" data-volume="0.38"></audio>
+
+      <!-- beat-locked: 16.86s strong cue — logo lands -->
+      <audio id="sfx-logo" src="assets/sfx/impactBell_heavy_000.ogg" data-start="16.86" data-track-index="24" data-volume="0.45"></audio>
+    </div>
+
+    <script>
+      const RMS = [0.969,0.537,0.56,0.62,0.545,0.996,0.51,0.424,0.448,0.387,0.83,0.657,0.411,0.391,0.417,0.635,0.847,0.379,0.523,0.591,0.347,0.957,0.524,0.528,0.507,0.38,0.895,0.493,0.441,0.351,0.364,0.749,0.727,0.392,0.356,0.332,0.472,0.911,0.316,0.419,0.496,0.319,0.9,0.575,0.55,0.634,0.52,0.837,0.547,0.554,0.509,0.415,0.753,0.754,0.439,0.413,0.376,0.418,0.983,0.398,0.423,0.521,0.352,0.906,0.563,0.511,0.659,0.48,0.888,0.509,0.376,0.456,0.466,0.7,0.746,0.358,0.366,0.401,0.472,1.0,0.414,0.427,0.454,0.265,0.93,0.559,0.529,0.617,0.531,0.904,0.533,0.441,0.465,0.443,0.651,0.83,0.452,0.386,0.405,0.521,0.934,0.474,0.43,0.601,0.382,0.904,0.606,0.537,0.618,0.45,0.808,0.559,0.445,0.398,0.372,0.574,0.892,0.43,0.391,0.298,0.344,0.928,0.414,0.347,0.539,0.372,0.85,0.661,0.512,0.672,0.546,0.759,0.6,0.513,0.446,0.386,0.518,0.901,0.509,0.433,0.361,0.409,0.948,0.444,0.345,0.595,0.439,0.358,0.476,0.57,0.716,0.552,0.503,0.419,0.469,0.434,0.386,0.463,0.494,0.359,0.181,0.116,0.301,0.257,0.207,0.217,0.276,0.274,0.817,0.632,0.563,0.722,0.622,0.813,0.636,0.657,0.549,0.538,0.597,0.937,0.52,0.466,0.508,0.68,0.876,0.491,0.459,0.808,0.721,0.898,0.557,0.548,0.692,0.492,0.754,0.648,0.648,0.578,0.502,0.463,0.929,0.555,0.526,0.494,0.656,0.902,0.515,0.485,0.696];
+
+      const tl = gsap.timeline({ paused: true });
+
+      /* ---------- scene 1 · scattered (0 → 3.18) ---------- */
+      const chips = ["#chip-5", "#chip-2", "#chip-1", "#chip-6", "#chip-3", "#chip-4"];
+      chips.forEach((id, i) => {
+        tl.fromTo(
+          id,
+          { opacity: 0, scale: 0.9, rotation: i % 2 ? -5 : 4, y: 18 },
+          { opacity: 1, scale: 1, rotation: i % 2 ? -3.5 : 2.5, y: 0, duration: 0.42, ease: "power3.out" },
+          0.18 + i * 0.12
+        );
+      });
+      tl.fromTo(
+        "#headline",
+        { opacity: 0, y: 34, scale: 0.97 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "power4.out" },
+        0.62
+      );
+      tl.to("#chips .chip", { opacity: 0.35, duration: 0.4, ease: "power2.out" }, 1.2);
+
+      /* ---------- scene 2 · the board assembles (3.18 → 8.44) ---------- */
+      // beat-locked: 3.18s strong cue
+      tl.to("#headline", { opacity: 0, y: -26, duration: 0.3, ease: "power2.in" }, 2.94);
+      document.querySelectorAll("#chips .chip").forEach((el, i) => {
+        const dx = 960 - (el.offsetLeft + el.offsetWidth / 2);
+        const dy = 620 - (el.offsetTop + el.offsetHeight / 2);
+        tl.to(
+          el,
+          { opacity: 0, scale: 0.24, x: dx, y: dy, rotation: 0, duration: 0.52, ease: "power3.inOut" },
+          2.9 + i * 0.035
+        );
+      });
+      tl.fromTo("#glow", { opacity: 0 }, { opacity: 1, duration: 0.8, ease: "power2.out" }, 3.0);
+      tl.fromTo(
+        "#board",
+        { opacity: 0, scale: 0.93, y: 26 },
+        { opacity: 1, scale: 1, y: 0, duration: 0.62, ease: "power3.out" },
+        3.18
+      );
+      tl.fromTo(
+        "#cap-land",
+        { opacity: 0, y: 26 },
+        { opacity: 1, y: 0, duration: 0.45, ease: "power3.out" },
+        3.46
+      );
+      // beat-grid: rows at 4.23 / 5.28 / 6.34
+      [
+        ["#row-sync", 4.23],
+        ["#row-dark", 5.28],
+        ["#row-csv", 6.34],
+      ].forEach(([id, at]) => {
+        tl.fromTo(
+          id,
+          { opacity: 0, y: 26, scale: 0.985 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.42, ease: "power3.out" },
+          at
+        );
+      });
+
+      /* ---------- scene 3 · votes settle the argument (8.44 → 12.65) ---------- */
+      // beat-locked: 8.44s strong cue
+      tl.to("#cap-land", { opacity: 0, y: -22, duration: 0.3, ease: "power2.in" }, 8.2);
+      tl.fromTo("#cap-votes", { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.42, ease: "power3.out" }, 8.44);
+      tl.fromTo(
+        "#cap-votes-sub",
+        { opacity: 0, y: 18 },
+        { opacity: 1, y: 0, duration: 0.42, ease: "power3.out" },
+        9.02
+      );
+
+      const counters = [
+        ["#count-dark", 14, 31, 8.5],
+        ["#count-sync", 22, 24, 8.7],
+        ["#count-csv", 9, 11, 8.9],
+      ];
+      counters.forEach(([sel, from, to, at]) => {
+        const box = { v: from };
+        const el = document.querySelector(sel);
+        tl.to(
+          box,
+          {
+            v: to,
+            duration: 1.1,
+            ease: "power2.out",
+            onUpdate: () => {
+              el.textContent = String(Math.round(box.v));
+            },
+          },
+          at
+        );
+      });
+      tl.to("#vote-dark", { backgroundColor: "#ED5F18", borderColor: "#ED5F18", duration: 0.3 }, 9.5);
+      tl.to("#count-dark", { color: "#FFFFFF", duration: 0.3 }, 9.5);
+      tl.to("#arrow-dark", { attr: { fill: "#FFFFFF" }, duration: 0.3 }, 9.5);
+
+      // the row that earned the votes physically overtakes the one above it
+      tl.to("#row-dark", { y: -134, duration: 0.5, ease: "power3.inOut" }, 10.2);
+      tl.to("#row-sync", { y: 134, duration: 0.5, ease: "power3.inOut" }, 10.2);
+
+      /* ---------- scene 4 · it ships (12.65 → 16.86) ---------- */
+      tl.to("#cap-votes", { opacity: 0, y: -22, duration: 0.28, ease: "power2.in" }, 12.3);
+      tl.to("#cap-votes-sub", { opacity: 0, y: -16, duration: 0.28, ease: "power2.in" }, 12.3);
+      tl.fromTo("#cap-ship", { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.42, ease: "power3.out" }, 12.62);
+      // beat-locked: 12.65s strong cue — Open flips to Done
+      tl.to("#status-open-dark", { opacity: 0, scale: 0.9, duration: 0.22, ease: "power2.in" }, 12.65);
+      tl.fromTo(
+        "#status-done-dark",
+        { opacity: 0, scale: 0.9 },
+        { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)" },
+        12.78
+      );
+      tl.to("#board-count", { opacity: 0, duration: 0.2 }, 12.8);
+      tl.fromTo(
+        "#email",
+        { opacity: 0, x: 90, y: 20 },
+        { opacity: 1, x: 0, y: 0, duration: 0.5, ease: "power3.out" },
+        13.3
+      );
+
+      /* ---------- scene 5 · logo (16.86 → 20.5) ---------- */
+      tl.to("#board", { opacity: 0, scale: 0.97, y: -18, duration: 0.42, ease: "power2.in" }, 16.5);
+      tl.to("#email", { opacity: 0, y: 18, duration: 0.34, ease: "power2.in" }, 16.5);
+      tl.to("#cap-ship", { opacity: 0, y: -18, duration: 0.34, ease: "power2.in" }, 16.5);
+      tl.to("#glow", { opacity: 0.55, duration: 0.8, ease: "power2.out" }, 16.6);
+
+      // beat-locked: 16.86s strong cue — the mark lands
+      [
+        ["#bar-top", 16.86],
+        ["#bar-mid", 17.02],
+        ["#bar-bot", 17.18],
+      ].forEach(([id, at]) => {
+        tl.fromTo(
+          id,
+          { opacity: 0, x: -26 },
+          { opacity: 1, x: 0, duration: 0.34, ease: "power3.out" },
+          at
+        );
+      });
+      tl.fromTo("#wordmark", { opacity: 0, x: -22 }, { opacity: 1, x: 0, duration: 0.42, ease: "power3.out" }, 17.2);
+      tl.fromTo("#tagline", { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 17.39);
+      tl.fromTo("#freeline", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.42, ease: "power3.out" }, 18.96);
+
+      /* ---------- subtle audio-reactive warmth (music RMS → accent glow) ---------- */
+      const core = document.querySelector("#glow-core");
+      for (let i = 0; i < RMS.length; i++) {
+        const t = i * 0.1;
+        if (t > 20.4) break;
+        const e = RMS[i];
+        tl.set(core, { opacity: 0.55 + 0.4 * e, scale: 0.95 + 0.09 * e }, t);
+      }
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

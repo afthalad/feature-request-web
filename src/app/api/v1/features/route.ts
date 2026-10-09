@@ -8,6 +8,20 @@ import {
   RateLimitError,
   LimitExceededError,
 } from "@/lib/features/service";
+import { FEATURE_STATUSES, type FeatureStatus } from "@/types";
+
+// `?status=planned,in_progress,done` — unknown names are dropped rather than rejected, so a
+// newer SDK asking for a status this deploy does not have still gets a sensible list.
+function parseStatuses(value: string | null): FeatureStatus[] | undefined {
+  if (!value) return undefined;
+  const statuses = value
+    .split(",")
+    .map((status) => status.trim())
+    .filter((status): status is FeatureStatus =>
+      FEATURE_STATUSES.includes(status as FeatureStatus),
+    );
+  return statuses.length > 0 ? statuses.slice(0, FEATURE_STATUSES.length) : undefined;
+}
 
 export async function GET(req: NextRequest) {
   const keyInfo = await verifyApiKey(req);
@@ -20,8 +34,16 @@ export async function GET(req: NextRequest) {
   const sort = searchParams.get("sort") === "top" ? "top" : "new";
   const limit = Math.min(Math.max(Number(searchParams.get("limit")) || 20, 1), 100);
   const cursor = searchParams.get("cursor");
+  const statuses = parseStatuses(searchParams.get("status"));
 
-  const result = await listFeaturesForApp({ appId: keyInfo.appId, deviceId, sort, limit, cursor });
+  const result = await listFeaturesForApp({
+    appId: keyInfo.appId,
+    deviceId,
+    sort,
+    limit,
+    cursor,
+    statuses,
+  });
   return ok(result);
 }
 

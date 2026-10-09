@@ -14,6 +14,8 @@ interface ListCommentsParams {
   featureId: string;
   limit: number;
   cursor: string | null;
+  /** When the caller knows who is asking, each comment says whether it is theirs. */
+  deviceId?: string | null;
 }
 
 export async function listCommentsForFeature({
@@ -21,6 +23,7 @@ export async function listCommentsForFeature({
   featureId,
   limit,
   cursor,
+  deviceId,
 }: ListCommentsParams): Promise<{ comments: Comment[]; nextCursor: string | null }> {
   const commentsRef = adminDb
     .collection("apps")
@@ -53,6 +56,7 @@ export async function listCommentsForFeature({
         deviceId: data.deviceId as string,
         isDeveloper: data.isDeveloper as boolean,
         createdAt: data.createdAt.toDate().toISOString() as string,
+        ...(deviceId ? { isMine: data.deviceId === deviceId } : {}),
       };
     });
 

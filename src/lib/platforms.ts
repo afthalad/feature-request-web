@@ -42,16 +42,17 @@ Fewchurs.showBoard()`,
   {
     id: "nextjs",
     name: "Next.js",
-    tagline: "A server-rendered board for Next.js apps, coming soon.",
+    tagline: "A server-rendered board, with your API key staying on the server.",
     iconPath: siNextdotjs.path,
     iconColor: `#${siNextdotjs.hex}`,
+    href: "/docs/nextjs",
     deviceType: "web",
     codeSnippet: {
-      filename: "app/page.tsx",
+      filename: "app/feedback/page.tsx",
       code: `import { FewchursBoard } from "@fewchurs/next";
 
 export default function Page() {
-  return <FewchursBoard apiKey="fr_live_xxx" />;
+  return <FewchursBoard />;
 }`,
     },
   },
@@ -73,10 +74,19 @@ FewchursBoard()`,
   {
     id: "react",
     name: "React",
-    tagline: "A drop-in React component for web apps, coming soon.",
+    tagline: "A drop-in board for Vite, CRA — any React app.",
     iconPath: siReact.path,
     iconColor: `#${siReact.hex}`,
+    href: "/docs/react",
     deviceType: "web",
+    codeSnippet: {
+      filename: "App.tsx",
+      code: `import { FewchursBoard, FewchursProvider } from "@fewchurs/react";
+
+<FewchursProvider apiKey="fr_live_xxx">
+  <FewchursBoard />
+</FewchursProvider>`,
+    },
   },
   {
     id: "laravel",
