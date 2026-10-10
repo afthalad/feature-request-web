@@ -12,12 +12,12 @@ export const metadata: Metadata = {
 };
 
 const STACKS = [
-  { href: "/docs/swiftui", name: "iOS (SwiftUI)", icon: siApple, line: "Native board view for iPhone apps.", ready: true },
-  { href: "/docs/react", name: "React", icon: siReact, line: "Board component and hooks for any React app.", ready: true },
-  { href: "/docs/nextjs", name: "Next.js", icon: siNextdotjs, line: "Server-rendered board. Your key stays on the server.", ready: true },
-  { href: "/docs/kotlin", name: "Android (Kotlin)", icon: siAndroid, line: "SDK on the way. Use the REST API today.", ready: false },
-  { href: "/docs/flutter", name: "Flutter", icon: siFlutter, line: "SDK on the way. Use the REST API today.", ready: false },
-  { href: "/docs/laravel", name: "Laravel", icon: siLaravel, line: "Package on the way. Use the REST API today.", ready: false },
+  { href: "/docs/swiftui", name: "iOS (SwiftUI)", icon: siApple, line: "Native board view for iPhone apps." },
+  { href: "/docs/react", name: "React", icon: siReact, line: "Board component and hooks for any React app." },
+  { href: "/docs/nextjs", name: "Next.js", icon: siNextdotjs, line: "Server-rendered board. Your key stays on the server." },
+  { href: "/docs/kotlin", name: "Android (Kotlin)", icon: siAndroid, line: "Add the board to your Android app with Kotlin." },
+  { href: "/docs/flutter", name: "Flutter", icon: siFlutter, line: "One codebase for mobile, web and desktop." },
+  { href: "/docs/laravel", name: "Laravel", icon: siLaravel, line: "Server-side board. Your key stays on the server." },
 ];
 
 const TOC = [
@@ -70,13 +70,8 @@ export default function DocsOverviewPage() {
                 />
               </span>
               <span className="min-w-0 flex-1">
-                <span className="flex items-center gap-2 font-semibold">
+                <span className="block font-semibold">
                   {stack.name}
-                  {!stack.ready && (
-                    <span className="text-muted-foreground rounded border border-border px-1.5 py-px text-[10px] font-medium">
-                      Soon
-                    </span>
-                  )}
                 </span>
                 <span className="text-muted-foreground mt-0.5 block text-sm">{stack.line}</span>
               </span>

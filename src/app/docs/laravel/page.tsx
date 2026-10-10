@@ -9,8 +9,7 @@ export const metadata: Metadata = {
 };
 
 const TOC = [
-  { id: "status", label: "Package status" },
-  { id: "use-the-api", label: "Use the API today" },
+  { id: "set-up", label: "Set up" },
   { id: "next", label: "What's next" },
 ];
 
@@ -113,17 +112,10 @@ export default function LaravelDocsPage() {
     <DocsPage
       path="/docs/laravel"
       title="Laravel"
-      intro="The Laravel package is on the way. Until then, you can call the REST API from your server with Laravel's HTTP client."
+      intro="Add Fewchurs to your Laravel app. Every call runs on your server with Laravel's HTTP client."
       toc={TOC}
     >
-      <Section id="status" title="Package status">
-        <Note title="Coming soon">
-          The Laravel package will give you a Blade component and a ready-made board. It
-          isn&apos;t released yet.
-        </Note>
-      </Section>
-
-      <Section id="use-the-api" title="Use the API today">
+      <Section id="set-up" title="Set up">
         <P>
           Here, every call happens on your server. Your API key never reaches the browser.
         </P>

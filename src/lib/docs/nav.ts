@@ -3,8 +3,6 @@ export const API_BASE_URL = `${(process.env.NEXT_PUBLIC_APP_URL ?? "https://www.
 export interface DocsNavItem {
   href: string;
   label: string;
-  /** "soon" = no SDK yet; the page shows how to use the REST API instead. */
-  badge?: "soon";
 }
 
 export const DOCS_NAV: { title: string; items: DocsNavItem[] }[] = [
@@ -19,8 +17,8 @@ export const DOCS_NAV: { title: string; items: DocsNavItem[] }[] = [
     title: "Mobile",
     items: [
       { href: "/docs/swiftui", label: "iOS (SwiftUI)" },
-      { href: "/docs/kotlin", label: "Android (Kotlin)", badge: "soon" },
-      { href: "/docs/flutter", label: "Flutter", badge: "soon" },
+      { href: "/docs/kotlin", label: "Android (Kotlin)" },
+      { href: "/docs/flutter", label: "Flutter" },
     ],
   },
   {
@@ -28,7 +26,7 @@ export const DOCS_NAV: { title: string; items: DocsNavItem[] }[] = [
     items: [
       { href: "/docs/react", label: "React" },
       { href: "/docs/nextjs", label: "Next.js" },
-      { href: "/docs/laravel", label: "Laravel", badge: "soon" },
+      { href: "/docs/laravel", label: "Laravel" },
     ],
   },
   {

@@ -30,11 +30,6 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
                 )}
               >
                 {item.label}
-                {item.badge === "soon" && (
-                  <span className="text-muted-foreground rounded border border-border px-1.5 py-px text-[10px] font-medium">
-                    Soon
-                  </span>
-                )}
               </Link>
             );
           })}

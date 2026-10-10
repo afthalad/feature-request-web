@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { CodeBlock } from "@/components/docs/CodeBlock";
-import { A, DocsPage, Note, P, Section, Step, Steps } from "@/components/docs/Docs";
+import { A, DocsPage, P, Section, Step, Steps } from "@/components/docs/Docs";
 import { API_BASE_URL } from "@/lib/docs/nav";
 
 export const metadata: Metadata = {
@@ -9,8 +9,7 @@ export const metadata: Metadata = {
 };
 
 const TOC = [
-  { id: "status", label: "Package status" },
-  { id: "use-the-api", label: "Use the API today" },
+  { id: "set-up", label: "Set up" },
   { id: "next", label: "What's next" },
 ];
 
@@ -85,18 +84,11 @@ export default function FlutterDocsPage() {
     <DocsPage
       path="/docs/flutter"
       title="Flutter"
-      intro="The Flutter package is on the way. Until then, you can call the REST API with a small Dart class."
+      intro="Add Fewchurs to your Flutter app with one small Dart class."
       meta="Works on Android, iOS, web, macOS, Windows and Linux."
       toc={TOC}
     >
-      <Section id="status" title="Package status">
-        <Note title="Coming soon">
-          The Flutter package will give you a ready-made board that uses your app&apos;s theme.
-          It isn&apos;t released yet.
-        </Note>
-      </Section>
-
-      <Section id="use-the-api" title="Use the API today">
+      <Section id="set-up" title="Set up">
         <Steps>
           <Step title="Add two packages">
             <CodeBlock code={INSTALL} />

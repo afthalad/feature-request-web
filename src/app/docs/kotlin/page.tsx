@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { CodeBlock } from "@/components/docs/CodeBlock";
-import { A, DocsPage, Note, P, Section, Step, Steps } from "@/components/docs/Docs";
+import { A, DocsPage, P, Section, Step, Steps } from "@/components/docs/Docs";
 import { API_BASE_URL } from "@/lib/docs/nav";
 
 export const metadata: Metadata = {
@@ -9,8 +9,7 @@ export const metadata: Metadata = {
 };
 
 const TOC = [
-  { id: "status", label: "SDK status" },
-  { id: "use-the-api", label: "Use the API today" },
+  { id: "set-up", label: "Set up" },
   { id: "next", label: "What's next" },
 ];
 
@@ -80,17 +79,10 @@ export default function KotlinDocsPage() {
     <DocsPage
       path="/docs/kotlin"
       title="Android (Kotlin)"
-      intro="The Android SDK is on the way. Until then, you can call the REST API from your app with a few lines of Kotlin."
+      intro="Add Fewchurs to your Android app. A small Kotlin client is all you need."
       toc={TOC}
     >
-      <Section id="status" title="SDK status">
-        <Note title="Coming soon">
-          The Android SDK will give you a ready-made board for Jetpack Compose, like the{" "}
-          <A href="/docs/swiftui">iOS one</A>. It isn&apos;t released yet.
-        </Note>
-      </Section>
-
-      <Section id="use-the-api" title="Use the API today">
+      <Section id="set-up" title="Set up">
         <Steps>
           <Step title="Add OkHttp">
             <CodeBlock code={GRADLE} filename="app/build.gradle.kts" />
