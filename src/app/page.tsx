@@ -13,6 +13,7 @@ import { getSessionUser } from "@/lib/auth/requireUser";
 import { buttonVariants } from "@/components/ui/button";
 import { PlatformShowcase } from "@/components/landing/PlatformShowcase";
 import { HeroVideo } from "@/components/landing/HeroVideo";
+import { FeatureHighlights } from "@/components/landing/FeatureHighlights";
 import { MarketingHeader } from "@/components/layout/MarketingHeader";
 import { PlatformPills } from "@/components/docs/PlatformPills";
 import { BrandIcon } from "@/components/marketing/BrandIcon";
@@ -247,6 +248,22 @@ export default async function Home() {
               ))}
             </Marquee>
           </div>
+        </div>
+      </section>
+
+      {/* Feature highlights */}
+      <section id="highlights" className="border-b border-border py-24">
+        <div className="mx-auto w-full max-w-6xl space-y-12 px-5">
+          <div className="mx-auto max-w-2xl space-y-3 text-center">
+            <h2 className="text-3xl font-bold text-balance sm:text-4xl">
+              The whole loop, in one tool
+            </h2>
+            <p className="text-muted-foreground">
+              Collect ideas in any language, let votes rank them, reply, ship,
+              and tell people it&apos;s done.
+            </p>
+          </div>
+          <FeatureHighlights />
         </div>
       </section>
 
