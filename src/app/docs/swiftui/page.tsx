@@ -1,36 +1,35 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { MarketingHeader } from "@/components/layout/MarketingHeader";
-import { PlatformPills } from "@/components/docs/PlatformPills";
 import { CodeBlock } from "@/components/docs/CodeBlock";
+import { A, C, DocsPage, Note, P, Section, Step, Steps, Table } from "@/components/docs/Docs";
 
 export const metadata: Metadata = {
-  title: "SwiftUI — Docs — Fewchurs",
-  description: "Add Fewchurs to your SwiftUI app.",
+  title: "iOS (SwiftUI) — Docs — Fewchurs",
+  description: "Add a feature request board to your iOS app with SwiftUI.",
 };
 
 const TOC = [
-  { id: "installation", label: "Installation" },
-  { id: "configure", label: "Configure the SDK" },
+  { id: "install", label: "Install" },
+  { id: "set-up", label: "Set up" },
   { id: "show-the-board", label: "Show the board" },
-  { id: "submit-programmatically", label: "Submit programmatically" },
-  { id: "branding", label: "Removing the badge" },
+  { id: "uikit", label: "Using UIKit" },
+  { id: "colors", label: "Colors and theme" },
+  { id: "api-key", label: "About the API key" },
+  { id: "badge", label: "The \"Powered by\" badge" },
 ];
 
-const INSTALL_CODE = `// Xcode → File → Add Package Dependencies…
-https://github.com/fewchurs/fewchurs-swift`;
+const PACKAGE_URL = "https://github.com/fewchurs/fewchurs-swift";
 
-const PACKAGE_SWIFT_CODE = `dependencies: [
-    .package(url: "https://github.com/fewchurs/fewchurs-swift", from: "1.0.0")
+const PACKAGE_SWIFT = `dependencies: [
+    .package(url: "${PACKAGE_URL}", from: "1.0.0")
 ]`;
 
-const CONFIGURE_CODE = `import SwiftUI
-import Fewchurs
+const CONFIGURE = `import SwiftUI
+import FeatureRequestKit
 
 @main
 struct MyApp: App {
     init() {
-        Fewchurs.configure(apiKey: "fr_live_xxx")
+        FeatureRequestKit.configure(apiKey: "fr_live_xxx")
     }
 
     var body: some Scene {
@@ -40,142 +39,122 @@ struct MyApp: App {
     }
 }`;
 
-const SHEET_CODE = `import SwiftUI
-import Fewchurs
+const SHEET = `import SwiftUI
+import FeatureRequestKit
 
 struct SettingsView: View {
     @State private var showBoard = false
 
     var body: some View {
-        Button("Request a feature") {
+        Button("Suggest a feature") {
             showBoard = true
         }
         .sheet(isPresented: $showBoard) {
-            FewchursBoardView()
+            FeatureRequestBoardView()
         }
     }
 }`;
 
-const IMPERATIVE_CODE = `// UIKit, or anywhere outside a SwiftUI view hierarchy
-Fewchurs.showBoard()`;
+const UIKIT = `import UIKit
+import SwiftUI
+import FeatureRequestKit
 
-const SUBMIT_CODE = `Task {
-    do {
-        let feature = try await Fewchurs.submitFeature(
-            title: "Add dark mode",
-            description: "Would love a dark theme.",
-            isSubscriber: currentUser.hasActiveSubscription
-        )
-        print(feature.id, feature.status)
-    } catch {
-        print("Failed to submit:", error)
-    }
-}`;
+let board = UIHostingController(rootView: FeatureRequestBoardView())
+present(board, animated: true)`;
+
+const THEME = `// A built-in dark theme
+FeatureRequestKit.configure(apiKey: "fr_live_xxx", theme: .midnight)
+
+// Or your own colors
+let theme = FeatureRequestTheme(
+    background: Color(.systemBackground),
+    accent: .orange,
+    cornerRadius: 16
+)
+FeatureRequestKit.configure(apiKey: "fr_live_xxx", theme: theme)`;
 
 export default function SwiftUIDocsPage() {
   return (
-    <>
-      <MarketingHeader />
-      <div className="mx-auto w-full max-w-2xl flex-1 space-y-12 px-4 py-16">
-        <div className="space-y-4">
-          <Link href="/docs" className="text-muted-foreground text-sm hover:text-foreground">
-            ← Docs
-          </Link>
-          <div className="space-y-2">
-            <h1 className="text-3xl font-semibold tracking-tight">SwiftUI</h1>
-            <p className="text-muted-foreground">
-              Drop the Fewchurs board into any SwiftUI app in a few minutes.
-            </p>
-          </div>
-          <PlatformPills activeId="swiftui" />
-        </div>
+    <DocsPage
+      path="/docs/swiftui"
+      title="iOS (SwiftUI)"
+      intro="Add a native feature request board to your iPhone app. It takes three steps."
+      meta="Needs iOS 17 or later and Swift 5.9 or later. No other packages needed."
+      toc={TOC}
+    >
+      <Section id="install" title="Install">
+        <Steps>
+          <Step title="Add the package in Xcode">
+            <P>
+              In Xcode, open <strong>File → Add Package Dependencies…</strong> and paste this
+              URL:
+            </P>
+            <CodeBlock code={PACKAGE_URL} />
+          </Step>
+          <Step title="Or add it to Package.swift">
+            <P>If your project uses a Package.swift file, add this line instead:</P>
+            <CodeBlock code={PACKAGE_SWIFT} filename="Package.swift" />
+          </Step>
+        </Steps>
+      </Section>
 
-        <nav className="rounded-2xl border border-border bg-card p-5 shadow-soft">
-          <p className="mb-2 text-xs font-medium tracking-wide text-muted-foreground uppercase">
-            On this page
-          </p>
-          <ul className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-sm sm:grid-cols-1">
-            {TOC.map((item) => (
-              <li key={item.id}>
-                <a href={`#${item.id}`} className="text-muted-foreground hover:text-foreground">
-                  {item.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-          <p className="text-muted-foreground mt-3 border-t border-border pt-3 text-xs">
-            Requires iOS 16+ and Swift 5.9+.
-          </p>
-        </nav>
+      <Section id="set-up" title="Set up">
+        <P>
+          Call <C>configure</C> once, when your app starts. Use the API key from your dashboard.
+        </P>
+        <CodeBlock code={CONFIGURE} filename="MyApp.swift" />
+      </Section>
 
-        <section id="installation" className="scroll-mt-20 space-y-3">
-          <h2 className="text-xl font-semibold tracking-tight">Installation</h2>
-          <p className="text-muted-foreground text-sm">Add the package through Xcode:</p>
-          <CodeBlock code={INSTALL_CODE} />
-          <p className="text-muted-foreground text-sm">Or add it directly to your Package.swift:</p>
-          <CodeBlock code={PACKAGE_SWIFT_CODE} />
-        </section>
+      <Section id="show-the-board" title="Show the board">
+        <P>
+          <C>FeatureRequestBoardView</C> is a normal SwiftUI view. Show it in a sheet, a tab, or
+          push it onto a navigation stack. It handles everything inside: the list, votes,
+          comments and new requests.
+        </P>
+        <CodeBlock code={SHEET} filename="SettingsView.swift" />
+      </Section>
 
-        <section id="configure" className="scroll-mt-20 space-y-3">
-          <h2 className="text-xl font-semibold tracking-tight">Configure the SDK</h2>
-          <p className="text-muted-foreground text-sm">
-            Call <code className="rounded bg-muted px-1 py-0.5">configure</code> once, on launch,
-            with the API key from your app&apos;s dashboard settings.
-          </p>
-          <CodeBlock code={CONFIGURE_CODE} />
-        </section>
+      <Section id="uikit" title="Using UIKit">
+        <P>
+          Wrap the board in a <C>UIHostingController</C> and present it from any view controller.
+        </P>
+        <CodeBlock code={UIKIT} />
+      </Section>
 
-        <section id="show-the-board" className="scroll-mt-20 space-y-3">
-          <h2 className="text-xl font-semibold tracking-tight">Show the board</h2>
-          <p className="text-muted-foreground text-sm">
-            Present <code className="rounded bg-muted px-1 py-0.5">FewchursBoardView</code> like any
-            other SwiftUI view — as a sheet, a tab, or pushed onto a navigation stack. It handles
-            listing, voting, comments, and submitting a new request on its own.
-          </p>
-          <CodeBlock code={SHEET_CODE} />
-          <p className="text-muted-foreground text-sm">
-            Outside a SwiftUI hierarchy (e.g. from a UIKit view controller), present it imperatively
-            instead:
-          </p>
-          <CodeBlock code={IMPERATIVE_CODE} />
-        </section>
+      <Section id="colors" title="Colors and theme">
+        <P>
+          By default the board follows your app: system colors, your accent color, and light or
+          dark mode. To change it, pass a <C>theme</C> to <C>configure</C>.
+        </P>
+        <CodeBlock code={THEME} />
+        <Table
+          head={["Theme", "What it looks like"]}
+          rows={[
+            [<C key="s">.system</C>, "Default. Follows the phone's light or dark mode."],
+            [<C key="m">.midnight</C>, "Always dark, black and white."],
+            [<C key="c">FeatureRequestTheme(…)</C>, "Your own background, accent color and corner radius."],
+          ]}
+        />
+      </Section>
 
-        <section id="submit-programmatically" className="scroll-mt-20 space-y-3">
-          <h2 className="text-xl font-semibold tracking-tight">Submit programmatically</h2>
-          <p className="text-muted-foreground text-sm">
-            To collect a request from your own custom UI instead of the bundled board:
-          </p>
-          <CodeBlock code={SUBMIT_CODE} />
-          <p className="text-muted-foreground text-sm">
-            <code className="rounded bg-muted px-1 py-0.5">isSubscriber</code> is optional and
-            defaults to <code className="rounded bg-muted px-1 py-0.5">false</code>. Pass{" "}
-            <code className="rounded bg-muted px-1 py-0.5">true</code> when the submitter is a
-            paying customer of your app (from StoreKit, RevenueCat, etc.) and a &quot;Subscriber&quot;
-            badge will show up on that request in your dashboard.
-          </p>
-        </section>
+      <Section id="api-key" title="About the API key">
+        <P>
+          It&apos;s fine to put this key in your app. It can only do what the board does: list,
+          vote, comment and suggest. It can&apos;t change your settings or read anything private.
+        </P>
+        <Note>
+          The SDK gives each device a random ID and keeps it in the Keychain. That is how it
+          remembers votes without an account. Read more in <A href="/docs/concepts">How it works</A>.
+        </Note>
+      </Section>
 
-        <section id="branding" className="scroll-mt-20 space-y-3">
-          <h2 className="text-xl font-semibold tracking-tight">Removing the &quot;Powered by&quot; badge</h2>
-          <p className="text-muted-foreground text-sm">
-            <code className="rounded bg-muted px-1 py-0.5">FewchursBoardView</code> shows a small
-            &quot;Powered by Fewchurs&quot; badge on the free plan. It disappears automatically once the
-            app&apos;s owner upgrades to Pro — nothing to change in code. See{" "}
-            <Link href="/pricing" className="underline underline-offset-2">
-              pricing
-            </Link>
-            .
-          </p>
-        </section>
-
-        <div className="bg-primary-soft space-y-2 rounded-2xl border border-border p-6">
-          <h2 className="text-lg font-semibold">Stuck on something?</h2>
-          <p className="text-muted-foreground text-sm">
-            Most integration issues come down to a missing API key or an app that hasn&apos;t been
-            created yet in the dashboard — double check those first.
-          </p>
-        </div>
-      </div>
-    </>
+      <Section id="badge" title='The "Powered by" badge'>
+        <P>
+          On the free plan the board shows a small &quot;Powered by Fewchurs&quot; line. It goes
+          away on its own when you upgrade to <A href="/pricing">Pro</A>. You don&apos;t need to
+          change any code.
+        </P>
+      </Section>
+    </DocsPage>
   );
 }

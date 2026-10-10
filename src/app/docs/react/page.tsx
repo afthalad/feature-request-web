@@ -1,29 +1,26 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { MarketingHeader } from "@/components/layout/MarketingHeader";
-import { PlatformPills } from "@/components/docs/PlatformPills";
 import { CodeBlock } from "@/components/docs/CodeBlock";
+import { A, C, DocsPage, Note, P, Section, Table } from "@/components/docs/Docs";
 
 export const metadata: Metadata = {
   title: "React — Docs — Fewchurs",
-  description: "Add a Fewchurs feature-request board to any React app.",
+  description: "Add a feature request board to any React app.",
 };
 
 const TOC = [
-  { id: "installation", label: "Installation" },
-  { id: "the-board", label: "Render the board" },
-  { id: "keys", label: "Where the key lives" },
-  { id: "hooks", label: "Hooks" },
-  { id: "errors", label: "Errors" },
-  { id: "customizing", label: "Customizing" },
-  { id: "identity", label: "Identity" },
-  { id: "branding", label: "Removing the badge" },
+  { id: "install", label: "Install" },
+  { id: "show-the-board", label: "Show the board" },
+  { id: "api-key", label: "Keeping the key private" },
+  { id: "change-the-look", label: "Change the look" },
+  { id: "your-own-ui", label: "Build your own UI" },
+  { id: "errors", label: "Handling errors" },
+  { id: "users", label: "Signed-in users" },
+  { id: "badge", label: "The \"Powered by\" badge" },
 ];
 
-const INSTALL_CODE = `pnpm add @fewchurs/react
-# npm install @fewchurs/react`;
+const INSTALL = `npm install @fewchurs/react`;
 
-const BOARD_CODE = `import { FewchursBoard, FewchursProvider } from "@fewchurs/react";
+const BOARD = `import { FewchursBoard, FewchursProvider } from "@fewchurs/react";
 import "@fewchurs/react/styles.css";
 
 export function App() {
@@ -34,182 +31,145 @@ export function App() {
   );
 }`;
 
-const PROXY_CODE = `// Your server adds the Authorization header; the browser never sees the key.
+const PROXY = `// Your server adds the API key. The browser never sees it.
 <FewchursProvider baseUrl="/api/fewchurs">
   <FewchursBoard />
 </FewchursProvider>`;
 
-const HOOKS_CODE = `const { features, isLoading, error, loadMore, hasMore } = useFeatures({ sort: "top" });
-const { hasVoted, upvoteCount, toggle, isPending } = useVote(featureId);
-const { comments, add, loadMore: loadMoreComments } = useComments(featureId);
-const { submit, isPending: isSubmitting } = useSubmitFeature();
-const { isFollowing, follow, unfollow } = useFollow(featureId);
-const { showBranding, hideVoteCounts } = useFewchursConfig();`;
-
-const ERROR_CODE = `const { submit, error } = useSubmitFeature();
-
-const feature = await submit({ title, description, email });
-if (!feature && error) {
-  // error.code is one of: invalid_key | validation_failed | rate_limited
-  //                       not_found | limit_reached | server | network
-  toast(userMessage(error));
-}`;
-
-const SLOTS_CODE = `<FewchursBoard
+const LOOK = `<FewchursBoard
   theme={{ primary: "#0f766e", radius: 8 }}
   labels={{ title: "Ideas", submit: "Suggest an idea" }}
+/>`;
+
+const RENDER = `<FewchursBoard
   renderFeature={(feature, actions) => (
     <MyRow feature={feature} onVote={actions.toggleVote} />
   )}
 />
 
-// Or compose the parts yourself:
+// Or put the parts together yourself
 <FewchursBoard.Root unstyled>
   <FewchursBoard.Tabs />
   <FewchursBoard.List />
   <FewchursBoard.SubmitTrigger />
 </FewchursBoard.Root>`;
 
-const IDENTITY_CODE = `// Hash the id — never send a raw user id or an email address.
+const HOOKS = `const { features, isLoading, loadMore, hasMore } = useFeatures({ sort: "top" });
+const { hasVoted, upvoteCount, toggle } = useVote(featureId);
+const { comments, add } = useComments(featureId);
+const { submit, isPending } = useSubmitFeature();
+const { isFollowing, follow, unfollow } = useFollow(featureId);`;
+
+const ERRORS = `import { useSubmitFeature } from "@fewchurs/react";
+import { userMessage } from "@fewchurs/react/core";
+
+const { submit, error } = useSubmitFeature();
+
+const feature = await submit({ title, description });
+if (!feature && error) {
+  showToast(userMessage(error)); // a friendly sentence for your users
+}`;
+
+const USERS = `// Use a hash of your user's ID, never the raw ID or an email
 <FewchursProvider apiKey={key} deviceId={hashedUserId}>`;
 
 export default function ReactDocsPage() {
   return (
-    <>
-      <MarketingHeader />
-      <div className="mx-auto w-full max-w-2xl flex-1 space-y-12 px-4 py-16">
-        <div className="space-y-4">
-          <Link href="/docs" className="text-muted-foreground text-sm hover:text-foreground">
-            ← Docs
-          </Link>
-          <div className="space-y-2">
-            <h1 className="text-3xl font-semibold tracking-tight">React</h1>
-            <p className="text-muted-foreground">
-              A drop-in board for Vite, CRA, Remix — any React app.
-            </p>
-          </div>
-          <PlatformPills activeId="react" />
-        </div>
+    <DocsPage
+      path="/docs/react"
+      title="React"
+      intro="Add a feature request board to any React app: Vite, Create React App, Remix or your own setup."
+      meta="Needs React 18 or later."
+      toc={TOC}
+    >
+      <Section id="install" title="Install">
+        <CodeBlock code={INSTALL} />
+        <P>
+          Using Next.js? Follow the <A href="/docs/nextjs">Next.js guide</A> instead. It keeps
+          your key on the server.
+        </P>
+      </Section>
 
-        <nav className="rounded-2xl border border-border bg-card p-5 shadow-soft">
-          <p className="mb-2 text-xs font-medium tracking-wide text-muted-foreground uppercase">
-            On this page
-          </p>
-          <ul className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-sm sm:grid-cols-1">
-            {TOC.map((item) => (
-              <li key={item.id}>
-                <a href={`#${item.id}`} className="text-muted-foreground hover:text-foreground">
-                  {item.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-          <p className="text-muted-foreground mt-3 border-t border-border pt-3 text-xs">
-            Requires React 18 or 19. No other runtime dependencies.
-          </p>
-        </nav>
+      <Section id="show-the-board" title="Show the board">
+        <P>
+          Wrap the board in <C>FewchursProvider</C> and give it your API key. Import the styles
+          file once.
+        </P>
+        <CodeBlock code={BOARD} filename="App.tsx" />
+      </Section>
 
-        <section id="installation" className="scroll-mt-20 space-y-3">
-          <h2 className="text-xl font-semibold tracking-tight">Installation</h2>
-          <CodeBlock code={INSTALL_CODE} />
-          <p className="text-muted-foreground text-sm">
-            On Next.js, install{" "}
-            <Link href="/docs/nextjs" className="underline underline-offset-2">
-              @fewchurs/next
-            </Link>{" "}
-            instead — it renders the board on the server and keeps the key there.
-          </p>
-        </section>
+      <Section id="api-key" title="Keeping the key private">
+        <P>
+          In an app with no server, the key ends up in your JavaScript files. That is okay: it
+          only works for your board, and each device has daily limits.
+        </P>
+        <P>
+          If you have a server and want to hide the key, send the board&apos;s calls to your own
+          server instead. Your server adds the key and forwards the call.
+        </P>
+        <CodeBlock code={PROXY} />
+      </Section>
 
-        <section id="the-board" className="scroll-mt-20 space-y-3">
-          <h2 className="text-xl font-semibold tracking-tight">Render the board</h2>
-          <CodeBlock code={BOARD_CODE} filename="App.tsx" />
-          <p className="text-muted-foreground text-sm">
-            That is the whole integration: tabs, voting, comments, the submit form and the styles.
-            The stylesheet is a plain CSS file — no Tailwind, no CSS-in-JS runtime.
-          </p>
-        </section>
+      <Section id="change-the-look" title="Change the look">
+        <P>
+          Set colors and text with props. You can also set CSS variables like{" "}
+          <C>--fw-primary</C> and <C>--fw-radius</C>. Light and dark mode follow the
+          visitor&apos;s system setting.
+        </P>
+        <CodeBlock code={LOOK} />
+        <P>Want to draw each row yourself? Use a render function, or build the board from parts:</P>
+        <CodeBlock code={RENDER} />
+        <P>
+          <C>unstyled</C> removes all our styles but keeps the behavior and keyboard support.
+        </P>
+      </Section>
 
-        <section id="keys" className="scroll-mt-20 space-y-3">
-          <h2 className="text-xl font-semibold tracking-tight">Where the key lives</h2>
-          <p className="text-muted-foreground text-sm">
-            In a client-only app the key ships in the bundle, the same way a Stripe or PostHog
-            public key does — it can only reach the feature-request endpoints for your app, and it
-            is rate limited per device. If you would rather not publish it at all, point the
-            provider at a path on your own server and add the{" "}
-            <code className="rounded bg-muted px-1 py-0.5">Authorization</code> header there.
-          </p>
-          <CodeBlock code={PROXY_CODE} />
-        </section>
+      <Section id="your-own-ui" title="Build your own UI">
+        <P>
+          The hooks give you the data and actions with no markup. Use them inside{" "}
+          <C>FewchursProvider</C>. They share one store, so a vote updates everywhere at once.
+        </P>
+        <CodeBlock code={HOOKS} />
+      </Section>
 
-        <section id="hooks" className="scroll-mt-20 space-y-3">
-          <h2 className="text-xl font-semibold tracking-tight">Hooks</h2>
-          <p className="text-muted-foreground text-sm">
-            Every hook reads from one shared store, so two components asking for the same list
-            trigger one request, and a vote updates every view of that request at once.
-          </p>
-          <CodeBlock code={HOOKS_CODE} />
-        </section>
+      <Section id="errors" title="Handling errors">
+        <P>
+          Nothing throws. When a call fails, you get an <C>error</C> with a <C>code</C>.{" "}
+          <C>userMessage(error)</C> turns it into a short sentence you can show.
+        </P>
+        <CodeBlock code={ERRORS} />
+        <Table
+          head={["Code", "What happened"]}
+          rows={[
+            [<C key="1">invalid_key</C>, "The API key is wrong or turned off."],
+            [<C key="2">validation_failed</C>, "Something in the form is missing or too long."],
+            [<C key="3">rate_limited</C>, "This device hit its daily limit."],
+            [<C key="4">limit_reached</C>, "Your plan's limit was reached."],
+            [<C key="5">not_found</C>, "That request no longer exists."],
+            [<C key="6">network</C>, "No connection, or the server didn't answer."],
+            [<C key="7">server</C>, "Something broke on our side. Try again."],
+          ]}
+        />
+      </Section>
 
-        <section id="errors" className="scroll-mt-20 space-y-3">
-          <h2 className="text-xl font-semibold tracking-tight">Errors</h2>
-          <p className="text-muted-foreground text-sm">
-            Nothing throws. A failed call is a typed value with a code you can branch on, and{" "}
-            <code className="rounded bg-muted px-1 py-0.5">userMessage(error)</code> gives a
-            sentence that is safe to show a visitor.
-          </p>
-          <CodeBlock code={ERROR_CODE} />
-        </section>
+      <Section id="users" title="Signed-in users">
+        <P>
+          By default each visitor gets a random ID, saved in the browser. If your app has
+          accounts, pass a hashed user ID. Then votes follow the person to every device.
+        </P>
+        <CodeBlock code={USERS} />
+      </Section>
 
-        <section id="customizing" className="scroll-mt-20 space-y-3">
-          <h2 className="text-xl font-semibold tracking-tight">Customizing</h2>
-          <p className="text-muted-foreground text-sm">
-            Five levels, in order of how much you want to own: defaults, CSS variables (
-            <code className="rounded bg-muted px-1 py-0.5">--fw-primary</code>,{" "}
-            <code className="rounded bg-muted px-1 py-0.5">--fw-radius</code>), props, render
-            slots, and headless.
-          </p>
-          <CodeBlock code={SLOTS_CODE} />
-          <p className="text-muted-foreground text-sm">
-            <code className="rounded bg-muted px-1 py-0.5">unstyled</code> drops every class name
-            and keeps the behaviour, the ARIA roles and the keyboard handling.
-          </p>
-        </section>
-
-        <section id="identity" className="scroll-mt-20 space-y-3">
-          <h2 className="text-xl font-semibold tracking-tight">Identity</h2>
-          <p className="text-muted-foreground text-sm">
-            Each visitor gets a random id in a cookie (with{" "}
-            <code className="rounded bg-muted px-1 py-0.5">localStorage</code> as a fallback), which
-            is what ties a vote to a device. If your app has accounts, pass a hashed user id and
-            votes follow the account instead.
-          </p>
-          <CodeBlock code={IDENTITY_CODE} />
-        </section>
-
-        <section id="branding" className="scroll-mt-20 space-y-3">
-          <h2 className="text-xl font-semibold tracking-tight">
-            Removing the &quot;Powered by&quot; badge
-          </h2>
-          <p className="text-muted-foreground text-sm">
-            The badge shows on the free plan and disappears once the app&apos;s owner upgrades to
-            Pro — nothing to change in code. See{" "}
-            <Link href="/pricing" className="underline underline-offset-2">
-              pricing
-            </Link>
-            .
-          </p>
-        </section>
-
-        <div className="bg-primary-soft space-y-2 rounded-2xl border border-border p-6">
-          <h2 className="text-lg font-semibold">Stuck on something?</h2>
-          <p className="text-muted-foreground text-sm">
-            An empty board with a console message about the API key means the key is wrong or
-            inactive — check the app&apos;s dashboard settings. In development the SDK prints
-            exactly what it could not do.
-          </p>
-        </div>
-      </div>
-    </>
+      <Section id="badge" title='The "Powered by" badge'>
+        <P>
+          The free plan shows a small &quot;Powered by Fewchurs&quot; line. It goes away on its
+          own when you upgrade to <A href="/pricing">Pro</A>.
+        </P>
+        <Note>
+          Stuck? A board that loads but stays empty usually means the API key is missing. Check
+          that the environment variable is set where your app is built.
+        </Note>
+      </Section>
+    </DocsPage>
   );
 }

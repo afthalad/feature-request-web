@@ -44,6 +44,7 @@ Fewchurs.showBoard()`,
     tagline: "A Dart package with the same board, coming soon.",
     iconPath: siFlutter.path,
     iconColor: `#${siFlutter.hex}`,
+    href: "/docs/flutter",
     deviceType: "mobile",
   },
   {
@@ -70,6 +71,7 @@ export default function Page() {
     tagline: "A Jetpack Compose board for Android, coming soon.",
     iconPath: siKotlin.path,
     iconColor: `#${siKotlin.hex}`,
+    href: "/docs/kotlin",
     deviceType: "mobile",
     codeSnippet: {
       filename: "MainActivity.kt",
@@ -102,6 +104,7 @@ FewchursBoard()`,
     tagline: "A Blade component and PHP SDK, coming soon.",
     iconPath: siLaravel.path,
     iconColor: `#${siLaravel.hex}`,
+    href: "/docs/laravel",
     deviceType: "web",
     codeSnippet: {
       filename: "dashboard.blade.php",
