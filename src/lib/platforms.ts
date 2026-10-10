@@ -24,7 +24,7 @@ export interface Platform {
 export const PLATFORMS: Platform[] = [
   {
     id: "swiftui",
-    name: "SwiftUII",
+    name: "SwiftUI",
     tagline: "A native board view, dropped into any SwiftUI app.",
     iconPath: siSwift.path,
     iconColor: `#${siSwift.hex}`,

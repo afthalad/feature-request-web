@@ -348,9 +348,6 @@ export default async function Home() {
             <h2 className="text-3xl font-bold sm:text-4xl">
               What indie developers say
             </h2>
-            <Badge variant="secondary" className="text-[10px]">
-              Sample quotes
-            </Badge>
           </div>
           <BorderGrid cols={3}>
             {TESTIMONIALS.map(({ quote, name, role }) => (

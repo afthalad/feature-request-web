@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Rocket, Sparkles, Sprout } from "lucide-react";
 import { toast } from "sonner";
 import { auth } from "@/lib/firebase/client";
 import { PlanCard } from "@/components/pricing/PlanCard";
@@ -12,27 +13,32 @@ const FREE_FEATURES = [
   "50 visible feature requests per app",
   "Unlimited votes & comments",
   "Unlimited notification emails",
+  "Public board link",
 ];
 
 const STARTER_FEATURES = [
   "3 apps",
   "200 visible feature requests per app",
-  "Unlimited votes & comments",
-  "Unlimited notification emails",
+  "Everything else in Free, unlimited",
 ];
 
 const PRO_FEATURES = [
   "5 apps",
   "Unlimited visible feature requests",
-  "Unlimited notification emails",
   "No \"Powered by\" badge",
-  "Custom SDK colours, CSV export, Slack/Discord alerts",
+  "Custom SDK colours",
+  "Custom public board name",
+  "CSV export",
+  "Slack & Discord alerts",
 ];
 
+// Keep in sync with the Dodo Payments products (amounts in dollars).
+// Yearly is 20% off twelve months of monthly.
 const PRICES = {
-  starter: { monthly: "$5", yearly: "$50" },
-  pro: { monthly: "$9", yearly: "$90" },
+  starter: { monthly: 14.99, yearly: 143.9 },
+  pro: { monthly: 29.99, yearly: 287.9 },
 };
+const YEARLY_SAVING = "Save 20%";
 
 type Period = "monthly" | "yearly";
 type PaidPlan = "starter" | "pro";
@@ -69,62 +75,90 @@ export function PricingPlans() {
     }
   }
 
+  const paidProps = (plan: PaidPlan) => {
+    const monthly = PRICES[plan].monthly;
+    const yearly = PRICES[plan].yearly;
+    return period === "monthly"
+      ? { price: monthly, period: "/ month", note: "Billed monthly. Cancel anytime." }
+      : {
+          price: yearly,
+          period: "/ year",
+          compareAt: monthly * 12,
+          note: `$${(yearly / 12).toFixed(2)}/mo, billed yearly`,
+        };
+  };
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-10">
       <div className="flex justify-center">
-        <div className="inline-flex items-center gap-1 rounded-md border border-border p-1 text-sm">
-          <button
-            type="button"
-            onClick={() => setPeriod("monthly")}
+        <div
+          role="radiogroup"
+          aria-label="Billing period"
+          className="relative grid grid-cols-2 rounded-full border border-border bg-muted p-1 text-sm"
+        >
+          <span
+            aria-hidden
             className={cn(
-              "rounded px-3 py-1 transition-colors",
-              period === "monthly" ? "bg-muted font-medium" : "text-muted-foreground"
+              "absolute inset-y-1 left-1 w-[calc(50%-0.25rem)] rounded-full bg-card shadow-sm ring-1 ring-border transition-transform duration-300 ease-out",
+              period === "yearly" && "translate-x-full"
             )}
-          >
-            Monthly
-          </button>
-          <button
-            type="button"
-            onClick={() => setPeriod("yearly")}
-            className={cn(
-              "rounded px-3 py-1 transition-colors",
-              period === "yearly" ? "bg-muted font-medium" : "text-muted-foreground"
-            )}
-          >
-            Yearly
-          </button>
+          />
+          {(["monthly", "yearly"] as const).map((value) => (
+            <button
+              key={value}
+              type="button"
+              role="radio"
+              aria-checked={period === value}
+              onClick={() => setPeriod(value)}
+              className={cn(
+                "relative z-10 flex items-center justify-center gap-2 rounded-full px-5 py-2 font-medium transition-colors",
+                period === value ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              {value === "monthly" ? "Monthly" : "Yearly"}
+              {value === "yearly" && (
+                <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[11px] font-semibold text-emerald-700 dark:text-emerald-400">
+                  {YEARLY_SAVING}
+                </span>
+              )}
+            </button>
+          ))}
         </div>
       </div>
 
-      <div className="mx-auto grid max-w-5xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mx-auto grid max-w-sm gap-6 text-left md:max-w-5xl md:grid-cols-3 md:gap-4 lg:gap-6">
         <PlanCard
           name="Free"
-          price="$0"
+          icon={Sprout}
+          tagline="For a side project or trying it out."
+          price={0}
           period="forever"
+          note="No credit card needed."
           features={FREE_FEATURES}
           ctaLabel="Get started free"
           ctaHref="/login"
         />
         <PlanCard
           name="Starter"
-          price={PRICES.starter[period]}
-          period={period === "monthly" ? "/ month" : "/ year"}
-          note={period === "yearly" ? "Two months free vs. monthly" : undefined}
+          icon={Rocket}
+          tagline="For an indie app that's starting to get traction."
+          {...paidProps("starter")}
+          featuresLead="Everything in Free, plus"
           features={STARTER_FEATURES}
-          ctaLabel={period === "monthly" ? "Upgrade monthly" : "Upgrade yearly"}
+          ctaLabel="Upgrade to Starter"
           ctaHref={null}
           onCtaClick={() => handleUpgrade("starter")}
           ctaLoading={loadingPlan === "starter"}
         />
         <PlanCard
           name="Pro"
-          price={PRICES.pro[period]}
-          period={period === "monthly" ? "/ month" : "/ year"}
-          note={period === "yearly" ? "Two months free vs. monthly" : undefined}
+          icon={Sparkles}
+          tagline="For developers shipping several apps."
+          {...paidProps("pro")}
           highlight
-          highlightLabel="Recommended"
+          featuresLead="Everything in Starter, plus"
           features={PRO_FEATURES}
-          ctaLabel={period === "monthly" ? "Upgrade monthly" : "Upgrade yearly"}
+          ctaLabel="Upgrade to Pro"
           ctaHref={null}
           onCtaClick={() => handleUpgrade("pro")}
           ctaLoading={loadingPlan === "pro"}

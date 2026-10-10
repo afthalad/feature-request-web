@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/table";
 import { MarketingHeader } from "@/components/layout/MarketingHeader";
 import { PricingPlans } from "@/components/pricing/PricingPlans";
+import { cn } from "@/lib/utils";
 
 interface PlanRow {
   label: string;
@@ -71,59 +72,66 @@ function Cell({ value }: { value: string | boolean }) {
   return <span>{value}</span>;
 }
 
+const PLAN_COLUMNS = ["free", "starter", "pro"] as const;
+
 export default function PricingPage() {
   return (
     <>
       <MarketingHeader />
-      <div className="mx-auto w-full max-w-4xl flex-1 space-y-12 px-4 py-12">
-        <div className="space-y-2 text-center">
-          <h1 className="text-2xl font-semibold">Pricing</h1>
-          <p className="text-muted-foreground">
-            Free forever for a hobby project. Upgrade once you&apos;re shipping.
+      <div className="mx-auto w-full max-w-5xl flex-1 space-y-14 px-4 py-14 sm:px-5 sm:py-20">
+        <div className="mx-auto max-w-2xl space-y-3 text-center">
+          <span className="text-primary text-xs font-semibold tracking-[0.2em] uppercase">
+            Pricing
+          </span>
+          <h1 className="text-3xl font-bold text-balance sm:text-5xl">
+            Start free. Upgrade when you&apos;re shipping.
+          </h1>
+          <p className="text-muted-foreground text-balance sm:text-lg">
+            Free forever for a hobby project. Every plan includes unlimited votes,
+            comments and notification emails.
           </p>
         </div>
 
         <PricingPlans />
 
-        <div className="space-y-2">
-          <p className="text-muted-foreground text-center text-xs sm:hidden">
-            Swipe to compare all plans →
-          </p>
-          <div className="overflow-hidden rounded-lg border">
-            <Table>
+        <div className="space-y-5">
+          <h2 className="text-center text-2xl font-bold sm:text-3xl">Compare plans</h2>
+          <div className="overflow-hidden rounded-2xl border border-border bg-card">
+            <Table className="table-fixed text-xs sm:text-sm">
               <TableHeader>
-                <TableRow className="bg-muted/40 hover:bg-muted/40">
-                  <TableHead className="w-[40%] min-w-[140px]">Feature</TableHead>
-                  <TableHead className="w-[20%] min-w-[90px] text-center font-medium">
-                    Free
-                  </TableHead>
-                  <TableHead className="w-[20%] min-w-[90px] text-center font-medium">
-                    Starter
-                  </TableHead>
-                  <TableHead className="w-[20%] min-w-[90px] text-center font-medium">
-                    Pro
-                  </TableHead>
+                <TableRow className="bg-muted/50 hover:bg-muted/50">
+                  <TableHead className="w-[34%] px-3 py-3 sm:w-[40%] sm:px-5">Feature</TableHead>
+                  {PLAN_COLUMNS.map((plan) => (
+                    <TableHead
+                      key={plan}
+                      className={cn(
+                        "px-1.5 py-3 text-center font-semibold capitalize sm:px-3",
+                        plan === "pro" && "text-primary"
+                      )}
+                    >
+                      {plan}
+                    </TableHead>
+                  ))}
                 </TableRow>
               </TableHeader>
 
               <TableBody>
                 {ROWS.map((row) => (
                   <TableRow key={row.label}>
-                    <TableCell className="min-w-[140px] py-4 font-medium whitespace-normal">
+                    <TableCell className="px-3 py-3.5 font-medium whitespace-normal sm:px-5 sm:py-4">
                       {row.label}
                     </TableCell>
-
-                    <TableCell className="w-[20%] min-w-[90px] py-4 text-center">
-                      <Cell value={row.free} />
-                    </TableCell>
-
-                    <TableCell className="w-[20%] min-w-[90px] py-4 text-center">
-                      <Cell value={row.starter} />
-                    </TableCell>
-
-                    <TableCell className="w-[20%] min-w-[90px] py-4 text-center">
-                      <Cell value={row.pro} />
-                    </TableCell>
+                    {PLAN_COLUMNS.map((plan) => (
+                      <TableCell
+                        key={plan}
+                        className={cn(
+                          "px-1.5 py-3.5 text-center whitespace-normal sm:px-3 sm:py-4",
+                          plan === "pro" && "bg-primary/[0.04]"
+                        )}
+                      >
+                        <Cell value={row[plan]} />
+                      </TableCell>
+                    ))}
                   </TableRow>
                 ))}
               </TableBody>

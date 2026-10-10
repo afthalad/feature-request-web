@@ -25,11 +25,11 @@ const PLAN_OPTIONS: {
   blurb: string;
   highlight?: boolean;
 }[] = [
-  { plan: "starter", name: "Starter", price: "$5/mo", blurb: "3 apps, 200 requests/app" },
+  { plan: "starter", name: "Starter", price: "$14.99/mo", blurb: "3 apps, 200 requests/app" },
   {
     plan: "pro",
     name: "Pro",
-    price: "$9/mo",
+    price: "$29.99/mo",
     blurb: "5 apps, unlimited requests",
     highlight: true,
   },
