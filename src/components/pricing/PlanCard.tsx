@@ -52,12 +52,12 @@ export function PlanCard({
 }: PlanCardProps) {
   const { dollars, cents } = formatPrice(price);
   const ctaVariant = highlight ? "default" : "outline";
-  const ctaClass = "h-11 w-full text-sm font-semibold";
+  const ctaClass = "h-11 w-full text-sm font-semibold border-none";
 
   return (
     <div
       className={cn(
-        "relative flex flex-col rounded-3xl border bg-card p-6 sm:p-7",
+        "relative flex flex-col rounded-3xl  bg-card p-6 sm:p-7",
         highlight
           ? "border-primary/50 from-primary/[0.07] bg-gradient-to-b to-transparent to-45% shadow-lift ring-primary/20 ring-4"
           : "border-border",
@@ -147,7 +147,7 @@ export function PlanCard({
             {featuresLead}
           </p>
         )}
-        <ul className="space-y-3 text-sm">
+        <ul className="space-y-3 text-xs">
           {features.map((feature) => (
             <li key={feature} className="flex items-start gap-2.5">
               <span

@@ -144,7 +144,7 @@ const FAQ_ROW_2 = [
 
 function FaqCard({ q, a }: { q: string; a: string }) {
   return (
-    <div className="w-[320px] shrink-0 rounded-lg border border-border bg-card p-5 sm:w-[380px]">
+    <div className="w-[320px] shrink-0 rounded-lg  bg-card p-5 sm:w-[380px]">
       <p className="font-semibold">{q}</p>
       <p className="text-muted-foreground mt-1.5 text-sm leading-relaxed">
         {a}
@@ -178,7 +178,10 @@ export default async function Home() {
             <div className="flex flex-wrap items-center gap-3">
               <Link
                 href="/login"
-                className={buttonVariants({ size: "lg", className: "px-6" })}
+                className={buttonVariants({
+                  size: "lg",
+                  className: "px-7 py-6 border-none",
+                })}
               >
                 Start free
                 <ArrowRight className="size-4" />
@@ -188,7 +191,7 @@ export default async function Home() {
                 className={buttonVariants({
                   variant: "outline",
                   size: "lg",
-                  className: "px-6",
+                  className: " px-7 py-6 border-none",
                 })}
               >
                 Read the docs
@@ -404,7 +407,10 @@ export default async function Home() {
           <div className="flex flex-wrap items-center justify-center gap-3">
             <Link
               href="/login"
-              className={buttonVariants({ size: "lg", className: "px-6" })}
+              className={buttonVariants({
+                size: "lg",
+                className: "px-6 py-5 border-none",
+              })}
             >
               Start free
               <ArrowRight className="size-4" />
@@ -414,7 +420,7 @@ export default async function Home() {
               className={buttonVariants({
                 variant: "outline",
                 size: "lg",
-                className: "px-6",
+                className: "px-6 py-5 border-none",
               })}
             >
               Read the docs

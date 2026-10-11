@@ -10,9 +10,9 @@ export function BorderGrid({ children, cols = 2, className }: BorderGridProps) {
   return (
     <div
       className={cn(
-        "grid gap-px overflow-hidden rounded-xl border border-border bg-border",
+        "grid gap-px overflow-hidden rounded-3xl  bg-border",
         cols === 3 ? "sm:grid-cols-2 lg:grid-cols-3" : "sm:grid-cols-2",
-        className
+        className,
       )}
     >
       {children}

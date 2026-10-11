@@ -25,7 +25,7 @@ const STARTER_FEATURES = [
 const PRO_FEATURES = [
   "5 apps",
   "Unlimited visible feature requests",
-  "No \"Powered by\" badge",
+  'No "Powered by" badge',
   "Custom SDK colours",
   "Custom public board name",
   "CSV export",
@@ -66,11 +66,14 @@ export function PricingPlans() {
         body: JSON.stringify({ plan, period }),
       });
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error?.message ?? "Failed to start checkout.");
+      if (!response.ok)
+        throw new Error(data.error?.message ?? "Failed to start checkout.");
 
       window.location.href = data.checkoutUrl;
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Failed to start checkout.");
+      toast.error(
+        error instanceof Error ? error.message : "Failed to start checkout.",
+      );
       setLoadingPlan(null);
     }
   }
@@ -79,7 +82,11 @@ export function PricingPlans() {
     const monthly = PRICES[plan].monthly;
     const yearly = PRICES[plan].yearly;
     return period === "monthly"
-      ? { price: monthly, period: "/ month", note: "Billed monthly. Cancel anytime." }
+      ? {
+          price: monthly,
+          period: "/ month",
+          note: "Billed monthly. Cancel anytime.",
+        }
       : {
           price: yearly,
           period: "/ year",
@@ -94,13 +101,13 @@ export function PricingPlans() {
         <div
           role="radiogroup"
           aria-label="Billing period"
-          className="relative grid grid-cols-2 rounded-full border border-border bg-muted p-1 text-sm"
+          className="relative grid grid-cols-2 rounded-full  bg-muted p-1 text-sm"
         >
           <span
             aria-hidden
             className={cn(
               "absolute inset-y-1 left-1 w-[calc(50%-0.25rem)] rounded-full bg-card shadow-sm ring-1 ring-border transition-transform duration-300 ease-out",
-              period === "yearly" && "translate-x-full"
+              period === "yearly" && "translate-x-full",
             )}
           />
           {(["monthly", "yearly"] as const).map((value) => (
@@ -112,7 +119,9 @@ export function PricingPlans() {
               onClick={() => setPeriod(value)}
               className={cn(
                 "relative z-10 flex items-center justify-center gap-2 rounded-full px-5 py-2 font-medium transition-colors",
-                period === value ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+                period === value
+                  ? "text-foreground"
+                  : "text-muted-foreground hover:text-foreground",
               )}
             >
               {value === "monthly" ? "Monthly" : "Yearly"}

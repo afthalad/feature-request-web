@@ -87,11 +87,11 @@ function HighlightRow({
   reverse: boolean;
 }) {
   return (
-    <article className="grid grid-cols-1 overflow-hidden rounded-3xl border border-border bg-card md:grid-cols-2">
+    <article className="grid grid-cols-1 overflow-hidden rounded-3xl  bg-card md:grid-cols-2">
       <div
         className={cn(
           "flex flex-col justify-center gap-4 p-8 sm:p-12",
-          reverse && "md:order-2"
+          reverse && "md:order-2",
         )}
       >
         <span className="text-primary text-xs font-semibold tracking-[0.2em] uppercase">
@@ -129,7 +129,7 @@ function StatusPill({ status }: { status: FeatureStatus }) {
     <span
       className={cn(
         "inline-flex rounded-md px-2 py-0.5 text-xs font-medium",
-        PILL_CLASS[status]
+        PILL_CLASS[status],
       )}
     >
       {STATUS_LABEL[status]}
@@ -137,9 +137,15 @@ function StatusPill({ status }: { status: FeatureStatus }) {
   );
 }
 
-function MockCard({ className, children }: { className?: string; children: ReactNode }) {
+function MockCard({
+  className,
+  children,
+}: {
+  className?: string;
+  children: ReactNode;
+}) {
   return (
-    <div className={cn("rounded-2xl border border-border bg-card shadow-lift", className)}>
+    <div className={cn("rounded-2xl  bg-card shadow-lift", className)}>
       {children}
     </div>
   );
@@ -172,7 +178,7 @@ function ReviewVisual() {
               "flex flex-col items-center gap-1.5 rounded-xl py-3 text-xs font-medium",
               active
                 ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
-                : "bg-muted/60 text-foreground"
+                : "bg-muted/60 text-foreground",
             )}
           >
             <Icon className="size-4" strokeWidth={1.8} />
@@ -222,7 +228,11 @@ function TranslateVisual() {
 }
 
 const THREAD: { name: string; text: string; time: string; dev?: boolean }[] = [
-  { name: "Sam Okafor", text: "Would love widgets for the lock screen too!", time: "2h ago" },
+  {
+    name: "Sam Okafor",
+    text: "Would love widgets for the lock screen too!",
+    time: "2h ago",
+  },
   {
     name: "You",
     text: "Planned for the next release. Lock screen is included.",
@@ -245,7 +255,9 @@ function ReplyVisual() {
             <span
               className={cn(
                 "flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-semibold",
-                c.dev ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
+                c.dev
+                  ? "bg-primary/10 text-primary"
+                  : "bg-muted text-muted-foreground",
               )}
             >
               {c.name.charAt(0)}
@@ -263,7 +275,7 @@ function ReplyVisual() {
               <p
                 className={cn(
                   "w-fit rounded-lg px-3 py-1.5 text-sm",
-                  c.dev ? "bg-primary-soft" : "bg-muted"
+                  c.dev ? "bg-primary-soft" : "bg-muted",
                 )}
               >
                 {c.text}
@@ -276,21 +288,45 @@ function ReplyVisual() {
   );
 }
 
-const VOTE_ROWS: { title: string; body: string; votes?: number; status: FeatureStatus }[] = [
-  { title: "Dark mode", body: "A dark theme that follows the system", status: "done" },
-  { title: "Offline mode", body: "Log habits without a connection", votes: 285, status: "in_progress" },
-  { title: "Home screen widgets", body: "See today's streak at a glance", votes: 190, status: "planned" },
+const VOTE_ROWS: {
+  title: string;
+  body: string;
+  votes?: number;
+  status: FeatureStatus;
+}[] = [
+  {
+    title: "Dark mode",
+    body: "A dark theme that follows the system",
+    status: "done",
+  },
+  {
+    title: "Offline mode",
+    body: "Log habits without a connection",
+    votes: 285,
+    status: "in_progress",
+  },
+  {
+    title: "Home screen widgets",
+    body: "See today's streak at a glance",
+    votes: 190,
+    status: "planned",
+  },
 ];
 
 function VotesVisual() {
   return (
     <MockCard className="space-y-2.5 p-3">
       {VOTE_ROWS.map((r) => (
-        <div key={r.title} className="flex gap-3 rounded-xl border border-border p-3">
+        <div
+          key={r.title}
+          className="flex gap-3 rounded-xl border border-border p-3"
+        >
           {r.votes ? (
             <div className="bg-muted flex w-11 shrink-0 flex-col items-center justify-center rounded-lg py-1.5">
               <ChevronUp className="text-muted-foreground size-4" />
-              <span className="text-xs font-semibold tabular-nums">{r.votes}</span>
+              <span className="text-xs font-semibold tabular-nums">
+                {r.votes}
+              </span>
             </div>
           ) : (
             <div className="flex w-11 shrink-0 items-center justify-center rounded-lg bg-emerald-500/10">
@@ -325,7 +361,9 @@ function NotifyVisual() {
           </span>
           <div className="min-w-0">
             <p className="text-sm font-semibold">Habits</p>
-            <p className="text-muted-foreground truncate text-xs">to 214 people who voted or followed</p>
+            <p className="text-muted-foreground truncate text-xs">
+              to 214 people who voted or followed
+            </p>
           </div>
         </div>
         <p className="mt-4 font-semibold">Dark mode is live 🎉</p>
@@ -334,7 +372,9 @@ function NotifyVisual() {
         </p>
         <div className="mt-4 flex items-center justify-between border-t border-border pt-3">
           <StatusPill status="done" />
-          <span className="text-muted-foreground text-xs">Sent automatically</span>
+          <span className="text-muted-foreground text-xs">
+            Sent automatically
+          </span>
         </div>
       </MockCard>
       <div className="absolute -top-1 right-4 flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium shadow-lift">
@@ -371,15 +411,20 @@ function PublicBoardVisual() {
           { title: "Home screen widgets", votes: 190 },
           { title: "CSV export", votes: 74 },
         ].map((r) => (
-          <div key={r.title} className="flex items-center gap-3 rounded-xl border border-border p-2.5">
+          <div
+            key={r.title}
+            className="flex items-center gap-3 rounded-xl border border-border p-2.5"
+          >
             <div
               className={cn(
                 "flex w-10 shrink-0 flex-col items-center rounded-lg py-1",
-                r.voted ? "bg-primary text-primary-foreground" : "bg-muted"
+                r.voted ? "bg-primary text-primary-foreground" : "bg-muted",
               )}
             >
               <ChevronUp className="size-3.5" />
-              <span className="text-[11px] font-semibold tabular-nums">{r.votes}</span>
+              <span className="text-[11px] font-semibold tabular-nums">
+                {r.votes}
+              </span>
             </div>
             <p className="text-sm font-medium">{r.title}</p>
           </div>
