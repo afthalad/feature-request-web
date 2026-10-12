@@ -3,6 +3,7 @@ import { FieldValue } from "firebase-admin/firestore";
 import { adminDb } from "@/lib/firebase/admin";
 import { getUserFromAuthHeader } from "@/lib/auth/requireUser";
 import { generateApiKey, hashApiKey, apiKeyDisplayPrefix } from "@/lib/auth/apiKey";
+import { forgetApiKey } from "@/lib/auth/verifyApiKey";
 import { ok, errorResponse } from "@/lib/api/response";
 
 export async function POST(
@@ -42,6 +43,7 @@ export async function POST(
     });
     batch.update(appRef, { apiKeyPrefix: apiKeyDisplayPrefix(newApiKey) });
     await batch.commit();
+    for (const doc of oldKeysSnapshot.docs) forgetApiKey(doc.id);
 
     return ok({ apiKey: newApiKey });
   } catch (error) {

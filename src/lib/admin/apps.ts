@@ -2,6 +2,7 @@ import "server-only";
 import { FieldValue, type QueryDocumentSnapshot } from "firebase-admin/firestore";
 import { adminDb } from "@/lib/firebase/admin";
 import { generateApiKey, hashApiKey, apiKeyDisplayPrefix } from "@/lib/auth/apiKey";
+import { forgetApiKey } from "@/lib/auth/verifyApiKey";
 import { generateUniqueSlug } from "@/lib/slug";
 import type { App, AppPlatformId } from "@/types";
 
@@ -137,6 +138,7 @@ export async function deleteApp(appId: string): Promise<void> {
     const batch = adminDb.batch();
     for (const doc of keysSnapshot.docs) batch.delete(doc.ref);
     await batch.commit();
+    for (const doc of keysSnapshot.docs) forgetApiKey(doc.id);
   }
 
   await adminDb.recursiveDelete(appRef);

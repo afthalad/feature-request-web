@@ -1,5 +1,6 @@
 import "server-only";
 import { adminDb } from "@/lib/firebase/admin";
+import { forgetApiKey } from "@/lib/auth/verifyApiKey";
 import type { AdminApiKey } from "@/types";
 
 interface ListApiKeysParams {
@@ -49,4 +50,5 @@ export async function listApiKeys({
 
 export async function revokeApiKey(hash: string): Promise<void> {
   await adminDb.collection("apiKeys").doc(hash).update({ active: false });
+  forgetApiKey(hash);
 }
