@@ -40,9 +40,12 @@ export function ExportReportButton({ appId, plan }: ExportReportButtonProps) {
       const idToken = await auth.currentUser?.getIdToken();
       if (!idToken) throw new Error("Not signed in.");
 
-      const response = await fetch(`/api/internal/apps/${appId}/export?period=${period}`, {
-        headers: { Authorization: `Bearer ${idToken}` },
-      });
+      const response = await fetch(
+        `/api/internal/apps/${appId}/export?period=${period}`,
+        {
+          headers: { Authorization: `Bearer ${idToken}` },
+        },
+      );
       if (!response.ok) {
         const data = await response.json().catch(() => null);
         throw new Error(data?.error?.message ?? "Failed to export report.");
@@ -56,7 +59,9 @@ export function ExportReportButton({ appId, plan }: ExportReportButtonProps) {
       link.click();
       URL.revokeObjectURL(url);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Failed to export report.");
+      toast.error(
+        error instanceof Error ? error.message : "Failed to export report.",
+      );
     } finally {
       setIsExporting(false);
     }
@@ -66,7 +71,7 @@ export function ExportReportButton({ appId, plan }: ExportReportButtonProps) {
     <>
       <DropdownMenu>
         <DropdownMenuTrigger
-          className={buttonVariants({ variant: "outline" })}
+          className={buttonVariants({ variant: "secondary" })}
           disabled={isExporting}
         >
           <Download className="size-4" />

@@ -34,19 +34,25 @@ export default async function AppPage({
 
   const userSnap = await adminDb.collection("users").doc(user.uid).get();
   const userPlan = userSnap.data()?.plan;
-  const plan: Plan = userPlan === "pro" || userPlan === "starter" ? userPlan : "free";
+  const plan: Plan =
+    userPlan === "pro" || userPlan === "starter" ? userPlan : "free";
 
-  const [{ features, nextCursor, hiddenCount, totalCount }] = await Promise.all([
-    listFeaturesForOwner({
-      appId,
-      tab: "pending",
-      limit: FEATURES_PAGE_SIZE,
-      cursor: null,
-      plan,
-      served: 0,
-    }),
-    adminDb.collection("apps").doc(appId).update({ featuresLastViewedAt: FieldValue.serverTimestamp() }),
-  ]);
+  const [{ features, nextCursor, hiddenCount, totalCount }] = await Promise.all(
+    [
+      listFeaturesForOwner({
+        appId,
+        tab: "pending",
+        limit: FEATURES_PAGE_SIZE,
+        cursor: null,
+        plan,
+        served: 0,
+      }),
+      adminDb
+        .collection("apps")
+        .doc(appId)
+        .update({ featuresLastViewedAt: FieldValue.serverTimestamp() }),
+    ],
+  );
 
   return (
     <div className="space-y-6">
@@ -63,7 +69,7 @@ export default async function AppPage({
             <Link
               href={`/b/${app.slug}`}
               target="_blank"
-              className={buttonVariants({ variant: "outline" })}
+              className={buttonVariants({ variant: "secondary" })}
             >
               Public board
             </Link>
@@ -71,7 +77,7 @@ export default async function AppPage({
           <ExportReportButton appId={appId} plan={plan} />
           <Link
             href={`/dashboard/apps/${appId}/settings`}
-            className={buttonVariants({ variant: "outline" })}
+            className={buttonVariants({ variant: "secondary" })}
           >
             Settings
           </Link>

@@ -163,7 +163,9 @@ export function FeatureList({
               <Link
                 href={`/b/${slug}`}
                 target="_blank"
-                className={buttonVariants({ variant: "outline" })}
+                className={buttonVariants({
+                  variant: "secondary",
+                })}
               >
                 Share your public board
               </Link>
@@ -178,7 +180,9 @@ export function FeatureList({
               appId={appId}
               feature={feature}
               isNew={!newSinceIso || feature.createdAt > newSinceIso}
-              onStatusChange={(status) => handleStatusChange(feature.id, status)}
+              onStatusChange={(status) =>
+                handleStatusChange(feature.id, status)
+              }
               onCommentCountChange={handleCommentCountChange}
               onDelete={handleDelete}
             />
