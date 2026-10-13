@@ -76,8 +76,9 @@ export default function Page() {
     codeSnippet: {
       filename: "MainActivity.kt",
       code: `import com.fewchurs.sdk.Fewchurs
+import com.fewchurs.sdk.ui.FewchursBoard
 
-Fewchurs.configure(apiKey = "fr_live_xxx")
+Fewchurs.configure(this, apiKey = "fr_live_xxx")
 FewchursBoard()`,
     },
   },
