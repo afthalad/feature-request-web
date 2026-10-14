@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { onAuthStateChanged, signOut, type User } from "firebase/auth";
-import { BookOpen, CreditCard, LayoutGrid, LogOut, Plus, Sparkles, Tag } from "lucide-react";
+import { BookOpen, CreditCard, LayoutDashboard, LogOut, Plus, Sparkles, Tag } from "lucide-react";
 import { toast } from "sonner";
 import { auth } from "@/lib/firebase/client";
 import { Logo } from "@/components/layout/Logo";
@@ -55,6 +55,15 @@ export function AppSidebar({ apps, plan, hasBillingAccount }: AppSidebarProps) {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton
+                  render={<Link href="/dashboard" />}
+                  isActive={pathname === "/dashboard"}
+                >
+                  <LayoutDashboard />
+                  <span>Dashboard</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
                   render={<Link href="/docs" />}
                   isActive={pathname.startsWith("/docs")}
                 >
@@ -80,15 +89,14 @@ export function AppSidebar({ apps, plan, hasBillingAccount }: AppSidebarProps) {
           </SidebarGroupAction>
           <SidebarGroupContent>
             <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  render={<Link href="/dashboard" />}
-                  isActive={pathname === "/dashboard"}
-                >
-                  <LayoutGrid />
-                  <span>All apps</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+              {apps.length === 0 && (
+                <SidebarMenuItem>
+                  <SidebarMenuButton render={<Link href="/dashboard/apps/new" />}>
+                    <Plus />
+                    <span>Create your first app</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
               {apps.map((app) => (
                 <SidebarMenuItem key={app.id}>
                   <SidebarMenuButton
