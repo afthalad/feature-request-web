@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { getAdminFromAuthHeader } from "@/lib/auth/requireAdmin";
 import { deleteApp, getApp, setAppDisabled, updateApp } from "@/lib/admin/apps";
 import { logAdminAction } from "@/lib/admin/audit";
+import { restoreApp } from "@/lib/apps/lifecycle";
 import { adminUpdateAppSchema } from "@/lib/validation/schemas";
 import { ok, errorResponse } from "@/lib/api/response";
 
@@ -35,13 +36,14 @@ export async function PATCH(
   const before = await getApp(appId);
   if (!before) return errorResponse("not_found", "App not found.");
 
-  const { disabled, ...fields } = parsed.data;
+  const { disabled, restore, ...fields } = parsed.data;
   if (Object.keys(fields).length > 0) await updateApp(appId, fields);
   if (disabled !== undefined && disabled !== before.disabled) await setAppDisabled(appId, disabled);
+  if (restore && before.deleted) await restoreApp(appId);
 
   await logAdminAction({
     adminUid: admin.uid,
-    action: "app.update",
+    action: restore ? "app.restore" : "app.update",
     targetType: "app",
     targetId: appId,
     before,

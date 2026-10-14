@@ -76,6 +76,8 @@ export const adminUpdateAppSchema = z.object({
   notificationEmail: z.string().trim().email().optional(),
   emailOnNewRequest: z.boolean().optional(),
   disabled: z.boolean().optional(),
+  /** Undo an owner's delete. */
+  restore: z.literal(true).optional(),
 });
 
 export const adminUpdateFeatureSchema = z.object({

@@ -45,16 +45,20 @@ export async function getOwnerPlan(uid: string): Promise<Plan> {
 }
 
 export async function checkAppLimit(uid: string): Promise<PlanLimitResult> {
-  // Both reads only need `uid`, so they run concurrently. The app count uses a server-side
-  // count() aggregate instead of fetching every app doc — we only need `.size`, not the data.
-  const [plan, countSnap] = await Promise.all([
+  // All reads only need `uid`, so they run concurrently. The app counts use server-side
+  // count() aggregates instead of fetching every app doc — we only need sizes, not the data.
+  // Apps the owner deleted (kept for admins, see src/lib/apps/lifecycle.ts) don't use up a slot.
+  const ownedApps = adminDb.collection("apps").where("ownerUid", "==", uid);
+  const [plan, countSnap, deletedSnap] = await Promise.all([
     getUserPlan(uid),
-    adminDb.collection("apps").where("ownerUid", "==", uid).count().get(),
+    ownedApps.count().get(),
+    ownedApps.where("deleted", "==", true).count().get(),
   ]);
   const limits = PLAN_LIMITS[plan];
+  const appCount = countSnap.data().count - deletedSnap.data().count;
   const upgradeHint = plan !== "pro" ? " Upgrade at /pricing for more." : "";
 
-  if (countSnap.data().count >= limits.maxApps) {
+  if (appCount >= limits.maxApps) {
     return {
       allowed: false,
       message: `You've reached the ${limits.maxApps}-app limit on the ${plan} plan.${upgradeHint}`,

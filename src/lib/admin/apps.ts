@@ -28,6 +28,8 @@ function mapApp(doc: QueryDocumentSnapshot): App {
     createdAt: data.createdAt.toDate().toISOString(),
     disabled: data.disabled ?? false,
     disabledSlug: data.disabledSlug ?? null,
+    deleted: data.deleted === true,
+    deletedAt: data.deletedAt ? data.deletedAt.toDate().toISOString() : null,
   };
 }
 

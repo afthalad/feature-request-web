@@ -26,7 +26,13 @@ export default async function AppPage({
     adminDb.collection("apps").doc(appId).get(),
   ]);
   if (!user) redirect("/login");
-  if (!appSnap.exists || appSnap.data()!.ownerUid !== user.uid) notFound();
+  if (
+    !appSnap.exists ||
+    appSnap.data()!.ownerUid !== user.uid ||
+    appSnap.get("deleted") === true
+  ) {
+    notFound();
+  }
 
   const app = appSnap.data()!;
   const newSinceIso: string | null = app.featuresLastViewedAt

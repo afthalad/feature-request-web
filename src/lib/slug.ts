@@ -44,6 +44,7 @@ export async function resolveAppBySlug(
 
   const doc = snapshot.docs[0];
   const data = doc.data();
+  if (data.deleted === true) return null;
   return {
     id: doc.id,
     name: data.name,

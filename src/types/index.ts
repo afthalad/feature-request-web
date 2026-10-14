@@ -48,6 +48,9 @@ export interface App {
   createdAt: string;
   disabled?: boolean;
   disabledSlug?: string | null;
+  /** The owner deleted it (soft delete, see src/lib/apps/lifecycle.ts). Admins can restore it. */
+  deleted?: boolean;
+  deletedAt?: string | null;
   featuresLastViewedAt?: string | null;
 }
 

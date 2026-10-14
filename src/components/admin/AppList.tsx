@@ -118,7 +118,9 @@ export function AppList({ initialApps, initialCursor }: AppListProps) {
                   <TableCell className="text-muted-foreground">{app.bundleId}</TableCell>
                   <TableCell>{app.featureCount}</TableCell>
                   <TableCell>
-                    {app.disabled ? (
+                    {app.deleted ? (
+                      <Badge variant="destructive">Deleted by owner</Badge>
+                    ) : app.disabled ? (
                       <Badge variant="destructive">Disabled</Badge>
                     ) : (
                       <Badge variant="outline">Active</Badge>

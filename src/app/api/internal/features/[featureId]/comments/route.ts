@@ -13,7 +13,7 @@ import { isFeatureLockedForOwner } from "@/lib/plans/visibility";
 async function verifyOwnership(appId: string, uid: string) {
   const appSnap = await adminDb.collection("apps").doc(appId).get();
   if (!appSnap.exists) return false;
-  return appSnap.data()!.ownerUid === uid;
+  return appSnap.data()!.ownerUid === uid && appSnap.get("deleted") !== true;
 }
 
 export async function GET(

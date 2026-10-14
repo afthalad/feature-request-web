@@ -35,6 +35,7 @@ export default async function DashboardPage() {
       : "free";
 
   const apps: App[] = appsSnapshot.docs
+    .filter((doc) => doc.get("deleted") !== true)
     .map((doc) => {
       const data = doc.data();
       return {

@@ -91,7 +91,8 @@ export default async function AdminUserDetailPage({
                   <LinkPendingSpinner />
                 </Link>
                 <span className="text-muted-foreground">
-                  {app.featureCount} requests{app.disabled ? " · disabled" : ""}
+                  {app.featureCount} requests
+                  {app.deleted ? " · deleted by owner" : app.disabled ? " · disabled" : ""}
                 </span>
               </li>
             ))}

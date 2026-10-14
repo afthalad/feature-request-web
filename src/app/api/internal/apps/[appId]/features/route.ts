@@ -13,7 +13,10 @@ export async function GET(
 
   const { appId } = await params;
   const appSnap = await adminDb.collection("apps").doc(appId).get();
-  if (!appSnap.exists) return errorResponse("not_found", "App not found.");
+  // A deleted app is gone for its owner (see src/lib/apps/lifecycle.ts).
+  if (!appSnap.exists || appSnap.get("deleted") === true) {
+    return errorResponse("not_found", "App not found.");
+  }
   if (appSnap.data()!.ownerUid !== user.uid) {
     return errorResponse("forbidden", "You do not own this app.");
   }
