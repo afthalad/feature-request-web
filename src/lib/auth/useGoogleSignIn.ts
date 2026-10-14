@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { signInWithPopup } from "firebase/auth";
+import { onAuthStateChanged, signInWithPopup, type User } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 import { toast } from "sonner";
 import { auth, googleAuthProvider } from "@/lib/firebase/client";
@@ -21,6 +21,40 @@ const CANCEL_CODES = new Set([
  */
 const FOCUS_CANCEL_GRACE_MS = 1200;
 
+/**
+ * The server session lasts 14 days, but Firebase keeps the browser signed in for much longer,
+ * so people land here while still signed in. Renew the session for them, at most once per this
+ * window, so a server that keeps refusing it can't bounce them back and forth.
+ */
+const RESUME_GUARD_MS = 30_000;
+const RESUME_KEY = "fewchurs.sessionResumedAt";
+
+async function createSession(user: User) {
+  const idToken = await user.getIdToken();
+  const response = await fetch("/api/auth/session", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ idToken }),
+  });
+  if (!response.ok) throw new Error("Failed to create session");
+}
+
+function recentlyResumed(): boolean {
+  try {
+    return Date.now() - Number(sessionStorage.getItem(RESUME_KEY) ?? 0) < RESUME_GUARD_MS;
+  } catch {
+    return false;
+  }
+}
+
+function markResumed() {
+  try {
+    sessionStorage.setItem(RESUME_KEY, String(Date.now()));
+  } catch {
+    // Private mode: the guard just doesn't persist.
+  }
+}
+
 export function useGoogleSignIn() {
   const router = useRouter();
   const [isSigningIn, setIsSigningIn] = useState(false);
@@ -30,6 +64,24 @@ export function useGoogleSignIn() {
   const cleanupRef = useRef<() => void>(() => {});
 
   useEffect(() => () => cleanupRef.current(), []);
+
+  // Already signed in to Firebase: renew the session and go straight back to the dashboard.
+  useEffect(() => {
+    let done = false;
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (!user || done || stageRef.current !== "idle" || recentlyResumed()) return;
+      done = true;
+      markResumed();
+      setIsSigningIn(true);
+      try {
+        await createSession(user);
+        router.replace("/dashboard");
+      } catch {
+        setIsSigningIn(false);
+      }
+    });
+    return unsubscribe;
+  }, [router]);
 
   function reset(attempt: number) {
     if (attempt !== attemptRef.current) return;
@@ -71,13 +123,7 @@ export function useGoogleSignIn() {
       // The focus watcher may have reset the button while the popup was finishing up.
       setIsSigningIn(true);
 
-      const idToken = await credential.user.getIdToken();
-      const response = await fetch("/api/auth/session", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ idToken }),
-      });
-      if (!response.ok) throw new Error("Failed to create session");
+      await createSession(credential.user);
 
       router.push("/dashboard");
     } catch (error) {
