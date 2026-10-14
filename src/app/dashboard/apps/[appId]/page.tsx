@@ -45,21 +45,19 @@ export default async function AppPage({
     userPlan === "pro" || userPlan === "starter" ? userPlan : "free";
   const hasPublicBoard = PLAN_LIMITS[plan].publicBoard;
 
-  const [{ features, nextCursor, hiddenCount }] = await Promise.all(
-    [
-      listFeaturesForOwner({
-        appId,
-        tab: "pending",
-        limit: FEATURES_PAGE_SIZE,
-        cursor: null,
-        plan,
-      }),
-      adminDb
-        .collection("apps")
-        .doc(appId)
-        .update({ featuresLastViewedAt: FieldValue.serverTimestamp() }),
-    ],
-  );
+  const [{ features, nextCursor, hiddenCount }] = await Promise.all([
+    listFeaturesForOwner({
+      appId,
+      tab: "pending",
+      limit: FEATURES_PAGE_SIZE,
+      cursor: null,
+      plan,
+    }),
+    adminDb
+      .collection("apps")
+      .doc(appId)
+      .update({ featuresLastViewedAt: FieldValue.serverTimestamp() }),
+  ]);
 
   return (
     <div className="space-y-6">
@@ -82,7 +80,10 @@ export default async function AppPage({
             </Link>
           )}
           {!hasPublicBoard && (
-            <Link href="/pricing" className={buttonVariants({ variant: "secondary" })}>
+            <Link
+              href="/pricing"
+              className={buttonVariants({ variant: "secondary" })}
+            >
               Public board
               <span className="bg-primary/10 text-primary rounded-full px-1.5 py-0.5 text-[10px] font-medium leading-none">
                 Pro
@@ -98,9 +99,7 @@ export default async function AppPage({
           </Link>
         </div>
       </div>
-      {plan === "free" && (
-        <UpgradeBanner message="Upgrade for a higher feature-request limit on this app." />
-      )}
+
       <FeatureList
         appId={appId}
         slug={hasPublicBoard ? (app.slug ?? "") : ""}
