@@ -151,7 +151,7 @@ export default function SwiftUIDocsPage() {
       <Section id="badge" title='The "Powered by" badge'>
         <P>
           On the free plan the board shows a small &quot;Powered by Fewchurs&quot; line. It goes
-          away on its own when you upgrade to <A href="/pricing">Pro</A>. You don&apos;t need to
+          away on its own when you upgrade to <A href="/pricing">Starter or Pro</A>. You don&apos;t need to
           change any code.
         </P>
       </Section>

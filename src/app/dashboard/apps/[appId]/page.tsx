@@ -9,6 +9,7 @@ import { UpgradeBanner } from "@/components/billing/UpgradeBanner";
 import { ExportReportButton } from "@/components/apps/ExportReportButton";
 import { PlatformIcons } from "@/components/apps/PlatformIcons";
 import { buttonVariants } from "@/components/ui/button";
+import { PLAN_LIMITS } from "@/lib/plans/limits";
 import type { Plan } from "@/types";
 
 const FEATURES_PAGE_SIZE = 20;
@@ -36,8 +37,9 @@ export default async function AppPage({
   const userPlan = userSnap.data()?.plan;
   const plan: Plan =
     userPlan === "pro" || userPlan === "starter" ? userPlan : "free";
+  const hasPublicBoard = PLAN_LIMITS[plan].publicBoard;
 
-  const [{ features, nextCursor, hiddenCount, totalCount }] = await Promise.all(
+  const [{ features, nextCursor, hiddenCount }] = await Promise.all(
     [
       listFeaturesForOwner({
         appId,
@@ -45,7 +47,6 @@ export default async function AppPage({
         limit: FEATURES_PAGE_SIZE,
         cursor: null,
         plan,
-        served: 0,
       }),
       adminDb
         .collection("apps")
@@ -65,13 +66,21 @@ export default async function AppPage({
           <p className="text-muted-foreground text-sm">{app.bundleId}</p>
         </div>
         <div className="flex flex-wrap gap-2">
-          {app.slug && (
+          {app.slug && hasPublicBoard && (
             <Link
               href={`/b/${app.slug}`}
               target="_blank"
               className={buttonVariants({ variant: "secondary" })}
             >
               Public board
+            </Link>
+          )}
+          {!hasPublicBoard && (
+            <Link href="/pricing" className={buttonVariants({ variant: "secondary" })}>
+              Public board
+              <span className="bg-primary/10 text-primary rounded-full px-1.5 py-0.5 text-[10px] font-medium leading-none">
+                Pro
+              </span>
             </Link>
           )}
           <ExportReportButton appId={appId} plan={plan} />
@@ -88,11 +97,10 @@ export default async function AppPage({
       )}
       <FeatureList
         appId={appId}
-        slug={app.slug ?? ""}
+        slug={hasPublicBoard ? (app.slug ?? "") : ""}
         initialFeatures={features}
         initialCursor={nextCursor}
         initialHiddenCount={hiddenCount}
-        initialTotalCount={totalCount}
         newSinceIso={newSinceIso}
       />
     </div>

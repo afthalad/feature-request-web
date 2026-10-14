@@ -1,8 +1,9 @@
 import { NextRequest } from "next/server";
-import { resolveAppBySlug } from "@/lib/slug";
+import { resolvePublicBoard } from "@/lib/slug";
 import { getDeviceId } from "@/lib/auth/verifyApiKey";
 import { createFeatureSchema } from "@/lib/validation/schemas";
 import { ok, errorResponse } from "@/lib/api/response";
+import { getOwnerPlan } from "@/lib/plans/limits";
 import {
   listFeaturesForApp,
   createFeatureForApp,
@@ -15,7 +16,7 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params;
-  const app = await resolveAppBySlug(slug);
+  const app = await resolvePublicBoard(slug);
   if (!app) return errorResponse("not_found", "Board not found.");
 
   const deviceId = getDeviceId(req);
@@ -26,7 +27,8 @@ export async function GET(
   const limit = Math.min(Math.max(Number(searchParams.get("limit")) || 20, 1), 100);
   const cursor = searchParams.get("cursor");
 
-  const result = await listFeaturesForApp({ appId: app.id, deviceId, sort, limit, cursor });
+  const plan = await getOwnerPlan(app.ownerUid);
+  const result = await listFeaturesForApp({ appId: app.id, deviceId, sort, limit, cursor, plan });
   if (app.hideVoteCounts) {
     result.features = result.features.map((feature) => ({ ...feature, upvoteCount: 0 }));
   }
@@ -38,7 +40,7 @@ export async function POST(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params;
-  const app = await resolveAppBySlug(slug);
+  const app = await resolvePublicBoard(slug);
   if (!app) return errorResponse("not_found", "Board not found.");
 
   const deviceId = getDeviceId(req);

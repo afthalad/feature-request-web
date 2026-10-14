@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { verifyApiKey, getDeviceId } from "@/lib/auth/verifyApiKey";
 import { ok, errorResponse } from "@/lib/api/response";
 import { getFeatureForApp, NotFoundError } from "@/lib/features/service";
+import { getOwnerPlan } from "@/lib/plans/limits";
 
 export async function GET(
   req: NextRequest,
@@ -16,7 +17,8 @@ export async function GET(
   const { featureId } = await params;
 
   try {
-    const feature = await getFeatureForApp({ appId: keyInfo.appId, featureId, deviceId });
+    const plan = await getOwnerPlan(keyInfo.ownerUid);
+    const feature = await getFeatureForApp({ appId: keyInfo.appId, featureId, deviceId, plan });
     return ok(feature);
   } catch (error) {
     if (error instanceof NotFoundError) return errorResponse("not_found", "Feature not found.");

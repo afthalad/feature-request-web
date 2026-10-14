@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { resolveAppBySlug } from "@/lib/slug";
 import { listFeaturesForApp } from "@/lib/features/service";
+import { getOwnerPlan, PLAN_LIMITS } from "@/lib/plans/limits";
 import { PublicBoard } from "@/components/public/PublicBoard";
 
 const FEATURES_PAGE_SIZE = 20;
@@ -31,6 +32,20 @@ export default async function PublicBoardPage({
   const app = await resolveAppBySlug(slug);
   if (!app) notFound();
 
+  // Public boards are a Pro feature. Links shared earlier, and the board link in status-update
+  // emails, still land here, so explain instead of a bare 404.
+  const plan = await getOwnerPlan(app.ownerUid);
+  if (!PLAN_LIMITS[plan].publicBoard) {
+    return (
+      <div className="mx-auto flex min-h-full w-full max-w-md flex-1 flex-col items-center justify-center gap-2 px-4 py-20 text-center">
+        <h1 className="text-xl font-semibold">{app.name}</h1>
+        <p className="text-muted-foreground text-sm">
+          This feature board isn&apos;t public. Open the {app.name} app to see requests and vote.
+        </p>
+      </div>
+    );
+  }
+
   // No real device id exists yet on the server, so votes/follows render as false here — the
   // client refetches this same first page once it has a device id to correct that. The
   // placeholder id below is never a real device, so it just never matches a vote/follow doc.
@@ -40,6 +55,7 @@ export default async function PublicBoardPage({
     sort: "new",
     limit: FEATURES_PAGE_SIZE,
     cursor: null,
+    plan,
   });
   const initialFeatures = app.hideVoteCounts
     ? rawInitialFeatures.map((feature) => ({ ...feature, upvoteCount: 0 }))

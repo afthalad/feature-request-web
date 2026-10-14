@@ -10,7 +10,15 @@ import {
 import { adminDb } from "@/lib/firebase/admin";
 import { sendNewFeatureRequestEmail } from "@/lib/email/send";
 import { followFeature } from "@/lib/followers/service";
-import { PLAN_LIMITS, type Plan } from "@/lib/plans/limits";
+import type { Plan } from "@/lib/plans/limits";
+import {
+  forgetVisibleIds,
+  getVisibleIds,
+  getVisibleWindow,
+  isLocked,
+  visibleLimit,
+} from "@/lib/plans/visibility";
+import { maskText } from "@/lib/email/mask";
 import { translateText } from "@/lib/translate/googleTranslate";
 import type {
   App,
@@ -55,6 +63,21 @@ interface ListFeaturesParams {
   cursor: string | null;
   /** Roadmap views ask for a subset; omitted means every status. */
   statuses?: FeatureStatus[];
+  /** App owner's plan. Boards list only the requests it shows; omitted means all of them. */
+  plan?: Plan;
+}
+
+// Locked dashboard rows carry only what a placeholder needs, never the request's text, so the
+// paywall can't be read around in the browser's network tab.
+function lockFeature<T extends Feature>(feature: T): T {
+  return {
+    ...feature,
+    title: maskText(feature.title),
+    description: "",
+    authorDeviceId: "",
+    translation: null,
+    locked: true,
+  };
 }
 
 export async function listFeaturesForApp({
@@ -64,6 +87,7 @@ export async function listFeaturesForApp({
   limit,
   cursor,
   statuses,
+  plan,
 }: ListFeaturesParams): Promise<{
   features: FeatureWithVote[];
   nextCursor: string | null;
@@ -72,22 +96,40 @@ export async function listFeaturesForApp({
     .collection("apps")
     .doc(appId)
     .collection("features");
-  let query: Query = statuses?.length
-    ? featuresRef.where("status", "in", statuses)
-    : featuresRef;
-  query = query
-    .orderBy(sort === "top" ? "upvoteCount" : "createdAt", "desc")
-    .limit(limit + 1);
-
-  if (cursor) {
-    const cursorSnap = await featuresRef.doc(cursor).get();
-    if (cursorSnap.exists) query = query.startAfter(cursorSnap);
+  let docs: QueryDocumentSnapshot[];
+  let nextCursor: string | null;
+  // Boards only ever see the plan's visible requests (the app's first N), chosen here on the
+  // server, so no cursor or crafted request can reach the locked ones. That window is at most
+  // the plan's limit, so it's filtered, ranked and paged in memory.
+  const window = plan ? await getVisibleWindow(appId, plan) : null;
+  if (window) {
+    const rows = (statuses?.length
+      ? window.filter((doc) => statuses.includes(doc.get("status")))
+      : [...window]
+    ).sort((a, b) =>
+      sort === "top"
+        ? (b.get("upvoteCount") ?? 0) - (a.get("upvoteCount") ?? 0) || b.id.localeCompare(a.id)
+        : b.get("createdAt").valueOf().localeCompare(a.get("createdAt").valueOf()) ||
+          b.id.localeCompare(a.id),
+    );
+    const start = cursor ? rows.findIndex((doc) => doc.id === cursor) + 1 : 0;
+    docs = rows.slice(start, start + limit);
+    nextCursor = start + limit < rows.length ? docs[docs.length - 1].id : null;
+  } else {
+    const filtered: Query = statuses?.length
+      ? featuresRef.where("status", "in", statuses)
+      : featuresRef;
+    let query = filtered
+      .orderBy(sort === "top" ? "upvoteCount" : "createdAt", "desc")
+      .limit(limit + 1);
+    if (cursor) {
+      const cursorSnap = await featuresRef.doc(cursor).get();
+      if (cursorSnap.exists) query = query.startAfter(cursorSnap);
+    }
+    const snapshot = await query.get();
+    docs = snapshot.docs.slice(0, limit);
+    nextCursor = snapshot.docs.length > limit ? docs[docs.length - 1].id : null;
   }
-
-  const snapshot = await query.get();
-  const docs = snapshot.docs.slice(0, limit);
-  const hasMore = snapshot.docs.length > limit;
-  const nextCursor = hasMore ? docs[docs.length - 1].id : null;
 
   const voteRefs = docs.map((doc) => doc.ref.collection("votes").doc(deviceId));
   const followerRefs = docs.map((doc) =>
@@ -126,14 +168,17 @@ export async function listFeaturesForApp({
 
 // Single feature for SDK deep links and per-request pages, with the same vote/follow state
 // the list gives, so a detail view does not have to page the list to find one row.
+// A request the plan locks reads as not found, except to the device that submitted it.
 export async function getFeatureForApp({
   appId,
   featureId,
   deviceId,
+  plan,
 }: {
   appId: string;
   featureId: string;
   deviceId: string;
+  plan?: Plan;
 }): Promise<FeatureWithVote> {
   const featureRef = adminDb
     .collection("apps")
@@ -141,20 +186,25 @@ export async function getFeatureForApp({
     .collection("features")
     .doc(featureId);
 
-  const [featureSnap, voteSnap, followerSnap] = await Promise.all([
+  const [featureSnap, voteSnap, followerSnap, visibleIds] = await Promise.all([
     featureRef.get(),
     featureRef.collection("votes").doc(deviceId).get(),
     featureRef.collection("followers").doc(deviceId).get(),
+    plan ? getVisibleIds(appId, plan) : Promise.resolve(null),
   ]);
 
   if (!featureSnap.exists) throw new NotFoundError();
 
   const feature = mapFeature(featureSnap as QueryDocumentSnapshot);
+  const isMine = feature.authorDeviceId === deviceId;
+  if (!isMine && isLocked(featureId, visibleIds)) {
+    throw new NotFoundError();
+  }
   return {
     ...feature,
     hasVoted: voteSnap.exists,
     isFollowing: followerSnap.exists,
-    isMine: feature.authorDeviceId === deviceId,
+    isMine,
   };
 }
 
@@ -165,33 +215,31 @@ interface ListFeaturesForOwnerParams {
   tab: OwnerFeatureTab;
   limit: number;
   cursor: string | null;
-  /** Owner's plan, for the pending-tab visibility cap. Defaults to unrestricted (admin views). */
+  /** Owner's plan, for locking requests past its limit. Defaults to unrestricted (admin views). */
   plan?: Plan;
-  /** How many pending items the caller has already been shown, for capping across pages. */
-  served?: number;
 }
 
 interface ListFeaturesForOwnerResult {
   features: Feature[];
   nextCursor: string | null;
   totalCount: number | null;
+  /** Requests in this app the plan locks (across all tabs). */
   hiddenCount: number;
 }
 
 // Owner-facing listing (dashboard): no per-device vote/follow lookups, since the dashboard never
 // shows "did I vote on this" — that saves two extra reads per feature vs. listFeaturesForApp.
 //
-// The pending tab is visibility-capped by plan (PLAN_LIMITS.maxFeaturesPerApp): submissions are
-// never blocked (see createFeatureForApp), so an app can collect more pending requests than its
-// plan shows — the newest `maxFeaturesPerApp` stay visible and the rest are reported as
-// `hiddenCount` so the dashboard can prompt an upgrade instead of turning away feedback.
+// Every request is listed, but on Free and Starter only the app's first N (PLAN_LIMITS
+// .maxFeaturesPerApp) come back readable; the rest are locked placeholders (see lockFeature)
+// and counted in `hiddenCount`, so the dashboard can prompt an upgrade. Submissions are never
+// blocked (see createFeatureForApp), so no feedback is turned away meanwhile.
 export async function listFeaturesForOwner({
   appId,
   tab,
   limit,
   cursor,
   plan = "pro",
-  served = 0,
 }: ListFeaturesForOwnerParams): Promise<ListFeaturesForOwnerResult> {
   const featuresRef = adminDb
     .collection("apps")
@@ -203,24 +251,16 @@ export async function listFeaturesForOwner({
   else if (tab === "approved")
     query = query.where("status", "in", APPROVED_STATUSES);
 
-  let totalCount: number | null = null;
-  let hiddenCount = 0;
-  const visibleLimit =
-    tab === "pending" ? PLAN_LIMITS[plan].maxFeaturesPerApp : Infinity;
-
-  if (tab === "pending") {
-    const countSnap = await query.count().get();
-    totalCount = countSnap.data().count;
-
-    if (Number.isFinite(visibleLimit)) {
-      hiddenCount = Math.max(0, totalCount - visibleLimit);
-      const remaining = Math.max(0, visibleLimit - served);
-      if (remaining === 0) {
-        return { features: [], nextCursor: null, totalCount, hiddenCount };
-      }
-      limit = Math.min(limit, remaining);
-    }
-  }
+  const [visibleIds, totalCount, appTotal] = await Promise.all([
+    getVisibleIds(appId, plan),
+    tab === "pending"
+      ? query.count().get().then((snap) => snap.data().count)
+      : Promise.resolve(null),
+    Number.isFinite(visibleLimit(plan))
+      ? featuresRef.count().get().then((snap) => snap.data().count)
+      : Promise.resolve(0),
+  ]);
+  const hiddenCount = visibleIds ? Math.max(0, appTotal - visibleLimit(plan)) : 0;
 
   query = query
     .orderBy(tab === "top" ? "upvoteCount" : "createdAt", "desc")
@@ -234,18 +274,13 @@ export async function listFeaturesForOwner({
   const snapshot = await query.get();
   const docs = snapshot.docs.slice(0, limit);
   const hasMore = snapshot.docs.length > limit;
-  let nextCursor = hasMore ? docs[docs.length - 1].id : null;
-
-  if (
-    nextCursor &&
-    Number.isFinite(visibleLimit) &&
-    served + docs.length >= visibleLimit
-  ) {
-    nextCursor = null;
-  }
+  const nextCursor = hasMore ? docs[docs.length - 1].id : null;
 
   return {
-    features: docs.map(mapFeature),
+    features: docs.map((doc) => {
+      const feature = mapFeature(doc);
+      return isLocked(doc.id, visibleIds) ? lockFeature(feature) : feature;
+    }),
     nextCursor,
     totalCount,
     hiddenCount,
@@ -253,29 +288,35 @@ export async function listFeaturesForOwner({
 }
 
 // Newest pending (unreviewed) features across all of an owner's apps, for the dashboard preview.
+// Requests past the owner's plan limit come back locked, as in listFeaturesForOwner.
 export async function listRecentPendingFeatures(
   apps: App[],
   limit: number,
+  plan: Plan = "pro",
 ): Promise<RecentFeature[]> {
   if (apps.length === 0) return [];
 
-  const perAppSnapshots = await Promise.all(
+  const perApp = await Promise.all(
     apps.map((app) =>
-      adminDb
-        .collection("apps")
-        .doc(app.id)
-        .collection("features")
-        .where("status", "==", "open")
-        .orderBy("createdAt", "desc")
-        .limit(limit)
-        .get(),
+      Promise.all([
+        adminDb
+          .collection("apps")
+          .doc(app.id)
+          .collection("features")
+          .where("status", "==", "open")
+          .orderBy("createdAt", "desc")
+          .limit(limit)
+          .get(),
+        getVisibleIds(app.id, plan),
+      ]),
     ),
   );
 
-  const features = perAppSnapshots.flatMap((snapshot, index) => {
+  const features = perApp.flatMap(([snapshot, visibleIds], index) => {
     const app = apps[index];
     return snapshot.docs.map((doc) => {
-      const feature = mapFeature(doc);
+      const mapped = mapFeature(doc);
+      const feature = isLocked(doc.id, visibleIds) ? lockFeature(mapped) : mapped;
       return {
         ...feature,
         appId: app.id,
@@ -521,4 +562,6 @@ export async function deleteFeature(
 
   await adminDb.recursiveDelete(featureRef);
   await appRef.update({ featureCount: FieldValue.increment(-1) });
+  // Deleting one of the visible requests unlocks the next one.
+  forgetVisibleIds(appId);
 }

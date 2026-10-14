@@ -72,6 +72,11 @@ export interface Feature {
   translation: FeatureTranslation | null;
   createdAt: string;
   updatedAt: string;
+  /**
+   * Dashboard only: the owner's plan hides this request (it's past their first N). The title
+   * is masked and the description removed; upgrading unlocks it.
+   */
+  locked?: boolean;
 }
 
 export interface FeatureWithVote extends Feature {

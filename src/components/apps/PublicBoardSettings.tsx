@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { auth } from "@/lib/firebase/client";
@@ -13,12 +14,15 @@ interface PublicBoardSettingsProps {
   appId: string;
   initialSlug: string;
   initialHideVoteCounts: boolean;
+  /** Public web boards are a Pro feature; other plans see an upgrade note instead. */
+  hasPublicBoard: boolean;
 }
 
 export function PublicBoardSettings({
   appId,
   initialSlug,
   initialHideVoteCounts,
+  hasPublicBoard,
 }: PublicBoardSettingsProps) {
   const router = useRouter();
   const [slug, setSlug] = useState(initialSlug);
@@ -86,36 +90,48 @@ export function PublicBoardSettings({
   return (
     <div className="space-y-2">
       <Label htmlFor="slug">Public board</Label>
-      <form onSubmit={handleSubmit} className="flex gap-2">
-        <Input
-          id="slug"
-          value={slug}
-          onChange={(event) => setSlug(event.target.value)}
-          minLength={3}
-          maxLength={60}
-        />
-        <Button type="submit" variant="outline" disabled={isSaving || slug === savedSlug}>
-          Save
-        </Button>
-      </form>
-      <div className="flex items-center gap-2">
-        <a
-          href={`/b/${savedSlug}`}
-          target="_blank"
-          rel="noreferrer"
-          className="text-muted-foreground text-sm underline underline-offset-2"
-        >
-          {boardUrl}
-        </a>
-        <Button type="button" variant="ghost" size="sm" onClick={handleCopy}>
-          Copy
-        </Button>
-      </div>
+      {hasPublicBoard ? (
+        <>
+          <form onSubmit={handleSubmit} className="flex gap-2">
+            <Input
+              id="slug"
+              value={slug}
+              onChange={(event) => setSlug(event.target.value)}
+              minLength={3}
+              maxLength={60}
+            />
+            <Button type="submit" variant="outline" disabled={isSaving || slug === savedSlug}>
+              Save
+            </Button>
+          </form>
+          <div className="flex items-center gap-2">
+            <a
+              href={`/b/${savedSlug}`}
+              target="_blank"
+              rel="noreferrer"
+              className="text-muted-foreground text-sm underline underline-offset-2"
+            >
+              {boardUrl}
+            </a>
+            <Button type="button" variant="ghost" size="sm" onClick={handleCopy}>
+              Copy
+            </Button>
+          </div>
+        </>
+      ) : (
+        <p className="text-muted-foreground text-sm">
+          A web page with your board that anyone can open and vote on, no app needed. Available on{" "}
+          <Link href="/pricing" className="text-foreground underline underline-offset-2">
+            Pro
+          </Link>
+          .
+        </p>
+      )}
       <div className="flex items-center justify-between pt-2">
         <div>
           <p className="text-sm font-medium">Hide vote counts</p>
           <p className="text-muted-foreground text-sm">
-            Voting still works, but visitors won&apos;t see how many votes a request has.
+            Voting still works, but people won&apos;t see how many votes a request has.
           </p>
         </div>
         <Switch

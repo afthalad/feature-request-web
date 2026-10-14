@@ -142,7 +142,7 @@ export default function NextJsDocsPage() {
       <Section id="badge" title='The "Powered by" badge'>
         <P>
           The free plan shows a small &quot;Powered by Fewchurs&quot; line. It goes away on its
-          own when you upgrade to <A href="/pricing">Pro</A>.
+          own when you upgrade to <A href="/pricing">Starter or Pro</A>.
         </P>
         <Note>
           Stuck? A board that loads but stays empty usually means <C>FEWCHURS_API_KEY</C> is

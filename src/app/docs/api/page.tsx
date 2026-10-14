@@ -186,6 +186,10 @@ export default function ApiDocsPage() {
         <P>
           <C>nextCursor</C> is <C>null</C> on the last page.
         </P>
+        <P>
+          Lists only include the requests your plan shows: an app&apos;s first 5 on Free, its first
+          200 on Starter, and all of them on Pro. See <A href="/pricing">pricing</A>.
+        </P>
       </Endpoint>
 
       <Endpoint id="get-request" title="Get one request" method="GET" path="/features/{id}">

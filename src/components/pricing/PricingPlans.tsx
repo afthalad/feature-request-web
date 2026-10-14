@@ -10,26 +10,25 @@ import { cn } from "@/lib/utils";
 
 const FREE_FEATURES = [
   "1 app",
-  "50 visible feature requests per app",
-  "Unlimited votes & comments",
-  "Unlimited notification emails",
-  "Public board link",
+  "First 5 feature requests visible per app",
+  "Collect unlimited requests, votes & comments",
+  "Email for every new request (details for the first 5)",
+  "Custom SDK colours",
 ];
 
 const STARTER_FEATURES = [
   "3 apps",
-  "200 visible feature requests per app",
-  "Everything else in Free, unlimited",
+  "First 200 feature requests visible per app",
+  "Full email details for the first 200",
+  'No "Powered by" badge',
 ];
 
 const PRO_FEATURES = [
   "5 apps",
-  "Unlimited visible feature requests",
-  'No "Powered by" badge',
-  "Custom SDK colours",
-  "Custom public board name",
+  "Every feature request visible",
+  "Full email details for every request",
+  "Public board with your own link",
   "CSV export",
-  "Slack & Discord alerts",
 ];
 
 // Keep in sync with the Dodo Payments products (amounts in dollars).

@@ -4,6 +4,7 @@ import { getUserFromAuthHeader } from "@/lib/auth/requireUser";
 import { ok, errorResponse } from "@/lib/api/response";
 import { listFollowersForFeature } from "@/lib/followers/service";
 import { maskEmail } from "@/lib/email/mask";
+import { isFeatureLockedForOwner } from "@/lib/plans/visibility";
 
 async function verifyOwnership(appId: string, uid: string) {
   const appSnap = await adminDb.collection("apps").doc(appId).get();
@@ -25,6 +26,9 @@ export async function GET(
 
   if (!(await verifyOwnership(appId, user.uid))) {
     return errorResponse("forbidden", "You do not own this app.");
+  }
+  if (await isFeatureLockedForOwner(appId, featureId, user.uid)) {
+    return errorResponse("limit_reached", "Upgrade your plan to view this feature request.");
   }
 
   const limit = Math.min(Math.max(Number(searchParams.get("limit")) || 20, 1), 100);

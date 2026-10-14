@@ -23,12 +23,11 @@ export async function GET(
   const tab = tabParam === "top" || tabParam === "approved" ? tabParam : "pending";
   const limit = Math.min(Math.max(Number(searchParams.get("limit")) || 20, 1), 100);
   const cursor = searchParams.get("cursor");
-  const served = Math.max(Number(searchParams.get("served")) || 0, 0);
 
   const userSnap = await adminDb.collection("users").doc(user.uid).get();
   const userPlan = userSnap.data()?.plan;
   const plan = userPlan === "pro" || userPlan === "starter" ? userPlan : "free";
 
-  const result = await listFeaturesForOwner({ appId, tab, limit, cursor, plan, served });
+  const result = await listFeaturesForOwner({ appId, tab, limit, cursor, plan });
   return ok(result);
 }

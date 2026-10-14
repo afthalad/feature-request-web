@@ -4,6 +4,7 @@ import { getUserFromAuthHeader } from "@/lib/auth/requireUser";
 import { translateFeatureSchema } from "@/lib/validation/schemas";
 import { ok, errorResponse } from "@/lib/api/response";
 import { translateFeature, NotFoundError } from "@/lib/features/service";
+import { isFeatureLockedForOwner } from "@/lib/plans/visibility";
 
 export async function POST(
   req: NextRequest,
@@ -23,6 +24,9 @@ export async function POST(
   if (!appSnap.exists) return errorResponse("not_found", "App not found.");
   if (appSnap.data()!.ownerUid !== user.uid) {
     return errorResponse("forbidden", "You do not own this app.");
+  }
+  if (await isFeatureLockedForOwner(appId, featureId, user.uid)) {
+    return errorResponse("limit_reached", "Upgrade your plan to view this feature request.");
   }
 
   try {

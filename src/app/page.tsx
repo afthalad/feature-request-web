@@ -69,7 +69,7 @@ const FEATURES = [
   {
     icon: Inbox,
     title: "A public board link",
-    body: "Share fewchurs.com/b/yourapp anywhere — no login needed to view or vote.",
+    body: "On Pro, share fewchurs.shop/b/yourapp anywhere — no login needed to view or vote.",
   },
   {
     icon: ListChecks,
@@ -119,7 +119,7 @@ const FAQ_ROW_1 = [
   },
   {
     q: "Do I need to build the UI?",
-    a: "No — the SDK renders the whole board, or link to your public board instead.",
+    a: "No — the SDK renders the whole board. On Pro you can also link to a public web board.",
   },
 ];
 
@@ -130,15 +130,15 @@ const FAQ_ROW_2 = [
   },
   {
     q: "Can I remove the badge?",
-    a: 'Yes, on the Pro plan — the "Powered by" badge only shows on Free.',
+    a: 'Yes, on Starter and Pro — the "Powered by" badge only shows on Free.',
   },
   {
     q: "What if I have more than one app?",
-    a: "Free covers 1 app, Pro covers 5. Each gets its own board and API key.",
+    a: "Free covers 1 app, Starter 3 and Pro 5. Each gets its own board and API key.",
   },
   {
     q: "Is there a link I can share?",
-    a: "Every app gets a public board at /b/your-app-name — no login needed to view or vote.",
+    a: "On Pro, every app gets a public board at /b/your-app-name — no login needed to view or vote.",
   },
 ];
 

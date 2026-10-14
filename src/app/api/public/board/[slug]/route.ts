@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { resolveAppBySlug } from "@/lib/slug";
+import { resolvePublicBoard } from "@/lib/slug";
 import { ok, errorResponse } from "@/lib/api/response";
 
 export async function GET(
@@ -7,7 +7,7 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params;
-  const app = await resolveAppBySlug(slug);
+  const app = await resolvePublicBoard(slug);
   if (!app) return errorResponse("not_found", "Board not found.");
 
   return ok({ name: app.name, slug: app.slug });

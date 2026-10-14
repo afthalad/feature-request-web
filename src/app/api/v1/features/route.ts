@@ -8,6 +8,7 @@ import {
   RateLimitError,
   LimitExceededError,
 } from "@/lib/features/service";
+import { getOwnerPlan } from "@/lib/plans/limits";
 import { FEATURE_STATUSES, type FeatureStatus } from "@/types";
 
 // `?status=planned,in_progress,done` — unknown names are dropped rather than rejected, so a
@@ -35,6 +36,7 @@ export async function GET(req: NextRequest) {
   const limit = Math.min(Math.max(Number(searchParams.get("limit")) || 20, 1), 100);
   const cursor = searchParams.get("cursor");
   const statuses = parseStatuses(searchParams.get("status"));
+  const plan = await getOwnerPlan(keyInfo.ownerUid);
 
   const result = await listFeaturesForApp({
     appId: keyInfo.appId,
@@ -43,6 +45,7 @@ export async function GET(req: NextRequest) {
     limit,
     cursor,
     statuses,
+    plan,
   });
   return ok(result);
 }

@@ -22,8 +22,14 @@ const ROWS: PlanRow[] = [
   { label: "Apps", free: "1", starter: "3", pro: "5" },
   {
     label: "Visible feature requests per app",
-    free: "50",
-    starter: "200",
+    free: "First 5",
+    starter: "First 200",
+    pro: "All",
+  },
+  {
+    label: "Feature requests collected",
+    free: "Unlimited",
+    starter: "Unlimited",
     pro: "Unlimited",
   },
   { label: "Votes", free: "Unlimited", starter: "Unlimited", pro: "Unlimited" },
@@ -34,31 +40,36 @@ const ROWS: PlanRow[] = [
     pro: "Unlimited",
   },
   {
-    label: "Notification emails",
-    free: "Unlimited",
-    starter: "Unlimited",
-    pro: "Unlimited",
+    label: "Email for every new request",
+    free: true,
+    starter: true,
+    pro: true,
+  },
+  {
+    label: "Full details in those emails",
+    free: "First 5",
+    starter: "First 200",
+    pro: "All",
   },
   {
     label: '"Powered by" badge in the SDK',
     free: "Shown",
-    starter: "Shown",
+    starter: "Removed",
     pro: "Removed",
   },
   {
     label: "Custom colours in the SDK",
+    free: true,
+    starter: true,
+    pro: true,
+  },
+  {
+    label: "Public board with your own link",
     free: false,
     starter: false,
     pro: true,
   },
-  {
-    label: "Public board link",
-    free: "Yes",
-    starter: "Yes",
-    pro: "Yes, custom name",
-  },
   { label: "Export to CSV", free: false, starter: false, pro: true },
-  { label: "Slack / Discord alerts", free: false, starter: false, pro: true },
 ];
 
 function Cell({ value }: { value: string | boolean }) {
@@ -87,8 +98,8 @@ export default function PricingPage() {
             Start free. Upgrade when you&apos;re shipping.
           </h1>
           <p className="text-muted-foreground text-balance sm:text-lg">
-            Free forever for a hobby project. Every plan includes unlimited votes,
-            comments and notification emails.
+            Free forever for a hobby project. Every plan collects unlimited requests, votes
+            and comments, emails you about each one, and lets you use your own colours.
           </p>
         </div>
 

@@ -58,7 +58,7 @@ export default async function DashboardPage() {
 
   const [stats, recentPendingFeatures] = await Promise.all([
     getDashboardStats(apps),
-    listRecentPendingFeatures(apps, PLAN_LIMITS[plan].recentPendingLimit),
+    listRecentPendingFeatures(apps, PLAN_LIMITS[plan].recentPendingLimit, plan),
   ]);
 
   const maxApps = PLAN_LIMITS[plan].maxApps;

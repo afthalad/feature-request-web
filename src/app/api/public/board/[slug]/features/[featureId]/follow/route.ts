@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { resolveAppBySlug } from "@/lib/slug";
+import { resolvePublicBoard } from "@/lib/slug";
 import { getDeviceId } from "@/lib/auth/verifyApiKey";
 import { followFeatureSchema } from "@/lib/validation/schemas";
 import { ok, errorResponse } from "@/lib/api/response";
@@ -10,7 +10,7 @@ export async function POST(
   { params }: { params: Promise<{ slug: string; featureId: string }> }
 ) {
   const { slug, featureId } = await params;
-  const app = await resolveAppBySlug(slug);
+  const app = await resolvePublicBoard(slug);
   if (!app) return errorResponse("not_found", "Board not found.");
 
   const deviceId = getDeviceId(req);
@@ -36,7 +36,7 @@ export async function DELETE(
   { params }: { params: Promise<{ slug: string; featureId: string }> }
 ) {
   const { slug, featureId } = await params;
-  const app = await resolveAppBySlug(slug);
+  const app = await resolvePublicBoard(slug);
   if (!app) return errorResponse("not_found", "Board not found.");
 
   const deviceId = getDeviceId(req);

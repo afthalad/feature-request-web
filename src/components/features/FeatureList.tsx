@@ -9,6 +9,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
 import { FeatureRow } from "@/components/features/FeatureRow";
+import { LockedFeatureRow } from "@/components/features/LockedFeatureRow";
 import { UpgradeBanner } from "@/components/billing/UpgradeBanner";
 import type { Feature, FeatureStatus } from "@/types";
 
@@ -21,7 +22,6 @@ interface FeatureListProps {
   initialFeatures: Feature[];
   initialCursor: string | null;
   initialHiddenCount: number;
-  initialTotalCount: number | null;
   newSinceIso: string | null;
 }
 
@@ -31,14 +31,12 @@ export function FeatureList({
   initialFeatures,
   initialCursor,
   initialHiddenCount,
-  initialTotalCount,
   newSinceIso,
 }: FeatureListProps) {
   const [tab, setTab] = useState<BoardTab>("pending");
   const [features, setFeatures] = useState(initialFeatures);
   const [cursor, setCursor] = useState(initialCursor);
   const [hiddenCount, setHiddenCount] = useState(initialHiddenCount);
-  const [totalCount, setTotalCount] = useState(initialTotalCount);
   const [isLoading, setIsLoading] = useState(false);
   const [isSwitchingTab, setIsSwitchingTab] = useState(false);
   const requestIdRef = useRef(0);
@@ -47,7 +45,6 @@ export function FeatureList({
     boardTab: BoardTab,
     cursorParam: string | null,
     append: boolean,
-    servedCount: number,
   ) {
     const requestId = ++requestIdRef.current;
     setIsLoading(true);
@@ -57,7 +54,6 @@ export function FeatureList({
       const params = new URLSearchParams({
         tab: boardTab,
         limit: String(PAGE_SIZE),
-        served: String(servedCount),
       });
       if (cursorParam) params.set("cursor", cursorParam);
 
@@ -78,10 +74,7 @@ export function FeatureList({
         append ? [...prev, ...data.features] : data.features,
       );
       setCursor(data.nextCursor);
-      if (boardTab === "pending") {
-        setHiddenCount(data.hiddenCount ?? 0);
-        setTotalCount(data.totalCount ?? null);
-      }
+      setHiddenCount(data.hiddenCount ?? 0);
     } finally {
       if (requestId === requestIdRef.current) {
         setIsLoading(false);
@@ -92,12 +85,12 @@ export function FeatureList({
 
   function handleTabChange(nextTab: BoardTab) {
     setTab(nextTab);
-    fetchPage(nextTab, null, false, 0);
+    fetchPage(nextTab, null, false);
   }
 
   function handleLoadMore() {
     if (!cursor) return;
-    fetchPage(tab, cursor, true, features.length);
+    fetchPage(tab, cursor, true);
   }
 
   function handleStatusChange(featureId: string, status: FeatureStatus) {
@@ -116,9 +109,6 @@ export function FeatureList({
 
   function handleDelete(featureId: string) {
     setFeatures((prev) => prev.filter((f) => f.id !== featureId));
-    if (tab === "pending") {
-      setTotalCount((prev) => (prev !== null ? Math.max(0, prev - 1) : prev));
-    }
   }
 
   return (
@@ -134,10 +124,10 @@ export function FeatureList({
         </TabsList>
       </Tabs>
 
-      {tab === "pending" && hiddenCount > 0 && !isSwitchingTab && (
+      {hiddenCount > 0 && !isSwitchingTab && (
         <UpgradeBanner
-          title="Some feature requests are hidden"
-          message={`This project has ${totalCount ?? hiddenCount} feature request${(totalCount ?? hiddenCount) === 1 ? "" : "s"}. Upgrade to view all.`}
+          title={`${hiddenCount} feature request${hiddenCount === 1 ? " is" : "s are"} locked`}
+          message="Your plan shows this app's first requests. Upgrade to see all of them."
         />
       )}
 
@@ -157,7 +147,11 @@ export function FeatureList({
         <EmptyState
           icon={Inbox}
           title="No feature requests here"
-          description="Share your public board so users can start submitting ideas."
+          description={
+            slug
+              ? "Share your public board so users can start submitting ideas."
+              : "Add the board to your app so users can start submitting ideas."
+          }
           action={
             slug && (
               <Link
@@ -174,19 +168,23 @@ export function FeatureList({
         />
       ) : (
         <div className="divide-y rounded-lg border">
-          {features.map((feature) => (
-            <FeatureRow
-              key={feature.id}
-              appId={appId}
-              feature={feature}
-              isNew={!newSinceIso || feature.createdAt > newSinceIso}
-              onStatusChange={(status) =>
-                handleStatusChange(feature.id, status)
-              }
-              onCommentCountChange={handleCommentCountChange}
-              onDelete={handleDelete}
-            />
-          ))}
+          {features.map((feature) =>
+            feature.locked ? (
+              <LockedFeatureRow key={feature.id} feature={feature} />
+            ) : (
+              <FeatureRow
+                key={feature.id}
+                appId={appId}
+                feature={feature}
+                isNew={!newSinceIso || feature.createdAt > newSinceIso}
+                onStatusChange={(status) =>
+                  handleStatusChange(feature.id, status)
+                }
+                onCommentCountChange={handleCommentCountChange}
+                onDelete={handleDelete}
+              />
+            ),
+          )}
         </div>
       )}
 

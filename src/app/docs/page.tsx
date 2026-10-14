@@ -87,7 +87,7 @@ export default function DocsOverviewPage() {
 
       <Section id="no-code" title="No code at all">
         <P>
-          Every app also gets a public board at <C>/b/your-app-name</C>. Share the link in your
+          On Pro, every app also gets a public board at <C>/b/your-app-name</C>. Share the link in your
           app, on your site or in an email. People can read and vote without making an account.
         </P>
       </Section>

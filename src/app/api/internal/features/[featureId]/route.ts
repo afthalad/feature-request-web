@@ -6,6 +6,7 @@ import { updateFeatureStatusSchema } from "@/lib/validation/schemas";
 import { ok, errorResponse } from "@/lib/api/response";
 import { sendStatusChangeEmails } from "@/lib/email/send";
 import { deleteFeature, NotFoundError } from "@/lib/features/service";
+import { isFeatureLockedForOwner } from "@/lib/plans/visibility";
 import { NOTIFIABLE_STATUSES } from "@/types";
 
 export async function PATCH(
@@ -31,6 +32,9 @@ export async function PATCH(
   const featureRef = appSnap.ref.collection("features").doc(featureId);
   const featureSnap = await featureRef.get();
   if (!featureSnap.exists) return errorResponse("not_found", "Feature not found.");
+  if (await isFeatureLockedForOwner(appId, featureId, user.uid)) {
+    return errorResponse("limit_reached", "Upgrade your plan to view this feature request.");
+  }
 
   await featureRef.update({ status, updatedAt: FieldValue.serverTimestamp() });
 

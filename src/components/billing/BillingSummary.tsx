@@ -30,9 +30,9 @@ const PLAN_LABEL: Record<Plan, string> = {
 };
 
 const PLAN_BLURB: Record<Plan, string> = {
-  free: "1 app, 50 requests per app — upgrade for more room to grow.",
-  starter: "3 apps, 200 requests per app, 500 emails a month.",
-  pro: "5 apps, unlimited requests, no badge, full customisation.",
+  free: "1 app, first 5 requests visible per app — upgrade to see the rest.",
+  starter: "3 apps, first 200 requests visible per app, no badge.",
+  pro: "5 apps, every request visible, public board, CSV export.",
 };
 
 export function BillingSummary({

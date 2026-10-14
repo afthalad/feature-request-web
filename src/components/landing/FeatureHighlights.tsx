@@ -68,7 +68,7 @@ const HIGHLIGHTS: {
   {
     eyebrow: "Share",
     title: "A public board, no SDK needed",
-    body: "Every app gets a link like fewchurs.com/b/yourapp. Post it anywhere, and anyone can vote without signing up.",
+    body: "On Pro, every app gets a link like fewchurs.shop/b/yourapp. Post it anywhere, and anyone can vote without signing up.",
     visual: <PublicBoardVisual />,
   },
 ];

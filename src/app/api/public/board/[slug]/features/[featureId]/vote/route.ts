@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { resolveAppBySlug } from "@/lib/slug";
+import { resolvePublicBoard } from "@/lib/slug";
 import { getDeviceId } from "@/lib/auth/verifyApiKey";
 import { ok, errorResponse } from "@/lib/api/response";
 import { voteOnFeature, NotFoundError } from "@/lib/features/service";
@@ -23,7 +23,7 @@ async function handleVote(
   params: { slug: string; featureId: string },
   action: "add" | "remove"
 ) {
-  const app = await resolveAppBySlug(params.slug);
+  const app = await resolvePublicBoard(params.slug);
   if (!app) return errorResponse("not_found", "Board not found.");
 
   const deviceId = getDeviceId(req);

@@ -65,14 +65,15 @@ export async function sendNewFeatureRequestEmail(params: NewFeatureRequestEmailP
   const ownerPlan = ownerSnap.data()?.plan;
   const plan: Plan = ownerPlan === "pro" || ownerPlan === "starter" ? ownerPlan : "free";
 
-  // Same limit the dashboard's "Pending" tab enforces (PLAN_LIMITS.maxFeaturesPerApp) — once an
-  // app has collected more pending requests than its plan shows, new notification emails switch
-  // to the masked/limit-reached Resend template instead of the full one.
+  // Every new request emails the owner, on every plan. Plans show an app's first N requests
+  // (PLAN_LIMITS.maxFeaturesPerApp, see src/lib/plans/visibility.ts); the request just created
+  // is the newest, so once the app holds more than N it's past the limit and the email switches
+  // to the masked Resend template, matching the locked row in the dashboard.
   const visibleLimit = PLAN_LIMITS[plan].maxFeaturesPerApp;
   let isOverLimit = false;
   if (Number.isFinite(visibleLimit)) {
-    const pendingCountSnap = await appRef.collection("features").where("status", "==", "open").count().get();
-    isOverLimit = pendingCountSnap.data().count > visibleLimit;
+    const featureCountSnap = await appRef.collection("features").count().get();
+    isOverLimit = featureCountSnap.data().count > visibleLimit;
   }
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL;

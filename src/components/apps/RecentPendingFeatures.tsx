@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { FeatureRow } from "@/components/features/FeatureRow";
+import { LockedFeatureRow } from "@/components/features/LockedFeatureRow";
 import type { FeatureStatus, RecentFeature } from "@/types";
 
 export function RecentPendingFeatures({ features: initialFeatures }: { features: RecentFeature[] }) {
@@ -31,18 +32,22 @@ export function RecentPendingFeatures({ features: initialFeatures }: { features:
     <div className="space-y-3">
       <h2 className="text-muted-foreground text-sm font-medium">Recent pending requests</h2>
       <div className="divide-y rounded-lg border">
-        {features.map((feature) => (
-          <FeatureRow
-            key={feature.id}
-            appId={feature.appId}
-            appName={feature.appName}
-            feature={feature}
-            isNew={feature.isNew}
-            onStatusChange={(status) => handleStatusChange(feature.id, status)}
-            onCommentCountChange={handleCommentCountChange}
-            onDelete={handleDelete}
-          />
-        ))}
+        {features.map((feature) =>
+          feature.locked ? (
+            <LockedFeatureRow key={feature.id} feature={feature} appName={feature.appName} />
+          ) : (
+            <FeatureRow
+              key={feature.id}
+              appId={feature.appId}
+              appName={feature.appName}
+              feature={feature}
+              isNew={feature.isNew}
+              onStatusChange={(status) => handleStatusChange(feature.id, status)}
+              onCommentCountChange={handleCommentCountChange}
+              onDelete={handleDelete}
+            />
+          )
+        )}
       </div>
     </div>
   );
