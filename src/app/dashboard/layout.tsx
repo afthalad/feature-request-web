@@ -23,9 +23,27 @@ async function loadSidebarData(): Promise<{
     adminDb.collection("users").doc(user.uid).get(),
   ]);
   const userPlan = userSnap.data()?.plan;
-  const apps = appsSnap.docs
-    .filter((doc) => doc.get("deleted") !== true)
-    .map((doc) => ({ id: doc.id, name: doc.get("name") as string }))
+  const liveApps = appsSnap.docs.filter((doc) => doc.get("deleted") !== true);
+  // "New" matches the dashboard's New badge: arrived since the owner last opened the app.
+  const newCounts = await Promise.all(
+    liveApps.map((doc) => {
+      const lastViewed = doc.get("featuresLastViewedAt");
+      if (!lastViewed) return Promise.resolve((doc.get("featureCount") as number) ?? 0);
+      return doc.ref
+        .collection("features")
+        .where("createdAt", ">", lastViewed)
+        .count()
+        .get()
+        .then((snap) => snap.data().count);
+    }),
+  );
+  const apps = liveApps
+    .map((doc, index) => ({
+      id: doc.id,
+      name: doc.get("name") as string,
+      featureCount: (doc.get("featureCount") as number) ?? 0,
+      newCount: newCounts[index],
+    }))
     .sort((a, b) => a.name.localeCompare(b.name));
 
   return {
