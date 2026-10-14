@@ -12,6 +12,8 @@ export default function NewAppPage() {
   function handleClose() {
     setApiKey(null);
     router.push("/dashboard");
+    // The sidebar's app list lives in the dashboard layout; refresh it to show the new app.
+    router.refresh();
   }
 
   return (

@@ -36,18 +36,24 @@ function SheetContent({
   className,
   children,
   showCloseButton = true,
+  side = "right",
   ...props
 }: SheetPrimitive.Popup.Props & {
   showCloseButton?: boolean
+  /** Edge the sheet slides in from. The mobile sidebar uses "left". */
+  side?: "left" | "right"
 }) {
   return (
     <SheetPortal>
       <SheetOverlay />
       <SheetPrimitive.Popup
         data-slot="sheet-content"
+        data-side={side}
         className={cn(
-          "fixed inset-y-0 right-0 z-50 flex h-full w-full max-w-full flex-col gap-4 border-l bg-popover p-4 text-sm text-popover-foreground shadow-lg outline-none duration-200 sm:max-w-sm",
-          "data-open:animate-in data-open:slide-in-from-right data-closed:animate-out data-closed:slide-out-to-right",
+          "fixed inset-y-0 z-50 flex h-full w-full max-w-full flex-col gap-4 bg-popover p-4 text-sm text-popover-foreground shadow-lg outline-none duration-200 sm:max-w-sm",
+          side === "right"
+            ? "right-0 border-l data-open:animate-in data-open:slide-in-from-right data-closed:animate-out data-closed:slide-out-to-right"
+            : "left-0 border-r data-open:animate-in data-open:slide-in-from-left data-closed:animate-out data-closed:slide-out-to-left",
           className
         )}
         {...props}
