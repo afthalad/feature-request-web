@@ -18,8 +18,13 @@ export default async function AdminUserDetailPage({
   const [user, apps] = await Promise.all([getUser(uid), listAppsForUser(uid)]);
   if (!user) notFound();
 
+  // The event log is diagnostics only, so a failed read (a missing index, say) shows a note
+  // instead of taking the whole user page down with it.
   const webhookEvents = user.dodoCustomerId
-    ? await listWebhookEventsForUser(user.dodoCustomerId)
+    ? await listWebhookEventsForUser(user.dodoCustomerId).catch((error) => {
+        console.error(`[admin] failed to load webhook events for ${uid}`, error);
+        return null;
+      })
     : [];
 
   return (
@@ -96,7 +101,9 @@ export default async function AdminUserDetailPage({
 
       <Card className="space-y-3 p-5">
         <p className="text-sm font-medium">Webhook event log</p>
-        {webhookEvents.length === 0 ? (
+        {webhookEvents === null ? (
+          <p className="text-muted-foreground text-sm">Couldn&apos;t load webhook events.</p>
+        ) : webhookEvents.length === 0 ? (
           <p className="text-muted-foreground text-sm">
             {user.dodoCustomerId ? "No webhook events recorded yet." : "No Dodo customer linked."}
           </p>
