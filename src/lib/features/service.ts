@@ -251,40 +251,98 @@ export async function listFeaturesForOwner({
   else if (tab === "approved")
     query = query.where("status", "in", APPROVED_STATUSES);
 
-  const [visibleIds, totalCount, appTotal] = await Promise.all([
-    getVisibleIds(appId, plan),
+  const limitForPlan = visibleLimit(plan);
+  const [window, totalCount, appTotal] = await Promise.all([
+    getVisibleWindow(appId, plan),
     tab === "pending"
       ? query.count().get().then((snap) => snap.data().count)
       : Promise.resolve(null),
-    Number.isFinite(visibleLimit(plan))
+    Number.isFinite(limitForPlan)
       ? featuresRef.count().get().then((snap) => snap.data().count)
       : Promise.resolve(0),
   ]);
-  const hiddenCount = visibleIds ? Math.max(0, appTotal - visibleLimit(plan)) : 0;
 
-  query = query
-    .orderBy(tab === "top" ? "upvoteCount" : "createdAt", "desc")
-    .limit(limit + 1);
-
-  if (cursor) {
-    const cursorSnap = await featuresRef.doc(cursor).get();
-    if (cursorSnap.exists) query = query.startAfter(cursorSnap);
+  // Nothing locked (unlimited plan, or the app is within its limit): one plain query.
+  if (!window || window.length < limitForPlan) {
+    query = query
+      .orderBy(tab === "top" ? "upvoteCount" : "createdAt", "desc")
+      .limit(limit + 1);
+    if (cursor) {
+      const cursorSnap = await featuresRef.doc(cursor).get();
+      if (cursorSnap.exists) query = query.startAfter(cursorSnap);
+    }
+    const snapshot = await query.get();
+    const docs = snapshot.docs.slice(0, limit);
+    return {
+      features: docs.map(mapFeature),
+      nextCursor: snapshot.docs.length > limit ? docs[docs.length - 1].id : null,
+      totalCount,
+      hiddenCount: 0,
+    };
   }
 
-  const snapshot = await query.get();
-  const docs = snapshot.docs.slice(0, limit);
-  const hasMore = snapshot.docs.length > limit;
-  const nextCursor = hasMore ? docs[docs.length - 1].id : null;
+  // Over the limit: list the readable requests first, in this tab's order, then the locked ones
+  // (newest first) below them, so the upgrade prompt sits at the bottom instead of mid-list.
+  // The cursor says which part comes next: "v:<index>" in the visible window, "l:<id>" in the
+  // locked rows.
+  const hiddenCount = Math.max(0, appTotal - limitForPlan);
+  const visibleIds = new Set(window.map((doc) => doc.id));
+  const inTab = (doc: QueryDocumentSnapshot) =>
+    tab === "pending"
+      ? doc.get("status") === "open"
+      : tab === "approved"
+        ? APPROVED_STATUSES.includes(doc.get("status"))
+        : true;
+  const visibleRows = window.filter(inTab).sort((a, b) =>
+    tab === "top"
+      ? (b.get("upvoteCount") ?? 0) - (a.get("upvoteCount") ?? 0) || b.id.localeCompare(a.id)
+      : b.get("createdAt").valueOf().localeCompare(a.get("createdAt").valueOf()) ||
+        b.id.localeCompare(a.id),
+  );
 
-  return {
-    features: docs.map((doc) => {
-      const feature = mapFeature(doc);
-      return isLocked(doc.id, visibleIds) ? lockFeature(feature) : feature;
-    }),
-    nextCursor,
-    totalCount,
-    hiddenCount,
-  };
+  // Locked rows are the ones created at or after the last visible request, minus the visible
+  // ones that share its exact timestamp (rare, so fetching that many extra is enough).
+  const cutoff = window[window.length - 1].get("createdAt");
+  const tiedVisible = window.filter((doc) => doc.get("createdAt").isEqual(cutoff)).length;
+  async function lockedPage(afterId: string | null, size: number) {
+    let lockedQuery = query
+      .where("createdAt", ">=", cutoff)
+      .orderBy("createdAt", "desc")
+      .limit(size + tiedVisible + 1);
+    if (afterId) {
+      const afterSnap = await featuresRef.doc(afterId).get();
+      if (afterSnap.exists) lockedQuery = lockedQuery.startAfter(afterSnap);
+    }
+    const rows = (await lockedQuery.get()).docs.filter((doc) => !visibleIds.has(doc.id));
+    const page = rows.slice(0, size);
+    return {
+      features: page.map((doc) => lockFeature(mapFeature(doc))),
+      next: rows.length > size ? `l:${page[page.length - 1].id}` : null,
+    };
+  }
+
+  if (cursor?.startsWith("l:")) {
+    const { features, next } = await lockedPage(cursor.slice(2) || null, limit);
+    return { features, nextCursor: next, totalCount, hiddenCount };
+  }
+
+  const start = cursor?.startsWith("v:") ? Number(cursor.slice(2)) || 0 : 0;
+  const features = visibleRows.slice(start, start + limit).map(mapFeature);
+  if (start + limit < visibleRows.length) {
+    return { features, nextCursor: `v:${start + limit}`, totalCount, hiddenCount };
+  }
+  // Visible rows end on this page: fill the rest with locked ones, or check whether any exist.
+  const room = limit - features.length;
+  const locked = await lockedPage(null, Math.max(room, 1));
+  if (room > 0) {
+    return {
+      features: [...features, ...locked.features],
+      nextCursor: locked.next,
+      totalCount,
+      hiddenCount,
+    };
+  }
+  return { features, nextCursor: locked.features.length ? "l:" : null, totalCount, hiddenCount };
 }
 
 // Newest pending (unreviewed) features across all of an owner's apps, for the dashboard preview.
@@ -328,8 +386,13 @@ export async function listRecentPendingFeatures(
     });
   });
 
+  // Readable requests first, then locked ones, each newest first.
   return features
-    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+    .sort(
+      (a, b) =>
+        Number(a.locked ?? false) - Number(b.locked ?? false) ||
+        b.createdAt.localeCompare(a.createdAt),
+    )
     .slice(0, limit);
 }
 
