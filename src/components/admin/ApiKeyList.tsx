@@ -103,7 +103,7 @@ export function ApiKeyList({ initialKeys, initialCursor }: ApiKeyListProps) {
       {keys.length === 0 ? (
         <EmptyState icon={KeyRound} title="No API keys found" description="Keys are created when a user sets up an app." />
       ) : (
-        <div className="overflow-hidden rounded-xl border">
+        <div className="bg-muted/40 overflow-hidden rounded-xl">
           <Table>
             <TableHeader>
               <TableRow>

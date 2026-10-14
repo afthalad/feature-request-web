@@ -82,7 +82,7 @@ export function UnsubscribeLookup() {
       </form>
 
       {result && (
-        <div className="flex items-center justify-between rounded-lg border p-3 text-sm">
+        <div className="flex items-center justify-between bg-muted/40 rounded-lg p-3 text-sm">
           <div className="space-y-1">
             <p className="font-medium">{result.email}</p>
             {result.unsubscribed ? (

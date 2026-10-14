@@ -92,7 +92,7 @@ export function AppList({ initialApps, initialCursor }: AppListProps) {
           description={search ? "Try a different slug or bundle ID." : "Apps created by users will show up here."}
         />
       ) : (
-        <div className="overflow-hidden rounded-xl border">
+        <div className="bg-muted/40 overflow-hidden rounded-xl">
           <Table>
             <TableHeader>
               <TableRow>

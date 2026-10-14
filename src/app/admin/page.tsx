@@ -37,7 +37,7 @@ export default async function AdminOverviewPage() {
               <p className="text-muted-foreground text-sm">{label}</p>
               <p className="text-2xl font-semibold">{value.toLocaleString()}</p>
             </div>
-            <div className="bg-foreground text-background flex size-10 shrink-0 items-center justify-center rounded-full">
+            <div className="bg-primary/10 text-primary flex size-10 shrink-0 items-center justify-center rounded-full">
               <Icon className="size-4" />
             </div>
           </Card>

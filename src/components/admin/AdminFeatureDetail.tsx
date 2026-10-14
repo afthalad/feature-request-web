@@ -306,7 +306,7 @@ export function AdminFeatureDetail({
               <li
                 key={comment.id}
                 className={cn(
-                  "flex items-start justify-between gap-3 rounded-lg border p-3 text-sm",
+                  "flex items-start justify-between gap-3 bg-muted/40 rounded-lg p-3 text-sm",
                   comment.isDeleted && "opacity-50"
                 )}
               >
@@ -386,7 +386,7 @@ export function AdminFeatureDetail({
         ) : (
           <ul className="space-y-2">
             {followers.map((follower) => (
-              <li key={follower.id} className="flex items-center justify-between gap-3 rounded-lg border p-3 text-sm">
+              <li key={follower.id} className="flex items-center justify-between gap-3 bg-muted/40 rounded-lg p-3 text-sm">
                 <div className="min-w-0">
                   <p className="truncate font-medium">{follower.email}</p>
                   <p className="text-muted-foreground text-xs">Following since {formatDate(follower.createdAt)}</p>

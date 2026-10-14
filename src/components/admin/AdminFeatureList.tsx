@@ -79,7 +79,7 @@ export function AdminFeatureList({ appId, initialFeatures, initialCursor }: Admi
             <Link
               key={feature.id}
               href={`/admin/apps/${appId}/features/${feature.id}`}
-              className="hover:bg-muted flex items-center justify-between rounded-lg border p-3 text-sm"
+              className="hover:bg-muted flex items-center justify-between bg-muted/40 rounded-lg p-3 text-sm"
             >
               <span className="min-w-0 flex-1 truncate">{feature.title}</span>
               <span className="text-muted-foreground flex shrink-0 items-center gap-3">

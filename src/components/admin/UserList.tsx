@@ -88,7 +88,7 @@ export function UserList({ initialUsers, initialCursor }: UserListProps) {
           description={search ? "Try a different email." : "Users will show up here once they sign in."}
         />
       ) : (
-        <div className="overflow-hidden rounded-xl border">
+        <div className="bg-muted/40 overflow-hidden rounded-xl">
           <Table>
             <TableHeader>
               <TableRow>
