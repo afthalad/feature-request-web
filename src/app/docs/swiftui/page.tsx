@@ -14,7 +14,7 @@ const TOC = [
   { id: "uikit", label: "Using UIKit" },
   { id: "colors", label: "Colors and theme" },
   { id: "api-key", label: "About the API key" },
-  { id: "badge", label: "The \"Powered by\" badge" },
+  { id: "badge", label: "What your plan changes" },
 ];
 
 const PACKAGE_URL = "https://github.com/fewchurs/fewchurs-swift";
@@ -148,11 +148,22 @@ export default function SwiftUIDocsPage() {
         </Note>
       </Section>
 
-      <Section id="badge" title='The "Powered by" badge'>
+      <Section id="badge" title="What your plan changes">
         <P>
-          On the free plan the board shows a small &quot;Powered by Fewchurs&quot; line. It goes
-          away on its own when you upgrade to <A href="/pricing">Starter or Pro</A>. You don&apos;t need to
-          change any code.
+          Your plan is applied on our servers, so you never need to change code or update the SDK
+          when it changes.
+        </P>
+        <Table
+          head={["", "Free", "Starter", "Pro"]}
+          rows={[
+            ["Requests the board lists", "First 5", "First 200", "All"],
+            ['"Powered by Fewchurs" line', "Shown", "Hidden", "Hidden"],
+          ]}
+        />
+        <P>
+          Newer requests are still saved and show in your dashboard. A request someone just
+          submitted appears on their board straight away, but once the app is past its limit it
+          leaves the list on the next refresh. See <A href="/pricing">pricing</A>.
         </P>
       </Section>
     </DocsPage>
