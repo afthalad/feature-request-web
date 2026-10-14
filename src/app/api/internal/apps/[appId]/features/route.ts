@@ -23,7 +23,13 @@ export async function GET(
 
   const { searchParams } = new URL(req.url);
   const tabParam = searchParams.get("tab");
-  const tab = tabParam === "top" || tabParam === "approved" ? tabParam : "pending";
+  // "all" is every request, newest first: the service's "new" listing.
+  const tab =
+    tabParam === "all"
+      ? "new"
+      : tabParam === "top" || tabParam === "approved"
+        ? tabParam
+        : "pending";
   const limit = Math.min(Math.max(Number(searchParams.get("limit")) || 20, 1), 100);
   const cursor = searchParams.get("cursor");
 

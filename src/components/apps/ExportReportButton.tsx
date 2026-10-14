@@ -76,6 +76,11 @@ export function ExportReportButton({ appId, plan }: ExportReportButtonProps) {
         >
           <Download className="size-4" />
           {isExporting ? "Exporting..." : "Export CSV"}
+          {plan !== "pro" && (
+            <span className="bg-primary/10 text-primary rounded-full px-1.5 py-0.5 text-[10px] font-medium leading-none">
+              Pro
+            </span>
+          )}
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           {PERIODS.map(({ value, label }) => (

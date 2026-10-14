@@ -13,7 +13,7 @@ import { LockedFeatureRow } from "@/components/features/LockedFeatureRow";
 import { UpgradeBanner } from "@/components/billing/UpgradeBanner";
 import type { Feature, FeatureStatus } from "@/types";
 
-type BoardTab = "top" | "pending" | "approved";
+type BoardTab = "all" | "top" | "pending" | "approved";
 const PAGE_SIZE = 20;
 
 interface FeatureListProps {
@@ -118,6 +118,7 @@ export function FeatureList({
         onValueChange={(value) => handleTabChange(value as BoardTab)}
       >
         <TabsList>
+          <TabsTrigger value="all">All</TabsTrigger>
           <TabsTrigger value="top">Top</TabsTrigger>
           <TabsTrigger value="pending">Pending</TabsTrigger>
           <TabsTrigger value="approved">Approved</TabsTrigger>

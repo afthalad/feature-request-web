@@ -8,15 +8,12 @@ import { onAuthStateChanged, signOut, type User } from "firebase/auth";
 import {
   BookOpen,
   ChevronDown,
-  ChevronRight,
   ChevronsUpDown,
   Code,
   CreditCard,
-  Inbox,
   LayoutDashboard,
   LogOut,
   Plus,
-  Settings,
   Sparkles,
   Tag,
 } from "lucide-react";
@@ -46,9 +43,6 @@ import {
   SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
   SidebarRail,
   useSidebar,
 } from "@/components/ui/sidebar";
@@ -96,14 +90,23 @@ export function AppSidebar({ apps, plan, hasBillingAccount }: AppSidebarProps) {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <CollapsibleGroup label="Apps" action={{ href: "/dashboard/apps/new", label: "New app" }}>
-          {apps.length === 0 && (
-            <NavItem href="/dashboard/apps/new" label="Create your first app" icon={<Plus />} />
-          )}
-          {apps.map((app) => (
-            <AppItem key={app.id} app={app} pathname={pathname} />
-          ))}
-        </CollapsibleGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>Apps</SidebarGroupLabel>
+          <SidebarGroupAction render={<Link href="/dashboard/apps/new" />} title="New app">
+            <Plus />
+            <span className="sr-only">New app</span>
+          </SidebarGroupAction>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {apps.length === 0 && (
+                <NavItem href="/dashboard/apps/new" label="Create your first app" icon={<Plus />} />
+              )}
+              {apps.map((app) => (
+                <AppItem key={app.id} app={app} pathname={pathname} />
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
 
         <CollapsibleGroup label="Resources">
           <NavItem href="/docs" label="Docs" icon={<BookOpen />} active={pathname.startsWith("/docs")} />
@@ -145,15 +148,7 @@ function NavItem({
 }
 
 /** A section whose label folds it open and shut, like "Tools ⌄" in a typical app sidebar. */
-function CollapsibleGroup({
-  label,
-  action,
-  children,
-}: {
-  label: string;
-  action?: { href: string; label: string };
-  children: React.ReactNode;
-}) {
+function CollapsibleGroup({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <Collapsible defaultOpen className="group/collapsible">
       <SidebarGroup>
@@ -164,12 +159,6 @@ function CollapsibleGroup({
           {label}
           <ChevronDown className="size-3.5 transition-transform group-data-[closed]/collapsible:-rotate-90" />
         </SidebarGroupLabel>
-        {action && (
-          <SidebarGroupAction render={<Link href={action.href} />} title={action.label}>
-            <Plus />
-            <span className="sr-only">{action.label}</span>
-          </SidebarGroupAction>
-        )}
         <CollapsibleContent>
           <SidebarGroupContent>
             <SidebarMenu>{children}</SidebarMenu>
@@ -180,48 +169,33 @@ function CollapsibleGroup({
   );
 }
 
-/** One app: folds open to its requests and settings, like "Tasks ^" with its sub-items. */
+/** One app: a straight link to its requests, with how many are new (or the total). */
 function AppItem({ app, pathname }: { app: SidebarApp; pathname: string }) {
   const base = `/dashboard/apps/${app.id}`;
-  const inApp = pathname.startsWith(base);
 
   return (
-    <Collapsible defaultOpen={inApp} className="group/app">
-      <SidebarMenuItem>
-        <SidebarMenuButton render={<CollapsibleTrigger />} isActive={inApp} tooltip={app.name}>
-          <span className="bg-sidebar-accent text-sidebar-accent-foreground flex size-4 shrink-0 items-center justify-center rounded text-[10px] font-semibold uppercase">
-            {app.name.trim()[0] ?? "?"}
-          </span>
-          <span className="truncate">{app.name}</span>
-          <ChevronRight className="ml-auto transition-transform group-data-[open]/app:rotate-90" />
-        </SidebarMenuButton>
-        {app.newCount > 0 && (
-          <SidebarMenuBadge className="bg-destructive right-7 rounded-full px-1.5 text-white peer-hover/menu-button:text-white peer-data-active/menu-button:text-white">
-            {app.newCount > 99 ? "99+" : app.newCount}
-          </SidebarMenuBadge>
-        )}
-        <CollapsibleContent>
-          <SidebarMenuSub>
-            <SidebarMenuSubItem>
-              <SidebarMenuSubButton render={<Link href={base} />} isActive={pathname === base}>
-                <Inbox />
-                <span>Requests</span>
-                <span className="text-muted-foreground ml-auto text-xs tabular-nums">{app.featureCount}</span>
-              </SidebarMenuSubButton>
-            </SidebarMenuSubItem>
-            <SidebarMenuSubItem>
-              <SidebarMenuSubButton
-                render={<Link href={`${base}/settings`} />}
-                isActive={pathname === `${base}/settings`}
-              >
-                <Settings />
-                <span>Settings</span>
-              </SidebarMenuSubButton>
-            </SidebarMenuSubItem>
-          </SidebarMenuSub>
-        </CollapsibleContent>
-      </SidebarMenuItem>
-    </Collapsible>
+    <SidebarMenuItem>
+      <SidebarMenuButton
+        render={<Link href={base} />}
+        isActive={pathname.startsWith(base)}
+        tooltip={app.name}
+      >
+        <span className="bg-sidebar-accent text-sidebar-accent-foreground flex size-4 shrink-0 items-center justify-center rounded text-[10px] font-semibold uppercase">
+          {app.name.trim()[0] ?? "?"}
+        </span>
+        <span className="truncate">{app.name}</span>
+      </SidebarMenuButton>
+      {app.newCount > 0 ? (
+        <SidebarMenuBadge
+          title={`${app.newCount} new`}
+          className="bg-destructive rounded-full px-1.5 text-white peer-hover/menu-button:text-white peer-data-active/menu-button:text-white"
+        >
+          {app.newCount > 99 ? "99+" : app.newCount}
+        </SidebarMenuBadge>
+      ) : (
+        <SidebarMenuBadge className="text-muted-foreground">{app.featureCount}</SidebarMenuBadge>
+      )}
+    </SidebarMenuItem>
   );
 }
 
