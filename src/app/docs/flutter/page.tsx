@@ -1,119 +1,183 @@
 import type { Metadata } from "next";
 import { CodeBlock } from "@/components/docs/CodeBlock";
-import { A, DocsPage, P, Section, Step, Steps } from "@/components/docs/Docs";
+import { A, C, DocsPage, Note, P, Section, Step, Steps, Table } from "@/components/docs/Docs";
 import { API_BASE_URL } from "@/lib/docs/nav";
 
 export const metadata: Metadata = {
   title: "Flutter — Docs — Fewchurs",
-  description: "Use Fewchurs in your Flutter app.",
+  description: "Add a feature request board to your Flutter app on mobile, web and desktop.",
 };
 
 const TOC = [
+  { id: "install", label: "Install" },
+  { id: "platforms", label: "Platform setup" },
   { id: "set-up", label: "Set up" },
-  { id: "next", label: "What's next" },
+  { id: "show-the-board", label: "Show the board" },
+  { id: "colors", label: "Colors and theme" },
+  { id: "badge", label: "What your plan changes" },
+  { id: "api-key", label: "About the API key" },
 ];
 
-const INSTALL = `flutter pub add http shared_preferences`;
+const REPO_URL = "https://github.com/fewchurs/fewchurs-flutter";
 
-const CLIENT = `import 'dart:convert';
-import 'dart:math';
+const PUBSPEC = `dependencies:
+  fewchurs:
+    git:
+      url: ${REPO_URL}.git
+      path: packages/fewchurs
 
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+dependency_overrides:
+  fewchurs_core:
+    git:
+      url: ${REPO_URL}.git
+      path: packages/fewchurs_core`;
 
-class Fewchurs {
-  Fewchurs(this.apiKey);
+const PUB_GET = `flutter pub get`;
 
-  final String apiKey;
-  static const baseUrl = '${API_BASE_URL}';
+const ANDROID = `<uses-permission android:name="android.permission.INTERNET"/>`;
 
-  Future<List<dynamic>> topRequests() async {
-    final json = await _send(
-      http.get(Uri.parse('$baseUrl/features?sort=top'), headers: await _headers()),
-    );
-    return json['features'] as List<dynamic>;
-  }
+const MACOS = `<key>com.apple.security.network.client</key>
+<true/>`;
 
-  Future<void> vote(String featureId) async {
-    await _send(
-      http.post(Uri.parse('$baseUrl/features/$featureId/vote'), headers: await _headers()),
-    );
-  }
+const CONFIGURE = `import 'package:fewchurs/fewchurs.dart';
+import 'package:flutter/material.dart';
 
-  Future<void> suggest(String title, {String description = ''}) async {
-    await _send(http.post(
-      Uri.parse('$baseUrl/features'),
-      headers: await _headers(),
-      body: jsonEncode({'title': title, 'description': description}),
-    ));
-  }
-
-  // Made once, then saved. This is how votes are remembered.
-  Future<String> _deviceId() async {
-    final prefs = await SharedPreferences.getInstance();
-    var id = prefs.getString('fewchurs_device_id');
-    if (id == null) {
-      final random = Random.secure();
-      id = List.generate(16, (_) => random.nextInt(256).toRadixString(16).padLeft(2, '0')).join();
-      await prefs.setString('fewchurs_device_id', id);
-    }
-    return id;
-  }
-
-  Future<Map<String, String>> _headers() async => {
-        'Authorization': 'Bearer $apiKey',
-        'X-Device-Id': await _deviceId(),
-        'Content-Type': 'application/json',
-      };
-
-  Future<Map<String, dynamic>> _send(Future<http.Response> call) async {
-    final response = await call;
-    final json = jsonDecode(response.body) as Map<String, dynamic>;
-    if (response.statusCode >= 400) throw Exception(json['error']['message']);
-    return json;
-  }
+void main() {
+  Fewchurs.configure(
+    apiKey: 'fr_live_xxx',
+    baseUrl: '${API_BASE_URL}',
+  );
+  runApp(const MyApp());
 }`;
 
-const USE = `final fewchurs = Fewchurs('fr_live_xxx');
+const SHOW = `FilledButton(
+  onPressed: () => Fewchurs.showBoard(context),
+  child: const Text('Suggest a feature'),
+)`;
 
-final requests = await fewchurs.topRequests();
-await fewchurs.vote(requests.first['id']);`;
+const SHEET = `Fewchurs.showBoardSheet(context);`;
+
+const WIDGET = `// In a tab or a page that has its own app bar
+const FewchursBoard(showAppBar: false)`;
+
+const THEME = `MaterialApp(
+  theme: ThemeData(
+    colorSchemeSeed: const Color(0xFFED5F18),
+    extensions: const [
+      FewchursThemeData(
+        cardRadius: 14,
+        voteButtonStyle: VoteButtonStyle.pill,
+      ),
+    ],
+  ),
+)`;
 
 export default function FlutterDocsPage() {
   return (
     <DocsPage
       path="/docs/flutter"
       title="Flutter"
-      intro="Add Fewchurs to your Flutter app with one small Dart class."
-      meta="Works on Android, iOS, web, macOS, Windows and Linux."
+      intro="Add a native feature request board to your Flutter app. One package, one line of setup."
+      meta="Needs Flutter 3.10 or later and Dart 3.0 or later. Runs on Android, iOS, web, macOS, Windows and Linux."
       toc={TOC}
     >
-      <Section id="set-up" title="Set up">
+      <Section id="install" title="Install">
         <Steps>
-          <Step title="Add two packages">
-            <CodeBlock code={INSTALL} />
-          </Step>
-          <Step title="Add a small client">
+          <Step title="Add the package">
             <P>
-              Copy this class into your app. It makes a device ID once and sends your key with
-              every call.
+              The package installs from GitHub. Add it to your app&apos;s <C>pubspec.yaml</C>:
             </P>
-            <CodeBlock code={CLIENT} filename="lib/fewchurs.dart" />
+            <CodeBlock code={PUBSPEC} filename="pubspec.yaml" />
           </Step>
-          <Step title="Use it">
-            <CodeBlock code={USE} />
+          <Step title="Get it">
+            <CodeBlock code={PUB_GET} />
           </Step>
         </Steps>
+        <Note>
+          The <C>dependency_overrides</C> part is only needed until the packages are on pub.dev.
+        </Note>
+      </Section>
+
+      <Section id="platforms" title="Platform setup">
         <P>
-          It&apos;s fine to put the API key in your app. It can only do what the board does.
+          <strong>Android:</strong> release builds need the internet permission in{" "}
+          <C>android/app/src/main/AndroidManifest.xml</C>. Debug builds have it already, which is
+          why a missing one only shows up in release.
+        </P>
+        <CodeBlock code={ANDROID} filename="AndroidManifest.xml" />
+        <P>
+          <strong>macOS:</strong> allow network access in both{" "}
+          <C>macos/Runner/DebugProfile.entitlements</C> and <C>Release.entitlements</C>:
+        </P>
+        <CodeBlock code={MACOS} />
+        <P>iOS, web, Windows and Linux need nothing.</P>
+      </Section>
+
+      <Section id="set-up" title="Set up">
+        <P>
+          Call <C>configure</C> once, before <C>runApp</C>. Use the API key from your dashboard. It
+          makes no network calls, so it doesn&apos;t slow down startup.
+        </P>
+        <CodeBlock code={CONFIGURE} filename="main.dart" />
+      </Section>
+
+      <Section id="show-the-board" title="Show the board">
+        <P>
+          Open the board as a full-screen page. It handles everything inside: the list, votes,
+          comments and new requests.
+        </P>
+        <CodeBlock code={SHOW} />
+        <P>Or as a bottom sheet:</P>
+        <CodeBlock code={SHEET} />
+        <P>
+          Or put <C>FewchursBoard</C> anywhere, like a tab or a route:
+        </P>
+        <CodeBlock code={WIDGET} />
+        <P>
+          On tablets, web and desktop the board shows the list and the open request side by side.
         </P>
       </Section>
 
-      <Section id="next" title="What's next">
+      <Section id="colors" title="Colors and theme">
         <P>
-          The <A href="/docs/api">REST API reference</A> lists every call: comments, following,
-          paging and errors.
+          By default the board follows your app&apos;s <C>Theme</C>: colors, fonts and light or dark
+          mode. To change it, add a <C>FewchursThemeData</C> to your theme&apos;s extensions.
         </P>
+        <CodeBlock code={THEME} />
+        <P>
+          The <A href={REPO_URL}>package README</A> covers every option: tabs, copy and
+          translations, iOS-style widgets, custom pieces of the board, and building your own UI.
+        </P>
+      </Section>
+
+      <Section id="badge" title="What your plan changes">
+        <P>
+          Your plan is applied on our servers, so you never need to change code or update the
+          package when it changes.
+        </P>
+        <Table
+          head={["", "Free", "Starter", "Pro"]}
+          rows={[
+            ["Requests the board lists", "First 5", "First 200", "All"],
+            ['"Powered by Fewchurs" line', "Shown", "Hidden", "Hidden"],
+          ]}
+        />
+        <P>
+          Newer requests are still saved and show in your dashboard. A request someone just
+          submitted appears on their board straight away, but once the app is past its limit it
+          leaves the list on the next refresh. See <A href="/pricing">pricing</A>.
+        </P>
+      </Section>
+
+      <Section id="api-key" title="About the API key">
+        <P>
+          It&apos;s fine to put this key in your app. It can only do what the board does: list,
+          vote, comment and suggest. It can&apos;t change your settings or read anything private.
+        </P>
+        <Note>
+          The package gives each device a random ID and saves it on the device. That is how it
+          remembers votes without an account. Read more in <A href="/docs/concepts">How it works</A>.
+        </Note>
       </Section>
     </DocsPage>
   );
