@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { CodeBlock } from "@/components/docs/CodeBlock";
 import { A, C, DocsPage, Note, P, Section, Step, Steps, Table } from "@/components/docs/Docs";
-import { API_BASE_URL } from "@/lib/docs/nav";
 
 export const metadata: Metadata = {
   title: "Flutter — Docs — Fewchurs",
@@ -19,18 +18,22 @@ const TOC = [
 ];
 
 const REPO_URL = "https://github.com/fewchurs/fewchurs-flutter";
+// Latest release tag of fewchurs-flutter. Bump it here when a new version ships.
+const VERSION_REF = "v1.2.0";
 
 const PUBSPEC = `dependencies:
   fewchurs:
     git:
       url: ${REPO_URL}.git
       path: packages/fewchurs
+      ref: ${VERSION_REF}
 
 dependency_overrides:
   fewchurs_core:
     git:
       url: ${REPO_URL}.git
-      path: packages/fewchurs_core`;
+      path: packages/fewchurs_core
+      ref: ${VERSION_REF}`;
 
 const PUB_GET = `flutter pub get`;
 
@@ -43,10 +46,7 @@ const CONFIGURE = `import 'package:fewchurs/fewchurs.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  Fewchurs.configure(
-    apiKey: 'fr_live_xxx',
-    baseUrl: '${API_BASE_URL}',
-  );
+  Fewchurs.configure(apiKey: 'fr_live_xxx');
   runApp(const MyApp());
 }`;
 
@@ -59,6 +59,11 @@ const SHEET = `Fewchurs.showBoardSheet(context);`;
 
 const WIDGET = `// In a tab or a page that has its own app bar
 const FewchursBoard(showAppBar: false)`;
+
+const DEEP_LINK = `Fewchurs.showBoard(
+  context,
+  board: FewchursBoard(showCloseButton: true, initialFeatureId: id),
+);`;
 
 const THEME = `MaterialApp(
   theme: ThemeData(
@@ -94,7 +99,9 @@ export default function FlutterDocsPage() {
           </Step>
         </Steps>
         <Note>
-          The <C>dependency_overrides</C> part is only needed until the packages are on pub.dev.
+          <C>ref</C> pins the release ({VERSION_REF} is the latest). Keep both <C>ref</C> lines the
+          same. The <C>dependency_overrides</C> part is only needed until the packages are on
+          pub.dev.
         </Note>
       </Section>
 
@@ -123,8 +130,8 @@ export default function FlutterDocsPage() {
 
       <Section id="show-the-board" title="Show the board">
         <P>
-          Open the board as a full-screen page. It handles everything inside: the list, votes,
-          comments and new requests.
+          Open the board as a full-screen page. It handles everything inside: the Top and New tabs,
+          votes, comments and new requests.
         </P>
         <CodeBlock code={SHOW} />
         <P>Or as a bottom sheet:</P>
@@ -136,6 +143,10 @@ export default function FlutterDocsPage() {
         <P>
           On tablets, web and desktop the board shows the list and the open request side by side.
         </P>
+        <P>
+          To open one request, for example from a deep link or a notification, pass its ID:
+        </P>
+        <CodeBlock code={DEEP_LINK} />
       </Section>
 
       <Section id="colors" title="Colors and theme">
