@@ -10,6 +10,7 @@ export const metadata: Metadata = {
 const TOC = [
   { id: "install", label: "Install" },
   { id: "show-the-board", label: "Show the board" },
+  { id: "sheet", label: "As a sheet" },
   { id: "layout", label: "Use your own layout" },
   { id: "customize", label: "Customize" },
   { id: "client", label: "Build your own UI" },
@@ -27,6 +28,18 @@ const ENV = `FEWCHURS_API_KEY=fr_live_xxx`;
 const BLADE = `<x-fewchurs::board />`;
 
 const LIVEWIRE = `<livewire:fewchurs-board />`;
+
+const LIVEWIRE_LAZY = `<livewire:fewchurs-board lazy />`;
+
+const SHEET = `<x-fewchurs::sheet />                    {{-- slides in from the right --}}
+<x-fewchurs::sheet side="left" />
+<x-fewchurs::sheet side="bottom" />`;
+
+const SHEET_LABEL = `<x-fewchurs::sheet label="Suggest a feature" />`;
+
+const SHEET_OWN_BUTTON = `<x-fewchurs::sheet :trigger="false" />
+
+<button data-fewchurs-open>Feedback</button>`;
 
 const LAYOUT = `'board' => [
     'layout' => 'layouts.app',  // your layout view
@@ -65,7 +78,7 @@ export default function LaravelDocsPage() {
       path="/docs/laravel"
       title="Laravel"
       intro="Add a feature request board to your Laravel app. One package, one env var, one Blade tag."
-      meta="Needs PHP 8.2 or later and Laravel 11 or 12. No JavaScript build step and no Tailwind needed."
+      meta="Needs PHP 8.2 or later and Laravel 10, 11, 12 or 13. No JavaScript build step and no Tailwind needed."
       toc={TOC}
     >
       <Section id="install" title="Install">
@@ -96,6 +109,38 @@ export default function LaravelDocsPage() {
           turned off. If your app uses Livewire, there&apos;s a reactive version too:
         </P>
         <CodeBlock code={LIVEWIRE} />
+        <P>
+          Votes count the moment someone clicks, and save in the background. If the API
+          can&apos;t be reached, the board shows a short message with a &quot;Try again&quot; button
+          inside the board, and the rest of your page keeps working.
+        </P>
+        <P>Add <C>lazy</C> to the Livewire board to show a loading shimmer until it&apos;s ready:</P>
+        <CodeBlock code={LIVEWIRE_LAZY} />
+      </Section>
+
+      <Section id="sheet" title="As a sheet">
+        <P>
+          Put the board behind a floating button instead of on the page. Add it once, for example
+          to your main layout, and it shows on every page:
+        </P>
+        <CodeBlock code={SHEET} />
+        <P>Change the button text with <C>label</C>:</P>
+        <CodeBlock code={SHEET_LABEL} />
+        <P>
+          Or hide the floating button and open the sheet from any element of your own with{" "}
+          <C>data-fewchurs-open</C>:
+        </P>
+        <CodeBlock code={SHEET_OWN_BUTTON} />
+        <P>
+          The board loads only the first time the sheet opens, so pages where nobody opens it make
+          no API calls. On phones it fills the screen, and without JavaScript the button is a link
+          to <C>/feedback</C>.
+        </P>
+        <Note>
+          The sheet shows <C>/feedback</C> in a frame, so it needs that route. If your app sends{" "}
+          <C>X-Frame-Options: DENY</C> or a CSP <C>frame-ancestors &apos;none&apos;</C>, allow your
+          own site to frame <C>/feedback</C>.
+        </Note>
       </Section>
 
       <Section id="layout" title="Use your own layout">
