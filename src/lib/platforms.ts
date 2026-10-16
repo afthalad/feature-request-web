@@ -108,10 +108,9 @@ FewchursBoard()`,
     href: "/docs/laravel",
     deviceType: "web",
     codeSnippet: {
-      filename: "dashboard.blade.php",
-      code: `@php
-    Fewchurs::configure(apiKey: config('fewchurs.key'));
-@endphp
+      filename: "feedback.blade.php",
+      code: `{{-- composer require fewchurs/laravel --}}
+{{-- .env: FEWCHURS_API_KEY=fr_live_xxx --}}
 
 <x-fewchurs::board />`,
     },
