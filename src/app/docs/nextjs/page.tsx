@@ -41,7 +41,7 @@ export const { GET, POST, DELETE } = createHandler({
 });`;
 
 const PROPS = `<FewchursBoard
-  tabs={["top", "new", "roadmap"]}
+  tabs={["top", "new"]}
   defaultTab="top"
   allowComments
   emailField="optional"
