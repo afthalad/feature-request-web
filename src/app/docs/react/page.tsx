@@ -12,6 +12,8 @@ const TOC = [
   { id: "show-the-board", label: "Show the board" },
   { id: "api-key", label: "Keeping the key private" },
   { id: "change-the-look", label: "Change the look" },
+  { id: "in-a-dialog", label: "Open it in a dialog" },
+  { id: "one-request", label: "Link to one request" },
   { id: "your-own-ui", label: "Build your own UI" },
   { id: "errors", label: "Handling errors" },
   { id: "users", label: "Signed-in users" },
@@ -54,11 +56,34 @@ const RENDER = `<FewchursBoard
   <FewchursBoard.SubmitTrigger />
 </FewchursBoard.Root>`;
 
+const DIALOG = `import { useState } from "react";
+import { FewchursBoardDialog, FewchursProvider } from "@fewchurs/react";
+import "@fewchurs/react/styles.css";
+
+export function FeedbackButton() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <FewchursProvider apiKey={import.meta.env.VITE_FEWCHURS_KEY}>
+      <button onClick={() => setOpen(true)}>Feedback</button>
+      <FewchursBoardDialog open={open} onClose={() => setOpen(false)} />
+    </FewchursProvider>
+  );
+}`;
+
+const ONE_REQUEST = `// e.g. /feedback?request=abc123
+const requestId = new URLSearchParams(location.search).get("request");
+
+<FewchursBoard initialFeatureId={requestId ?? undefined} />`;
+
+const ONE_REQUEST_HOOK = `const { feature, isLoading, error, refresh } = useFeature(requestId);`;
+
 const HOOKS = `const { features, isLoading, loadMore, hasMore } = useFeatures({ sort: "top" });
 const { hasVoted, upvoteCount, toggle } = useVote(featureId);
 const { comments, add } = useComments(featureId);
 const { submit, isPending } = useSubmitFeature();
-const { isFollowing, follow, unfollow } = useFollow(featureId);`;
+const { isFollowing, follow, unfollow } = useFollow(featureId);
+const { feature } = useFeature(featureId);`;
 
 const ERRORS = `import { useSubmitFeature } from "@fewchurs/react";
 import { userMessage } from "@fewchurs/react/core";
@@ -122,6 +147,31 @@ export default function ReactDocsPage() {
         <P>
           <C>unstyled</C> removes all our styles but keeps the behavior and keyboard support.
         </P>
+      </Section>
+
+      <Section id="in-a-dialog" title="Open it in a dialog">
+        <P>
+          <C>FewchursBoardDialog</C> puts the whole board in a modal, so a &quot;Feedback&quot;
+          button anywhere in your app can open it. It takes every <C>FewchursBoard</C> prop,
+          plus <C>open</C> and <C>onClose</C>. Escape closes it, and focus returns to the button
+          that opened it.
+        </P>
+        <CodeBlock code={DIALOG} filename="FeedbackButton.tsx" />
+      </Section>
+
+      <Section id="one-request" title="Link to one request">
+        <P>
+          <C>initialFeatureId</C> shows one request above the list, with its comments already
+          open. Use it for a link from an email or a changelog straight to the request someone
+          voted on.
+        </P>
+        <CodeBlock code={ONE_REQUEST} />
+        <P>
+          It works the same on the <A href="/docs/nextjs">Next.js board</A>, where the request is
+          rendered on the server. If the id no longer exists, the board just shows the list. To
+          fetch one request without the board, use <C>useFeature</C>:
+        </P>
+        <CodeBlock code={ONE_REQUEST_HOOK} />
       </Section>
 
       <Section id="your-own-ui" title="Build your own UI">

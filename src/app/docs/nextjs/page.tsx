@@ -22,7 +22,7 @@ const ENV = `FEWCHURS_API_KEY=fr_live_xxx`;
 const HANDLER = `export { GET, POST, DELETE } from "@fewchurs/next/handler";`;
 
 const PAGE = `import { FewchursBoard } from "@fewchurs/next";
-import "@fewchurs/react/styles.css";
+import "@fewchurs/next/styles.css";
 
 export default function FeedbackPage() {
   return <FewchursBoard />;
@@ -121,6 +121,11 @@ export default function NextJsDocsPage() {
           <C>--fw-font</C>.
         </P>
         <CodeBlock code={PROPS} />
+        <P>
+          <C>initialFeatureId</C> shows one request above the list, with its comments open and
+          rendered on the server — handy for a link from an email straight to a request. See{" "}
+          <A href="/docs/react#one-request">Link to one request</A>.
+        </P>
         <P>
           Need functions as props, like <C>renderFeature</C>? Those can&apos;t be passed to a
           server component. Use the board from <A href="/docs/react">@fewchurs/react</A> in a{" "}
