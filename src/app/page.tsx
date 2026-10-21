@@ -69,7 +69,7 @@ const FEATURES = [
   {
     icon: Inbox,
     title: "A public board link",
-    body: "On Pro, share fewchurs.shop/b/yourapp anywhere — no login needed to view or vote.",
+    body: "On Pro, share fewchurs.com/b/yourapp anywhere — no login needed to view or vote.",
   },
   {
     icon: ListChecks,
