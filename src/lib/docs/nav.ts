@@ -1,4 +1,4 @@
-export const API_BASE_URL = `${(process.env.NEXT_PUBLIC_APP_URL ?? "https://www.fewchurs.com").replace(/\/$/, "")}/api/v1`;
+export const API_BASE_URL = "https://www.fewchurs.com/api/v1";
 
 export interface DocsNavItem {
   href: string;
