@@ -17,23 +17,14 @@ const TOC = [
   { id: "api-key", label: "About the API key" },
 ];
 
-const REPO_URL = "https://github.com/fewchurs/fewchurs-flutter";
-// Latest release tag of fewchurs-flutter. Bump it here when a new version ships.
-const VERSION_REF = "v1.2.0";
+const PUB_URL = "https://pub.dev/packages/fewchurs";
+// Latest version of the fewchurs package on pub.dev. Bump it here when a new version ships.
+const VERSION = "1.5.2";
+
+const PUB_ADD = `flutter pub add fewchurs`;
 
 const PUBSPEC = `dependencies:
-  fewchurs:
-    git:
-      url: ${REPO_URL}.git
-      path: packages/fewchurs
-      ref: ${VERSION_REF}
-
-dependency_overrides:
-  fewchurs_core:
-    git:
-      url: ${REPO_URL}.git
-      path: packages/fewchurs_core
-      ref: ${VERSION_REF}`;
+  fewchurs: ^${VERSION}`;
 
 const PUB_GET = `flutter pub get`;
 
@@ -90,18 +81,19 @@ export default function FlutterDocsPage() {
         <Steps>
           <Step title="Add the package">
             <P>
-              The package installs from GitHub. Add it to your app&apos;s <C>pubspec.yaml</C>:
+              The package is on <A href={PUB_URL}>pub.dev</A>. Add it from your project folder:
             </P>
-            <CodeBlock code={PUBSPEC} filename="pubspec.yaml" />
+            <CodeBlock code={PUB_ADD} />
           </Step>
-          <Step title="Get it">
+          <Step title="Or edit pubspec.yaml">
+            <P>If you prefer, add it to your app&apos;s <C>pubspec.yaml</C> yourself:</P>
+            <CodeBlock code={PUBSPEC} filename="pubspec.yaml" />
             <CodeBlock code={PUB_GET} />
           </Step>
         </Steps>
         <Note>
-          <C>ref</C> pins the release ({VERSION_REF} is the latest). Keep both <C>ref</C> lines the
-          same. The <C>dependency_overrides</C> part is only needed until the packages are on
-          pub.dev.
+          {VERSION} is the latest version. It brings in <C>fewchurs_core</C>, the API client, on
+          its own, so you don&apos;t need to add it.
         </Note>
       </Section>
 
@@ -156,7 +148,7 @@ export default function FlutterDocsPage() {
         </P>
         <CodeBlock code={THEME} />
         <P>
-          The <A href={REPO_URL}>package README</A> covers every option: tabs, copy and
+          The <A href={PUB_URL}>package README</A> covers every option: tabs, copy and
           translations, iOS-style widgets, custom pieces of the board, and building your own UI.
         </P>
       </Section>
