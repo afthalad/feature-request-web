@@ -48,7 +48,7 @@ export default async function AppPage({
   const [{ features, nextCursor, hiddenCount }] = await Promise.all([
     listFeaturesForOwner({
       appId,
-      tab: "pending",
+      tab: "new",
       limit: FEATURES_PAGE_SIZE,
       cursor: null,
       plan,

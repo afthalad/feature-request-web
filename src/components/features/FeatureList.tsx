@@ -33,7 +33,7 @@ export function FeatureList({
   initialHiddenCount,
   newSinceIso,
 }: FeatureListProps) {
-  const [tab, setTab] = useState<BoardTab>("pending");
+  const [tab, setTab] = useState<BoardTab>("all");
   const [features, setFeatures] = useState(initialFeatures);
   const [cursor, setCursor] = useState(initialCursor);
   const [hiddenCount, setHiddenCount] = useState(initialHiddenCount);
