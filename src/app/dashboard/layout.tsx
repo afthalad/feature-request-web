@@ -54,12 +54,16 @@ async function loadSidebarData(): Promise<{
 }
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const [sidebar, cookieStore] = await Promise.all([loadSidebarData(), cookies()]);
+  const [sidebar, cookieStore, user] = await Promise.all([
+    loadSidebarData(),
+    cookies(),
+    getSessionUser(),
+  ]);
   // Remember whether the sidebar was collapsed (the shadcn sidebar writes this cookie).
   const defaultOpen = cookieStore.get("sidebar_state")?.value !== "false";
 
   return (
-    <AuthGuard>
+    <AuthGuard sessionIssuedAt={user ? user.iat * 1000 : null}>
       <TooltipProvider>
         <SidebarProvider defaultOpen={defaultOpen}>
           <AppSidebar {...sidebar} />
