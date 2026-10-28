@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { FieldValue, type DocumentReference, type Transaction } from "firebase-admin/firestore";
-import { validateEvent, WebhookVerificationError } from "@polar-sh/sdk/webhooks";
-import { SDKValidationError } from "@polar-sh/sdk/models/errors/sdkvalidationerror.js";
+import { Webhook } from "standardwebhooks";
 import { adminDb } from "@/lib/firebase/admin";
 import { grantsPaidAccess } from "@/lib/polar/client";
 import { planFromProductId } from "@/lib/polar/products";
@@ -40,25 +39,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Missing webhook headers" }, { status: 400 });
   }
 
-  // validateEvent checks the signature first, then parses the body against the SDK's schemas.
-  // A schema miss (an event type or field newer than this SDK) still means the signature was
-  // good, so it isn't rejected — the handler reads the raw JSON below either way.
-  try {
-    validateEvent(
-      raw,
-      {
-        "webhook-id": webhookId,
-        "webhook-signature": webhookSignature,
-        "webhook-timestamp": webhookTimestamp,
-      },
-      process.env.POLAR_WEBHOOK_SECRET ?? ""
-    );
-  } catch (error) {
-    if (error instanceof WebhookVerificationError) {
-      console.error("Polar webhook signature verification failed", error);
-      return NextResponse.json({ error: "Invalid signature" }, { status: 403 });
-    }
-    if (!(error instanceof SDKValidationError)) throw error;
+  const signed = verifySignature(raw, {
+    "webhook-id": webhookId,
+    "webhook-signature": webhookSignature,
+    "webhook-timestamp": webhookTimestamp,
+  });
+  if (!signed) {
+    console.error("Polar webhook signature verification failed");
+    return NextResponse.json({ error: "Invalid signature" }, { status: 403 });
   }
 
   const event = JSON.parse(raw) as { type: string; data: unknown };
@@ -91,6 +79,26 @@ export async function POST(req: NextRequest) {
   }
 
   return NextResponse.json({ received: true });
+}
+
+// Polar's endpoint secrets are now Standard Webhooks keys ("whsec_<base64>"); older ones were raw
+// strings that @polar-sh/sdk 0.49's validateEvent base64-encodes first. That SDK version encodes
+// the new form too, which breaks it, so both readings are checked here. The handler reads the raw
+// JSON itself, so no SDK schema parsing is needed.
+function verifySignature(raw: string, headers: Record<string, string>): boolean {
+  const secret = process.env.POLAR_WEBHOOK_SECRET ?? "";
+  if (!secret) return false;
+
+  const legacyKey = Buffer.from(secret, "utf-8").toString("base64");
+  const keys = secret.startsWith("whsec_") ? [secret, legacyKey] : [legacyKey];
+  return keys.some((key) => {
+    try {
+      new Webhook(key).verify(raw, headers);
+      return true;
+    } catch {
+      return false;
+    }
+  });
 }
 
 // Checkout sets the Polar customer's external_id (and the subscription's metadata) to the
