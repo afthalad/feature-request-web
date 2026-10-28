@@ -15,11 +15,13 @@ export function CheckoutStatusRefresher({ plan }: { plan: Plan }) {
   const attemptsRef = useRef(0);
 
   const isWaitingForCheckout = searchParams.get("checkout") === "success";
+  // The plan just bought. A plan switch starts from a paid plan, so "not free" isn't enough.
+  const expectedPlan = searchParams.get("plan");
 
   useEffect(() => {
     if (!isWaitingForCheckout) return;
 
-    if (plan !== "free") {
+    if (expectedPlan ? plan === expectedPlan : plan !== "free") {
       toast.success(`Your ${plan} plan is now active.`);
       router.replace(pathname);
       return;
@@ -38,7 +40,7 @@ export function CheckoutStatusRefresher({ plan }: { plan: Plan }) {
 
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [plan, isWaitingForCheckout]);
+  }, [plan, isWaitingForCheckout, expectedPlan]);
 
   return null;
 }

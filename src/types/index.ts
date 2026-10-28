@@ -20,9 +20,12 @@ export interface AppUser {
   photoURL: string;
   plan: Plan;
   createdAt: string;
+  polarCustomerId?: string;
+  /** Billing customer from before the move to Polar; set only for those older subscribers. */
   dodoCustomerId?: string;
   subscriptionId?: string;
   subscriptionStatus?: string;
+  cancelAtPeriodEnd?: boolean;
   billingPeriod?: "monthly" | "yearly" | null;
   nextBillingDate?: string | null;
   emailsSentMonth?: string;
@@ -133,6 +136,7 @@ export interface AdminApiKey {
 
 export interface AdminWebhookEvent {
   id: string;
+  provider: "polar" | "dodo";
   type: string;
   receivedAt: string;
 }

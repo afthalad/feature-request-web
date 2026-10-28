@@ -32,27 +32,32 @@ firebase-admin for all server-side data access, Resend for email, zod for valida
    verify a domain at [resend.com/domains](https://resend.com/domains) and point `EMAIL_FROM` at
    an address on that domain to send anywhere.
 
-### 3. Payment links (optional, for Starter/Pro upgrades)
+### 3. Billing with Polar (optional, for Starter/Pro upgrades)
 
-No billing integration is built — `/pricing` shows three plans (Free, Starter, Pro) with a
-Monthly/Yearly toggle. Starter and Pro each link to a hosted checkout link you create by hand —
-one per price point — pasted into:
+Subscriptions run on [Polar](https://polar.sh) as Merchant of Record. Build and test against a
+[sandbox](https://sandbox.polar.sh/start) organization first (`POLAR_SERVER=sandbox`), then repeat
+the setup in your production organization.
 
-- `NEXT_PUBLIC_PAYMENT_LINK_STARTER_MONTHLY` ($5/month)
-- `NEXT_PUBLIC_PAYMENT_LINK_STARTER_YEARLY` ($50/year)
-- `NEXT_PUBLIC_PAYMENT_LINK_PRO_MONTHLY` (Pro, $9/month)
-- `NEXT_PUBLIC_PAYMENT_LINK_PRO_YEARLY` (Pro, $90/year)
+1. Create four recurring products — Starter Monthly ($14.99), Starter Yearly ($143.90), Pro
+   Monthly ($29.99), Pro Yearly ($287.90) — and put their IDs in the `POLAR_PRODUCT_*` env vars.
+   Prices shown on `/pricing` live in `src/components/pricing/PricingPlans.tsx`.
+2. Create an Organization Access Token (scopes: `checkouts:write`, `customer_sessions:write`,
+   `subscriptions:write`, `products:read`, `customers:read`) → `POLAR_ACCESS_TOKEN`.
+3. Add a webhook endpoint at `<NEXT_PUBLIC_APP_URL>/api/webhooks/polar` subscribed to the
+   `subscription.*` events → its secret goes in `POLAR_WEBHOOK_SECRET`. Locally,
+   `polar webhook listen http://localhost:3000/api/webhooks/polar` (Polar CLI) forwards sandbox
+   events and prints the secret to use.
+4. Deploy the Firestore indexes (`firebase deploy --only firestore:indexes`) — the admin webhook
+   log needs the `polarWebhookEvents` index.
 
-Stripe doesn't support Sri Lankan merchant accounts, so this project targets
-[PayHere](https://www.payhere.lk/) instead — it's Central Bank of Sri Lanka approved, settles
-directly to a Sri Lankan bank account, and its "PayHere Links" feature is a no-code hosted
-checkout link, the same drop-in shape as a Stripe Payment Link. Recurring billing needs the PLUS
-(LKR 3,990/mo) or PREMIUM (LKR 9,990/mo) plan — the free LITE tier doesn't support recurring
-charges. When a payment notification comes in, set that user's `plan` field to `"starter"` or
-`"pro"` in Firestore directly (billing cycle isn't tracked — both links for a tier grant the same
-limits). Leave any of these env vars empty to show a "Not open yet" placeholder on that card
-instead of a live link. Every new user gets `plan: "free"` automatically on first sign-in —
-there's no way to register directly into a paid tier.
+Checkout passes the Firebase uid as Polar's external customer ID, so the webhook updates
+`users/{uid}` (`plan`, `subscriptionStatus`, `billingPeriod`, `nextBillingDate`) directly. A
+subscriber who picks another plan is switched on the same subscription with a prorated invoice.
+Every new user gets `plan: "free"` automatically on first sign-in.
+
+Subscribers from before the move to Polar are still billed by Dodo Payments: the `DODO_*` env
+vars, `src/lib/dodo/` and `/api/webhooks/dodo` keep their renewals, cancellations and Manage
+billing working. Remove them once no Dodo subscriptions are left.
 
 Plan limits (enforced by `checkPlanLimit()` in `src/lib/plans/limits.ts`):
 

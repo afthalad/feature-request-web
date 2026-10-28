@@ -31,7 +31,7 @@ const PRO_FEATURES = [
   "CSV export",
 ];
 
-// Keep in sync with the Dodo Payments products (amounts in dollars).
+// Keep in sync with the Polar products (amounts in dollars).
 // Yearly is 20% off twelve months of monthly.
 const PRICES = {
   starter: { monthly: 14.99, yearly: 143.9 },

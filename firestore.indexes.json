@@ -17,6 +17,14 @@
       ]
     },
     {
+      "collectionGroup": "polarWebhookEvents",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "uid", "order": "ASCENDING" },
+        { "fieldPath": "receivedAt", "order": "DESCENDING" }
+      ]
+    },
+    {
       "collectionGroup": "dodoWebhookEvents",
       "queryScope": "COLLECTION",
       "fields": [

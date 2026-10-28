@@ -23,7 +23,7 @@ export async function GET(
   if (!user) return errorResponse("not_found", "User not found.");
 
   const apps = await listAppsForUser(uid);
-  const webhookEvents = user.dodoCustomerId ? await listWebhookEventsForUser(user.dodoCustomerId) : [];
+  const webhookEvents = await listWebhookEventsForUser(user);
 
   return ok({ user, apps, webhookEvents });
 }
@@ -69,7 +69,16 @@ export async function DELETE(
   const before = await getUser(uid);
   if (!before) return errorResponse("not_found", "User not found.");
 
-  const { deletedAppIds } = await deleteUser(uid);
+  let deletedAppIds: string[];
+  try {
+    ({ deletedAppIds } = await deleteUser(uid));
+  } catch (error) {
+    console.error(`[admin] failed to delete user ${uid}`, error);
+    return errorResponse(
+      "internal",
+      "Couldn't delete the user. If their subscription couldn't be cancelled, nothing was deleted."
+    );
+  }
 
   await logAdminAction({
     adminUid: admin.uid,

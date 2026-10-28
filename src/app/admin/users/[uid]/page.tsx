@@ -14,18 +14,16 @@ export default async function AdminUserDetailPage({
 }) {
   const { uid } = await params;
   // apps only needs uid, not the user doc, so it starts alongside getUser instead of waiting
-  // on it. webhookEvents genuinely depends on user.dodoCustomerId and has to follow.
+  // on it. webhookEvents genuinely depends on the user doc (its Dodo customer ID) and has to follow.
   const [user, apps] = await Promise.all([getUser(uid), listAppsForUser(uid)]);
   if (!user) notFound();
 
   // The event log is diagnostics only, so a failed read (a missing index, say) shows a note
   // instead of taking the whole user page down with it.
-  const webhookEvents = user.dodoCustomerId
-    ? await listWebhookEventsForUser(user.dodoCustomerId).catch((error) => {
-        console.error(`[admin] failed to load webhook events for ${uid}`, error);
-        return null;
-      })
-    : [];
+  const webhookEvents = await listWebhookEventsForUser(user).catch((error) => {
+    console.error(`[admin] failed to load webhook events for ${uid}`, error);
+    return null;
+  });
 
   return (
     <div className="space-y-6">
@@ -50,7 +48,10 @@ export default async function AdminUserDetailPage({
         <dl className="grid grid-cols-2 gap-3 text-sm sm:grid-cols-3">
           <div>
             <dt className="text-muted-foreground">Subscription status</dt>
-            <dd>{user.subscriptionStatus ?? "—"}</dd>
+            <dd>
+              {user.subscriptionStatus ?? "—"}
+              {user.cancelAtPeriodEnd ? " · cancels at period end" : ""}
+            </dd>
           </div>
           <div>
             <dt className="text-muted-foreground">Billing period</dt>
@@ -61,9 +62,15 @@ export default async function AdminUserDetailPage({
             <dd>{user.nextBillingDate ? new Date(user.nextBillingDate).toLocaleDateString() : "—"}</dd>
           </div>
           <div>
-            <dt className="text-muted-foreground">Dodo customer ID</dt>
-            <dd className="truncate">{user.dodoCustomerId ?? "—"}</dd>
+            <dt className="text-muted-foreground">Polar customer ID</dt>
+            <dd className="truncate">{user.polarCustomerId ?? "—"}</dd>
           </div>
+          {user.dodoCustomerId && (
+            <div>
+              <dt className="text-muted-foreground">Dodo customer ID (legacy)</dt>
+              <dd className="truncate">{user.dodoCustomerId}</dd>
+            </div>
+          )}
           <div>
             <dt className="text-muted-foreground">Subscription ID</dt>
             <dd className="truncate">{user.subscriptionId ?? "—"}</dd>
@@ -106,13 +113,18 @@ export default async function AdminUserDetailPage({
           <p className="text-muted-foreground text-sm">Couldn&apos;t load webhook events.</p>
         ) : webhookEvents.length === 0 ? (
           <p className="text-muted-foreground text-sm">
-            {user.dodoCustomerId ? "No webhook events recorded yet." : "No Dodo customer linked."}
+            No webhook events recorded yet.
           </p>
         ) : (
           <ul className="space-y-2">
             {webhookEvents.map((event) => (
               <li key={event.id} className="flex items-center justify-between text-sm">
-                <Badge variant="outline">{event.type}</Badge>
+                <span className="flex items-center gap-2">
+                  <Badge variant="outline">{event.type}</Badge>
+                  {event.provider === "dodo" && (
+                    <span className="text-muted-foreground text-xs">Dodo</span>
+                  )}
+                </span>
                 <span className="text-muted-foreground">
                   {new Date(event.receivedAt).toLocaleString()}
                 </span>
