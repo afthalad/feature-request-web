@@ -20,7 +20,11 @@ import {
 import { toast } from "sonner";
 import { auth } from "@/lib/firebase/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -63,7 +67,11 @@ interface AppSidebarProps {
   hasBillingAccount: boolean;
 }
 
-const PLAN_LABEL: Record<Plan, string> = { free: "Free", starter: "Starter", pro: "Pro" };
+const PLAN_LABEL: Record<Plan, string> = {
+  free: "Free",
+  starter: "Starter",
+  pro: "Pro",
+};
 
 export function AppSidebar({ apps, plan, hasBillingAccount }: AppSidebarProps) {
   const pathname = usePathname();
@@ -73,8 +81,19 @@ export function AppSidebar({ apps, plan, hasBillingAccount }: AppSidebarProps) {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" render={<Link href="/dashboard" />} tooltip="Fewchurs">
-              <Image src="/logo-mark.svg" alt="" width={24} height={24} priority className="size-6" />
+            <SidebarMenuButton
+              size="lg"
+              render={<Link href="/dashboard" />}
+              tooltip="Fewchurs"
+            >
+              <Image
+                src="/logo-mark.svg"
+                alt=""
+                width={24}
+                height={24}
+                priority
+                className="size-6"
+              />
               <span className="font-semibold tracking-tight">Fewchurs</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -85,21 +104,33 @@ export function AppSidebar({ apps, plan, hasBillingAccount }: AppSidebarProps) {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              <NavItem href="/dashboard" label="Dashboard" icon={<LayoutDashboard />} active={pathname === "/dashboard"} />
+              <NavItem
+                href="/dashboard"
+                label="Dashboard"
+                icon={<LayoutDashboard />}
+                active={pathname === "/dashboard"}
+              />
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
 
         <SidebarGroup>
           <SidebarGroupLabel>Apps</SidebarGroupLabel>
-          <SidebarGroupAction render={<Link href="/dashboard/apps/new" />} title="New app">
+          <SidebarGroupAction
+            render={<Link href="/dashboard/apps/new" />}
+            title="New app"
+          >
             <Plus />
             <span className="sr-only">New app</span>
           </SidebarGroupAction>
           <SidebarGroupContent>
             <SidebarMenu>
               {apps.length === 0 && (
-                <NavItem href="/dashboard/apps/new" label="Create your first app" icon={<Plus />} />
+                <NavItem
+                  href="/dashboard/apps/new"
+                  label="Create your first app"
+                  icon={<Plus />}
+                />
               )}
               {apps.map((app) => (
                 <AppItem key={app.id} app={app} pathname={pathname} />
@@ -109,7 +140,12 @@ export function AppSidebar({ apps, plan, hasBillingAccount }: AppSidebarProps) {
         </SidebarGroup>
 
         <CollapsibleGroup label="Resources">
-          <NavItem href="/docs" label="Docs" icon={<BookOpen />} active={pathname.startsWith("/docs")} />
+          <NavItem
+            href="/docs"
+            label="Docs"
+            icon={<BookOpen />}
+            active={pathname.startsWith("/docs")}
+          />
           <NavItem href="/docs/api" label="API reference" icon={<Code />} />
           <NavItem href="/pricing" label="Pricing" icon={<Tag />} />
         </CollapsibleGroup>
@@ -139,7 +175,11 @@ function NavItem({
 }) {
   return (
     <SidebarMenuItem>
-      <SidebarMenuButton render={<Link href={href} />} isActive={active} tooltip={label}>
+      <SidebarMenuButton
+        render={<Link href={href} />}
+        isActive={active}
+        tooltip={label}
+      >
         {icon}
         <span>{label}</span>
       </SidebarMenuButton>
@@ -148,7 +188,13 @@ function NavItem({
 }
 
 /** A section whose label folds it open and shut, like "Tools ⌄" in a typical app sidebar. */
-function CollapsibleGroup({ label, children }: { label: string; children: React.ReactNode }) {
+function CollapsibleGroup({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
   return (
     <Collapsible defaultOpen className="group/collapsible">
       <SidebarGroup>
@@ -193,7 +239,9 @@ function AppItem({ app, pathname }: { app: SidebarApp; pathname: string }) {
           {app.newCount > 99 ? "99+" : app.newCount}
         </SidebarMenuBadge>
       ) : (
-        <SidebarMenuBadge className="text-muted-foreground">{app.featureCount}</SidebarMenuBadge>
+        <SidebarMenuBadge className="text-muted-foreground">
+          {app.featureCount}
+        </SidebarMenuBadge>
       )}
     </SidebarMenuItem>
   );
@@ -212,10 +260,17 @@ function useBillingPortal() {
         headers: { Authorization: `Bearer ${idToken}` },
       });
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error?.message ?? "Failed to open billing portal.");
+      if (!response.ok)
+        throw new Error(
+          data.error?.message ?? "Failed to open billing portal.",
+        );
       window.location.href = data.portalUrl;
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Failed to open billing portal.");
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to open billing portal.",
+      );
       setIsOpening(false);
     }
   }
@@ -224,7 +279,13 @@ function useBillingPortal() {
 }
 
 /** The plan, as a footer link: Upgrade on Free, billing on paid plans. */
-function PlanItem({ plan, hasBillingAccount }: { plan: Plan; hasBillingAccount: boolean }) {
+function PlanItem({
+  plan,
+  hasBillingAccount,
+}: {
+  plan: Plan;
+  hasBillingAccount: boolean;
+}) {
   const billing = useBillingPortal();
   const badge = (
     <span className="bg-primary/10 text-primary ml-auto rounded-full px-1.5 py-0.5 text-[10px] font-medium leading-none">
@@ -235,7 +296,10 @@ function PlanItem({ plan, hasBillingAccount }: { plan: Plan; hasBillingAccount: 
   if (plan === "free" || !hasBillingAccount) {
     return (
       <SidebarMenuItem>
-        <SidebarMenuButton render={<Link href="/pricing" />} tooltip={plan === "free" ? "Upgrade" : "Plans"}>
+        <SidebarMenuButton
+          render={<Link href="/pricing" />}
+          tooltip={plan === "free" ? "Upgrade" : "Plans"}
+        >
           <Sparkles className="text-primary" />
           <span>{plan === "free" ? "Upgrade" : "Plans"}</span>
           {badge}
@@ -245,7 +309,11 @@ function PlanItem({ plan, hasBillingAccount }: { plan: Plan; hasBillingAccount: 
   }
   return (
     <SidebarMenuItem>
-      <SidebarMenuButton onClick={billing.open} disabled={billing.isOpening} tooltip="Billing">
+      <SidebarMenuButton
+        onClick={billing.open}
+        disabled={billing.isOpening}
+        tooltip="Billing"
+      >
         <CreditCard />
         <span>{billing.isOpening ? "Opening..." : "Billing"}</span>
         {badge}
@@ -255,7 +323,13 @@ function PlanItem({ plan, hasBillingAccount }: { plan: Plan; hasBillingAccount: 
 }
 
 /** Avatar, name and email; opens a menu with plan, billing and sign out. */
-function AccountMenu({ plan, hasBillingAccount }: { plan: Plan; hasBillingAccount: boolean }) {
+function AccountMenu({
+  plan,
+  hasBillingAccount,
+}: {
+  plan: Plan;
+  hasBillingAccount: boolean;
+}) {
   const router = useRouter();
   const { isMobile } = useSidebar();
   const billing = useBillingPortal();
@@ -276,7 +350,11 @@ function AccountMenu({ plan, hasBillingAccount }: { plan: Plan; hasBillingAccoun
   }
 
   const name = user?.displayName ?? "Account";
-  const initial = (user?.displayName?.[0] ?? user?.email?.[0] ?? "?").toUpperCase();
+  const initial = (
+    user?.displayName?.[0] ??
+    user?.email?.[0] ??
+    "?"
+  ).toUpperCase();
   const identity = (
     <>
       <Avatar className="size-8 rounded-lg">
@@ -285,7 +363,9 @@ function AccountMenu({ plan, hasBillingAccount }: { plan: Plan; hasBillingAccoun
       </Avatar>
       <div className="grid min-w-0 flex-1 text-left text-sm leading-tight">
         <span className="truncate font-medium">{name}</span>
-        <span className="text-muted-foreground truncate text-xs">{user?.email}</span>
+        <span className="text-muted-foreground truncate text-xs">
+          {user?.email}
+        </span>
       </div>
     </>
   );
@@ -320,12 +400,14 @@ function AccountMenu({ plan, hasBillingAccount }: { plan: Plan; hasBillingAccoun
             <DropdownMenuLabel>{PLAN_LABEL[plan]} plan</DropdownMenuLabel>
             {plan === "free" ? (
               <DropdownMenuItem render={<Link href="/pricing" />}>
-                <Sparkles />
                 Upgrade
               </DropdownMenuItem>
             ) : (
               hasBillingAccount && (
-                <DropdownMenuItem onClick={billing.open} disabled={billing.isOpening}>
+                <DropdownMenuItem
+                  onClick={billing.open}
+                  disabled={billing.isOpening}
+                >
                   <CreditCard />
                   {billing.isOpening ? "Opening..." : "Manage billing"}
                 </DropdownMenuItem>
