@@ -8,8 +8,10 @@ export const polar = new Polar({
   server,
 });
 
-// Subscription statuses that keep paid access. past_due keeps it while Polar retries the card,
-// the same grace Dodo's on_hold gave.
+export const POLAR_API_BASE =
+  server === "production" ? "https://api.polar.sh" : "https://sandbox-api.polar.sh";
+
+// past_due keeps access while the failed payment is retried.
 const PAID_STATUSES = new Set(["active", "trialing", "past_due"]);
 
 export function grantsPaidAccess(status: string | undefined | null): boolean {

@@ -69,11 +69,11 @@ export function UpgradeDialog({
         body: JSON.stringify({ plan, period: "monthly" }),
       });
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error?.message ?? "Failed to start checkout.");
+      if (!response.ok) throw new Error(data.error?.message ?? "We couldn't start checkout. Please try again.");
 
       window.location.href = data.checkoutUrl;
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Failed to start checkout.");
+      toast.error(error instanceof Error ? error.message : "We couldn't start checkout. Please try again.");
       setLoadingPlan(null);
     }
   }

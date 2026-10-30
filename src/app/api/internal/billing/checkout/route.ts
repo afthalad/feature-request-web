@@ -4,6 +4,7 @@ import { adminDb } from "@/lib/firebase/admin";
 import { getUserFromAuthHeader } from "@/lib/auth/requireUser";
 import { polar, grantsPaidAccess } from "@/lib/polar/client";
 import { productIdFor } from "@/lib/polar/products";
+import { refreshSubscriptionFromPolar } from "@/lib/polar/refreshSubscription";
 import { ok, errorResponse } from "@/lib/api/response";
 
 const checkoutSchema = z.object({
@@ -23,28 +24,30 @@ export async function POST(req: NextRequest) {
   const { plan, period } = parsed.data;
   const productId = productIdFor(plan, period);
   if (!productId) {
-    return errorResponse("internal", "That plan isn't available for checkout yet.");
+    return errorResponse("internal", "This plan isn't available right now. Please try again later.");
   }
 
   const successUrl = `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?checkout=success&plan=${plan}`;
 
   try {
+    // Avoids a second subscription when a webhook was missed.
+    await refreshSubscriptionFromPolar(user.uid).catch((error) =>
+      console.error(`Failed to refresh Polar subscription for ${user.uid}`, error)
+    );
+
     const userData = (await adminDb.collection("users").doc(user.uid).get()).data();
     const hasPaidSubscription = grantsPaidAccess(userData?.subscriptionStatus);
 
-    // Subscribers from before the move to Polar are still billed by Dodo. A Polar checkout would
-    // charge them twice, so they stay on Dodo until that plan ends (Manage billing still opens
-    // Dodo's portal).
+    // Older subscribers stay on their existing plan until it ends.
     const isPaidPlan = userData?.plan === "starter" || userData?.plan === "pro";
     if (isPaidPlan && !userData?.polarCustomerId && userData?.dodoCustomerId) {
       return errorResponse(
         "validation_failed",
-        "Your current plan is billed through our previous provider. Manage or cancel it from Manage billing — you can switch here once it ends."
+        "You already have a paid plan. You can change or cancel it from Manage billing, and switch plans here once it ends."
       );
     }
 
-    // An existing Polar subscriber switches plan on the same subscription instead of starting a
-    // second one; Polar invoices the prorated difference straight away.
+    // Switches the existing subscription instead of starting a second one.
     if (hasPaidSubscription && userData?.polarCustomerId && userData?.subscriptionId) {
       if (userData.currentProductId === productId) {
         return errorResponse("validation_failed", "You're already on this plan.");
@@ -56,8 +59,6 @@ export async function POST(req: NextRequest) {
       return ok({ checkoutUrl: successUrl });
     }
 
-    // externalCustomerId ties the Polar customer to the Firebase uid, so webhooks map straight
-    // back to users/{uid} without storing a customer ID first.
     const checkout = await polar.checkouts.create({
       products: [productId],
       externalCustomerId: user.uid,
@@ -71,6 +72,6 @@ export async function POST(req: NextRequest) {
     return ok({ checkoutUrl: checkout.url });
   } catch (error) {
     console.error("Failed to start Polar checkout", error);
-    return errorResponse("internal", "Failed to start checkout.");
+    return errorResponse("internal", "We couldn't start checkout. Please try again.");
   }
 }

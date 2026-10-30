@@ -262,14 +262,14 @@ function useBillingPortal() {
       const data = await response.json();
       if (!response.ok)
         throw new Error(
-          data.error?.message ?? "Failed to open billing portal.",
+          data.error?.message ?? "We couldn't open your billing page. Please try again.",
         );
       window.location.href = data.portalUrl;
     } catch (error) {
       toast.error(
         error instanceof Error
           ? error.message
-          : "Failed to open billing portal.",
+          : "We couldn't open your billing page. Please try again.",
       );
       setIsOpening(false);
     }

@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { toast } from "sonner";
+import { auth } from "@/lib/firebase/client";
 import type { Plan } from "@/types";
 
 const POLL_INTERVAL_MS = 2000;
@@ -33,8 +34,15 @@ export function CheckoutStatusRefresher({ plan }: { plan: Plan }) {
       return;
     }
 
-    const timer = setTimeout(() => {
+    const timer = setTimeout(async () => {
       attemptsRef.current += 1;
+      const idToken = await auth.currentUser?.getIdToken().catch(() => undefined);
+      if (idToken) {
+        await fetch("/api/internal/billing/refresh", {
+          method: "POST",
+          headers: { Authorization: `Bearer ${idToken}` },
+        }).catch(() => undefined);
+      }
       router.refresh();
     }, POLL_INTERVAL_MS);
 

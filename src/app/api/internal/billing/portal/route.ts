@@ -2,12 +2,17 @@ import { NextRequest } from "next/server";
 import { adminDb } from "@/lib/firebase/admin";
 import { getUserFromAuthHeader } from "@/lib/auth/requireUser";
 import { polar } from "@/lib/polar/client";
+import { refreshSubscriptionFromPolar } from "@/lib/polar/refreshSubscription";
 import { dodo } from "@/lib/dodo/client";
 import { ok, errorResponse } from "@/lib/api/response";
 
 export async function POST(req: NextRequest) {
   const user = await getUserFromAuthHeader(req);
   if (!user) return errorResponse("unauthorized", "Sign in required.");
+
+  await refreshSubscriptionFromPolar(user.uid).catch((error) =>
+    console.error(`Failed to refresh Polar subscription for ${user.uid}`, error)
+  );
 
   const userData = (await adminDb.collection("users").doc(user.uid).get()).data();
   const returnUrl = `${process.env.NEXT_PUBLIC_APP_URL}/dashboard`;
@@ -30,8 +35,8 @@ export async function POST(req: NextRequest) {
     }
   } catch (error) {
     console.error("Failed to create customer portal session", error);
-    return errorResponse("internal", "Failed to open billing portal.");
+    return errorResponse("internal", "We couldn't open your billing page. Please try again.");
   }
 
-  return errorResponse("not_found", "No billing account found yet.");
+  return errorResponse("not_found", "You don't have a paid plan yet.");
 }
