@@ -300,7 +300,6 @@ function PlanItem({
           render={<Link href="/pricing" />}
           tooltip={plan === "free" ? "Upgrade" : "Plans"}
         >
-          <Sparkles className="text-primary" />
           <span>{plan === "free" ? "Upgrade" : "Plans"}</span>
           {badge}
         </SidebarMenuButton>
