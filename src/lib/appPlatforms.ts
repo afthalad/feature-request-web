@@ -3,7 +3,7 @@ import { Globe, type LucideIcon } from "lucide-react";
 import type { AppPlatformId } from "@/types";
 
 type PlatformIcon =
-  | { kind: "brand"; path: string; color: string }
+  | { kind: "brand"; path: string; color?: string }
   | { kind: "lucide"; Icon: LucideIcon };
 
 export interface AppPlatformDef {
@@ -13,7 +13,7 @@ export interface AppPlatformDef {
 }
 
 export const APP_PLATFORMS: AppPlatformDef[] = [
-  { id: "ios", label: "iOS", icon: { kind: "brand", path: siApple.path, color: `#${siApple.hex}` } },
+  { id: "ios", label: "iOS", icon: { kind: "brand", path: siApple.path } },
   {
     id: "android",
     label: "Android",
