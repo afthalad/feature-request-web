@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import Link from "next/link";
+import { useState, type ReactNode } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { BrandIcon } from "@/components/marketing/BrandIcon";
@@ -19,27 +20,56 @@ export const EMPTY_APP_ID_VALUES: AppIdValues = {
 
 const FIELD_BY_PLATFORM: Record<
   AppPlatformId,
-  { name: keyof AppIds; label: string; placeholder: string; hint: string }
+  { name: keyof AppIds; label: string; placeholder: string; help: ReactNode }
 > = {
   ios: {
     name: "iosBundleId",
     label: "iOS Bundle ID",
     placeholder: "com.yourcompany.app",
-    hint: "In Xcode: your target → General → Bundle Identifier.",
+    help: (
+      <>
+        <HelpLine tech="Flutter">
+          Open <Code>ios/Runner.xcworkspace</Code> in Xcode, then Runner → General → Bundle
+          Identifier.
+        </HelpLine>
+        <HelpLine tech="SwiftUI">In Xcode: your target → General → Bundle Identifier.</HelpLine>
+      </>
+    ),
   },
   android: {
     name: "androidPackageName",
     label: "Android package name",
     placeholder: "com.yourcompany.app",
-    hint: "The applicationId in your app's build.gradle.",
+    help: (
+      <>
+        <HelpLine tech="Flutter">
+          <Code>applicationId</Code> in <Code>android/app/build.gradle</Code>.
+        </HelpLine>
+        <HelpLine tech="Kotlin">
+          <Code>applicationId</Code> in <Code>app/build.gradle.kts</Code>.
+        </HelpLine>
+      </>
+    ),
   },
   web: {
     name: "webDomain",
     label: "Website domain",
     placeholder: "yourcompany.com",
-    hint: "The website where the board shows. Subdomains work too.",
+    help: <p>Just the domain, without https://. Subdomains work too.</p>,
   },
 };
+
+function Code({ children }: { children: ReactNode }) {
+  return <code className="bg-muted rounded px-1 py-0.5 font-mono text-[11px]">{children}</code>;
+}
+
+function HelpLine({ tech, children }: { tech: string; children: ReactNode }) {
+  return (
+    <p>
+      <span className="text-foreground font-medium">{tech}:</span> {children}
+    </p>
+  );
+}
 
 export function toAppIdValues(appIds: AppIds): AppIdValues {
   return {
@@ -126,13 +156,22 @@ export function AppIdFields({ value, onChange, disabled }: AppIdFieldsProps) {
               disabled={disabled}
               required
             />
-            <p className="text-muted-foreground text-xs">{field.hint}</p>
+            <div className="text-muted-foreground space-y-1 text-xs leading-5">{field.help}</div>
           </div>
         );
       })}
       {selected.length > 0 && (
         <p className="text-muted-foreground text-xs">
-          Your API key only works in the apps and websites you add here.
+          Your API key only works in the apps and websites you add here. Not sure where to find
+          an ID?{" "}
+          <Link
+            href="/docs/concepts#app-ids"
+            target="_blank"
+            className="text-foreground underline underline-offset-4"
+          >
+            See the guide
+          </Link>
+          .
         </p>
       )}
     </div>

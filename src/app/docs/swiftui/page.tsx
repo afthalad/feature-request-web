@@ -142,6 +142,10 @@ export default function SwiftUIDocsPage() {
           It&apos;s fine to put this key in your app. It can only do what the board does: list,
           vote, comment and suggest. It can&apos;t change your settings or read anything private.
         </P>
+        <P>
+          The key only works in the apps you added in the dashboard. Your Bundle ID is in Xcode
+          under your target → General. See <A href="/docs/concepts#app-ids">find your app IDs</A>.
+        </P>
         <Note>
           The SDK gives each device a random ID and keeps it in the Keychain. That is how it
           remembers votes without an account. Read more in <A href="/docs/concepts">How it works</A>.

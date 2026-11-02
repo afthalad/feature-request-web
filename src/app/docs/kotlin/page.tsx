@@ -175,6 +175,11 @@ export default function KotlinDocsPage() {
           It&apos;s fine to put this key in your app. It can only do what the board does: list,
           vote, comment and suggest. It can&apos;t change your settings or read anything private.
         </P>
+        <P>
+          The key only works in the apps you added in the dashboard. Your package name is the{" "}
+          <C>applicationId</C> in <C>app/build.gradle.kts</C>. See{" "}
+          <A href="/docs/concepts#app-ids">find your app IDs</A>.
+        </P>
         <Note>
           The SDK gives each device a random ID and saves it on the device. That is how it
           remembers votes without an account. Read more in <A href="/docs/concepts">How it works</A>.

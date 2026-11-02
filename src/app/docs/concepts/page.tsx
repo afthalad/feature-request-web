@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { CodeBlock } from "@/components/docs/CodeBlock";
 import {
   A,
   C,
@@ -17,11 +18,21 @@ export const metadata: Metadata = {
 
 const TOC = [
   { id: "the-pieces", label: "The pieces" },
+  { id: "app-ids", label: "Find your app IDs" },
   { id: "statuses", label: "Statuses" },
   { id: "who-is-voting", label: "Who is voting" },
   { id: "emails", label: "Emails" },
   { id: "limits", label: "Limits" },
 ];
+
+const GRADLE = `android {
+    defaultConfig {
+        applicationId = "com.yourcompany.app"
+    }
+}`;
+
+const FIND_IDS = `grep applicationId android/app/build.gradle*
+grep PRODUCT_BUNDLE_IDENTIFIER ios/Runner.xcodeproj/project.pbxproj`;
 
 export default function ConceptsPage() {
   return (
@@ -65,6 +76,58 @@ export default function ConceptsPage() {
             ],
           ]}
         />
+      </Section>
+
+      <Section id="app-ids" title="Find your app IDs">
+        <P>
+          Your API key only works in the apps and websites you add to your app in the dashboard.
+          Here is where to find each ID.
+        </P>
+        <Table
+          head={["You build with", "iOS Bundle ID", "Android package name"]}
+          rows={[
+            [
+              <strong key="f">Flutter</strong>,
+              <>
+                Open <C>ios/Runner.xcworkspace</C> in Xcode, then Runner → General → Bundle
+                Identifier.
+              </>,
+              <>
+                <C>applicationId</C> in <C>android/app/build.gradle</C> or{" "}
+                <C>build.gradle.kts</C>.
+              </>,
+            ],
+            [
+              <strong key="s">SwiftUI</strong>,
+              "In Xcode: your target → General → Bundle Identifier.",
+              "—",
+            ],
+            [
+              <strong key="k">Kotlin</strong>,
+              "—",
+              <>
+                <C>applicationId</C> in <C>app/build.gradle.kts</C>.
+              </>,
+            ],
+          ]}
+        />
+        <P>In a Flutter project, the Android package name looks like this:</P>
+        <CodeBlock code={GRADLE} filename="android/app/build.gradle.kts" />
+        <P>Or run this in your Flutter project folder to print both:</P>
+        <CodeBlock code={FIND_IDS} />
+        <P>
+          For iOS, use the line without <C>RunnerTests</C>. On iOS and Android the ID is often
+          the same, like <C>com.yourcompany.app</C>.
+        </P>
+        <Note title="Use applicationId, not namespace">
+          Android projects also have a <C>namespace</C>. It can be different. Fewchurs checks the{" "}
+          <C>applicationId</C>. Debug builds that add <C>.debug</C> to the end work too.
+        </Note>
+        <P>
+          <strong>Website:</strong> add just the domain, like <C>yourcompany.com</C>, without{" "}
+          <C>https://</C>. Subdomains like <C>app.yourcompany.com</C> work too, and{" "}
+          <C>localhost</C> always works while you build.
+        </P>
       </Section>
 
       <Section id="statuses" title="Statuses">
