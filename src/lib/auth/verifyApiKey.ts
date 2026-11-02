@@ -1,10 +1,13 @@
 import "server-only";
 import { adminDb } from "@/lib/firebase/admin";
 import { hashApiKey } from "@/lib/auth/apiKey";
+import { errorResponse } from "@/lib/api/response";
+import { getCallerId, isCallerAllowed, readAppIds, type AppIds } from "@/lib/apps/appIds";
 
 interface VerifiedApiKey {
   appId: string;
   ownerUid: string;
+  appIds: AppIds;
 }
 
 // Every SDK request starts with this lookup, so without a cache each one paid a Firestore read
@@ -21,7 +24,22 @@ const MAX_ENTRIES = 500;
 
 const cache = new Map<string, { value: VerifiedApiKey | null; expiresAt: number }>();
 
-export async function verifyApiKey(req: Request): Promise<VerifiedApiKey | null> {
+export async function requireApiKey(req: Request): Promise<VerifiedApiKey | Response> {
+  const apiKey = await verifyApiKey(req);
+  if (!apiKey) return errorResponse("invalid_key", "Invalid or inactive API key.");
+
+  const callerId = getCallerId(req);
+  if (!isCallerAllowed(callerId, apiKey.appIds)) {
+    return errorResponse(
+      "wrong_app",
+      `This API key is not set up for ${callerId}. Add it to your app in the Fewchurs dashboard.`
+    );
+  }
+
+  return apiKey;
+}
+
+async function verifyApiKey(req: Request): Promise<VerifiedApiKey | null> {
   const authHeader = req.headers.get("authorization") ?? "";
   const key = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : null;
   if (!key) return null;
@@ -33,11 +51,16 @@ export async function verifyApiKey(req: Request): Promise<VerifiedApiKey | null>
   const keyDoc = await adminDb.collection("apiKeys").doc(hash).get();
   const data = keyDoc.exists ? keyDoc.data() : undefined;
   const value: VerifiedApiKey | null = data?.active
-    ? { appId: data.appId, ownerUid: data.ownerUid }
+    ? { appId: data.appId, ownerUid: data.ownerUid, appIds: await getAppIds(data.appId) }
     : null;
 
   remember(hash, value);
   return value;
+}
+
+async function getAppIds(appId: string): Promise<AppIds> {
+  const appSnap = await adminDb.collection("apps").doc(appId).get();
+  return readAppIds(appSnap.data());
 }
 
 /** Drops a key from this instance's cache, for code that revokes, replaces or deletes keys. */

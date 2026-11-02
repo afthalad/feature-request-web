@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
     return errorResponse("limit_reached", limitCheck.message!);
   }
 
-  const { name, bundleId, platforms } = parsed.data;
+  const { name, iosBundleId, androidPackageName, webDomain } = parsed.data;
   const apiKey = generateApiKey();
   const appRef = adminDb.collection("apps").doc();
   const apiKeyRef = adminDb.collection("apiKeys").doc(hashApiKey(apiKey));
@@ -33,12 +33,13 @@ export async function POST(req: NextRequest) {
     batch.set(appRef, {
       ownerUid: user.uid,
       name,
-      bundleId,
+      iosBundleId: iosBundleId ?? null,
+      androidPackageName: androidPackageName ?? null,
+      webDomain: webDomain ?? null,
       slug,
       apiKeyPrefix: apiKeyDisplayPrefix(apiKey),
       notificationEmail: user.email ?? "",
       emailOnNewRequest: true,
-      platforms,
       featureCount: 0,
       createdAt: FieldValue.serverTimestamp(),
     });
@@ -60,12 +61,13 @@ export async function POST(req: NextRequest) {
           id: appRef.id,
           ownerUid: appData.ownerUid,
           name: appData.name,
-          bundleId: appData.bundleId,
+          iosBundleId: appData.iosBundleId,
+          androidPackageName: appData.androidPackageName,
+          webDomain: appData.webDomain,
           slug: appData.slug,
           apiKeyPrefix: appData.apiKeyPrefix,
           notificationEmail: appData.notificationEmail,
           emailOnNewRequest: appData.emailOnNewRequest,
-          platforms: appData.platforms ?? [],
           featureCount: appData.featureCount,
           createdAt: appData.createdAt.toDate().toISOString(),
         },

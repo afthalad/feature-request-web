@@ -4,7 +4,6 @@ import { createAppForOwner, listApps } from "@/lib/admin/apps";
 import { logAdminAction } from "@/lib/admin/audit";
 import { adminCreateAppSchema } from "@/lib/validation/schemas";
 import { ok, errorResponse } from "@/lib/api/response";
-import type { App } from "@/types";
 
 export async function GET(req: NextRequest) {
   const admin = await getAdminFromAuthHeader(req);
@@ -30,10 +29,7 @@ export async function POST(req: NextRequest) {
 
   let result;
   try {
-    result = await createAppForOwner({
-      ...parsed.data,
-      platforms: parsed.data.platforms as App["platforms"],
-    });
+    result = await createAppForOwner(parsed.data);
   } catch (error) {
     const message = error instanceof Error ? error.message : "Failed to create app.";
     return errorResponse("validation_failed", message);

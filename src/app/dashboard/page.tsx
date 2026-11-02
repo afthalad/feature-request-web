@@ -42,13 +42,14 @@ export default async function DashboardPage() {
         id: doc.id,
         ownerUid: data.ownerUid,
         name: data.name,
-        bundleId: data.bundleId,
+        iosBundleId: data.iosBundleId ?? null,
+        androidPackageName: data.androidPackageName ?? null,
+        webDomain: data.webDomain ?? null,
         slug: data.slug ?? "",
         apiKeyPrefix: data.apiKeyPrefix,
         notificationEmail: data.notificationEmail,
         emailOnNewRequest: data.emailOnNewRequest,
-        platforms: data.platforms ?? [],
-        featureCount: data.featureCount,
+                featureCount: data.featureCount,
         createdAt: data.createdAt.toDate().toISOString(),
         featuresLastViewedAt: data.featuresLastViewedAt
           ? data.featuresLastViewedAt.toDate().toISOString()

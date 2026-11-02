@@ -39,7 +39,8 @@ export default function DocsOverviewPage() {
           <Step title="Create an app">
             <P>
               <A href="/login">Sign in</A> and create an app in your dashboard. Each app gets its
-              own board.
+              own board. Add your iOS Bundle ID, Android package name or website domain. The API
+              key only works in those apps and websites.
             </P>
           </Step>
           <Step title="Copy your API key">

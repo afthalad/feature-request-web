@@ -4,7 +4,8 @@ import { adminDb } from "@/lib/firebase/admin";
 import { generateApiKey, hashApiKey, apiKeyDisplayPrefix } from "@/lib/auth/apiKey";
 import { forgetApiKey } from "@/lib/auth/verifyApiKey";
 import { generateUniqueSlug } from "@/lib/slug";
-import type { App, AppPlatformId } from "@/types";
+import { APP_ID_FIELDS } from "@/lib/apps/appIds";
+import type { App } from "@/types";
 
 interface ListAppsParams {
   limit: number;
@@ -18,13 +19,14 @@ function mapApp(doc: QueryDocumentSnapshot): App {
     id: doc.id,
     ownerUid: data.ownerUid,
     name: data.name,
-    bundleId: data.bundleId,
+    iosBundleId: data.iosBundleId ?? null,
+    androidPackageName: data.androidPackageName ?? null,
+    webDomain: data.webDomain ?? null,
     slug: data.slug ?? "",
     apiKeyPrefix: data.apiKeyPrefix,
     notificationEmail: data.notificationEmail,
     emailOnNewRequest: data.emailOnNewRequest,
-    platforms: data.platforms ?? [],
-    featureCount: data.featureCount,
+        featureCount: data.featureCount,
     createdAt: data.createdAt.toDate().toISOString(),
     disabled: data.disabled ?? false,
     disabledSlug: data.disabledSlug ?? null,
@@ -42,12 +44,13 @@ export async function listApps({
 
   if (search) {
     const term = search.trim();
-    const [bySlug, byBundleId] = await Promise.all([
-      appsRef.where("slug", "==", term).limit(limit).get(),
-      appsRef.where("bundleId", "==", term).limit(limit).get(),
-    ]);
+    const snapshots = await Promise.all(
+      ["slug", ...APP_ID_FIELDS].map((field) =>
+        appsRef.where(field, "==", term).limit(limit).get()
+      )
+    );
     const seen = new Map<string, QueryDocumentSnapshot>();
-    for (const doc of [...bySlug.docs, ...byBundleId.docs]) seen.set(doc.id, doc);
+    for (const doc of snapshots.flatMap((snapshot) => snapshot.docs)) seen.set(doc.id, doc);
     return { apps: [...seen.values()].map(mapApp), nextCursor: null };
   }
 
@@ -81,8 +84,9 @@ export async function updateApp(
 interface CreateAppForOwnerParams {
   ownerUid: string;
   name: string;
-  bundleId: string;
-  platforms: AppPlatformId[];
+  iosBundleId?: string | null;
+  androidPackageName?: string | null;
+  webDomain?: string | null;
   notificationEmail?: string;
 }
 
@@ -92,8 +96,9 @@ interface CreateAppForOwnerParams {
 export async function createAppForOwner({
   ownerUid,
   name,
-  bundleId,
-  platforms,
+  iosBundleId,
+  androidPackageName,
+  webDomain,
   notificationEmail,
 }: CreateAppForOwnerParams): Promise<{ app: App; apiKey: string }> {
   const ownerSnap = await adminDb.collection("users").doc(ownerUid).get();
@@ -108,12 +113,13 @@ export async function createAppForOwner({
   batch.set(appRef, {
     ownerUid,
     name,
-    bundleId,
+    iosBundleId: iosBundleId ?? null,
+    androidPackageName: androidPackageName ?? null,
+    webDomain: webDomain ?? null,
     slug,
     apiKeyPrefix: apiKeyDisplayPrefix(apiKey),
     notificationEmail: notificationEmail ?? ownerSnap.data()?.email ?? "",
     emailOnNewRequest: true,
-    platforms,
     featureCount: 0,
     createdAt: FieldValue.serverTimestamp(),
   });

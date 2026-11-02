@@ -6,6 +6,7 @@ import {
   ItemTitle,
 } from "@/components/ui/item";
 import { PlatformIcons } from "@/components/apps/PlatformIcons";
+import { listAppIds, listAppPlatforms } from "@/lib/apps/appIds";
 import type { App } from "@/types";
 
 export function AppCard({ app }: { app: App }) {
@@ -15,9 +16,9 @@ export function AppCard({ app }: { app: App }) {
         <ItemContent>
           <ItemTitle className="flex items-center gap-2">
             {app.name}
-            <PlatformIcons platforms={app.platforms} />
+            <PlatformIcons platforms={listAppPlatforms(app)} />
           </ItemTitle>
-          <ItemDescription>{app.bundleId}</ItemDescription>
+          <ItemDescription>{listAppIds(app).join(" · ")}</ItemDescription>
         </ItemContent>
 
         <div className="text-muted-foreground text-sm">

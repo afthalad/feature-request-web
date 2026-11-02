@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { verifyApiKey, getDeviceId } from "@/lib/auth/verifyApiKey";
+import { requireApiKey, getDeviceId } from "@/lib/auth/verifyApiKey";
 import { ok, errorResponse } from "@/lib/api/response";
 import { voteOnFeature, NotFoundError } from "@/lib/features/service";
 
@@ -22,8 +22,8 @@ async function handleVote(
   params: { featureId: string },
   action: "add" | "remove"
 ) {
-  const keyInfo = await verifyApiKey(req);
-  if (!keyInfo) return errorResponse("invalid_key", "Invalid or inactive API key.");
+  const keyInfo = await requireApiKey(req);
+  if (keyInfo instanceof Response) return keyInfo;
 
   const deviceId = getDeviceId(req);
   if (!deviceId) return errorResponse("missing_device_id", "X-Device-Id header is required.");

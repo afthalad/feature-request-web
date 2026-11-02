@@ -1,5 +1,5 @@
-import { siApple, siAndroid, siMacos } from "simple-icons";
-import { Monitor, Globe, type LucideIcon } from "lucide-react";
+import { siApple, siAndroid } from "simple-icons";
+import { Globe, type LucideIcon } from "lucide-react";
 import type { AppPlatformId } from "@/types";
 
 type PlatformIcon =
@@ -19,8 +19,6 @@ export const APP_PLATFORMS: AppPlatformDef[] = [
     label: "Android",
     icon: { kind: "brand", path: siAndroid.path, color: `#${siAndroid.hex}` },
   },
-  { id: "macos", label: "macOS", icon: { kind: "brand", path: siMacos.path, color: `#${siMacos.hex}` } },
-  { id: "desktop", label: "Desktop", icon: { kind: "lucide", Icon: Monitor } },
   { id: "web", label: "Web", icon: { kind: "lucide", Icon: Globe } },
 ];
 

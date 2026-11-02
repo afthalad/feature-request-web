@@ -10,9 +10,7 @@ export const FEATURE_STATUSES: FeatureStatus[] = [
 
 export type Plan = "free" | "starter" | "pro";
 
-export type AppPlatformId = "ios" | "android" | "macos" | "desktop" | "web";
-
-export const APP_PLATFORM_IDS: AppPlatformId[] = ["ios", "android", "macos", "desktop", "web"];
+export type AppPlatformId = "ios" | "android" | "web";
 
 export interface AppUser {
   email: string;
@@ -40,13 +38,14 @@ export interface App {
   id: string;
   ownerUid: string;
   name: string;
-  bundleId: string;
+  iosBundleId: string | null;
+  androidPackageName: string | null;
+  webDomain: string | null;
   slug: string;
   apiKeyPrefix: string;
   notificationEmail: string;
   emailOnNewRequest: boolean;
   hideVoteCounts?: boolean;
-  platforms: AppPlatformId[];
   featureCount: number;
   createdAt: string;
   disabled?: boolean;
@@ -161,7 +160,8 @@ export type ApiErrorCode =
   | "internal"
   | "unauthorized"
   | "forbidden"
-  | "limit_reached";
+  | "limit_reached"
+  | "wrong_app";
 
 export interface ApiErrorBody {
   error: {

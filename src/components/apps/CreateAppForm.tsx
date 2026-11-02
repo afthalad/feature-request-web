@@ -7,8 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { UpgradeDialog } from "@/components/billing/UpgradeDialog";
-import { PlatformPicker } from "@/components/apps/PlatformPicker";
-import type { ApiErrorBody, AppPlatformId } from "@/types";
+import { AppIdFields, EMPTY_APP_ID_VALUES, toAppIds } from "@/components/apps/AppIdFields";
+import { hasAppId } from "@/lib/apps/appIds";
+import type { ApiErrorBody } from "@/types";
 
 interface CreateAppFormProps {
   onCreated: (apiKey: string) => void;
@@ -16,10 +17,11 @@ interface CreateAppFormProps {
 
 export function CreateAppForm({ onCreated }: CreateAppFormProps) {
   const [name, setName] = useState("");
-  const [bundleId, setBundleId] = useState("");
-  const [platforms, setPlatforms] = useState<AppPlatformId[]>([]);
+  const [appIdValues, setAppIdValues] = useState(EMPTY_APP_ID_VALUES);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [limitMessage, setLimitMessage] = useState<string | null>(null);
+
+  const appIds = toAppIds(appIdValues);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -34,7 +36,7 @@ export function CreateAppForm({ onCreated }: CreateAppFormProps) {
           "Content-Type": "application/json",
           Authorization: `Bearer ${idToken}`,
         },
-        body: JSON.stringify({ name, bundleId, platforms }),
+        body: JSON.stringify({ name, ...appIds }),
       });
       const data: { apiKey?: string } & Partial<ApiErrorBody> = await response.json();
       if (!response.ok) {
@@ -66,22 +68,8 @@ export function CreateAppForm({ onCreated }: CreateAppFormProps) {
             required
           />
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="bundleId">Bundle ID</Label>
-          <Input
-            id="bundleId"
-            value={bundleId}
-            onChange={(event) => setBundleId(event.target.value)}
-            placeholder="com.yourcompany.app"
-            maxLength={200}
-            required
-          />
-        </div>
-        <div className="space-y-2">
-          <Label>Platforms (optional)</Label>
-          <PlatformPicker value={platforms} onChange={setPlatforms} disabled={isSubmitting} />
-        </div>
-        <Button type="submit" disabled={isSubmitting} className="w-full">
+        <AppIdFields value={appIdValues} onChange={setAppIdValues} disabled={isSubmitting} />
+        <Button type="submit" disabled={isSubmitting || !hasAppId(appIds)} className="w-full">
           {isSubmitting ? "Creating..." : "Create app"}
         </Button>
       </form>

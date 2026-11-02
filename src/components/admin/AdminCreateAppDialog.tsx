@@ -6,7 +6,8 @@ import { auth } from "@/lib/firebase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { PlatformPicker } from "@/components/apps/PlatformPicker";
+import { AppIdFields, EMPTY_APP_ID_VALUES, toAppIds } from "@/components/apps/AppIdFields";
+import { hasAppId } from "@/lib/apps/appIds";
 import {
   Dialog,
   DialogContent,
@@ -16,7 +17,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import type { AdminUser, App, AppPlatformId } from "@/types";
+import type { AdminUser, App } from "@/types";
 
 async function authedFetch(path: string, init?: RequestInit) {
   const idToken = await auth.currentUser?.getIdToken();
@@ -41,16 +42,16 @@ export function AdminCreateAppDialog({ onCreated }: AdminCreateAppDialogProps) {
   const [open, setOpen] = useState(false);
   const [ownerEmail, setOwnerEmail] = useState("");
   const [name, setName] = useState("");
-  const [bundleId, setBundleId] = useState("");
-  const [platforms, setPlatforms] = useState<AppPlatformId[]>([]);
+  const [appIdValues, setAppIdValues] = useState(EMPTY_APP_ID_VALUES);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   function reset() {
     setOwnerEmail("");
     setName("");
-    setBundleId("");
-    setPlatforms([]);
+    setAppIdValues(EMPTY_APP_ID_VALUES);
   }
+
+  const appIds = toAppIds(appIdValues);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -64,7 +65,7 @@ export function AdminCreateAppDialog({ onCreated }: AdminCreateAppDialogProps) {
 
       const { app } = await authedFetch("/api/admin/apps", {
         method: "POST",
-        body: JSON.stringify({ ownerUid: owner.uid, name, bundleId, platforms }),
+        body: JSON.stringify({ ownerUid: owner.uid, name, ...appIds }),
       });
 
       toast.success("App created");
@@ -110,26 +111,12 @@ export function AdminCreateAppDialog({ onCreated }: AdminCreateAppDialogProps) {
               required
             />
           </div>
-          <div className="space-y-1.5">
-            <Label htmlFor="bundleId">Bundle ID</Label>
-            <Input
-              id="bundleId"
-              value={bundleId}
-              onChange={(event) => setBundleId(event.target.value)}
-              placeholder="com.yourcompany.app"
-              maxLength={200}
-              required
-            />
-          </div>
-          <div className="space-y-1.5">
-            <Label>Platforms (optional)</Label>
-            <PlatformPicker value={platforms} onChange={setPlatforms} disabled={isSubmitting} />
-          </div>
+          <AppIdFields value={appIdValues} onChange={setAppIdValues} disabled={isSubmitting} />
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => setOpen(false)} disabled={isSubmitting}>
               Cancel
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
+            <Button type="submit" disabled={isSubmitting || !hasAppId(appIds)}>
               {isSubmitting ? "Creating..." : "Create app"}
             </Button>
           </DialogFooter>

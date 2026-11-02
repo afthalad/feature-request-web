@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { AdminAppSettingsForm } from "@/components/admin/AdminAppSettingsForm";
 import { AdminFeatureList } from "@/components/admin/AdminFeatureList";
 import { LinkPendingSpinner } from "@/components/admin/LinkPendingSpinner";
+import { listAppIds } from "@/lib/apps/appIds";
 
 const FEATURES_PAGE_SIZE = 20;
 
@@ -36,7 +37,7 @@ export default async function AdminAppDetailPage({
             <LinkPendingSpinner />
           </Link>
           {" · "}
-          {app.bundleId}
+          {listAppIds(app).join(" · ")}
         </p>
       </div>
 

@@ -8,6 +8,7 @@ import { FeatureList } from "@/components/features/FeatureList";
 import { UpgradeBanner } from "@/components/billing/UpgradeBanner";
 import { ExportReportButton } from "@/components/apps/ExportReportButton";
 import { PlatformIcons } from "@/components/apps/PlatformIcons";
+import { listAppIds, listAppPlatforms, readAppIds } from "@/lib/apps/appIds";
 import { buttonVariants } from "@/components/ui/button";
 import { PLAN_LIMITS } from "@/lib/plans/limits";
 import type { Plan } from "@/types";
@@ -65,9 +66,9 @@ export default async function AppPage({
         <div className="min-w-0">
           <h1 className="flex items-center gap-2 truncate text-xl font-semibold">
             {app.name}
-            <PlatformIcons platforms={app.platforms ?? []} />
+            <PlatformIcons platforms={listAppPlatforms(readAppIds(app))} />
           </h1>
-          <p className="text-muted-foreground text-sm">{app.bundleId}</p>
+          <p className="text-muted-foreground text-sm">{listAppIds(readAppIds(app)).join(" · ")}</p>
         </div>
         <div className="flex flex-wrap gap-2">
           {app.slug && hasPublicBoard && (

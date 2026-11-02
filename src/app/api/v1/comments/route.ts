@@ -1,12 +1,12 @@
 import { NextRequest } from "next/server";
-import { verifyApiKey, getDeviceId } from "@/lib/auth/verifyApiKey";
+import { requireApiKey, getDeviceId } from "@/lib/auth/verifyApiKey";
 import { createSdkCommentSchema } from "@/lib/validation/schemas";
 import { ok, errorResponse } from "@/lib/api/response";
 import { createComment, RateLimitError, NotFoundError } from "@/lib/comments/service";
 
 export async function POST(req: NextRequest) {
-  const keyInfo = await verifyApiKey(req);
-  if (!keyInfo) return errorResponse("invalid_key", "Invalid or inactive API key.");
+  const keyInfo = await requireApiKey(req);
+  if (keyInfo instanceof Response) return keyInfo;
 
   const deviceId = getDeviceId(req);
   if (!deviceId) return errorResponse("missing_device_id", "X-Device-Id header is required.");

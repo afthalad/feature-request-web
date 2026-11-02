@@ -35,7 +35,7 @@ export function ApiKeyDialog({ apiKey, onClose }: ApiKeyDialogProps) {
         <DialogHeader>
           <DialogTitle>Your API key</DialogTitle>
           <DialogDescription>
-            Copy this key now and add it to your iOS app. You won&apos;t be able to see it
+            Copy this key now and add it to your app. You won&apos;t be able to see it
             again.
           </DialogDescription>
         </DialogHeader>

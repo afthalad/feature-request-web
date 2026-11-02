@@ -8,6 +8,7 @@ import { PublicBoardSettings } from "@/components/apps/PublicBoardSettings";
 import { DeleteAppSection } from "@/components/apps/DeleteAppSection";
 import { Separator } from "@/components/ui/separator";
 import { getUserPlan, PLAN_LIMITS } from "@/lib/plans/limits";
+import { readAppIds } from "@/lib/apps/appIds";
 
 export default async function AppSettingsPage({
   params,
@@ -34,7 +35,7 @@ export default async function AppSettingsPage({
   return (
     <div className="max-w-lg space-y-8">
       <h1 className="text-xl font-semibold">Settings</h1>
-      <AppDetailsForm appId={appId} initialName={app.name} initialBundleId={app.bundleId} />
+      <AppDetailsForm appId={appId} initialName={app.name} initialAppIds={readAppIds(app)} />
       <Separator />
       <ApiKeySection appId={appId} apiKeyPrefix={app.apiKeyPrefix} />
       <Separator />
@@ -49,7 +50,6 @@ export default async function AppSettingsPage({
         appId={appId}
         initialNotificationEmail={app.notificationEmail}
         initialEmailOnNewRequest={app.emailOnNewRequest}
-        initialPlatforms={app.platforms ?? []}
       />
       <Separator />
       <DeleteAppSection appId={appId} appName={app.name} featureCount={app.featureCount ?? 0} />

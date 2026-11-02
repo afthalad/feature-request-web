@@ -1,9 +1,42 @@
 import { z } from "zod";
-import { APP_PLATFORM_IDS } from "@/types";
+import { hasAppId } from "@/lib/apps/appIds";
 
-const platformsSchema = z
-  .array(z.enum(APP_PLATFORM_IDS as [string, ...string[]]))
-  .max(APP_PLATFORM_IDS.length);
+const iosBundleIdSchema = z
+  .string()
+  .trim()
+  .max(155)
+  .regex(/^[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)+$/, "Enter a valid iOS Bundle ID, like com.company.app.");
+
+const androidPackageNameSchema = z
+  .string()
+  .trim()
+  .max(150)
+  .regex(
+    /^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)+$/,
+    "Enter a valid Android package name, like com.company.app."
+  );
+
+const webDomainSchema = z
+  .string()
+  .trim()
+  .toLowerCase()
+  .transform((value) => value.replace(/^https?:\/\//, "").replace(/[/:].*$/, ""))
+  .pipe(
+    z
+      .string()
+      .max(253)
+      .regex(/^([a-z0-9-]+\.)+[a-z]{2,}$/, "Enter a valid website domain, like company.com.")
+  );
+
+const appIdFields = {
+  iosBundleId: iosBundleIdSchema.nullable().optional(),
+  androidPackageName: androidPackageNameSchema.nullable().optional(),
+  webDomain: webDomainSchema.nullable().optional(),
+};
+
+const APP_ID_REQUIRED = {
+  message: "Add at least one: iOS Bundle ID, Android package name or website domain.",
+};
 
 export const createFeatureSchema = z.object({
   title: z.string().trim().min(3).max(100),
@@ -12,11 +45,12 @@ export const createFeatureSchema = z.object({
   isSubscriber: z.boolean().optional().default(false),
 });
 
-export const createAppSchema = z.object({
-  name: z.string().trim().min(1).max(100),
-  bundleId: z.string().trim().min(1).max(200),
-  platforms: platformsSchema.optional().default([]),
-});
+export const createAppSchema = z
+  .object({
+    name: z.string().trim().min(1).max(100),
+    ...appIdFields,
+  })
+  .refine(hasAppId, APP_ID_REQUIRED);
 
 export const slugSchema = z
   .string()
@@ -28,11 +62,10 @@ export const slugSchema = z
 
 export const updateAppSchema = z.object({
   name: z.string().trim().min(1).max(100).optional(),
-  bundleId: z.string().trim().min(1).max(200).optional(),
+  ...appIdFields,
   notificationEmail: z.string().trim().email().optional(),
   emailOnNewRequest: z.boolean().optional(),
   hideVoteCounts: z.boolean().optional(),
-  platforms: platformsSchema.optional(),
   slug: slugSchema.optional(),
 });
 
@@ -86,13 +119,14 @@ export const adminUpdateFeatureSchema = z.object({
   status: z.enum(["open", "planned", "in_progress", "done", "declined"]).optional(),
 });
 
-export const adminCreateAppSchema = z.object({
-  ownerUid: z.string().trim().min(1),
-  name: z.string().trim().min(1).max(100),
-  bundleId: z.string().trim().min(1).max(200),
-  platforms: platformsSchema.optional().default([]),
-  notificationEmail: z.string().trim().email().optional(),
-});
+export const adminCreateAppSchema = z
+  .object({
+    ownerUid: z.string().trim().min(1),
+    name: z.string().trim().min(1).max(100),
+    ...appIdFields,
+    notificationEmail: z.string().trim().email().optional(),
+  })
+  .refine(hasAppId, APP_ID_REQUIRED);
 
 export const adminCreateFeatureSchema = z.object({
   title: z.string().trim().min(3).max(100),

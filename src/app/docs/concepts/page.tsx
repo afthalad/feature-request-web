@@ -43,7 +43,8 @@ export default function ConceptsPage() {
               <strong key="k">API key</strong>,
               <>
                 A secret-looking string that starts with <C>fr_live_</C>. It
-                tells Fewchurs which app a request is for.
+                tells Fewchurs which app a request is for. It only works in the apps and
+                websites you added: your iOS Bundle ID, Android package name or website domain.
               </>,
             ],
             [

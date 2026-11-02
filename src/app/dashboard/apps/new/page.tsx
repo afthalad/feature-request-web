@@ -21,7 +21,7 @@ export default function NewAppPage() {
       <div className="space-y-1">
         <h1 className="text-xl font-semibold">New app</h1>
         <p className="text-muted-foreground text-sm">
-          Create an app to get an API key for your iOS SDK.
+          Create an app to get an API key for your app or website.
         </p>
       </div>
       <CreateAppForm onCreated={setApiKey} />

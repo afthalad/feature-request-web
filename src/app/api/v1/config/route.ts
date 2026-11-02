@@ -1,12 +1,12 @@
 import { NextRequest } from "next/server";
 import { adminDb } from "@/lib/firebase/admin";
-import { verifyApiKey } from "@/lib/auth/verifyApiKey";
-import { ok, errorResponse } from "@/lib/api/response";
+import { requireApiKey } from "@/lib/auth/verifyApiKey";
+import { ok } from "@/lib/api/response";
 import { PLAN_LIMITS, type Plan } from "@/lib/plans/limits";
 
 export async function GET(req: NextRequest) {
-  const keyInfo = await verifyApiKey(req);
-  if (!keyInfo) return errorResponse("invalid_key", "Invalid or inactive API key.");
+  const keyInfo = await requireApiKey(req);
+  if (keyInfo instanceof Response) return keyInfo;
 
   const [userSnap, appSnap] = await Promise.all([
     adminDb.collection("users").doc(keyInfo.ownerUid).get(),

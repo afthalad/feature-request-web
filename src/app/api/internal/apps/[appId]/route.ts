@@ -5,6 +5,7 @@ import { updateAppSchema } from "@/lib/validation/schemas";
 import { slugExists } from "@/lib/slug";
 import { ok, errorResponse } from "@/lib/api/response";
 import { softDeleteApp } from "@/lib/apps/lifecycle";
+import { APP_ID_FIELDS, hasAppId, readAppIds } from "@/lib/apps/appIds";
 
 export async function PATCH(
   req: NextRequest,
@@ -27,6 +28,14 @@ export async function PATCH(
   }
   if (appSnap.data()!.ownerUid !== user.uid) {
     return errorResponse("forbidden", "You do not own this app.");
+  }
+
+  const changesAppIds = APP_ID_FIELDS.some((field) => field in parsed.data);
+  if (changesAppIds && !hasAppId({ ...readAppIds(appSnap.data()), ...parsed.data })) {
+    return errorResponse(
+      "validation_failed",
+      "Keep at least one: iOS Bundle ID, Android package name or website domain."
+    );
   }
 
   if (parsed.data.slug && (await slugExists(parsed.data.slug, appId))) {

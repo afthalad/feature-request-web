@@ -125,6 +125,7 @@ export default function ApiDocsPage() {
             [<C key="a">Authorization</C>, "Always", <>Your API key, like <C>Bearer fr_live_xxx</C>.</>],
             [<C key="d">X-Device-Id</C>, "Almost always", <>A random ID for this device or user. Make it once, save it, reuse it. See <A href="/docs/concepts#who-is-voting">who is voting</A>.</>],
             [<C key="c">Content-Type</C>, "When sending a body", <C key="cv">application/json</C>],
+            [<C key="i">X-Fewchurs-App-Id</C>, "From apps and servers", <>Your iOS Bundle ID, Android package name or website domain. It must be one you added to the app. Browsers send <C>Origin</C> instead, and that is checked the same way.</>],
           ]}
         />
       </Section>
@@ -142,6 +143,7 @@ export default function ApiDocsPage() {
             [<C key="5">limit_reached</C>, "402", "Your plan's limit was reached."],
             [<C key="6">rate_limited</C>, "429", "This device hit its daily limit. Try again tomorrow."],
             [<C key="7">internal</C>, "500", "Something broke on our side. Try again."],
+            [<C key="8">wrong_app</C>, "403", "This app or website isn't added to the API key's app. Add it in your app settings."],
           ]}
         />
       </Section>

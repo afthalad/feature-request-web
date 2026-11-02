@@ -18,6 +18,7 @@ import {
 import { EmptyState } from "@/components/ui/empty-state";
 import { AdminCreateAppDialog } from "@/components/admin/AdminCreateAppDialog";
 import { LinkPendingSpinner } from "@/components/admin/LinkPendingSpinner";
+import { listAppIds } from "@/lib/apps/appIds";
 import type { App } from "@/types";
 
 const PAGE_SIZE = 20;
@@ -97,7 +98,7 @@ export function AppList({ initialApps, initialCursor }: AppListProps) {
             <TableHeader>
               <TableRow>
                 <TableHead>Name</TableHead>
-                <TableHead>Bundle ID</TableHead>
+                <TableHead>App IDs</TableHead>
                 <TableHead>Features</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Created</TableHead>
@@ -115,7 +116,7 @@ export function AppList({ initialApps, initialCursor }: AppListProps) {
                       <LinkPendingSpinner />
                     </Link>
                   </TableCell>
-                  <TableCell className="text-muted-foreground">{app.bundleId}</TableCell>
+                  <TableCell className="text-muted-foreground">{listAppIds(app).join(" · ")}</TableCell>
                   <TableCell>{app.featureCount}</TableCell>
                   <TableCell>
                     {app.deleted ? (

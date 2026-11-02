@@ -11,6 +11,7 @@ const STATUS_BY_CODE: Record<ApiErrorCode, number> = {
   unauthorized: 401,
   forbidden: 403,
   limit_reached: 402,
+  wrong_app: 403,
 };
 
 export function ok<T>(data: T, status = 200) {
