@@ -262,7 +262,8 @@ function useBillingPortal() {
       const data = await response.json();
       if (!response.ok)
         throw new Error(
-          data.error?.message ?? "We couldn't open your billing page. Please try again.",
+          data.error?.message ??
+            "We couldn't open your billing page. Please try again.",
         );
       window.location.href = data.portalUrl;
     } catch (error) {
@@ -314,7 +315,7 @@ function PlanItem({
         tooltip="Billing"
       >
         <CreditCard />
-        <span>{billing.isOpening ? "Opening..." : "Billing"}</span>
+        <span>{billing.isOpening ? "Opening...." : "Billing"}</span>
         {badge}
       </SidebarMenuButton>
     </SidebarMenuItem>
