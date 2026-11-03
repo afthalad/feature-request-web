@@ -114,7 +114,7 @@ export function FeatureRow({
     showTranslation && translation ? translation.description : feature.description;
 
   return (
-    <div className="bg-muted/50 flex items-start gap-3 rounded-lg px-4 py-4">
+    <div className="bg-surface flex items-start gap-3 rounded-lg px-4 py-4">
       <div className="self-center">
         <FeatureVoteIndicator status={feature.status} upvoteCount={feature.upvoteCount} />
       </div>

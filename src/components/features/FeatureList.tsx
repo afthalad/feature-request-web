@@ -246,7 +246,7 @@ export function FeatureList({
           {[0, 1, 2].map((row) => (
             <div
               key={row}
-              className="bg-muted/50 flex items-start gap-3 rounded-lg px-4 py-4"
+              className="bg-surface flex items-start gap-3 rounded-lg px-4 py-4"
             >
               <Skeleton className="size-10 shrink-0 rounded-lg" />
               <div className="flex-1 space-y-2">

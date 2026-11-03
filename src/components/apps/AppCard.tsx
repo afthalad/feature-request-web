@@ -11,7 +11,7 @@ export function AppCard({ app }: { app: App }) {
   return (
     <Link
       href={`/dashboard/apps/${app.id}`}
-      className="bg-muted/50 hover:bg-muted group flex items-center gap-4 rounded-xl p-4 transition-colors"
+      className="bg-surface hover:bg-surface-hover group flex items-center gap-4 rounded-xl p-4 transition-colors"
     >
       <div className="bg-primary/15 text-primary flex size-11 shrink-0 items-center justify-center rounded-lg text-lg font-semibold">
         {app.name.charAt(0).toUpperCase()}

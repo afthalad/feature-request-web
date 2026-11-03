@@ -6,6 +6,8 @@
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-be-vietnam-pro);
   --font-mono: var(--font-geist-mono);
@@ -56,6 +58,8 @@
   --radius: 0.625rem;
 
   --background: oklch(1 0 0);
+  --surface: oklch(0 0 0 / 5%);
+  --surface-hover: oklch(0 0 0 / 8%);
   --foreground: oklch(0.22 0.005 60);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.22 0.005 60);
@@ -103,6 +107,8 @@
 
 .dark {
   --background: oklch(0.16 0 0);
+  --surface: oklch(1 0 0 / 5%);
+  --surface-hover: oklch(1 0 0 / 9%);
   --foreground: oklch(0.97 0 0);
   --card: oklch(0.2 0 0);
   --card-foreground: oklch(0.97 0 0);

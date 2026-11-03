@@ -15,7 +15,7 @@ interface LockedFeatureRowProps {
  */
 export function LockedFeatureRow({ feature, appName }: LockedFeatureRowProps) {
   return (
-    <div className="bg-muted/50 flex items-start gap-3 rounded-lg px-4 py-4">
+    <div className="bg-surface flex items-start gap-3 rounded-lg px-4 py-4">
       <div className="self-center opacity-60">
         <FeatureVoteIndicator
           status={feature.status}

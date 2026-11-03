@@ -26,7 +26,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             <ThemeToggle />
           </header>
           {/* Borderless admin: cards drop their outline and sit on a soft fill instead. */}
-          <main className="mx-auto w-full max-w-[1100px] flex-1 px-4 pt-2 pb-10 [&_[data-slot=card]]:bg-muted/40 [&_[data-slot=card]]:ring-0">
+          <main className="mx-auto w-full max-w-[1100px] flex-1 px-4 pt-2 pb-10 [&_[data-slot=card]]:bg-surface [&_[data-slot=card]]:ring-0">
             {children}
           </main>
         </SidebarInset>

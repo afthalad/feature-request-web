@@ -134,7 +134,7 @@ export function AppIdFields({ value, onChange, disabled, maxPlatforms }: AppIdFi
                   "inline-flex h-9 items-center gap-1.5 rounded-full px-3.5 text-sm transition-colors disabled:opacity-50",
                   isSelected
                     ? "bg-primary/15 text-foreground"
-                    : "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground"
+                    : "bg-surface text-muted-foreground hover:bg-surface-hover hover:text-foreground"
                 )}
               >
                 {icon.kind === "brand" ? (
@@ -169,7 +169,7 @@ export function AppIdFields({ value, onChange, disabled, maxPlatforms }: AppIdFi
               required
             />
             {openHelp === id ? (
-              <div className="text-muted-foreground bg-muted/50 space-y-1 rounded-lg p-3 text-xs leading-5">
+              <div className="text-muted-foreground bg-surface space-y-1 rounded-lg p-3 text-xs leading-5">
                 {field.help}
                 <Link
                   href="/docs/concepts#app-ids"

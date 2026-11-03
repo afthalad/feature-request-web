@@ -243,7 +243,7 @@ export function AdminFeatureDetail({
             value={description}
             onChange={(event) => setDescription(event.target.value)}
             rows={4}
-            className="bg-muted/50 focus-visible:ring-ring/50 w-full min-w-0 rounded-lg px-2.5 py-1.5 text-base outline-none transition-colors focus-visible:ring-3 md:text-sm"
+            className="bg-surface focus-visible:ring-ring/50 w-full min-w-0 rounded-lg px-2.5 py-1.5 text-base outline-none transition-colors focus-visible:ring-3 md:text-sm"
           />
         </div>
         <div className="flex items-end gap-4">
@@ -306,7 +306,7 @@ export function AdminFeatureDetail({
               <li
                 key={comment.id}
                 className={cn(
-                  "flex items-start justify-between gap-3 bg-muted/40 rounded-lg p-3 text-sm",
+                  "flex items-start justify-between gap-3 bg-surface rounded-lg p-3 text-sm",
                   comment.isDeleted && "opacity-50"
                 )}
               >
@@ -324,7 +324,7 @@ export function AdminFeatureDetail({
                         onChange={(event) => setEditingText(event.target.value)}
                         rows={2}
                         maxLength={1000}
-                        className="bg-muted/50 focus-visible:ring-ring/50 w-full min-w-0 rounded-lg px-2.5 py-1.5 text-sm outline-none transition-colors focus-visible:ring-3"
+                        className="bg-surface focus-visible:ring-ring/50 w-full min-w-0 rounded-lg px-2.5 py-1.5 text-sm outline-none transition-colors focus-visible:ring-3"
                       />
                       <div className="flex gap-2">
                         <Button size="sm" onClick={() => handleSaveComment(comment.id)} disabled={isSavingComment}>
@@ -371,7 +371,7 @@ export function AdminFeatureDetail({
             rows={2}
             maxLength={1000}
             required
-            className="bg-muted/50 focus-visible:ring-ring/50 w-full min-w-0 rounded-lg px-2.5 py-1.5 text-sm outline-none transition-colors focus-visible:ring-3"
+            className="bg-surface focus-visible:ring-ring/50 w-full min-w-0 rounded-lg px-2.5 py-1.5 text-sm outline-none transition-colors focus-visible:ring-3"
           />
           <Button type="submit" size="sm" disabled={isPostingComment || !newCommentText.trim()}>
             {isPostingComment ? "Posting..." : "Post comment"}
@@ -386,7 +386,7 @@ export function AdminFeatureDetail({
         ) : (
           <ul className="space-y-2">
             {followers.map((follower) => (
-              <li key={follower.id} className="flex items-center justify-between gap-3 bg-muted/40 rounded-lg p-3 text-sm">
+              <li key={follower.id} className="flex items-center justify-between gap-3 bg-surface rounded-lg p-3 text-sm">
                 <div className="min-w-0">
                   <p className="truncate font-medium">{follower.email}</p>
                   <p className="text-muted-foreground text-xs">Following since {formatDate(follower.createdAt)}</p>

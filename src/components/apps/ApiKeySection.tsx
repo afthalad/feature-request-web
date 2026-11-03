@@ -14,7 +14,7 @@ export function ApiKeySection({ appId, apiKeyPrefix }: ApiKeySectionProps) {
 
   return (
     <div className="flex items-center gap-2">
-      <code className="bg-muted/50 text-muted-foreground flex h-10 min-w-0 flex-1 items-center rounded-lg px-3 text-sm">
+      <code className="bg-surface text-muted-foreground flex h-10 min-w-0 flex-1 items-center rounded-lg px-3 text-sm">
         {apiKeyPrefix}...
       </code>
       <RegenerateKeyDialog appId={appId} onRegenerated={setNewApiKey} />
