@@ -20,7 +20,7 @@ export default async function AdminAppDetailPage({
   // run concurrently instead of paying two sequential Firestore round trips.
   const [app, { features, nextCursor }] = await Promise.all([
     getApp(appId),
-    listFeaturesForOwner({ appId, tab: "new", limit: FEATURES_PAGE_SIZE, cursor: null }),
+    listFeaturesForOwner({ appId, status: "all", sort: "newest", limit: FEATURES_PAGE_SIZE, cursor: null }),
   ]);
   if (!app) notFound();
 

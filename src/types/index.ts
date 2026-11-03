@@ -75,6 +75,8 @@ export interface Feature {
   authorDeviceId: string;
   authorIsSubscriber: boolean;
   platform: AppPlatformId | null;
+  /** Language the request was written in, detected the first time the owner lists it. */
+  lang: string | null;
   translation: FeatureTranslation | null;
   createdAt: string;
   updatedAt: string;

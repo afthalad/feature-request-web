@@ -3,6 +3,7 @@ import { adminDb } from "@/lib/firebase/admin";
 import { getUserFromAuthHeader } from "@/lib/auth/requireUser";
 import { listFeaturesForOwner } from "@/lib/features/service";
 import { ok, errorResponse } from "@/lib/api/response";
+import { isAppPlatformId } from "@/lib/apps/appIds";
 
 export async function GET(
   req: NextRequest,
@@ -22,14 +23,13 @@ export async function GET(
   }
 
   const { searchParams } = new URL(req.url);
-  const tabParam = searchParams.get("tab");
-  // "all" is every request, newest first: the service's "new" listing.
-  const tab =
-    tabParam === "all"
-      ? "new"
-      : tabParam === "top" || tabParam === "approved"
-        ? tabParam
-        : "pending";
+  const statusParam = searchParams.get("status");
+  const status = statusParam === "pending" || statusParam === "approved" ? statusParam : "all";
+  const sortParam = searchParams.get("sort");
+  const sort = sortParam === "oldest" || sortParam === "top" ? sortParam : "newest";
+  const paidOnly = searchParams.get("paid") === "true";
+  const platformParam = searchParams.get("platform");
+  const platform = isAppPlatformId(platformParam) ? platformParam : null;
   const limit = Math.min(Math.max(Number(searchParams.get("limit")) || 20, 1), 100);
   const cursor = searchParams.get("cursor");
 
@@ -37,6 +37,15 @@ export async function GET(
   const userPlan = userSnap.data()?.plan;
   const plan = userPlan === "pro" || userPlan === "starter" ? userPlan : "free";
 
-  const result = await listFeaturesForOwner({ appId, tab, limit, cursor, plan });
+  const result = await listFeaturesForOwner({
+    appId,
+    status,
+    sort,
+    paidOnly,
+    platform,
+    limit,
+    cursor,
+    plan,
+  });
   return ok(result);
 }

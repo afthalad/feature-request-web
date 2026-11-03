@@ -71,6 +71,7 @@ export async function getFeature(appId: string, featureId: string): Promise<Feat
     authorDeviceId: data.authorDeviceId,
     authorIsSubscriber: data.authorIsSubscriber ?? false,
     platform: data.platform ?? null,
+    lang: data.lang ?? null,
     translation: data.translation ?? null,
     createdAt: data.createdAt.toDate().toISOString(),
     updatedAt: data.updatedAt.toDate().toISOString(),

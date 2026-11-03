@@ -5,16 +5,51 @@ import Link from "next/link";
 import { Inbox, Loader2Icon } from "lucide-react";
 import { auth } from "@/lib/firebase/client";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
 import { FeatureRow } from "@/components/features/FeatureRow";
 import { LockedFeatureRow } from "@/components/features/LockedFeatureRow";
 import { UpgradeBanner } from "@/components/billing/UpgradeBanner";
-import type { Feature, FeatureStatus } from "@/types";
+import { APP_PLATFORM_MAP } from "@/lib/appPlatforms";
+import type { AppPlatformId, Feature, FeatureStatus } from "@/types";
 
-type BoardTab = "all" | "top" | "pending" | "approved";
+type StatusFilter = "all" | "pending" | "approved";
+type SortOrder = "newest" | "oldest" | "top";
+type AuthorFilter = "everyone" | "paid";
+
+interface Filters {
+  status: StatusFilter;
+  sort: SortOrder;
+  author: AuthorFilter;
+  platform: AppPlatformId | "all";
+}
+
 const PAGE_SIZE = 20;
+const DEFAULT_FILTERS: Filters = {
+  status: "all",
+  sort: "newest",
+  author: "everyone",
+  platform: "all",
+};
+
+const SORT_LABEL: Record<SortOrder, string> = {
+  newest: "Newest first",
+  oldest: "Oldest first",
+  top: "Most votes",
+};
+
+const AUTHOR_LABEL: Record<AuthorFilter, string> = {
+  everyone: "Everyone",
+  paid: "Paid users",
+};
 
 interface FeatureListProps {
   appId: string;
@@ -23,6 +58,7 @@ interface FeatureListProps {
   initialCursor: string | null;
   initialHiddenCount: number;
   newSinceIso: string | null;
+  platforms: AppPlatformId[];
 }
 
 export function FeatureList({
@@ -32,17 +68,22 @@ export function FeatureList({
   initialCursor,
   initialHiddenCount,
   newSinceIso,
+  platforms,
 }: FeatureListProps) {
-  const [tab, setTab] = useState<BoardTab>("all");
+  const [filters, setFilters] = useState(DEFAULT_FILTERS);
   const [features, setFeatures] = useState(initialFeatures);
   const [cursor, setCursor] = useState(initialCursor);
   const [hiddenCount, setHiddenCount] = useState(initialHiddenCount);
   const [isLoading, setIsLoading] = useState(false);
   const [isSwitchingTab, setIsSwitchingTab] = useState(false);
   const requestIdRef = useRef(0);
+  const isFiltered =
+    filters.status !== "all" ||
+    filters.author !== "everyone" ||
+    filters.platform !== "all";
 
   async function fetchPage(
-    boardTab: BoardTab,
+    pageFilters: Filters,
     cursorParam: string | null,
     append: boolean,
   ) {
@@ -52,9 +93,13 @@ export function FeatureList({
     try {
       const idToken = await auth.currentUser?.getIdToken();
       const params = new URLSearchParams({
-        tab: boardTab,
+        status: pageFilters.status,
+        sort: pageFilters.sort,
         limit: String(PAGE_SIZE),
       });
+      if (pageFilters.author === "paid") params.set("paid", "true");
+      if (pageFilters.platform !== "all")
+        params.set("platform", pageFilters.platform);
       if (cursorParam) params.set("cursor", cursorParam);
 
       const response = await fetch(
@@ -83,14 +128,15 @@ export function FeatureList({
     }
   }
 
-  function handleTabChange(nextTab: BoardTab) {
-    setTab(nextTab);
-    fetchPage(nextTab, null, false);
+  function handleFilterChange(change: Partial<Filters>) {
+    const nextFilters = { ...filters, ...change };
+    setFilters(nextFilters);
+    fetchPage(nextFilters, null, false);
   }
 
   function handleLoadMore() {
     if (!cursor) return;
-    fetchPage(tab, cursor, true);
+    fetchPage(filters, cursor, true);
   }
 
   function handleStatusChange(featureId: string, status: FeatureStatus) {
@@ -113,17 +159,80 @@ export function FeatureList({
 
   return (
     <div className="space-y-4">
-      <Tabs
-        value={tab}
-        onValueChange={(value) => handleTabChange(value as BoardTab)}
-      >
-        <TabsList>
-          <TabsTrigger value="all">All</TabsTrigger>
-          <TabsTrigger value="top">Top</TabsTrigger>
-          <TabsTrigger value="pending">Pending</TabsTrigger>
-          <TabsTrigger value="approved">Approved</TabsTrigger>
-        </TabsList>
-      </Tabs>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <Tabs
+          value={filters.status}
+          onValueChange={(value) =>
+            handleFilterChange({ status: value as StatusFilter })
+          }
+        >
+          <TabsList>
+            <TabsTrigger value="all">All</TabsTrigger>
+            <TabsTrigger value="pending">Pending</TabsTrigger>
+            <TabsTrigger value="approved">Approved</TabsTrigger>
+          </TabsList>
+        </Tabs>
+        <div className="flex flex-wrap items-center gap-2">
+          <Select
+            value={filters.author}
+            onValueChange={(value) =>
+              handleFilterChange({ author: value as AuthorFilter })
+            }
+          >
+            <SelectTrigger size="sm">
+              <SelectValue>{AUTHOR_LABEL[filters.author]}</SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              {(Object.keys(AUTHOR_LABEL) as AuthorFilter[]).map((author) => (
+                <SelectItem key={author} value={author}>
+                  {AUTHOR_LABEL[author]}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {platforms.length > 1 && (
+            <Select
+              value={filters.platform}
+              onValueChange={(value) =>
+                handleFilterChange({ platform: value as Filters["platform"] })
+              }
+            >
+              <SelectTrigger size="sm">
+                <SelectValue>
+                  {filters.platform === "all"
+                    ? "All platforms"
+                    : APP_PLATFORM_MAP[filters.platform].label}
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All platforms</SelectItem>
+                {platforms.map((platform) => (
+                  <SelectItem key={platform} value={platform}>
+                    {APP_PLATFORM_MAP[platform].label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+          <Select
+            value={filters.sort}
+            onValueChange={(value) =>
+              handleFilterChange({ sort: value as SortOrder })
+            }
+          >
+            <SelectTrigger size="sm">
+              <SelectValue>{SORT_LABEL[filters.sort]}</SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              {(Object.keys(SORT_LABEL) as SortOrder[]).map((sort) => (
+                <SelectItem key={sort} value={sort}>
+                  {SORT_LABEL[sort]}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
 
       {hiddenCount > 0 && !isSwitchingTab && (
         <UpgradeBanner
@@ -135,7 +244,10 @@ export function FeatureList({
       {isSwitchingTab ? (
         <div className="space-y-2">
           {[0, 1, 2].map((row) => (
-            <div key={row} className="bg-muted/50 flex items-start gap-3 rounded-lg px-4 py-4">
+            <div
+              key={row}
+              className="bg-muted/50 flex items-start gap-3 rounded-lg px-4 py-4"
+            >
               <Skeleton className="size-10 shrink-0 rounded-lg" />
               <div className="flex-1 space-y-2">
                 <Skeleton className="h-4 w-1/3" />
@@ -145,28 +257,36 @@ export function FeatureList({
           ))}
         </div>
       ) : features.length === 0 ? (
-        <EmptyState
-          icon={Inbox}
-          title="No feature requests here"
-          description={
-            slug
-              ? "Share your public board so users can start submitting ideas."
-              : "Add the board to your app so users can start submitting ideas."
-          }
-          action={
-            slug && (
-              <Link
-                href={`/b/${slug}`}
-                target="_blank"
-                className={buttonVariants({
-                  variant: "secondary",
-                })}
-              >
-                Share your public board
-              </Link>
-            )
-          }
-        />
+        isFiltered ? (
+          <EmptyState
+            icon={Inbox}
+            title="No feature requests match"
+            description="Try another filter to see more requests."
+          />
+        ) : (
+          <EmptyState
+            icon={Inbox}
+            title="No feature requests here"
+            description={
+              slug
+                ? "Share your public board so users can start submitting ideas."
+                : "Add the board to your app so users can start submitting ideas."
+            }
+            action={
+              slug && (
+                <Link
+                  href={`/b/${slug}`}
+                  target="_blank"
+                  className={buttonVariants({
+                    variant: "secondary",
+                  })}
+                >
+                  Share your public board
+                </Link>
+              )
+            }
+          />
+        )
       ) : (
         <div className="space-y-2">
           {features.map((feature) =>

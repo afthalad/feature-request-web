@@ -19,7 +19,7 @@ import {
   visibleLimit,
 } from "@/lib/plans/visibility";
 import { maskText } from "@/lib/email/mask";
-import { translateText } from "@/lib/translate/googleTranslate";
+import { detectLanguages, translateText } from "@/lib/translate/googleTranslate";
 import type {
   App,
   AppPlatformId,
@@ -51,6 +51,7 @@ function mapFeature(doc: QueryDocumentSnapshot): Feature {
     authorDeviceId: data.authorDeviceId,
     authorIsSubscriber: data.authorIsSubscriber ?? false,
     platform: data.platform ?? null,
+    lang: data.lang ?? null,
     translation: data.translation ?? null,
     createdAt: data.createdAt.toDate().toISOString(),
     updatedAt: data.updatedAt.toDate().toISOString(),
@@ -210,11 +211,15 @@ export async function getFeatureForApp({
   };
 }
 
-export type OwnerFeatureTab = "top" | "new" | "pending" | "approved";
+export type OwnerFeatureStatus = "all" | "pending" | "approved";
+export type OwnerFeatureSort = "newest" | "oldest" | "top";
 
 interface ListFeaturesForOwnerParams {
   appId: string;
-  tab: OwnerFeatureTab;
+  status: OwnerFeatureStatus;
+  sort: OwnerFeatureSort;
+  paidOnly?: boolean;
+  platform?: AppPlatformId | null;
   limit: number;
   cursor: string | null;
   /** Owner's plan, for locking requests past its limit. Defaults to unrestricted (admin views). */
@@ -229,6 +234,39 @@ interface ListFeaturesForOwnerResult {
   hiddenCount: number;
 }
 
+// Fills in the language of requests listed before it was known, so the dashboard can offer
+// Translate only for requests in another language. Each request is detected once, then saved.
+async function withLanguages(appId: string, features: Feature[]): Promise<Feature[]> {
+  const missing = features.filter((feature) => !feature.locked && !feature.lang);
+  if (!missing.length) return features;
+
+  let langs: string[];
+  try {
+    langs = await detectLanguages(
+      missing.map((feature) => `${feature.title}\n${feature.description}`.trim()),
+    );
+  } catch {
+    return features;
+  }
+
+  const featuresRef = adminDb.collection("apps").doc(appId).collection("features");
+  const batch = adminDb.batch();
+  const langById = new Map(missing.map((feature, index) => [feature.id, langs[index]]));
+  langById.forEach((lang, id) => batch.update(featuresRef.doc(id), { lang }));
+  await batch.commit().catch(() => {});
+
+  return features.map((feature) =>
+    langById.has(feature.id) ? { ...feature, lang: langById.get(feature.id)! } : feature,
+  );
+}
+
+export async function listFeaturesForOwner(
+  params: ListFeaturesForOwnerParams,
+): Promise<ListFeaturesForOwnerResult> {
+  const result = await listOwnerRows(params);
+  return { ...result, features: await withLanguages(params.appId, result.features) };
+}
+
 // Owner-facing listing (dashboard): no per-device vote/follow lookups, since the dashboard never
 // shows "did I vote on this" — that saves two extra reads per feature vs. listFeaturesForApp.
 //
@@ -236,9 +274,12 @@ interface ListFeaturesForOwnerResult {
 // .maxFeaturesPerApp) come back readable; the rest are locked placeholders (see lockFeature)
 // and counted in `hiddenCount`, so the dashboard can prompt an upgrade. Submissions are never
 // blocked (see createFeatureForApp), so no feedback is turned away meanwhile.
-export async function listFeaturesForOwner({
+async function listOwnerRows({
   appId,
-  tab,
+  status,
+  sort,
+  paidOnly = false,
+  platform = null,
   limit,
   cursor,
   plan = "pro",
@@ -249,14 +290,16 @@ export async function listFeaturesForOwner({
     .collection("features");
   let query: Query = featuresRef;
 
-  if (tab === "pending") query = query.where("status", "==", "open");
-  else if (tab === "approved")
+  if (status === "pending") query = query.where("status", "==", "open");
+  else if (status === "approved")
     query = query.where("status", "in", APPROVED_STATUSES);
+  if (paidOnly) query = query.where("authorIsSubscriber", "==", true);
+  if (platform) query = query.where("platform", "==", platform);
 
   const limitForPlan = visibleLimit(plan);
   const [window, totalCount, appTotal] = await Promise.all([
     getVisibleWindow(appId, plan),
-    tab === "pending"
+    status === "pending"
       ? query.count().get().then((snap) => snap.data().count)
       : Promise.resolve(null),
     Number.isFinite(limitForPlan)
@@ -267,7 +310,7 @@ export async function listFeaturesForOwner({
   // Nothing locked (unlimited plan, or the app is within its limit): one plain query.
   if (!window || window.length < limitForPlan) {
     query = query
-      .orderBy(tab === "top" ? "upvoteCount" : "createdAt", "desc")
+      .orderBy(sort === "top" ? "upvoteCount" : "createdAt", sort === "oldest" ? "asc" : "desc")
       .limit(limit + 1);
     if (cursor) {
       const cursorSnap = await featuresRef.doc(cursor).get();
@@ -289,17 +332,23 @@ export async function listFeaturesForOwner({
   // locked rows.
   const hiddenCount = Math.max(0, appTotal - limitForPlan);
   const visibleIds = new Set(window.map((doc) => doc.id));
-  const inTab = (doc: QueryDocumentSnapshot) =>
-    tab === "pending"
+  const matches = (doc: QueryDocumentSnapshot) =>
+    (status === "pending"
       ? doc.get("status") === "open"
-      : tab === "approved"
+      : status === "approved"
         ? APPROVED_STATUSES.includes(doc.get("status"))
-        : true;
-  const visibleRows = window.filter(inTab).sort((a, b) =>
-    tab === "top"
+        : true) &&
+    (!paidOnly || doc.get("authorIsSubscriber") === true) &&
+    (!platform || doc.get("platform") === platform);
+  const byNewest = (a: QueryDocumentSnapshot, b: QueryDocumentSnapshot) =>
+    b.get("createdAt").valueOf().localeCompare(a.get("createdAt").valueOf()) ||
+    b.id.localeCompare(a.id);
+  const visibleRows = window.filter(matches).sort((a, b) =>
+    sort === "top"
       ? (b.get("upvoteCount") ?? 0) - (a.get("upvoteCount") ?? 0) || b.id.localeCompare(a.id)
-      : b.get("createdAt").valueOf().localeCompare(a.get("createdAt").valueOf()) ||
-        b.id.localeCompare(a.id),
+      : sort === "oldest"
+        ? byNewest(b, a)
+        : byNewest(a, b),
   );
 
   // Locked rows are the ones created at or after the last visible request, minus the visible
@@ -514,6 +563,7 @@ export async function createFeatureForApp({
     authorDeviceId: data.authorDeviceId as string,
     authorIsSubscriber: data.authorIsSubscriber as boolean,
     platform: data.platform ?? null,
+    lang: null,
     translation: null,
     createdAt: data.createdAt.toDate().toISOString() as string,
     updatedAt: data.updatedAt.toDate().toISOString() as string,
@@ -613,7 +663,7 @@ export async function translateFeature({
     description: descriptionResult.translatedText,
   };
 
-  await featureRef.update({ translation });
+  await featureRef.update({ translation, lang: titleResult.detectedSourceLanguage });
   return translation;
 }
 

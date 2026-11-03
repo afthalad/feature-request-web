@@ -15,11 +15,11 @@ export async function GET(
 
   const { appId } = await params;
   const { searchParams } = new URL(req.url);
-  const tab = searchParams.get("sort") === "top" ? "top" : "new";
+  const sort = searchParams.get("sort") === "top" ? "top" : "newest";
   const limit = Math.min(Math.max(Number(searchParams.get("limit")) || 20, 1), 100);
   const cursor = searchParams.get("cursor");
 
-  const result = await listFeaturesForOwner({ appId, tab, limit, cursor });
+  const result = await listFeaturesForOwner({ appId, status: "all", sort, limit, cursor });
   return ok(result);
 }
 

@@ -45,11 +45,15 @@ export default async function AppPage({
   const plan: Plan =
     userPlan === "pro" || userPlan === "starter" ? userPlan : "free";
   const hasPublicBoard = PLAN_LIMITS[plan].publicBoard;
+  const appPlatforms = listAppPlatforms(readAppIds(app));
+  const requestPlatforms =
+    hasPublicBoard && !appPlatforms.includes("web") ? [...appPlatforms, "web" as const] : appPlatforms;
 
   const [{ features, nextCursor, hiddenCount }] = await Promise.all([
     listFeaturesForOwner({
       appId,
-      tab: "new",
+      status: "all",
+      sort: "newest",
       limit: FEATURES_PAGE_SIZE,
       cursor: null,
       plan,
@@ -108,6 +112,7 @@ export default async function AppPage({
         initialCursor={nextCursor}
         initialHiddenCount={hiddenCount}
         newSinceIso={newSinceIso}
+        platforms={requestPlatforms}
       />
     </div>
   );

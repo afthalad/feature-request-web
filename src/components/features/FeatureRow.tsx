@@ -7,7 +7,6 @@ import { toast } from "sonner";
 import { auth } from "@/lib/firebase/client";
 import { FeatureVoteIndicator } from "@/components/features/FeatureVoteIndicator";
 import { StatusSelect } from "@/components/features/StatusSelect";
-import { PlatformLabel } from "@/components/features/PlatformLabel";
 import { DashboardCommentsPanel } from "@/components/comments/DashboardCommentsPanel";
 import { FollowersPanel } from "@/components/followers/FollowersPanel";
 import { Badge } from "@/components/ui/badge";
@@ -55,6 +54,7 @@ export function FeatureRow({
   const [isDeleting, setIsDeleting] = useState(false);
 
   const targetLang = browserLang();
+  const isOtherLanguage = feature.lang?.split("-")[0] !== targetLang;
 
   async function handleDelete() {
     setIsDeleting(true);
@@ -137,7 +137,6 @@ export function FeatureRow({
           <p className="text-muted-foreground text-sm">{displayDescription}</p>
         )}
         <div className="flex flex-wrap items-center gap-3 pt-0.5">
-          {feature.platform && <PlatformLabel platform={feature.platform} />}
           <button
             type="button"
             onClick={() => setShowComments((value) => !value)}
@@ -156,19 +155,21 @@ export function FeatureRow({
               {feature.followerCount} following
             </button>
           )}
-          <button
-            type="button"
-            onClick={handleTranslate}
-            disabled={isTranslating}
-            className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1.5 text-xs transition-colors disabled:opacity-50"
-          >
-            <Languages className="size-3.5" />
-            {isTranslating
-              ? "Translating..."
-              : showTranslation
-                ? "Show original"
-                : "Translate"}
-          </button>
+          {isOtherLanguage && (
+            <button
+              type="button"
+              onClick={handleTranslate}
+              disabled={isTranslating}
+              className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1.5 text-xs transition-colors disabled:opacity-50"
+            >
+              <Languages className="size-3.5" />
+              {isTranslating
+                ? "Translating..."
+                : showTranslation
+                  ? "Show original"
+                  : "Translate"}
+            </button>
+          )}
           {appName && (
             <>
               <span className="text-muted-foreground text-xs">·</span>

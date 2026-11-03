@@ -32,6 +32,10 @@ export function listAppIds(appIds: AppIds): string[] {
   );
 }
 
+export function isAppPlatformId(value: string | null): value is AppPlatformId {
+  return value === "ios" || value === "android" || value === "web";
+}
+
 export function listAppPlatforms(appIds: AppIds): AppPlatformId[] {
   const platforms: AppPlatformId[] = [];
   if (appIds.iosBundleId) platforms.push("ios");

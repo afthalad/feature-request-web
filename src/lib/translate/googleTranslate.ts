@@ -32,3 +32,19 @@ export async function translateText(text: string, targetLang: string): Promise<T
     detectedSourceLanguage: (translation.detectedSourceLanguage as string | undefined) ?? targetLang,
   };
 }
+
+export async function detectLanguages(texts: string[]): Promise<string[]> {
+  const apiKey = process.env.GOOGLE_TRANSLATE_API_KEY;
+  if (!apiKey) throw new Error("Translation is not configured for this deployment.");
+
+  const response = await fetch(`${GOOGLE_TRANSLATE_ENDPOINT}/detect?key=${apiKey}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ q: texts }),
+  });
+  if (!response.ok) throw new Error("Language detection failed.");
+
+  const data = await response.json();
+  const detections = data?.data?.detections as { language: string }[][] | undefined;
+  return texts.map((_, index) => detections?.[index]?.[0]?.language ?? "und");
+}
