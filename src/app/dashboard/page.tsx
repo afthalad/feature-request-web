@@ -58,6 +58,27 @@ export default async function DashboardPage() {
     })
     .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 
+  if (apps.length === 0) {
+    return (
+      <div className="flex min-h-[calc(100svh-10rem)] items-center justify-center">
+        <Suspense fallback={null}>
+          <CheckoutStatusRefresher plan={plan} />
+        </Suspense>
+        <EmptyState
+          icon={LayoutGrid}
+          title="Create your first app"
+          description="Get an API key and start collecting feature requests from your users."
+          action={
+            <Link href="/dashboard/apps/new" className={buttonVariants({ size: "lg" })}>
+              Create app
+            </Link>
+          }
+          className="border-0"
+        />
+      </div>
+    );
+  }
+
   const [stats, recentPendingFeatures] = await Promise.all([
     getDashboardStats(apps),
     listRecentPendingFeatures(apps, PLAN_LIMITS[plan].recentPendingLimit, plan),
@@ -84,24 +105,11 @@ export default async function DashboardPage() {
           New App
         </NewAppButton>
       </div>
-      {apps.length === 0 ? (
-        <EmptyState
-          icon={LayoutGrid}
-          title="No apps yet"
-          description="Create your first app to get an API key and start collecting feature requests."
-          action={
-            <Link href="/dashboard/apps/new" className={buttonVariants()}>
-              Create your first app
-            </Link>
-          }
-        />
-      ) : (
-        <div className="grid gap-4 sm:grid-cols-2">
-          {apps.map((app) => (
-            <AppCard key={app.id} app={app} />
-          ))}
-        </div>
-      )}
+      <div className="grid gap-4 sm:grid-cols-2">
+        {apps.map((app) => (
+          <AppCard key={app.id} app={app} />
+        ))}
+      </div>
       {plan === "free" && (
         <UpgradeBanner message="Upgrade for more apps, higher feature limits, and more monthly emails." />
       )}

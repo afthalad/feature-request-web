@@ -125,13 +125,6 @@ export function AppSidebar({ apps, plan, hasBillingAccount }: AppSidebarProps) {
           </SidebarGroupAction>
           <SidebarGroupContent>
             <SidebarMenu>
-              {apps.length === 0 && (
-                <NavItem
-                  href="/dashboard/apps/new"
-                  label="Create your first app"
-                  icon={<Plus />}
-                />
-              )}
               {apps.map((app) => (
                 <AppItem key={app.id} app={app} pathname={pathname} />
               ))}
