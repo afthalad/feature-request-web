@@ -111,7 +111,7 @@ const FAQ_ROW_1 = [
   },
   {
     q: "What's on the free plan?",
-    a: "One app, 50 visible feature requests, unlimited votes and comments — free forever.",
+    a: "One app on one platform, the first 5 feature requests visible, unlimited votes and comments — free forever.",
   },
   {
     q: "Can users vote without an account?",
@@ -134,7 +134,7 @@ const FAQ_ROW_2 = [
   },
   {
     q: "What if I have more than one app?",
-    a: "Free covers 1 app on one platform. Starter covers 3 and Pro 5, each on iOS, Android and web. Every app gets its own board and API key.",
+    a: "Free covers 1 app on one platform. Starter covers 3 apps and Pro 5, all on every platform. Every app gets its own board and API key.",
   },
   {
     q: "Is there a link I can share?",

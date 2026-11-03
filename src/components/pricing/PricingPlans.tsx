@@ -17,14 +17,14 @@ const FREE_FEATURES = [
 ];
 
 const STARTER_FEATURES = [
-  "3 apps on iOS, Android & web",
+  "3 apps on every platform",
   "First 200 feature requests visible per app",
   "Full email details for the first 200",
   'No "Powered by" badge',
 ];
 
 const PRO_FEATURES = [
-  "5 apps on iOS, Android & web",
+  "5 apps on every platform",
   "Every feature request visible",
   "Full email details for every request",
   "Public board with your own link",
