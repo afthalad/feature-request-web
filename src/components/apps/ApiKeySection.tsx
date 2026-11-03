@@ -13,11 +13,10 @@ export function ApiKeySection({ appId, apiKeyPrefix }: ApiKeySectionProps) {
   const [newApiKey, setNewApiKey] = useState<string | null>(null);
 
   return (
-    <div className="flex items-center justify-between">
-      <div>
-        <p className="text-sm font-medium">API key</p>
-        <code className="text-muted-foreground text-sm">{apiKeyPrefix}...</code>
-      </div>
+    <div className="flex items-center gap-2">
+      <code className="bg-muted/50 text-muted-foreground flex h-10 min-w-0 flex-1 items-center rounded-lg px-3 text-sm">
+        {apiKeyPrefix}...
+      </code>
       <RegenerateKeyDialog appId={appId} onRegenerated={setNewApiKey} />
       <ApiKeyDialog apiKey={newApiKey} onClose={() => setNewApiKey(null)} />
     </div>

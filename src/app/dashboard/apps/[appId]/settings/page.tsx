@@ -7,6 +7,7 @@ import { ApiKeySection } from "@/components/apps/ApiKeySection";
 import { PublicBoardSettings } from "@/components/apps/PublicBoardSettings";
 import { DeleteAppSection } from "@/components/apps/DeleteAppSection";
 import { Separator } from "@/components/ui/separator";
+import { SettingsSection } from "@/components/apps/SettingsSection";
 import { getUserPlan, PLAN_LIMITS } from "@/lib/plans/limits";
 import { readAppIds } from "@/lib/apps/appIds";
 
@@ -33,29 +34,43 @@ export default async function AppSettingsPage({
   const plan = await getUserPlan(user.uid);
 
   return (
-    <div className="max-w-lg space-y-8">
+    <div className="max-w-xl space-y-10">
       <h1 className="text-xl font-semibold">Settings</h1>
-      <AppDetailsForm
-        appId={appId}
-        initialName={app.name}
-        initialAppIds={readAppIds(app)}
-        maxPlatforms={PLAN_LIMITS[plan].maxPlatformsPerApp}
-      />
+      <SettingsSection
+        title="App"
+        description="Your API key only works in the apps and websites you add here."
+      >
+        <AppDetailsForm
+          appId={appId}
+          initialName={app.name}
+          initialAppIds={readAppIds(app)}
+          maxPlatforms={PLAN_LIMITS[plan].maxPlatformsPerApp}
+        />
+      </SettingsSection>
       <Separator />
-      <ApiKeySection appId={appId} apiKeyPrefix={app.apiKeyPrefix} />
+      <SettingsSection
+        title="API key"
+        description="Your app sends this key to load its board. You only see the full key once."
+      >
+        <ApiKeySection appId={appId} apiKeyPrefix={app.apiKeyPrefix} />
+      </SettingsSection>
       <Separator />
-      <PublicBoardSettings
-        appId={appId}
-        initialSlug={app.slug ?? ""}
-        initialHideVoteCounts={app.hideVoteCounts ?? false}
-        hasPublicBoard={PLAN_LIMITS[plan].publicBoard}
-      />
+      <SettingsSection title="Public board">
+        <PublicBoardSettings
+          appId={appId}
+          initialSlug={app.slug ?? ""}
+          initialHideVoteCounts={app.hideVoteCounts ?? false}
+          hasPublicBoard={PLAN_LIMITS[plan].publicBoard}
+        />
+      </SettingsSection>
       <Separator />
-      <AppSettingsForm
-        appId={appId}
-        initialNotificationEmail={app.notificationEmail}
-        initialEmailOnNewRequest={app.emailOnNewRequest}
-      />
+      <SettingsSection title="Notifications">
+        <AppSettingsForm
+          appId={appId}
+          initialNotificationEmail={app.notificationEmail}
+          initialEmailOnNewRequest={app.emailOnNewRequest}
+        />
+      </SettingsSection>
       <Separator />
       <DeleteAppSection appId={appId} appName={app.name} featureCount={app.featureCount ?? 0} />
     </div>

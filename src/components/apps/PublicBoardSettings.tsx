@@ -88,10 +88,10 @@ export function PublicBoardSettings({
   }
 
   return (
-    <div className="space-y-2">
-      <Label htmlFor="slug">Public board</Label>
+    <div className="space-y-5">
       {hasPublicBoard ? (
-        <>
+        <div className="space-y-2">
+          <Label htmlFor="slug">Board link</Label>
           <form onSubmit={handleSubmit} className="flex gap-2">
             <Input
               id="slug"
@@ -117,7 +117,7 @@ export function PublicBoardSettings({
               Copy
             </Button>
           </div>
-        </>
+        </div>
       ) : (
         <p className="text-muted-foreground text-sm">
           A web page with your board that anyone can open and vote on, no app needed. Available on{" "}
@@ -127,7 +127,7 @@ export function PublicBoardSettings({
           .
         </p>
       )}
-      <div className="flex items-center justify-between pt-2">
+      <div className="flex items-center justify-between gap-4">
         <div>
           <p className="text-sm font-medium">Hide vote counts</p>
           <p className="text-muted-foreground text-sm">

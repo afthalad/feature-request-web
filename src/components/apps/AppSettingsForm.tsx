@@ -62,7 +62,7 @@ export function AppSettingsForm({
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <form onSubmit={handleEmailSubmit} className="space-y-2">
         <Label htmlFor="notificationEmail">Notification email</Label>
         <div className="flex gap-2">
@@ -77,7 +77,7 @@ export function AppSettingsForm({
           </Button>
         </div>
       </form>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-4">
         <div>
           <p className="text-sm font-medium">Email on new request</p>
           <p className="text-muted-foreground text-sm">

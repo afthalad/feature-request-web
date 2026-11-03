@@ -55,7 +55,7 @@ export function AppDetailsForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-5">
       <div className="space-y-2">
         <Label htmlFor="appName">App name</Label>
         <Input
@@ -72,8 +72,8 @@ export function AppDetailsForm({
         disabled={isSaving}
         maxPlatforms={maxPlatforms}
       />
-      <Button type="submit" variant="outline" disabled={isSaving || !hasAppId(appIds)}>
-        {isSaving ? "Saving..." : "Save"}
+      <Button type="submit" disabled={isSaving || !hasAppId(appIds)}>
+        {isSaving ? "Saving..." : "Save changes"}
       </Button>
     </form>
   );

@@ -101,6 +101,7 @@ export function AppIdFields({ value, onChange, disabled, maxPlatforms }: AppIdFi
     APP_PLATFORMS.filter(({ id }) => value[FIELD_BY_PLATFORM[id].name]).map(({ id }) => id)
   );
   const [showUpgrade, setShowUpgrade] = useState(false);
+  const [openHelp, setOpenHelp] = useState<AppPlatformId | null>(null);
   const isAtLimit = selected.length >= maxPlatforms;
 
   function togglePlatform(platform: AppPlatformId) {
@@ -115,8 +116,8 @@ export function AppIdFields({ value, onChange, disabled, maxPlatforms }: AppIdFi
   }
 
   return (
-    <div className="space-y-4">
-      <div className="space-y-2">
+    <div className="space-y-5">
+      <div className="space-y-2.5">
         <Label>Where does your app run?</Label>
         <div className="flex flex-wrap gap-2">
           {APP_PLATFORMS.map(({ id, label, icon }) => {
@@ -130,7 +131,7 @@ export function AppIdFields({ value, onChange, disabled, maxPlatforms }: AppIdFi
                 disabled={disabled}
                 aria-pressed={isSelected}
                 className={cn(
-                  "inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm transition-colors disabled:opacity-50",
+                  "inline-flex h-9 items-center gap-1.5 rounded-full px-3.5 text-sm transition-colors disabled:opacity-50",
                   isSelected
                     ? "bg-primary/15 text-foreground"
                     : "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -167,24 +168,29 @@ export function AppIdFields({ value, onChange, disabled, maxPlatforms }: AppIdFi
               disabled={disabled}
               required
             />
-            <div className="text-muted-foreground space-y-1 text-xs leading-5">{field.help}</div>
+            {openHelp === id ? (
+              <div className="text-muted-foreground bg-muted/50 space-y-1 rounded-lg p-3 text-xs leading-5">
+                {field.help}
+                <Link
+                  href="/docs/concepts#app-ids"
+                  target="_blank"
+                  className="text-foreground inline-block underline underline-offset-4"
+                >
+                  See the full guide
+                </Link>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setOpenHelp(id)}
+                className="text-muted-foreground hover:text-foreground text-xs transition-colors"
+              >
+                Where do I find this?
+              </button>
+            )}
           </div>
         );
       })}
-      {selected.length > 0 && (
-        <p className="text-muted-foreground text-xs">
-          Your API key only works in the apps and websites you add here. Not sure where to find
-          an ID?{" "}
-          <Link
-            href="/docs/concepts#app-ids"
-            target="_blank"
-            className="text-foreground underline underline-offset-4"
-          >
-            See the guide
-          </Link>
-          .
-        </p>
-      )}
       <UpgradeDialog
         open={showUpgrade}
         onOpenChange={setShowUpgrade}
