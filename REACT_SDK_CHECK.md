@@ -21,7 +21,7 @@ On **npm** ([npmjs.com](https://www.npmjs.com)), the React version of pub.dev or
 
 | Stack | Registry | Status today |
 |---|---|---|
-| Android | Maven Central | Live as `shop.fewchurs:fewchurs-android` |
+| Android | Maven Central | Live as `com.fewchurs:fewchurs-android` |
 | Laravel | Packagist | Live as `fewchurs/laravel` 1.4.0 |
 | Flutter | pub.dev | Not yet; installed from GitHub with a `ref` |
 | React / Next.js | npm | Not yet |

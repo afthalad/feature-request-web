@@ -19,14 +19,14 @@ const TOC = [
 ];
 
 const REPO_URL = "https://github.com/fewchurs/fewchurs-kotlin";
-const VERSION = "1.0.0";
+const VERSION = "1.1.0";
 
 const GRADLE = `dependencies {
-    implementation("shop.fewchurs:fewchurs-android:${VERSION}")
+    implementation("com.fewchurs:fewchurs-android:${VERSION}")
 }`;
 
 const CATALOG = `[libraries]
-fewchurs = { module = "shop.fewchurs:fewchurs-android", version = "${VERSION}" }`;
+fewchurs = { module = "com.fewchurs:fewchurs-android", version = "${VERSION}" }`;
 
 const CATALOG_USE = `dependencies {
     implementation(libs.fewchurs)
@@ -90,7 +90,7 @@ Fewchurs.configure(this, apiKey = "fr_live_xxx") {
 const KMP = `kotlin {
     sourceSets {
         androidMain.dependencies {
-            implementation("shop.fewchurs:fewchurs-android:${VERSION}")
+            implementation("com.fewchurs:fewchurs-android:${VERSION}")
         }
     }
 }`;
