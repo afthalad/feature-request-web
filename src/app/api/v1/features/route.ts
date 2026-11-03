@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { requireApiKey, getDeviceId } from "@/lib/auth/verifyApiKey";
 import { createFeatureSchema } from "@/lib/validation/schemas";
+import { getCallerPlatform } from "@/lib/apps/appIds";
 import { ok, errorResponse } from "@/lib/api/response";
 import {
   listFeaturesForApp,
@@ -70,6 +71,7 @@ export async function POST(req: NextRequest) {
       description: parsed.data.description,
       email: parsed.data.email,
       isSubscriber: parsed.data.isSubscriber,
+      platform: getCallerPlatform(req, keyInfo.appIds),
     });
     return ok(feature, 201);
   } catch (error) {

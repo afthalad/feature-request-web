@@ -47,6 +47,7 @@ const FEATURE = `{
   "hasVoted": true,
   "isFollowing": false,
   "isMine": false,
+  "platform": "ios",
   "createdAt": "2026-10-01T09:30:00.000Z",
   "updatedAt": "2026-10-04T14:12:00.000Z"
 }`;
@@ -162,6 +163,10 @@ export default function ApiDocsPage() {
         <P>
           <C>status</C> is one of <C>open</C>, <C>planned</C>, <C>in_progress</C>, <C>done</C>{" "}
           or <C>declined</C>. Show a plain label if you get a status you don&apos;t know.
+        </P>
+        <P>
+          <C>platform</C> is where the request was made: <C>ios</C>, <C>android</C>, <C>web</C>{" "}
+          or <C>null</C> if Fewchurs couldn&apos;t tell.
         </P>
       </Section>
 

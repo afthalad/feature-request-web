@@ -14,13 +14,15 @@ const TOC = [
   { id: "uikit", label: "Using UIKit" },
   { id: "colors", label: "Colors and theme" },
   { id: "api-key", label: "About the API key" },
+  { id: "wrong-app", label: "Key not working" },
   { id: "badge", label: "What your plan changes" },
 ];
 
 const PACKAGE_URL = "https://github.com/fewchurs/fewchurs-swift";
+const VERSION = "1.2.0";
 
 const PACKAGE_SWIFT = `dependencies: [
-    .package(url: "${PACKAGE_URL}", from: "1.0.0")
+    .package(url: "${PACKAGE_URL}", from: "${VERSION}")
 ]`;
 
 const CONFIGURE = `import SwiftUI
@@ -90,6 +92,10 @@ export default function SwiftUIDocsPage() {
               URL:
             </P>
             <CodeBlock code={PACKAGE_URL} />
+            <P>
+              Keep the rule <strong>Up to Next Major Version</strong> and pick {VERSION} or
+              later.
+            </P>
           </Step>
           <Step title="Or add it to Package.swift">
             <P>If your project uses a Package.swift file, add this line instead:</P>
@@ -149,6 +155,44 @@ export default function SwiftUIDocsPage() {
         <Note>
           The SDK gives each device a random ID and keeps it in the Keychain. That is how it
           remembers votes without an account. Read more in <A href="/docs/concepts">How it works</A>.
+        </Note>
+      </Section>
+
+      <Section id="wrong-app" title="Key not working">
+        <P>
+          The SDK sends your app&apos;s Bundle ID with every request. If that Bundle ID isn&apos;t
+          added to your app in the dashboard, Fewchurs refuses the request.
+        </P>
+        <Table
+          head={["Who", "What they see"]}
+          rows={[
+            ["Your users", <>&quot;This app&apos;s API key is invalid. Please contact the developer.&quot;</>],
+            [
+              "You, in Debug builds",
+              <>
+                The board also shows which Bundle ID was refused, like &quot;This API key is not
+                set up for <C>com.other.app</C>.&quot;
+              </>,
+            ],
+          ]}
+        />
+        <P>
+          To fix it, open your app&apos;s <strong>Settings</strong> in the dashboard, pick iOS and
+          add the exact Bundle ID. It works again within a minute. You don&apos;t need a new key
+          or a new release.
+        </P>
+        <Table
+          head={["Bundle ID in the app", "Works with com.yourcompany.app saved?"]}
+          rows={[
+            [<C key="a">com.yourcompany.app</C>, "Yes"],
+            [<C key="b">com.yourcompany.app.widget</C>, "Yes, IDs under it work too"],
+            [<C key="c">com.yourcompany.app.debug</C>, "Yes"],
+            [<C key="d">com.yourcompany.other</C>, "No. Add it, or use the right key"],
+          ]}
+        />
+        <Note>
+          Versions before {VERSION} don&apos;t send the Bundle ID. They still work for now, but
+          update so your key only works in your own app.
         </Note>
       </Section>
 

@@ -6,7 +6,7 @@ const CORS_HEADERS: Record<string, string> = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
   "Access-Control-Allow-Headers":
-    "Authorization, Content-Type, X-Device-Id, X-Fewchurs-Sdk, Accept-Language",
+    "Authorization, Content-Type, X-Device-Id, X-Fewchurs-Sdk, X-Fewchurs-App-Id, Accept-Language",
   "Access-Control-Max-Age": "86400",
 };
 

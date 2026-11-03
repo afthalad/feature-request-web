@@ -74,6 +74,7 @@ export interface Feature {
   followerCount: number;
   authorDeviceId: string;
   authorIsSubscriber: boolean;
+  platform: AppPlatformId | null;
   translation: FeatureTranslation | null;
   createdAt: string;
   updatedAt: string;

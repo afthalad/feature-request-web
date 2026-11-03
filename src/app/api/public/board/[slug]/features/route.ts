@@ -59,6 +59,7 @@ export async function POST(
       description: parsed.data.description,
       email: parsed.data.email,
       isSubscriber: parsed.data.isSubscriber,
+      platform: "web",
     });
     return ok(feature, 201);
   } catch (error) {

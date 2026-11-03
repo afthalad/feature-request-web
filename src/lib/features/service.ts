@@ -22,6 +22,7 @@ import { maskText } from "@/lib/email/mask";
 import { translateText } from "@/lib/translate/googleTranslate";
 import type {
   App,
+  AppPlatformId,
   DashboardStats,
   Feature,
   FeatureStatus,
@@ -49,6 +50,7 @@ function mapFeature(doc: QueryDocumentSnapshot): Feature {
     followerCount: data.followerCount ?? 0,
     authorDeviceId: data.authorDeviceId,
     authorIsSubscriber: data.authorIsSubscriber ?? false,
+    platform: data.platform ?? null,
     translation: data.translation ?? null,
     createdAt: data.createdAt.toDate().toISOString(),
     updatedAt: data.updatedAt.toDate().toISOString(),
@@ -428,6 +430,7 @@ interface CreateFeatureParams {
   description: string;
   email?: string;
   isSubscriber?: boolean;
+  platform: AppPlatformId | null;
 }
 
 export async function createFeatureForApp({
@@ -437,6 +440,7 @@ export async function createFeatureForApp({
   description,
   email,
   isSubscriber,
+  platform,
 }: CreateFeatureParams) {
   const appRef = adminDb.collection("apps").doc(appId);
   const appSnap = await appRef.get();
@@ -468,6 +472,7 @@ export async function createFeatureForApp({
       followerCount: 0,
       authorDeviceId: deviceId,
       authorIsSubscriber: isSubscriber ?? false,
+      platform,
       createdAt: now,
       updatedAt: now,
     });
@@ -508,6 +513,7 @@ export async function createFeatureForApp({
     followerCount: data.followerCount as number,
     authorDeviceId: data.authorDeviceId as string,
     authorIsSubscriber: data.authorIsSubscriber as boolean,
+    platform: data.platform ?? null,
     translation: null,
     createdAt: data.createdAt.toDate().toISOString() as string,
     updatedAt: data.updatedAt.toDate().toISOString() as string,

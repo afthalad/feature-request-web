@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { auth } from "@/lib/firebase/client";
 import { FeatureVoteIndicator } from "@/components/features/FeatureVoteIndicator";
 import { StatusSelect } from "@/components/features/StatusSelect";
+import { PlatformLabel } from "@/components/features/PlatformLabel";
 import { DashboardCommentsPanel } from "@/components/comments/DashboardCommentsPanel";
 import { FollowersPanel } from "@/components/followers/FollowersPanel";
 import { Badge } from "@/components/ui/badge";
@@ -136,6 +137,7 @@ export function FeatureRow({
           <p className="text-muted-foreground text-sm">{displayDescription}</p>
         )}
         <div className="flex flex-wrap items-center gap-3 pt-0.5">
+          {feature.platform && <PlatformLabel platform={feature.platform} />}
           <button
             type="button"
             onClick={() => setShowComments((value) => !value)}
