@@ -130,10 +130,10 @@ export function AppIdFields({ value, onChange, disabled, maxPlatforms }: AppIdFi
                 disabled={disabled}
                 aria-pressed={isSelected}
                 className={cn(
-                  "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm transition-colors disabled:opacity-50",
+                  "inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm transition-colors disabled:opacity-50",
                   isSelected
-                    ? "border-primary bg-primary/10 text-foreground"
-                    : "border-border text-muted-foreground hover:text-foreground"
+                    ? "bg-primary/15 text-foreground"
+                    : "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground"
                 )}
               >
                 {icon.kind === "brand" ? (

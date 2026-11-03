@@ -91,7 +91,7 @@ export function AdminCreateFeatureDialog({ appId, onCreated }: AdminCreateFeatur
               onChange={(event) => setDescription(event.target.value)}
               rows={4}
               maxLength={1000}
-              className="border-input focus-visible:border-ring focus-visible:ring-ring/50 w-full min-w-0 rounded-lg border bg-transparent px-2.5 py-1.5 text-base outline-none transition-colors focus-visible:ring-3 md:text-sm dark:bg-input/30"
+              className="bg-muted/50 focus-visible:ring-ring/50 w-full min-w-0 rounded-lg px-2.5 py-1.5 text-base outline-none transition-colors focus-visible:ring-3 md:text-sm"
             />
           </div>
           <div className="space-y-1.5">

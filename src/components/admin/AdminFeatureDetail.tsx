@@ -243,7 +243,7 @@ export function AdminFeatureDetail({
             value={description}
             onChange={(event) => setDescription(event.target.value)}
             rows={4}
-            className="border-input focus-visible:border-ring focus-visible:ring-ring/50 w-full min-w-0 rounded-lg border bg-transparent px-2.5 py-1.5 text-base outline-none transition-colors focus-visible:ring-3 md:text-sm dark:bg-input/30"
+            className="bg-muted/50 focus-visible:ring-ring/50 w-full min-w-0 rounded-lg px-2.5 py-1.5 text-base outline-none transition-colors focus-visible:ring-3 md:text-sm"
           />
         </div>
         <div className="flex items-end gap-4">
@@ -324,7 +324,7 @@ export function AdminFeatureDetail({
                         onChange={(event) => setEditingText(event.target.value)}
                         rows={2}
                         maxLength={1000}
-                        className="border-input focus-visible:border-ring focus-visible:ring-ring/50 w-full min-w-0 rounded-lg border bg-transparent px-2.5 py-1.5 text-sm outline-none transition-colors focus-visible:ring-3 dark:bg-input/30"
+                        className="bg-muted/50 focus-visible:ring-ring/50 w-full min-w-0 rounded-lg px-2.5 py-1.5 text-sm outline-none transition-colors focus-visible:ring-3"
                       />
                       <div className="flex gap-2">
                         <Button size="sm" onClick={() => handleSaveComment(comment.id)} disabled={isSavingComment}>
@@ -371,7 +371,7 @@ export function AdminFeatureDetail({
             rows={2}
             maxLength={1000}
             required
-            className="border-input focus-visible:border-ring focus-visible:ring-ring/50 w-full min-w-0 rounded-lg border bg-transparent px-2.5 py-1.5 text-sm outline-none transition-colors focus-visible:ring-3 dark:bg-input/30"
+            className="bg-muted/50 focus-visible:ring-ring/50 w-full min-w-0 rounded-lg px-2.5 py-1.5 text-sm outline-none transition-colors focus-visible:ring-3"
           />
           <Button type="submit" size="sm" disabled={isPostingComment || !newCommentText.trim()}>
             {isPostingComment ? "Posting..." : "Post comment"}
