@@ -8,7 +8,7 @@ import { FeatureList } from "@/components/features/FeatureList";
 import { UpgradeBanner } from "@/components/billing/UpgradeBanner";
 import { ExportReportButton } from "@/components/apps/ExportReportButton";
 import { PlatformIcons } from "@/components/apps/PlatformIcons";
-import { listAppIds, listAppPlatforms, readAppIds } from "@/lib/apps/appIds";
+import { listAppPlatforms, readAppIds } from "@/lib/apps/appIds";
 import { buttonVariants } from "@/components/ui/button";
 import { PLAN_LIMITS } from "@/lib/plans/limits";
 import type { Plan } from "@/types";
@@ -72,7 +72,6 @@ export default async function AppPage({
             {app.name}
             <PlatformIcons platforms={listAppPlatforms(readAppIds(app))} />
           </h1>
-          <p className="text-muted-foreground text-sm">{listAppIds(readAppIds(app)).join(" · ")}</p>
         </div>
         <div className="flex flex-wrap gap-2">
           {app.slug && hasPublicBoard && (
