@@ -31,7 +31,7 @@ export function RecentPendingFeatures({ features: initialFeatures }: { features:
   return (
     <div className="space-y-3">
       <h2 className="text-muted-foreground text-sm font-medium">Recent pending requests</h2>
-      <div className="divide-y rounded-lg border">
+      <div className="space-y-2">
         {features.map((feature) =>
           feature.locked ? (
             <LockedFeatureRow key={feature.id} feature={feature} appName={feature.appName} />

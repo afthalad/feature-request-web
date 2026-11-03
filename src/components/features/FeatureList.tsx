@@ -133,9 +133,9 @@ export function FeatureList({
       )}
 
       {isSwitchingTab ? (
-        <div className="divide-y rounded-lg border">
+        <div className="space-y-2">
           {[0, 1, 2].map((row) => (
-            <div key={row} className="flex items-start gap-3 px-4 py-4">
+            <div key={row} className="bg-muted/50 flex items-start gap-3 rounded-lg px-4 py-4">
               <Skeleton className="size-10 shrink-0 rounded-lg" />
               <div className="flex-1 space-y-2">
                 <Skeleton className="h-4 w-1/3" />
@@ -168,7 +168,7 @@ export function FeatureList({
           }
         />
       ) : (
-        <div className="divide-y rounded-lg border">
+        <div className="space-y-2">
           {features.map((feature) =>
             feature.locked ? (
               <LockedFeatureRow key={feature.id} feature={feature} />

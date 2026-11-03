@@ -32,6 +32,16 @@ const CATALOG_USE = `dependencies {
     implementation(libs.fewchurs)
 }`;
 
+const MANIFEST_KEY = `<application
+    ...>
+
+    <meta-data
+        android:name="com.fewchurs.sdk.API_KEY"
+        android:value="fr_live_xxx" />
+
+    <activity android:name=".MainActivity" ... />
+</application>`;
+
 const CONFIGURE = `import android.app.Application
 import com.fewchurs.sdk.Fewchurs
 
@@ -122,14 +132,25 @@ export default function KotlinDocsPage() {
 
       <Section id="set-up" title="Set up">
         <P>
-          Call <C>configure</C> once, when your app starts. Use the API key from your dashboard.
+          Add your API key to <C>AndroidManifest.xml</C>, inside <C>&lt;application&gt;</C>. Every
+          project has this file, and the SDK reads the key when your app starts. No code needed.
+        </P>
+        <CodeBlock code={MANIFEST_KEY} filename="app/src/main/AndroidManifest.xml" />
+        <P>
+          Use the API key from your dashboard. A new project with only <C>MainActivity</C> is
+          ready now.
+        </P>
+        <P>
+          <strong>Or set it up in code.</strong> Use this if you want to change settings, or your
+          app already has an <C>Application</C> class. Call <C>configure</C> once, when your app
+          starts:
         </P>
         <CodeBlock code={CONFIGURE} filename="MyApp.kt" />
         <P>
-          If your app doesn&apos;t have an <C>Application</C> class yet, register the new one in
-          your manifest:
+          If you just made this class, register it in your manifest. Then remove the{" "}
+          <C>meta-data</C> line, so the key is only in one place.
         </P>
-        <CodeBlock code={MANIFEST} filename="AndroidManifest.xml" />
+        <CodeBlock code={MANIFEST} filename="app/src/main/AndroidManifest.xml" />
       </Section>
 
       <Section id="show-the-board" title="Show the board">
@@ -138,6 +159,10 @@ export default function KotlinDocsPage() {
           inside: the list, votes, comments and new requests.
         </P>
         <CodeBlock code={SHEET} filename="SettingsScreen.kt" />
+        <P>
+          In a new project, call <C>SettingsScreen()</C> inside <C>setContent</C> in{" "}
+          <C>MainActivity.kt</C>, or put the button on any screen you like.
+        </P>
         <P>
           To use it as a full screen or a navigation destination, use <C>FewchursBoard</C>.
         </P>
