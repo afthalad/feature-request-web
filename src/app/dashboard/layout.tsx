@@ -68,7 +68,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         <SidebarProvider defaultOpen={defaultOpen}>
           <AppSidebar {...sidebar} />
           <SidebarInset>
-            <header className="bg-background sticky top-0 z-10 flex h-14 items-center justify-between border-b px-4">
+            <header className="bg-background sticky top-0 z-10 flex h-14 items-center justify-between border-b px-4 md:rounded-t-xl">
               <SidebarTrigger />
               <ThemeToggle />
             </header>

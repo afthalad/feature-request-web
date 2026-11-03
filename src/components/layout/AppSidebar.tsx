@@ -77,7 +77,7 @@ export function AppSidebar({ apps, plan, hasBillingAccount }: AppSidebarProps) {
   const pathname = usePathname();
 
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar variant="inset" collapsible="icon">
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -301,6 +301,7 @@ function PlanItem({
           render={<Link href="/pricing" />}
           tooltip={plan === "free" ? "Upgrade" : "Plans"}
         >
+          <Sparkles />
           <span>{plan === "free" ? "Upgrade" : "Plans"}</span>
           {badge}
         </SidebarMenuButton>
