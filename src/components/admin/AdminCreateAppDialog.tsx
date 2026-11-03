@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AppIdFields, EMPTY_APP_ID_VALUES, toAppIds } from "@/components/apps/AppIdFields";
 import { hasAppId } from "@/lib/apps/appIds";
+import { APP_PLATFORMS } from "@/lib/appPlatforms";
 import {
   Dialog,
   DialogContent,
@@ -111,7 +112,12 @@ export function AdminCreateAppDialog({ onCreated }: AdminCreateAppDialogProps) {
               required
             />
           </div>
-          <AppIdFields value={appIdValues} onChange={setAppIdValues} disabled={isSubmitting} />
+          <AppIdFields
+            value={appIdValues}
+            onChange={setAppIdValues}
+            disabled={isSubmitting}
+            maxPlatforms={APP_PLATFORMS.length}
+          />
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => setOpen(false)} disabled={isSubmitting}>
               Cancel

@@ -6,6 +6,7 @@ import { slugExists } from "@/lib/slug";
 import { ok, errorResponse } from "@/lib/api/response";
 import { softDeleteApp } from "@/lib/apps/lifecycle";
 import { APP_ID_FIELDS, hasAppId, readAppIds } from "@/lib/apps/appIds";
+import { checkPlatformLimit, getUserPlan } from "@/lib/plans/limits";
 
 export async function PATCH(
   req: NextRequest,
@@ -31,11 +32,23 @@ export async function PATCH(
   }
 
   const changesAppIds = APP_ID_FIELDS.some((field) => field in parsed.data);
-  if (changesAppIds && !hasAppId({ ...readAppIds(appSnap.data()), ...parsed.data })) {
-    return errorResponse(
-      "validation_failed",
-      "Keep at least one: iOS Bundle ID, Android package name or website domain."
+  if (changesAppIds) {
+    const currentAppIds = readAppIds(appSnap.data());
+    const nextAppIds = readAppIds({ ...currentAppIds, ...parsed.data });
+    if (!hasAppId(nextAppIds)) {
+      return errorResponse(
+        "validation_failed",
+        "Keep at least one: iOS Bundle ID, Android package name or website domain."
+      );
+    }
+    const platformCheck = checkPlatformLimit(
+      await getUserPlan(user.uid),
+      nextAppIds,
+      currentAppIds
     );
+    if (!platformCheck.allowed) {
+      return errorResponse("limit_reached", platformCheck.message!);
+    }
   }
 
   if (parsed.data.slug && (await slugExists(parsed.data.slug, appId))) {

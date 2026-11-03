@@ -1,12 +1,13 @@
 import "server-only";
 import { adminDb } from "@/lib/firebase/admin";
+import { listAppPlatforms, type AppIds } from "@/lib/apps/appIds";
 
 // publicBoard: the web board at /b/<slug>. showBranding: the "Powered by Fewchurs" line in
 // the SDK boards (sent to them as /config showBranding).
 export const PLAN_LIMITS = {
-  free: { maxApps: 1, maxFeaturesPerApp: 5, recentPendingLimit: 3, publicBoard: false, showBranding: true },
-  starter: { maxApps: 3, maxFeaturesPerApp: 200, recentPendingLimit: 5, publicBoard: false, showBranding: false },
-  pro: { maxApps: 5, maxFeaturesPerApp: Infinity, recentPendingLimit: 10, publicBoard: true, showBranding: false },
+  free: { maxApps: 1, maxPlatformsPerApp: 1, maxFeaturesPerApp: 5, recentPendingLimit: 3, publicBoard: false, showBranding: true },
+  starter: { maxApps: 3, maxPlatformsPerApp: 3, maxFeaturesPerApp: 200, recentPendingLimit: 5, publicBoard: false, showBranding: false },
+  pro: { maxApps: 5, maxPlatformsPerApp: 3, maxFeaturesPerApp: Infinity, recentPendingLimit: 10, publicBoard: true, showBranding: false },
 } as const;
 
 export type Plan = "free" | "starter" | "pro";
@@ -62,6 +63,26 @@ export async function checkAppLimit(uid: string): Promise<PlanLimitResult> {
     return {
       allowed: false,
       message: `You've reached the ${limits.maxApps}-app limit on the ${plan} plan.${upgradeHint}`,
+    };
+  }
+  return { allowed: true };
+}
+
+// An app that already has more platforms than the plan allows (added before a downgrade) keeps
+// them, but can't add another.
+export function checkPlatformLimit(
+  plan: Plan,
+  nextAppIds: AppIds,
+  currentAppIds?: AppIds
+): PlanLimitResult {
+  const max = PLAN_LIMITS[plan].maxPlatformsPerApp;
+  const nextCount = listAppPlatforms(nextAppIds).length;
+  const currentCount = currentAppIds ? listAppPlatforms(currentAppIds).length : 0;
+
+  if (nextCount > max && nextCount > currentCount) {
+    return {
+      allowed: false,
+      message: "Free apps work on one platform. Upgrade to add iOS, Android and web to the same app.",
     };
   }
   return { allowed: true };

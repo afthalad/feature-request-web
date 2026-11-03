@@ -35,7 +35,12 @@ export default async function AppSettingsPage({
   return (
     <div className="max-w-lg space-y-8">
       <h1 className="text-xl font-semibold">Settings</h1>
-      <AppDetailsForm appId={appId} initialName={app.name} initialAppIds={readAppIds(app)} />
+      <AppDetailsForm
+        appId={appId}
+        initialName={app.name}
+        initialAppIds={readAppIds(app)}
+        maxPlatforms={PLAN_LIMITS[plan].maxPlatformsPerApp}
+      />
       <Separator />
       <ApiKeySection appId={appId} apiKeyPrefix={app.apiKeyPrefix} />
       <Separator />

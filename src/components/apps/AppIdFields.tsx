@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { useState, type ReactNode } from "react";
+import { Lock } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { BrandIcon } from "@/components/marketing/BrandIcon";
+import { UpgradeDialog } from "@/components/billing/UpgradeDialog";
 import { APP_PLATFORMS } from "@/lib/appPlatforms";
 import { cn } from "@/lib/utils";
 import type { AppIds } from "@/lib/apps/appIds";
@@ -91,17 +93,22 @@ interface AppIdFieldsProps {
   value: AppIdValues;
   onChange: (value: AppIdValues) => void;
   disabled?: boolean;
+  maxPlatforms: number;
 }
 
-export function AppIdFields({ value, onChange, disabled }: AppIdFieldsProps) {
+export function AppIdFields({ value, onChange, disabled, maxPlatforms }: AppIdFieldsProps) {
   const [selected, setSelected] = useState<AppPlatformId[]>(() =>
     APP_PLATFORMS.filter(({ id }) => value[FIELD_BY_PLATFORM[id].name]).map(({ id }) => id)
   );
+  const [showUpgrade, setShowUpgrade] = useState(false);
+  const isAtLimit = selected.length >= maxPlatforms;
 
   function togglePlatform(platform: AppPlatformId) {
     if (selected.includes(platform)) {
       setSelected(selected.filter((id) => id !== platform));
       onChange({ ...value, [FIELD_BY_PLATFORM[platform].name]: "" });
+    } else if (isAtLimit) {
+      setShowUpgrade(true);
     } else {
       setSelected([...selected, platform]);
     }
@@ -114,6 +121,7 @@ export function AppIdFields({ value, onChange, disabled }: AppIdFieldsProps) {
         <div className="flex flex-wrap gap-2">
           {APP_PLATFORMS.map(({ id, label, icon }) => {
             const isSelected = selected.includes(id);
+            const isLocked = !isSelected && isAtLimit;
             return (
               <button
                 key={id}
@@ -134,12 +142,15 @@ export function AppIdFields({ value, onChange, disabled }: AppIdFieldsProps) {
                   <icon.Icon className="size-3.5" />
                 )}
                 {label}
+                {isLocked && <Lock className="size-3" />}
               </button>
             );
           })}
         </div>
         <p className="text-muted-foreground text-xs">
-          Pick every place your app runs. Flutter apps usually pick iOS and Android.
+          {maxPlatforms > 1
+            ? "Pick every place your app runs. Flutter apps usually pick iOS and Android."
+            : "Free apps work on one platform. Upgrade to add more to the same app."}
         </p>
       </div>
       {APP_PLATFORMS.filter(({ id }) => selected.includes(id)).map(({ id }) => {
@@ -174,6 +185,12 @@ export function AppIdFields({ value, onChange, disabled }: AppIdFieldsProps) {
           .
         </p>
       )}
+      <UpgradeDialog
+        open={showUpgrade}
+        onOpenChange={setShowUpgrade}
+        title="Add more platforms"
+        description="Free apps work on one platform. Upgrade to add iOS, Android and web to the same app."
+      />
     </div>
   );
 }

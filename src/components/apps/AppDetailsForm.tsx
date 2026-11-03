@@ -14,9 +14,15 @@ interface AppDetailsFormProps {
   appId: string;
   initialName: string;
   initialAppIds: AppIds;
+  maxPlatforms: number;
 }
 
-export function AppDetailsForm({ appId, initialName, initialAppIds }: AppDetailsFormProps) {
+export function AppDetailsForm({
+  appId,
+  initialName,
+  initialAppIds,
+  maxPlatforms,
+}: AppDetailsFormProps) {
   const router = useRouter();
   const [name, setName] = useState(initialName);
   const [appIdValues, setAppIdValues] = useState(toAppIdValues(initialAppIds));
@@ -60,7 +66,12 @@ export function AppDetailsForm({ appId, initialName, initialAppIds }: AppDetails
           required
         />
       </div>
-      <AppIdFields value={appIdValues} onChange={setAppIdValues} disabled={isSaving} />
+      <AppIdFields
+        value={appIdValues}
+        onChange={setAppIdValues}
+        disabled={isSaving}
+        maxPlatforms={maxPlatforms}
+      />
       <Button type="submit" variant="outline" disabled={isSaving || !hasAppId(appIds)}>
         {isSaving ? "Saving..." : "Save"}
       </Button>

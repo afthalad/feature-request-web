@@ -134,7 +134,7 @@ const FAQ_ROW_2 = [
   },
   {
     q: "What if I have more than one app?",
-    a: "Free covers 1 app, Starter 3 and Pro 5. Each gets its own board and API key.",
+    a: "Free covers 1 app on one platform. Starter covers 3 and Pro 5, each on iOS, Android and web. Every app gets its own board and API key.",
   },
   {
     q: "Is there a link I can share?",

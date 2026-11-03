@@ -6,7 +6,7 @@ import { generateApiKey, hashApiKey, apiKeyDisplayPrefix } from "@/lib/auth/apiK
 import { generateUniqueSlug } from "@/lib/slug";
 import { createAppSchema } from "@/lib/validation/schemas";
 import { ok, errorResponse } from "@/lib/api/response";
-import { checkAppLimit } from "@/lib/plans/limits";
+import { checkAppLimit, checkPlatformLimit, getUserPlan } from "@/lib/plans/limits";
 
 export async function POST(req: NextRequest) {
   const user = await getUserFromAuthHeader(req);
@@ -23,6 +23,14 @@ export async function POST(req: NextRequest) {
   }
 
   const { name, iosBundleId, androidPackageName, webDomain } = parsed.data;
+  const platformCheck = checkPlatformLimit(await getUserPlan(user.uid), {
+    iosBundleId: iosBundleId ?? null,
+    androidPackageName: androidPackageName ?? null,
+    webDomain: webDomain ?? null,
+  });
+  if (!platformCheck.allowed) {
+    return errorResponse("limit_reached", platformCheck.message!);
+  }
   const apiKey = generateApiKey();
   const appRef = adminDb.collection("apps").doc();
   const apiKeyRef = adminDb.collection("apiKeys").doc(hashApiKey(apiKey));

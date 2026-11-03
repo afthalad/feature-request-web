@@ -13,9 +13,10 @@ import type { ApiErrorBody } from "@/types";
 
 interface CreateAppFormProps {
   onCreated: (apiKey: string) => void;
+  maxPlatforms: number;
 }
 
-export function CreateAppForm({ onCreated }: CreateAppFormProps) {
+export function CreateAppForm({ onCreated, maxPlatforms }: CreateAppFormProps) {
   const [name, setName] = useState("");
   const [appIdValues, setAppIdValues] = useState(EMPTY_APP_ID_VALUES);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -68,7 +69,12 @@ export function CreateAppForm({ onCreated }: CreateAppFormProps) {
             required
           />
         </div>
-        <AppIdFields value={appIdValues} onChange={setAppIdValues} disabled={isSubmitting} />
+        <AppIdFields
+        value={appIdValues}
+        onChange={setAppIdValues}
+        disabled={isSubmitting}
+        maxPlatforms={maxPlatforms}
+      />
         <Button type="submit" disabled={isSubmitting || !hasAppId(appIds)} className="w-full">
           {isSubmitting ? "Creating..." : "Create app"}
         </Button>

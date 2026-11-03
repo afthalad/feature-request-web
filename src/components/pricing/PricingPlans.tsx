@@ -9,7 +9,7 @@ import { PlanCard } from "@/components/pricing/PlanCard";
 import { cn } from "@/lib/utils";
 
 const FREE_FEATURES = [
-  "1 app",
+  "1 app on one platform",
   "First 5 feature requests visible per app",
   "Collect unlimited requests, votes & comments",
   "Email for every new request (details for the first 5)",
@@ -17,14 +17,14 @@ const FREE_FEATURES = [
 ];
 
 const STARTER_FEATURES = [
-  "3 apps",
+  "3 apps on iOS, Android & web",
   "First 200 feature requests visible per app",
   "Full email details for the first 200",
   'No "Powered by" badge',
 ];
 
 const PRO_FEATURES = [
-  "5 apps",
+  "5 apps on iOS, Android & web",
   "Every feature request visible",
   "Full email details for every request",
   "Public board with your own link",
