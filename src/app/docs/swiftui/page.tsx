@@ -19,19 +19,19 @@ const TOC = [
 ];
 
 const PACKAGE_URL = "https://github.com/fewchurs/fewchurs-swift";
-const VERSION = "1.2.0";
+const VERSION = "2.0.0";
 
 const PACKAGE_SWIFT = `dependencies: [
     .package(url: "${PACKAGE_URL}", from: "${VERSION}")
 ]`;
 
 const CONFIGURE = `import SwiftUI
-import FeatureRequestKit
+import Fewchurs
 
 @main
 struct MyApp: App {
     init() {
-        FeatureRequestKit.configure(apiKey: "fr_live_xxx")
+        Fewchurs.configure(apiKey: "fr_live_xxx")
     }
 
     var body: some Scene {
@@ -42,7 +42,7 @@ struct MyApp: App {
 }`;
 
 const SHEET = `import SwiftUI
-import FeatureRequestKit
+import Fewchurs
 
 struct SettingsView: View {
     @State private var showBoard = false
@@ -59,13 +59,13 @@ struct SettingsView: View {
 
 const UIKIT = `import UIKit
 import SwiftUI
-import FeatureRequestKit
+import Fewchurs
 
 let board = UIHostingController(rootView: FeatureRequestBoardView())
 present(board, animated: true)`;
 
 const THEME = `// A built-in dark theme
-FeatureRequestKit.configure(apiKey: "fr_live_xxx", theme: .midnight)
+Fewchurs.configure(apiKey: "fr_live_xxx", theme: .midnight)
 
 // Or your own colors
 let theme = FeatureRequestTheme(
@@ -73,7 +73,7 @@ let theme = FeatureRequestTheme(
     accent: .orange,
     cornerRadius: 16
 )
-FeatureRequestKit.configure(apiKey: "fr_live_xxx", theme: theme)`;
+Fewchurs.configure(apiKey: "fr_live_xxx", theme: theme)`;
 
 export default function SwiftUIDocsPage() {
   return (
@@ -191,7 +191,7 @@ export default function SwiftUIDocsPage() {
           ]}
         />
         <Note>
-          Versions before {VERSION} don&apos;t send the Bundle ID. They still work for now, but
+          Versions before 1.2.0 don&apos;t send the Bundle ID. They still work for now, but
           update so your key only works in your own app.
         </Note>
       </Section>
