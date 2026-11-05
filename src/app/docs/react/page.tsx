@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { CodeBlock } from "@/components/docs/CodeBlock";
-import { A, C, DocsPage, Note, P, Section, Table } from "@/components/docs/Docs";
+import { A, C, DocsPage, Note, P, Section, Step, Steps, Sub, Table } from "@/components/docs/Docs";
 
 export const metadata: Metadata = {
   title: "React — Docs — Fewchurs",
@@ -11,6 +11,7 @@ const TOC = [
   { id: "install", label: "Install" },
   { id: "show-the-board", label: "Show the board" },
   { id: "api-key", label: "Keeping the key private" },
+  { id: "going-live", label: "Localhost and going live" },
   { id: "change-the-look", label: "Change the look" },
   { id: "in-a-dialog", label: "Open it in a dialog" },
   { id: "one-request", label: "Link to one request" },
@@ -98,6 +99,10 @@ if (!feature && error) {
 const USERS = `// Use a hash of your user's ID, never the raw ID or an email
 <FewchursProvider apiKey={key} deviceId={hashedUserId}>`;
 
+const ENV_LOCAL = `VITE_FEWCHURS_KEY=fr_live_xxx`;
+
+const APP_ID_HEADER = `X-Fewchurs-App-Id: yourcompany.com`;
+
 export default function ReactDocsPage() {
   return (
     <DocsPage
@@ -133,6 +138,114 @@ export default function ReactDocsPage() {
           server instead. Your server adds the key and forwards the call.
         </P>
         <CodeBlock code={PROXY} />
+      </Section>
+
+      <Section id="going-live" title="Localhost and going live">
+        <P>
+          Your API key only works from the domain you add to your app. The visitor&apos;s browser
+          reports the domain on every call, so there is nothing to set in your code.
+        </P>
+
+        <Sub>While you build on localhost</Sub>
+        <P>You only need your API key. There is nothing to add in the dashboard yet.</P>
+        <CodeBlock code={ENV_LOCAL} filename=".env" />
+        <P>
+          <C>localhost</C> and <C>127.0.0.1</C> always work. That also means a board that works on
+          localhost doesn&apos;t prove your domain is set up. You can only check that on your live
+          site.
+        </P>
+
+        <Sub>When you go live</Sub>
+        <Steps>
+          <Step>
+            <P>Open your app in the <A href="/dashboard">Fewchurs dashboard</A>.</P>
+          </Step>
+          <Step>
+            <P>Under <strong>Where does your app run?</strong> pick <strong>Web</strong>.</P>
+          </Step>
+          <Step>
+            <P>
+              Add just the domain in <strong>Website domain</strong>, like <C>yourcompany.com</C>.
+              Leave out <C>https://</C>.
+            </P>
+          </Step>
+          <Step>
+            <P>
+              Click <strong>Save changes</strong>. A new domain can take up to a minute to work.
+            </P>
+          </Step>
+          <Step>
+            <P>
+              Set your key where your site is built, for example <C>VITE_FEWCHURS_KEY</C> on your
+              host, then deploy.
+            </P>
+          </Step>
+          <Step>
+            <P>Open the board on your live site. You should see your requests.</P>
+          </Step>
+        </Steps>
+        <Note tone="warning">
+          Don&apos;t skip the domain. The board can work on localhost and still be refused on your
+          live site if your domain isn&apos;t added.
+        </Note>
+
+        <Sub>Which addresses work</Sub>
+        <P>If you add <C>yourcompany.com</C>:</P>
+        <Table
+          head={["Your site runs on", "Result"]}
+          rows={[
+            [<C key="u">http://localhost:5173</C>, "Works"],
+            [<C key="u">https://yourcompany.com</C>, "Works"],
+            [<C key="u">https://www.yourcompany.com</C>, "Works"],
+            [<C key="u">https://app.yourcompany.com</C>, "Works"],
+            [<C key="u">https://othercompany.com</C>, "Refused"],
+            [<C key="u">https://yourapp.vercel.app</C>, "Refused"],
+          ]}
+        />
+        <P>
+          Subdomains of the domain you add work on their own. It doesn&apos;t work the other way:
+          if you add <C>app.yourcompany.com</C> then <C>yourcompany.com</C> is refused. Add the
+          main domain if you use more than one.
+        </P>
+
+        <Sub>Staging and preview sites</Sub>
+        <P>
+          A browser can&apos;t change the domain it reports, so there is no setting to override it.
+          A site on a different address, like a preview deployment, needs its own app and API key
+          in the dashboard.
+        </P>
+
+        <Sub>If you use your own server</Sub>
+        <P>
+          When your server forwards the calls, it should tell Fewchurs your domain. Add this header
+          to each call it forwards:
+        </P>
+        <CodeBlock code={APP_ID_HEADER} />
+
+        <Sub>If something goes wrong</Sub>
+        <P>
+          When a call is refused, visitors see &quot;Feedback is unavailable right now.&quot; To see
+          why, open your browser&apos;s developer tools, go to the Network tab and click the failed
+          call. The response says what&apos;s wrong:
+        </P>
+        <Table
+          head={["Status", "What it means", "What to do"]}
+          rows={[
+            [
+              <C key="s">403</C>,
+              <>
+                This domain isn&apos;t added to the app for this key. The code is{" "}
+                <C>wrong_app</C>.
+              </>,
+              "Add the domain in the dashboard.",
+            ],
+            [
+              <C key="s">401</C>,
+              "The key is wrong or no longer active.",
+              "Copy the key from the dashboard and deploy again.",
+            ],
+          ]}
+        />
       </Section>
 
       <Section id="change-the-look" title="Change the look">
@@ -191,7 +304,10 @@ export default function ReactDocsPage() {
         <Table
           head={["Code", "What happened"]}
           rows={[
-            [<C key="1">invalid_key</C>, "The API key is wrong or turned off."],
+            [
+              <C key="1">invalid_key</C>,
+              "The API key is wrong or turned off, or this domain isn't added to your app (from version 1.1.0).",
+            ],
             [<C key="2">validation_failed</C>, "Something in the form is missing or too long."],
             [<C key="3">rate_limited</C>, "This device hit its daily limit."],
             [<C key="4">limit_reached</C>, "Your plan's limit was reached."],
