@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { CodeBlock } from "@/components/docs/CodeBlock";
-import { A, C, DocsPage, Note, P, Section, Step, Steps, Table } from "@/components/docs/Docs";
+import { A, C, DocsPage, Note, P, Section, Step, Steps, Sub, Table } from "@/components/docs/Docs";
 
 export const metadata: Metadata = {
   title: "Laravel — Docs — Fewchurs",
@@ -15,6 +15,7 @@ const TOC = [
   { id: "customize", label: "Customize" },
   { id: "client", label: "Build your own UI" },
   { id: "check", label: "Check your setup" },
+  { id: "going-live", label: "Localhost and going live" },
   { id: "badge", label: "What your plan changes" },
   { id: "api-key", label: "About the API key" },
 ];
@@ -72,6 +73,31 @@ Fewchurs::comments()->create($feature->id, text: '+1');`;
 
 const CHECK = `php artisan fewchurs:check`;
 
+const ENV_LOCAL = `APP_URL=http://localhost:8000
+FEWCHURS_API_KEY=fr_live_xxx`;
+
+const ENV_LIVE = `APP_URL=https://yourcompany.com
+APP_DEBUG=false
+FEWCHURS_API_KEY=fr_live_xxx`;
+
+const CONFIG_CACHE = `php artisan config:cache`;
+
+const CONFIG_CLEAR = `php artisan config:clear`;
+
+const ENV_APP_ID = `FEWCHURS_APP_ID=yourcompany.com`;
+
+const APPS = `'apps' => [
+    'docs' => [
+        'api_key' => env('FEWCHURS_DOCS_KEY'),
+        'app_id' => 'docs.yourcompany.com',
+    ],
+],`;
+
+/** The first column of a Table doesn't wrap, which is too wide for a full message. */
+function Message({ children }: { children: string }) {
+  return <span className="block min-w-48 whitespace-normal">{children}</span>;
+}
+
 export default function LaravelDocsPage() {
   return (
     <DocsPage
@@ -124,6 +150,10 @@ export default function LaravelDocsPage() {
           to your main layout, and it shows on every page:
         </P>
         <CodeBlock code={SHEET} />
+        <P>
+          The sheet opens on your list of requests. A floating <strong>New request</strong> button
+          switches it to the form and <strong>Back</strong> returns to the list.
+        </P>
         <P>Change the button text with <C>label</C>:</P>
         <CodeBlock code={SHEET_LABEL} />
         <P>
@@ -186,6 +216,161 @@ export default function LaravelDocsPage() {
         <P>
           After a deploy, <C>php artisan fewchurs:warm</C> loads the board settings ahead of the
           first visitor.
+        </P>
+      </Section>
+
+      <Section id="going-live" title="Localhost and going live">
+        <P>
+          Your API key only works from the domain you add to your app. Laravel handles this for
+          you. It reads the domain from <C>APP_URL</C> and sends it with every request.
+        </P>
+
+        <Sub>While you build on localhost</Sub>
+        <P>You only need your API key. There is nothing to add in the dashboard yet.</P>
+        <CodeBlock code={ENV_LOCAL} filename=".env" />
+        <P>
+          <C>localhost</C> and <C>127.0.0.1</C> always work. While <C>APP_DEBUG=true</C> the board
+          shows a small note to remind you to add your domain before you go live. Visitors never
+          see this note.
+        </P>
+
+        <Sub>When you go live</Sub>
+        <Steps>
+          <Step>
+            <P>Open your app in the <A href="/dashboard">Fewchurs dashboard</A>.</P>
+          </Step>
+          <Step>
+            <P>Under <strong>Where does your app run?</strong> pick <strong>Web</strong>.</P>
+          </Step>
+          <Step>
+            <P>
+              Add just the domain in <strong>Website domain</strong>, like <C>yourcompany.com</C>.
+              Leave out <C>https://</C>.
+            </P>
+          </Step>
+          <Step>
+            <P>
+              Click <strong>Save changes</strong>. A new domain can take up to a minute to work.
+            </P>
+          </Step>
+          <Step>
+            <P>Set these in the <C>.env</C> on your live server:</P>
+            <CodeBlock code={ENV_LIVE} filename=".env" />
+          </Step>
+          <Step>
+            <P>If you cache your config, refresh it:</P>
+            <CodeBlock code={CONFIG_CACHE} />
+          </Step>
+          <Step>
+            <P>Check it on your live server:</P>
+            <CodeBlock code={CHECK} />
+            <P>You should see &quot;Board reachable&quot;.</P>
+          </Step>
+        </Steps>
+        <Note tone="warning">
+          Don&apos;t skip the domain. The board can work on localhost and still be refused on your
+          live site if your domain isn&apos;t added.
+        </Note>
+
+        <Sub>Test your domain before you go live</Sub>
+        <P>You can check your domain from localhost:</P>
+        <Steps>
+          <Step>
+            <P>Add this line to your local <C>.env</C>:</P>
+            <CodeBlock code={ENV_APP_ID} filename=".env" />
+          </Step>
+          <Step>
+            <P>Run these:</P>
+            <CodeBlock code={CONFIG_CLEAR} />
+            <CodeBlock code={CHECK} />
+          </Step>
+        </Steps>
+        <P>
+          If you see &quot;Board reachable&quot; your domain is set up. Remove the line when
+          you&apos;re done. If you only just added the domain and it&apos;s refused, wait a minute
+          and run the check again.
+        </P>
+
+        <Sub>Which addresses work</Sub>
+        <P>If you add <C>yourcompany.com</C>:</P>
+        <Table
+          head={["APP_URL", "Result"]}
+          rows={[
+            [<C key="u">http://localhost:8000</C>, "Works"],
+            [<C key="u">https://yourcompany.com</C>, "Works"],
+            [<C key="u">https://www.yourcompany.com</C>, "Works"],
+            [<C key="u">https://app.yourcompany.com</C>, "Works"],
+            [<C key="u">https://othercompany.com</C>, "Refused"],
+          ]}
+        />
+        <P>
+          Subdomains of the domain you add work on their own. It doesn&apos;t work the other way:
+          if you add <C>app.yourcompany.com</C> then <C>yourcompany.com</C> is refused. Add the
+          main domain if you use more than one.
+        </P>
+
+        <Sub>
+          When you need <C>FEWCHURS_APP_ID</C>
+        </Sub>
+        <P>
+          Most sites don&apos;t need it. It replaces the domain the package reads from{" "}
+          <C>APP_URL</C>. Use it when <C>APP_URL</C> isn&apos;t the domain you added, for example a
+          staging site on a different address:
+        </P>
+        <CodeBlock code={ENV_APP_ID} filename=".env" />
+        <P>
+          If you have more than one board you can give each one its own ID in{" "}
+          <C>config/fewchurs.php</C>:
+        </P>
+        <CodeBlock code={APPS} filename="config/fewchurs.php" />
+
+        <Sub>If something goes wrong</Sub>
+        <Table
+          head={["What you see", "What it means", "What to do"]}
+          rows={[
+            [
+              <Message key="m">
+                This API key is not set up for yourcompany.com. Add it to your app in the Fewchurs
+                dashboard.
+              </Message>,
+              "This domain isn't added to the app for this key",
+              <>
+                Add the domain in the dashboard. If the domain in the message is wrong, fix{" "}
+                <C>APP_URL</C>.
+              </>,
+            ],
+            [
+              <Message key="m">Invalid API key. Check the key in your Fewchurs dashboard.</Message>,
+              "The key is wrong or no longer active",
+              <>
+                Copy the key from the dashboard into <C>.env</C>.
+              </>,
+            ],
+            [
+              <Message key="m">Couldn&apos;t reach the feedback service.</Message>,
+              "Your server can't reach Fewchurs",
+              "Check your server's internet connection.",
+            ],
+            [
+              <Message key="m">Something went wrong. Try again.</Message>,
+              "Any other error",
+              <>
+                Set <C>APP_DEBUG=true</C> on a test site to see the real cause, and check your log
+                file.
+              </>,
+            ],
+          ]}
+        />
+        <P>
+          Visitors see these messages on your live site too. Keep <C>APP_DEBUG=false</C> there, as
+          Laravel recommends.
+        </P>
+        <P>
+          After you change <C>.env</C> run <C>php artisan config:clear</C>, or{" "}
+          <C>php artisan config:cache</C> if you cache your config. The board keeps a recent copy of
+          the list, so it can show old requests for a while after a key is refused. Run{" "}
+          <C>php artisan cache:clear</C> to see the current state.{" "}
+          <C>php artisan fewchurs:check</C> always checks live.
         </P>
       </Section>
 

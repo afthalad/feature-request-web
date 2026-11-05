@@ -83,6 +83,11 @@ export function Section({
   );
 }
 
+/** A heading inside a section. */
+export function Sub({ children }: { children: ReactNode }) {
+  return <h3 className="pt-4 font-semibold">{children}</h3>;
+}
+
 export function P({ children }: { children: ReactNode }) {
   return <p className="text-foreground/85 leading-7">{children}</p>;
 }
@@ -141,11 +146,11 @@ export function Steps({ children }: { children: ReactNode }) {
   return <ol className="space-y-8 [counter-reset:step]">{children}</ol>;
 }
 
-export function Step({ title, children }: { title: string; children: ReactNode }) {
+export function Step({ title, children }: { title?: string; children: ReactNode }) {
   return (
     <li className="relative pl-10 [counter-increment:step] before:absolute before:top-0 before:left-0 before:flex before:size-7 before:items-center before:justify-center before:rounded-full before:border before:border-border before:bg-card before:text-xs before:font-semibold before:content-[counter(step)] after:absolute after:top-9 after:bottom-[-1.5rem] after:left-3.5 after:w-px after:bg-border last:after:hidden">
-      <h3 className="pt-0.5 font-semibold">{title}</h3>
-      <div className="mt-3 space-y-4">{children}</div>
+      {title && <h3 className="pt-0.5 font-semibold">{title}</h3>}
+      <div className={cn("space-y-4", title && "mt-3")}>{children}</div>
     </li>
   );
 }
