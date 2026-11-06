@@ -4,13 +4,14 @@ import { A, C, DocsPage, Note, P, Section, Step, Steps, Sub, Table } from "@/com
 
 export const metadata: Metadata = {
   title: "Next.js — Docs — Fewchurs",
-  description: "Add a server-rendered feature request board to your Next.js app.",
+  description: "Add a floating button to your Next.js app that opens your feature request board in a sheet.",
 };
 
 const TOC = [
   { id: "set-up", label: "Set up" },
-  { id: "signed-in-users", label: "Signed-in users" },
   { id: "change-the-look", label: "Change the look" },
+  { id: "full-page-board", label: "Use a full page board" },
+  { id: "signed-in-users", label: "Signed-in users" },
   { id: "your-own-ui", label: "Build your own UI" },
   { id: "going-live", label: "Localhost and going live" },
   { id: "badge", label: "The \"Powered by\" badge" },
@@ -21,6 +22,22 @@ const INSTALL = `npm install @fewchurs/next`;
 const ENV = `FEWCHURS_API_KEY=fr_live_xxx`;
 
 const HANDLER = `export { GET, POST, DELETE } from "@fewchurs/next/handler";`;
+
+const LAYOUT = `import { FewchursButton } from "@fewchurs/next";
+import "@fewchurs/next/styles.css";
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body>
+        {children}
+        <FewchursButton floating />
+      </body>
+    </html>
+  );
+}`;
+
+const UPGRADE = `npm install @fewchurs/next@latest`;
 
 const PAGE = `import { FewchursBoard } from "@fewchurs/next";
 import "@fewchurs/next/styles.css";
@@ -41,13 +58,22 @@ export const { GET, POST, DELETE } = createHandler({
   },
 });`;
 
-const PROPS = `<FewchursBoard
+const PROPS = `<FewchursButton
+  floating="left"
   tabs={["top", "new"]}
   defaultTab="top"
   allowComments
   emailField="optional"
   theme={{ primary: "#0f766e", radius: 8 }}
   labels={{ title: "Ideas", submit: "Suggest an idea" }}
+>
+  Suggest an idea
+</FewchursButton>`;
+
+const BOARD_PROPS = `<FewchursBoard
+  tabs={["top", "new"]}
+  theme={{ primary: "#0f766e", radius: 8 }}
+  labels={{ title: "Ideas" }}
 />`;
 
 const HOOKS = `"use client";
@@ -83,7 +109,7 @@ export default function NextJsDocsPage() {
     <DocsPage
       path="/docs/nextjs"
       title="Next.js"
-      intro="A board that renders on your server. Your API key never reaches the browser."
+      intro="A floating button that opens your feature board in a sheet. Your API key never reaches the browser."
       meta="Needs Next.js 14 or later with the App Router, React 18 or later, and Node 20 or later."
       toc={TOC}
     >
@@ -101,19 +127,67 @@ export default function NextJsDocsPage() {
           </Step>
           <Step title="Add the route handler">
             <P>
-              Create this one file. When a visitor votes or comments, the board calls this route.
-              The route adds your key and passes the call to Fewchurs.
+              Create this one file. When a visitor votes, comments or adds a request, the sheet
+              calls this route. The route adds your key and passes the call to Fewchurs.
             </P>
             <CodeBlock code={HANDLER} filename="app/api/fewchurs/[...route]/route.ts" />
           </Step>
-          <Step title="Show the board on a page">
-            <CodeBlock code={PAGE} filename="app/feedback/page.tsx" />
+          <Step title="Add the floating button">
+            <P>Add it to your root layout, so it shows on every page.</P>
+            <CodeBlock code={LAYOUT} filename="app/layout.tsx" />
             <P>
-              The board loads on the server, so the page arrives with the requests already in it.
-              Search engines can read them too.
+              A <strong>Feedback</strong> button now stays on the bottom right of every page.
+              Pressing it slides in your feature board as a sheet. Inside the board,{" "}
+              <strong>New request</strong> shows the form for adding a request.
+            </P>
+            <P>
+              The board only loads when someone presses the button, and the button doesn&apos;t
+              make your pages dynamic.
             </P>
           </Step>
         </Steps>
+        <Note>
+          The floating button needs <C>@fewchurs/next</C> 1.3.0 or later. To upgrade, run{" "}
+          <C>{UPGRADE}</C>.
+        </Note>
+      </Section>
+
+      <Section id="change-the-look" title="Change the look">
+        <P>
+          Pass your own label as the button&apos;s text. Use <C>floating=&quot;left&quot;</C> for the
+          bottom left, or leave out <C>floating</C> to place the button anywhere in your page. Every
+          other prop goes to the board in the sheet: which tabs to show, whether people can comment,
+          and your colors and text. You can also use CSS variables like <C>--fw-primary</C>,{" "}
+          <C>--fw-radius</C> and <C>--fw-font</C>.
+        </P>
+        <CodeBlock code={PROPS} />
+        <P>
+          <C>className</C> and <C>style</C> go on the button itself.
+        </P>
+        <P>
+          Need functions as props, like <C>renderFeature</C>? Those can&apos;t be passed to a
+          server component. Use <C>FewchursButton</C> from{" "}
+          <A href="/docs/react">@fewchurs/react</A> in a <C>&quot;use client&quot;</C> file instead,
+          with <C>{'<FewchursProvider baseUrl="/api/fewchurs">'}</C> around it.
+        </P>
+      </Section>
+
+      <Section id="full-page-board" title="Use a full page board">
+        <P>
+          Want the board on its own page instead of in a sheet? Use <C>FewchursBoard</C>. You need
+          the same API key and route handler from <A href="#set-up">Set up</A>.
+        </P>
+        <CodeBlock code={PAGE} filename="app/feedback/page.tsx" />
+        <P>
+          This board loads on the server, so the page arrives with the requests already in it.
+          Search engines can read them too. It takes the same board props as the button:
+        </P>
+        <CodeBlock code={BOARD_PROPS} />
+        <P>
+          <C>initialFeatureId</C> shows one request above the list, with its comments open and
+          rendered on the server — handy for a link from an email straight to a request. See{" "}
+          <A href="/docs/react#one-request">Link to one request</A>.
+        </P>
       </Section>
 
       <Section id="signed-in-users" title="Signed-in users">
@@ -123,25 +197,6 @@ export default function NextJsDocsPage() {
         </P>
         <CodeBlock code={USERS} filename="app/api/fewchurs/[...route]/route.ts" />
         <Note tone="warning">Always hash the ID. Never send a raw user ID or an email address.</Note>
-      </Section>
-
-      <Section id="change-the-look" title="Change the look">
-        <P>
-          Pick which tabs to show, whether people can comment, and your colors and text. You can
-          also use CSS variables like <C>--fw-primary</C>, <C>--fw-radius</C> and{" "}
-          <C>--fw-font</C>.
-        </P>
-        <CodeBlock code={PROPS} />
-        <P>
-          <C>initialFeatureId</C> shows one request above the list, with its comments open and
-          rendered on the server — handy for a link from an email straight to a request. See{" "}
-          <A href="/docs/react#one-request">Link to one request</A>.
-        </P>
-        <P>
-          Need functions as props, like <C>renderFeature</C>? Those can&apos;t be passed to a
-          server component. Use the board from <A href="/docs/react">@fewchurs/react</A> in a{" "}
-          <C>&quot;use client&quot;</C> file instead.
-        </P>
       </Section>
 
       <Section id="your-own-ui" title="Build your own UI">
@@ -191,11 +246,11 @@ export default function NextJsDocsPage() {
             <P>Add <C>FEWCHURS_API_KEY</C> to the environment variables on your host, then deploy.</P>
           </Step>
           <Step>
-            <P>Open the board on your live site. You should see your requests.</P>
+            <P>Press the button on your live site. You should see your requests.</P>
           </Step>
         </Steps>
         <Note tone="warning">
-          Don&apos;t skip the domain. The board can work on localhost and still be refused on your
+          Don&apos;t skip the domain. The sheet can work on localhost and still be refused on your
           live site if your domain isn&apos;t added. If you&apos;re upgrading from an older version,
           add it before you deploy the upgrade.
         </Note>
@@ -208,7 +263,7 @@ export default function NextJsDocsPage() {
             <CodeBlock code={ENV_APP_ID} filename=".env.local" />
           </Step>
           <Step>
-            <P>Restart your dev server and open the board.</P>
+            <P>Restart your dev server and press the button.</P>
           </Step>
         </Steps>
         <P>
@@ -245,8 +300,8 @@ export default function NextJsDocsPage() {
         </P>
         <CodeBlock code={ENV_APP_ID} />
         <P>
-          If you have more than one board you can give each one its own ID. Set it on both the route
-          handler and the board:
+          To set the ID in code instead, the floating button only needs it on the route handler. A
+          full page board needs it in both places:
         </P>
         <CodeBlock code={APP_ID_OPTION} />
 
@@ -269,8 +324,8 @@ export default function NextJsDocsPage() {
           own when you upgrade to <A href="/pricing">Starter or Pro</A>.
         </P>
         <Note>
-          Stuck? A board that loads but stays empty usually means <C>FEWCHURS_API_KEY</C> is
-          missing on the server. Check your terminal for a message from Fewchurs.
+          Stuck? If the sheet says &quot;Something went wrong&quot;, <C>FEWCHURS_API_KEY</C> is
+          usually missing on the server. Check your terminal for a message from Fewchurs.
         </Note>
       </Section>
     </DocsPage>
