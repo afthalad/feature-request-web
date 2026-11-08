@@ -2,7 +2,14 @@ import "server-only";
 import { adminDb } from "@/lib/firebase/admin";
 import { hashApiKey } from "@/lib/auth/apiKey";
 import { errorResponse } from "@/lib/api/response";
-import { getCallerId, isCallerAllowed, readAppIds, type AppIds } from "@/lib/apps/appIds";
+import {
+  getCallerId,
+  getCallerPlatform,
+  isCallerAllowed,
+  readAppIds,
+  sdkAlwaysSendsAppId,
+  type AppIds,
+} from "@/lib/apps/appIds";
 
 interface VerifiedApiKey {
   appId: string;
@@ -29,10 +36,16 @@ export async function requireApiKey(req: Request): Promise<VerifiedApiKey | Resp
   if (!apiKey) return errorResponse("invalid_key", "Invalid or inactive API key.");
 
   const callerId = getCallerId(req);
-  if (!isCallerAllowed(callerId, apiKey.appIds)) {
+  const allowed = isCallerAllowed(callerId, apiKey.appIds, {
+    platform: getCallerPlatform(req, apiKey.appIds),
+    requireId: sdkAlwaysSendsAppId(req),
+  });
+  if (!allowed) {
     return errorResponse(
       "wrong_app",
-      `This API key is not set up for ${callerId}. Add it to your app in the Fewchurs dashboard.`
+      callerId
+        ? `This API key is not set up for ${callerId}. Add it to your app in the Fewchurs dashboard.`
+        : "This request didn't say which app it came from. Update the Fewchurs package and try again."
     );
   }
 

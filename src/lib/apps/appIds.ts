@@ -75,16 +75,49 @@ export function getCallerPlatform(req: Request, appIds: AppIds): AppPlatformId |
   return isIos ? "ios" : "android";
 }
 
-export function isCallerAllowed(callerId: string | null, appIds: AppIds): boolean {
+/**
+ * SDK versions that always send an app ID. A request from one of these with no ID was changed
+ * by hand, so it is refused once the app has IDs saved. Other callers may still leave it off.
+ */
+const SDKS_ALWAYS_SENDING_ID: Record<string, string> = {
+  laravel: "1.8.0",
+};
+
+export function sdkAlwaysSendsAppId(req: Request): boolean {
+  const sdk = req.headers.get("x-fewchurs-sdk")?.trim().toLowerCase() ?? "";
+  const [name, version] = sdk.split(/[\s/]/, 2);
+  const minVersion = SDKS_ALWAYS_SENDING_ID[name];
+  return Boolean(minVersion && version && compareVersions(version, minVersion) >= 0);
+}
+
+/**
+ * When the caller's platform is known, only the ID saved for that platform counts, so a web
+ * domain can't pass because it happens to start with the iOS Bundle ID.
+ */
+export function isCallerAllowed(
+  callerId: string | null,
+  appIds: AppIds,
+  options: { platform?: AppPlatformId | null; requireId?: boolean } = {}
+): boolean {
   if (!hasAppId(appIds)) return true;
-  if (!callerId || LOCAL_HOSTS.includes(callerId)) return true;
+  if (!callerId) return !options.requireId;
+  if (LOCAL_HOSTS.includes(callerId)) return true;
 
   const { iosBundleId, androidPackageName, webDomain } = appIds;
-  return (
-    isSameOrChildId(callerId, iosBundleId) ||
-    isSameOrChildId(callerId, androidPackageName) ||
-    isSameOrSubdomain(callerId, webDomain)
-  );
+  switch (options.platform) {
+    case "ios":
+      return isSameOrChildId(callerId, iosBundleId);
+    case "android":
+      return isSameOrChildId(callerId, androidPackageName);
+    case "web":
+      return isSameOrSubdomain(callerId, webDomain);
+    default:
+      return (
+        isSameOrChildId(callerId, iosBundleId) ||
+        isSameOrChildId(callerId, androidPackageName) ||
+        isSameOrSubdomain(callerId, webDomain)
+      );
+  }
 }
 
 function isSameOrChildId(callerId: string, appId: string | null): boolean {
@@ -96,4 +129,15 @@ function isSameOrChildId(callerId: string, appId: string | null): boolean {
 function isSameOrSubdomain(callerId: string, domain: string | null): boolean {
   if (!domain) return false;
   return callerId === domain || callerId.endsWith(`.${domain}`);
+}
+
+/** Compares dotted version numbers like 1.10.0 and 1.8.0. Pre-release tags are ignored. */
+function compareVersions(a: string, b: string): number {
+  const partsA = a.split(/[-+]/)[0].split(".").map((n) => parseInt(n, 10) || 0);
+  const partsB = b.split(/[-+]/)[0].split(".").map((n) => parseInt(n, 10) || 0);
+  for (let i = 0; i < Math.max(partsA.length, partsB.length); i++) {
+    const diff = (partsA[i] ?? 0) - (partsB[i] ?? 0);
+    if (diff !== 0) return diff;
+  }
+  return 0;
 }

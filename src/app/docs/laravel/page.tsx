@@ -222,7 +222,8 @@ export default function LaravelDocsPage() {
       <Section id="going-live" title="Localhost and going live">
         <P>
           Your API key only works from the domain you add to your app. Laravel handles this for
-          you. It reads the domain from <C>APP_URL</C> and sends it with every request.
+          you. It sends the domain each page is opened on with every request, so the key works on
+          your live domain whatever <C>APP_URL</C> says. This needs version 1.8.0 or later.
         </P>
 
         <Sub>While you build on localhost</Sub>
@@ -256,6 +257,10 @@ export default function LaravelDocsPage() {
           <Step>
             <P>Set these in the <C>.env</C> on your live server:</P>
             <CodeBlock code={ENV_LIVE} filename=".env" />
+            <P>
+              The board doesn&apos;t use <C>APP_URL</C>, but <C>php artisan fewchurs:check</C>{" "}
+              does. A command has no visitor, so it sends the domain in <C>APP_URL</C> instead.
+            </P>
           </Step>
           <Step>
             <P>If you cache your config, refresh it:</P>
@@ -294,7 +299,7 @@ export default function LaravelDocsPage() {
         <Sub>Which addresses work</Sub>
         <P>If you add <C>yourcompany.com</C>:</P>
         <Table
-          head={["APP_URL", "Result"]}
+          head={["Page opened on", "Result"]}
           rows={[
             [<C key="u">http://localhost:8000</C>, "Works"],
             [<C key="u">https://yourcompany.com</C>, "Works"],
@@ -313,9 +318,9 @@ export default function LaravelDocsPage() {
           When you need <C>FEWCHURS_APP_ID</C>
         </Sub>
         <P>
-          Most sites don&apos;t need it. It replaces the domain the package reads from{" "}
-          <C>APP_URL</C>. Use it when <C>APP_URL</C> isn&apos;t the domain you added, for example a
-          staging site on a different address:
+          Most sites don&apos;t need it. It sends one fixed ID instead of the domain each page is
+          opened on, for every page and for <C>fewchurs:check</C>. Use it when your site runs on an
+          address you haven&apos;t added, for example a staging site on your host&apos;s own domain:
         </P>
         <CodeBlock code={ENV_APP_ID} filename=".env" />
         <P>
@@ -335,8 +340,9 @@ export default function LaravelDocsPage() {
               </Message>,
               "This domain isn't added to the app for this key",
               <>
-                Add the domain in the dashboard. If the domain in the message is wrong, fix{" "}
-                <C>APP_URL</C>.
+                Add the domain in the dashboard. The message names the domain the page was opened
+                on. In <C>fewchurs:check</C> it comes from <C>APP_URL</C>, or from{" "}
+                <C>FEWCHURS_APP_ID</C> if you set it.
               </>,
             ],
             [

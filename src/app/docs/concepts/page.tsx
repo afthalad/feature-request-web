@@ -145,9 +145,7 @@ export default function ConceptsPage() {
             ],
             [
               <strong key="l">Laravel</strong>,
-              <>
-                <C>APP_URL</C> in the <C>.env</C> on your live server.
-              </>,
+              "The address bar when you open your live site.",
             ],
           ]}
         />
