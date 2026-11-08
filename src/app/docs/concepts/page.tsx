@@ -7,6 +7,7 @@ import {
   Note,
   P,
   Section,
+  Sub,
   Table,
 } from "@/components/docs/Docs";
 
@@ -123,10 +124,53 @@ export default function ConceptsPage() {
           Android projects also have a <C>namespace</C>. It can be different. Fewchurs checks the{" "}
           <C>applicationId</C>. Debug builds that add <C>.debug</C> to the end work too.
         </Note>
+        <Sub>Website domain</Sub>
         <P>
-          <strong>Website:</strong> add just the domain, like <C>yourcompany.com</C>, without{" "}
-          <C>https://</C>. Subdomains like <C>app.yourcompany.com</C> work too, and{" "}
-          <C>localhost</C> always works while you build.
+          For React, Next.js and Laravel, the ID is your website&apos;s domain. It&apos;s the
+          address your live site opens on, without the rest of the link:
+        </P>
+        <Table
+          head={["You build with", "Where to find it"]}
+          rows={[
+            [
+              <strong key="r">React</strong>,
+              "The address bar when you open your live site.",
+            ],
+            [
+              <strong key="n">Next.js</strong>,
+              <>
+                The address bar when you open your live site, or the domain listed in your
+                host&apos;s settings, like <strong>Domains</strong> on Vercel.
+              </>,
+            ],
+            [
+              <strong key="l">Laravel</strong>,
+              <>
+                <C>APP_URL</C> in the <C>.env</C> on your live server.
+              </>,
+            ],
+          ]}
+        />
+        <P>Take the main domain out of the address:</P>
+        <Table
+          head={["Your site's address", "Add this"]}
+          rows={[
+            [<C key="a">https://yourcompany.com</C>, <C key="b">yourcompany.com</C>],
+            [<C key="a">https://www.yourcompany.com/feedback</C>, <C key="b">yourcompany.com</C>],
+            [<C key="a">https://app.yourcompany.com</C>, <C key="b">yourcompany.com</C>],
+          ]}
+        />
+        <P>
+          Leave out <C>https://</C>, <C>www.</C> and anything after the domain. Subdomains like{" "}
+          <C>www.yourcompany.com</C> and <C>app.yourcompany.com</C> work on their own once you add
+          the main domain. If you add a subdomain instead, only that subdomain and the ones under
+          it work.
+        </P>
+        <P>
+          You don&apos;t need to add <C>localhost</C>. It always works while you build. Each
+          guide&apos;s &quot;Localhost and going live&quot; section shows the full steps:{" "}
+          <A href="/docs/react#going-live">React</A>, <A href="/docs/nextjs#going-live">Next.js</A>{" "}
+          and <A href="/docs/laravel#going-live">Laravel</A>.
         </P>
       </Section>
 

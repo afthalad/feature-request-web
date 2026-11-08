@@ -57,7 +57,12 @@ const FIELD_BY_PLATFORM: Record<
     name: "webDomain",
     label: "Website domain",
     placeholder: "yourcompany.com",
-    help: <p>Just the domain, without https://. Subdomains work too.</p>,
+    help: (
+      <p>
+        Just the main domain, without https:// or www., like yourcompany.com. Subdomains like
+        www. and app. then work on their own.
+      </p>
+    ),
   },
 };
 
