@@ -17,7 +17,7 @@ const PREVIEW_ROWS = [
 const PERKS = ["Free forever for one app", "No credit card needed", "Three lines of code to set up"];
 
 export default function LoginPage() {
-  const { signIn, isSigningIn } = useGoogleSignIn();
+  const { signIn, isSigningIn } = useGoogleSignIn({ resumeSession: true });
 
   return (
     <div className="bg-muted relative flex min-h-dvh flex-col items-center justify-center overflow-hidden px-4 py-10">

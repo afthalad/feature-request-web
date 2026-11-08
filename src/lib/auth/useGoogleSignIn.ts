@@ -55,7 +55,11 @@ function markResumed() {
   }
 }
 
-export function useGoogleSignIn() {
+/**
+ * `resumeSession` sends someone who is already signed in straight to the dashboard. Only the
+ * login page wants that: on the docs or pricing it would pull signed-in people off the page.
+ */
+export function useGoogleSignIn({ resumeSession = false }: { resumeSession?: boolean } = {}) {
   const router = useRouter();
   const [isSigningIn, setIsSigningIn] = useState(false);
   // Each click gets an id, so a late result from an abandoned attempt can't touch a newer one.
@@ -67,6 +71,7 @@ export function useGoogleSignIn() {
 
   // Already signed in to Firebase: renew the session and go straight back to the dashboard.
   useEffect(() => {
+    if (!resumeSession) return;
     let done = false;
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (!user || done || stageRef.current !== "idle" || recentlyResumed()) return;
@@ -81,7 +86,7 @@ export function useGoogleSignIn() {
       }
     });
     return unsubscribe;
-  }, [router]);
+  }, [router, resumeSession]);
 
   function reset(attempt: number) {
     if (attempt !== attemptRef.current) return;
