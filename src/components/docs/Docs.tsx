@@ -1,10 +1,16 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, Info, TriangleAlert } from "lucide-react";
-import { DOCS_PAGES } from "@/lib/docs/nav";
+import { Eyebrow } from "@/components/landing-v2/Frame";
+import { DOCS_V2_PAGES, toV2 } from "@/components/docs-v2/nav";
+import { OnThisPage } from "@/components/docs-v2/OnThisPage";
 import { cn } from "@/lib/utils";
 
-/* Small building blocks so every docs page has the same rhythm. */
+/*
+ * Same building blocks (and the same props) as components/docs/Docs.tsx,
+ * drawn in the new landing-page style. Pages copied from /docs only need
+ * their import path changed.
+ */
 
 export interface TocItem {
   id: string;
@@ -19,63 +25,56 @@ export function DocsPage({
   toc,
   children,
 }: {
-  /** This page's route, used for the previous/next links. */
+  /** This page's route under /docs; mapped to /docs-v2 for the previous/next links. */
   path: string;
   title: string;
   intro: ReactNode;
-  /** One short line under the intro, e.g. requirements. */
   meta?: ReactNode;
   toc?: TocItem[];
   children: ReactNode;
 }) {
+  const here = toV2(path);
+  const group = DOCS_V2_PAGES.find((p) => p.href === here)?.group ?? "Docs";
+
   return (
     <div className="flex gap-12">
       <article className="min-w-0 max-w-3xl flex-1">
-        <header className="space-y-3 border-b border-border pb-8">
-          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">{title}</h1>
-          <p className="text-muted-foreground text-lg leading-relaxed">{intro}</p>
-          {meta && <p className="text-muted-foreground text-sm">{meta}</p>}
+        <header className="space-y-5 pb-10">
+          <Eyebrow>{group}</Eyebrow>
+          <h1 className="text-[clamp(2.4rem,5vw,3.75rem)] leading-[1] font-semibold tracking-[-0.045em] text-balance">
+            {title}
+          </h1>
+          <p className="max-w-2xl text-lg leading-relaxed text-muted-foreground">{intro}</p>
+          {meta && (
+            <p className="inline-flex rounded-md border border-dashed border-border px-3 py-1.5 font-mono text-xs text-muted-foreground">
+              {meta}
+            </p>
+          )}
         </header>
-        <div className="space-y-12 pt-10">{children}</div>
-        <PrevNext path={path} />
+        <div className="space-y-14 border-t border-border pt-10">{children}</div>
+        <PrevNext path={here} />
       </article>
       {toc && toc.length > 0 && (
-        <aside className="hidden w-48 shrink-0 xl:block">
-          <div className="sticky top-20 space-y-2 text-sm">
-            <p className="text-xs font-semibold">On this page</p>
-            <ul className="space-y-1.5">
-              {toc.map((item) => (
-                <li key={item.id}>
-                  <a
-                    href={`#${item.id}`}
-                    className="text-muted-foreground hover:text-foreground block leading-snug transition-colors"
-                  >
-                    {item.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
+        <aside className="hidden w-52 shrink-0 xl:block">
+          <OnThisPage items={toc} />
         </aside>
       )}
     </div>
   );
 }
 
-export function Section({
-  id,
-  title,
-  children,
-}: {
-  id: string;
-  title: string;
-  children: ReactNode;
-}) {
+export function Section({ id, title, children }: { id: string; title: string; children: ReactNode }) {
   return (
-    <section id={id} className="scroll-mt-24 space-y-4">
-      <h2 className="group text-xl font-semibold tracking-tight">
-        <a href={`#${id}`} className="hover:underline hover:decoration-border hover:underline-offset-4">
+    <section id={id} className="scroll-mt-24 space-y-5">
+      <h2 className="group flex items-baseline gap-2 text-2xl font-semibold tracking-[-0.035em] sm:text-[1.75rem]">
+        <a href={`#${id}`} className="flex items-baseline gap-2">
           {title}
+          <span
+            aria-hidden
+            className="font-mono text-base text-primary opacity-0 transition-opacity group-hover:opacity-100"
+          >
+            #
+          </span>
         </a>
       </h2>
       {children}
@@ -83,18 +82,17 @@ export function Section({
   );
 }
 
-/** A heading inside a section. */
 export function Sub({ children }: { children: ReactNode }) {
-  return <h3 className="pt-4 font-semibold">{children}</h3>;
+  return <h3 className="pt-4 text-lg font-semibold tracking-[-0.02em]">{children}</h3>;
 }
 
 export function P({ children }: { children: ReactNode }) {
-  return <p className="text-foreground/85 leading-7">{children}</p>;
+  return <p className="leading-7 text-foreground/85">{children}</p>;
 }
 
 export function C({ children }: { children: ReactNode }) {
   return (
-    <code className="bg-muted rounded px-1.5 py-0.5 font-mono text-[0.85em] break-words">
+    <code className="rounded-md border border-border bg-muted/60 px-1.5 py-0.5 font-mono text-[0.84em] break-words">
       {children}
     </code>
   );
@@ -102,7 +100,10 @@ export function C({ children }: { children: ReactNode }) {
 
 export function A({ href, children }: { href: string; children: ReactNode }) {
   return (
-    <Link href={href} className="text-foreground font-medium underline underline-offset-4 decoration-border hover:decoration-foreground">
+    <Link
+      href={toV2(href)}
+      className="font-medium text-foreground underline decoration-primary/40 underline-offset-4 transition-colors hover:text-primary hover:decoration-primary"
+    >
       {children}
     </Link>
   );
@@ -118,20 +119,17 @@ export function Note({
   children: ReactNode;
 }) {
   const Icon = tone === "warning" ? TriangleAlert : Info;
+  const warn = tone === "warning";
   return (
     <div
       className={cn(
-        "flex gap-3 rounded-lg border p-4 text-sm leading-6",
-        tone === "warning"
-          ? "border-amber-500/30 bg-amber-500/5"
-          : "border-border bg-muted/50"
+        "relative flex gap-3 border-l-2 py-4 pr-4 pl-5 text-sm leading-6",
+        warn ? "border-amber-500 bg-amber-500/[0.06]" : "border-primary bg-primary/[0.05]",
       )}
     >
+      <span aria-hidden className={cn("absolute -top-[3px] -left-[4px] size-[6px]", warn ? "bg-amber-500" : "bg-primary")} />
       <Icon
-        className={cn(
-          "mt-0.5 size-4 shrink-0",
-          tone === "warning" ? "text-amber-600 dark:text-amber-400" : "text-muted-foreground"
-        )}
+        className={cn("mt-0.5 size-4 shrink-0", warn ? "text-amber-600 dark:text-amber-400" : "text-primary")}
       />
       <div className="space-y-1">
         {title && <p className="font-semibold">{title}</p>}
@@ -141,15 +139,15 @@ export function Note({
   );
 }
 
-/** Numbered steps with a thin line connecting them. */
+/** Numbered steps: mono numbers in small squares, joined by a dashed rail. */
 export function Steps({ children }: { children: ReactNode }) {
-  return <ol className="space-y-8 [counter-reset:step]">{children}</ol>;
+  return <ol className="space-y-10 [counter-reset:step]">{children}</ol>;
 }
 
 export function Step({ title, children }: { title?: string; children: ReactNode }) {
   return (
-    <li className="relative pl-10 [counter-increment:step] before:absolute before:top-0 before:left-0 before:flex before:size-7 before:items-center before:justify-center before:rounded-full before:border before:border-border before:bg-card before:text-xs before:font-semibold before:content-[counter(step)] after:absolute after:top-9 after:bottom-[-1.5rem] after:left-3.5 after:w-px after:bg-border last:after:hidden">
-      {title && <h3 className="pt-0.5 font-semibold">{title}</h3>}
+    <li className="relative pl-12 [counter-increment:step] before:absolute before:top-0 before:left-0 before:flex before:size-8 before:items-center before:justify-center before:rounded-md before:border before:border-primary/40 before:bg-primary/10 before:font-mono before:text-xs before:font-semibold before:text-primary before:content-[counter(step,decimal-leading-zero)] after:absolute after:top-10 after:bottom-[-2rem] after:left-4 after:border-l after:border-dashed after:border-border last:after:hidden">
+      {title && <h3 className="pt-1 text-lg font-semibold tracking-[-0.02em]">{title}</h3>}
       <div className={cn("space-y-4", title && "mt-3")}>{children}</div>
     </li>
   );
@@ -157,12 +155,15 @@ export function Step({ title, children }: { title?: string; children: ReactNode 
 
 export function Table({ head, rows }: { head: string[]; rows: ReactNode[][] }) {
   return (
-    <div className="overflow-x-auto rounded-lg border border-border">
+    <div className="overflow-x-auto border border-border">
       <table className="w-full text-left text-sm">
-        <thead className="bg-muted/50">
-          <tr>
+        <thead>
+          <tr className="border-b border-border bg-muted/40">
             {head.map((h) => (
-              <th key={h} className="px-4 py-2.5 font-semibold whitespace-nowrap">
+              <th
+                key={h}
+                className="px-4 py-3 font-mono text-[11px] font-medium tracking-[0.12em] whitespace-nowrap text-muted-foreground uppercase"
+              >
                 {h}
               </th>
             ))}
@@ -170,7 +171,7 @@ export function Table({ head, rows }: { head: string[]; rows: ReactNode[][] }) {
         </thead>
         <tbody>
           {rows.map((row, i) => (
-            <tr key={i} className="border-t border-border align-top">
+            <tr key={i} className="border-t border-border align-top first:border-t-0">
               {row.map((cell, j) => (
                 <td key={j} className={cn("px-4 py-3 leading-6", j === 0 && "whitespace-nowrap")}>
                   {cell}
@@ -185,34 +186,31 @@ export function Table({ head, rows }: { head: string[]; rows: ReactNode[][] }) {
 }
 
 function PrevNext({ path }: { path: string }) {
-  const index = DOCS_PAGES.findIndex((page) => page.href === path);
-  const prev = index > 0 ? DOCS_PAGES[index - 1] : null;
-  const next = index >= 0 && index < DOCS_PAGES.length - 1 ? DOCS_PAGES[index + 1] : null;
+  const index = DOCS_V2_PAGES.findIndex((page) => page.href === path);
+  const prev = index > 0 ? DOCS_V2_PAGES[index - 1] : null;
+  const next = index >= 0 && index < DOCS_V2_PAGES.length - 1 ? DOCS_V2_PAGES[index + 1] : null;
 
   return (
-    <nav className="mt-16 grid gap-3 border-t border-border pt-8 sm:grid-cols-2">
+    <nav aria-label="Previous and next page" className="mt-20 grid border border-border sm:grid-cols-2">
       {prev ? (
-        <Link
-          href={prev.href}
-          className="hover:border-foreground/30 rounded-lg border border-border p-4 transition-colors"
-        >
-          <span className="text-muted-foreground flex items-center gap-1 text-xs">
-            <ArrowLeft className="size-3" /> Previous
+        <Link href={prev.href} className="group p-5 transition-colors hover:bg-muted/50 sm:border-r sm:border-border">
+          <span className="flex items-center gap-1.5 font-mono text-[11px] tracking-[0.14em] text-muted-foreground uppercase">
+            <ArrowLeft className="size-3 transition-transform group-hover:-translate-x-0.5" /> Previous
           </span>
-          <span className="mt-1 block font-medium">{prev.label}</span>
+          <span className="mt-1.5 block text-lg font-semibold tracking-[-0.02em]">{prev.label}</span>
         </Link>
       ) : (
-        <span />
+        <span className="hidden sm:block sm:border-r sm:border-border" />
       )}
       {next && (
         <Link
           href={next.href}
-          className="hover:border-foreground/30 rounded-lg border border-border p-4 text-right transition-colors"
+          className="group border-t border-border p-5 text-right transition-colors hover:bg-muted/50 sm:border-t-0"
         >
-          <span className="text-muted-foreground flex items-center justify-end gap-1 text-xs">
-            Next <ArrowRight className="size-3" />
+          <span className="flex items-center justify-end gap-1.5 font-mono text-[11px] tracking-[0.14em] text-muted-foreground uppercase">
+            Next <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
           </span>
-          <span className="mt-1 block font-medium">{next.label}</span>
+          <span className="mt-1.5 block text-lg font-semibold tracking-[-0.02em]">{next.label}</span>
         </Link>
       )}
     </nav>

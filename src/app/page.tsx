@@ -1,433 +1,269 @@
+import type { Metadata } from "next";
 import Link from "next/link";
-import { redirect } from "next/navigation";
-import {
-  ArrowRight,
-  Inbox,
-  TrendingUp,
-  ListChecks,
-  Bell,
-  MessageSquare,
-  Smartphone,
-} from "lucide-react";
-import { getSessionUser } from "@/lib/auth/requireUser";
+import { ArrowRight, Check } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
-import { PlatformShowcase } from "@/components/landing/PlatformShowcase";
-import { HeroVideo } from "@/components/landing/HeroVideo";
-import { FeatureHighlights } from "@/components/landing/FeatureHighlights";
-import { MarketingHeader } from "@/components/layout/MarketingHeader";
-import { PlatformPills } from "@/components/docs/PlatformPills";
 import { BrandIcon } from "@/components/marketing/BrandIcon";
-import { Marquee } from "@/components/marketing/Marquee";
-import { BorderGrid, BorderGridCell } from "@/components/marketing/BorderGrid";
 import { PricingPlans } from "@/components/pricing/PricingPlans";
-import { Badge } from "@/components/ui/badge";
 import { PLATFORMS } from "@/lib/platforms";
+import { FrameSection, Eyebrow, SectionHeading } from "@/components/landing-v2/Frame";
+import { PhysicsPit } from "@/components/landing-v2/PhysicsPit";
+import { ToggleHeadline } from "@/components/landing-v2/ToggleHeadline";
+import { VideoShowcase } from "@/components/landing-v2/VideoShowcase";
+import { CodeTabs } from "@/components/landing-v2/CodeTabs";
+import { Bento } from "@/components/landing-v2/Bento";
+import { SiteFooter, SiteNav } from "@/components/landing-v2/SiteChrome";
+import { DOCS_HOME, toV2 } from "@/components/docs-v2/nav";
+import "@/components/landing-v2/landing.css";
 
-const CHAPTERS = [
-  {
-    step: "01",
-    icon: Inbox,
-    title: "Ideas land in one place",
-    body: "Someone taps “Suggest a feature” while they're using your app. No email thread, no DM you forget to answer.",
-  },
-  {
-    step: "02",
-    icon: TrendingUp,
-    title: "Votes settle the argument",
-    body: "The loudest person stops winning. The top of the board is simply what most people asked for.",
-  },
-  {
-    step: "03",
-    icon: ListChecks,
-    title: "You mark what you're doing",
-    body: "Open, Planned, Done or Declined — with a short note, so nobody wonders if you read it.",
-  },
-  {
-    step: "04",
-    icon: Bell,
-    title: "They hear back when it ships",
-    body: "Everyone who followed a request gets an email the day it's Done. That's usually the day they reopen your app.",
-  },
-];
+export const metadata: Metadata = {
+  title: "Fewchurs - Let your users tell you what to build next",
+  description:
+    "Drop the Fewchurs SDK into your app and turn scattered feedback into a ranked, shippable roadmap.",
+  // A design preview of the home page: keep it out of search results so it
+  // doesn't compete with "/".
+  robots: { index: false, follow: true },
+};
 
-const FEATURES = [
-  {
-    icon: Smartphone,
-    title: "A board that looks like your app",
-    body: "It picks up your colours and corner radius, so it never feels bolted on.",
-  },
-  {
-    icon: Bell,
-    title: "Email when someone asks",
-    body: "A short note the moment a request arrives. Turn it off whenever you want quiet.",
-  },
-  {
-    icon: TrendingUp,
-    title: "Top, New and Roadmap",
-    body: "Three tabs people already understand. Nothing to explain to your users.",
-  },
-  {
-    icon: Inbox,
-    title: "A public board link",
-    body: "On Pro, share fewchurs.com/b/yourapp anywhere — no login needed to view or vote.",
-  },
-  {
-    icon: ListChecks,
-    title: "Status you control",
-    body: "Move things along in one click and the public roadmap updates itself.",
-  },
-  {
-    icon: MessageSquare,
-    title: "Reply right in the thread",
-    body: "Comment on any request with a Developer badge, so people know you saw it.",
-  },
-];
-
-const TESTIMONIALS = [
-  {
-    quote:
-      "I used to lose feature requests in a pile of App Store reviews. Now they're in one ranked list and I actually know what to build next.",
-    name: "Indie iOS developer",
-    role: "Solo founder",
-  },
-  {
-    quote:
-      "The email when something ships is the whole trick. People come back to check, and a few of them vote on the next thing too.",
-    name: "Weekend app builder",
-    role: "Two apps on the App Store",
-  },
-  {
-    quote:
-      "Three lines of code and I had a board. That's the entire pitch, and it's true.",
-    name: "iOS contractor",
-    role: "Ships for clients",
-  },
-];
-
-const FAQ_ROW_1 = [
-  {
-    q: "Do I need a backend?",
-    a: "No — Fewchurs is the backend. Add the SDK and you're done.",
-  },
+const FAQ = [
+  { q: "Do I need a backend?", a: "No. Fewchurs is the backend. Add the SDK and you're done." },
   {
     q: "What's on the free plan?",
-    a: "One app on one platform, the first 5 feature requests visible, unlimited votes and comments — free forever.",
+    a: "One app on one platform, the first 5 feature requests visible, unlimited votes and comments. Free forever.",
   },
-  {
-    q: "Can users vote without an account?",
-    a: "Yes, anonymously by device. No login required for anyone but you.",
-  },
+  { q: "Can users vote without an account?", a: "Yes, anonymously by device. No login required for anyone but you." },
   {
     q: "Do I need to build the UI?",
-    a: "No — the SDK renders the whole board. On Pro you can also link to a public web board.",
+    a: "No. The SDK renders the whole board. On Pro you can also link to a public web board.",
   },
-];
-
-const FAQ_ROW_2 = [
-  {
-    q: "How do I get notified?",
-    a: 'Turn on "Email on new request" in settings and you\'ll hear about every submission.',
-  },
-  {
-    q: "Can I remove the badge?",
-    a: 'Yes, on Starter and Pro — the "Powered by" badge only shows on Free.',
-  },
+  { q: "Can I remove the badge?", a: 'Yes, on Starter and Pro. The "Powered by" badge only shows on Free.' },
   {
     q: "What if I have more than one app?",
     a: "Free covers 1 app on one platform. Starter covers 3 apps and Pro 5, all on every platform. Every app gets its own board and API key.",
   },
-  {
-    q: "Is there a link I can share?",
-    a: "On Pro, every app gets a public board at /b/your-app-name — no login needed to view or vote.",
-  },
 ];
 
-function FaqCard({ q, a }: { q: string; a: string }) {
+const INSTALL_POINTS = [
+  "No backend to run. Fewchurs is the backend.",
+  "Users vote without signing up, by device.",
+  "The same board on iOS, Android, Flutter and the web.",
+];
+
+const NAV_LINKS = [
+  { href: "#install", label: "Install" },
+  { href: "#board", label: "The board" },
+  { href: "#pricing", label: "Pricing" },
+  { href: DOCS_HOME, label: "Docs" },
+];
+
+export default function LandingV2() {
   return (
-    <div className="w-[320px] shrink-0 rounded-lg  bg-card p-5 sm:w-[380px]">
-      <p className="font-semibold">{q}</p>
-      <p className="text-muted-foreground mt-1.5 text-sm leading-relaxed">
-        {a}
-      </p>
-    </div>
-  );
-}
+    <div className="flex flex-1 flex-col overflow-x-clip bg-background text-foreground">
+      <SiteNav links={NAV_LINKS} />
 
-export default async function Home() {
-  const user = await getSessionUser();
-  if (user) redirect("/dashboard");
-
-  return (
-    <>
-      <MarketingHeader />
-
-      {/* Hero */}
-      <section className="border-b border-border py-16 sm:py-24">
-        <div className="mx-auto grid w-full max-w-6xl gap-12 px-5 lg:grid-cols-[1.05fr_1fr] lg:items-center">
-          <div className="space-y-6">
-            <span className="text-primary text-xs font-semibold tracking-[0.2em] uppercase">
-              get rid of guessings
-            </span>
-            <h1 className="text-4xl leading-[1.08] font-bold text-balance sm:text-5xl">
-              Let your app&apos;s users tell you what to build next.
-            </h1>
-            <p className="text-muted-foreground max-w-lg text-lg text-balance">
-              Drop the Fewchurs SDK into your app and turn scattered feedback
-              into a ranked shippable roadmap.
-            </p>
-            <div className="flex flex-wrap items-center gap-3">
-              <Link
-                href="/login"
-                className={buttonVariants({
-                  size: "lg",
-                  className: "px-7 py-6 border-none",
-                })}
+      <main className="flex-1">
+        {/* Hero */}
+        <FrameSection corners={false} className="[&>div]:border-t-0">
+          <div className="grid lg:grid-cols-[1fr_1.08fr]">
+            <div className="flex flex-col justify-center gap-7 px-5 py-14 sm:px-10 sm:py-20 lg:py-24">
+              <Eyebrow className="lv2-rise">Feature requests for your app</Eyebrow>
+              <h1
+                className="lv2-rise text-[clamp(2.6rem,6.4vw,5rem)] leading-[0.98] font-semibold tracking-[-0.05em] text-balance"
+                style={{ animationDelay: "60ms" }}
               >
-                Start free
-                <ArrowRight className="size-4" />
-              </Link>
+                Let your users tell you what to build <span className="text-primary">next.</span>
+              </h1>
+              <p
+                className="lv2-rise max-w-md text-lg leading-relaxed text-muted-foreground"
+                style={{ animationDelay: "120ms" }}
+              >
+                Drop the Fewchurs SDK into your app and turn scattered feedback into a ranked, shippable roadmap.
+              </p>
+              <div className="lv2-rise flex flex-wrap items-center gap-3" style={{ animationDelay: "180ms" }}>
+                <Link href="/login" className={buttonVariants({ size: "lg", className: "h-12 px-6 text-base" })}>
+                  Start free
+                  <ArrowRight className="size-4" />
+                </Link>
+                <Link
+                  href={DOCS_HOME}
+                  className={buttonVariants({ variant: "outline", size: "lg", className: "h-12 px-6 text-base" })}
+                >
+                  Read the docs
+                </Link>
+              </div>
+              <p className="lv2-rise text-sm text-muted-foreground" style={{ animationDelay: "240ms" }}>
+                Free forever for one app. No credit card.
+              </p>
+            </div>
+
+            <div className="relative flex flex-col border-t border-border lg:border-t-0 lg:border-l">
+              <div className="flex items-center justify-between border-b border-border px-4 py-2.5">
+                <div className="flex gap-1 text-xs font-medium" aria-hidden>
+                  <span className="rounded-md bg-muted px-2.5 py-1 text-foreground">Top</span>
+                  <span className="px-2.5 py-1 text-muted-foreground">New</span>
+                  <span className="px-2.5 py-1 text-muted-foreground">Roadmap</span>
+                </div>
+                <span className="font-mono text-[10px] tracking-[0.14em] text-muted-foreground uppercase">
+                  Drag · throw · vote
+                </span>
+              </div>
+              <PhysicsPit className="h-[440px] sm:h-[480px] lg:h-auto lg:min-h-[520px] lg:flex-1" />
+            </div>
+          </div>
+        </FrameSection>
+
+        {/* Platforms */}
+        <FrameSection id="platforms" aria-label="Platforms">
+          <div className="flex flex-col gap-1 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-10">
+            <Eyebrow>Works where your app lives</Eyebrow>
+            <p className="text-sm text-muted-foreground">One SDK per platform, the same board everywhere.</p>
+          </div>
+          <ul className="grid grid-cols-3 border-t border-border md:grid-cols-6">
+            {PLATFORMS.map((p, i) => (
+              <li
+                key={p.id}
+                className={
+                  "border-border " +
+                  (i % 3 !== 2 ? "border-r " : "md:border-r ") +
+                  (i < 3 ? "border-b md:border-b-0 " : "") +
+                  (i === PLATFORMS.length - 1 ? "md:border-r-0" : "")
+                }
+              >
+                <Link
+                  href={toV2(p.href ?? "/docs")}
+                  className="group flex h-24 flex-col items-center justify-center gap-2 transition-colors hover:bg-muted/50 sm:h-28"
+                >
+                  <BrandIcon
+                    path={p.iconPath}
+                    className="size-6 text-muted-foreground transition-all duration-300 group-hover:-translate-y-0.5 group-hover:scale-110 group-hover:[fill:var(--brand)]"
+                    style={{ "--brand": p.iconColor } as React.CSSProperties}
+                  />
+                  <span className="text-xs font-medium text-muted-foreground group-hover:text-foreground">
+                    {p.name}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </FrameSection>
+
+        {/* Toggle headline */}
+        <FrameSection innerClassName="px-5 py-20 sm:px-10 sm:py-28">
+          <ToggleHeadline />
+        </FrameSection>
+
+        {/* Video */}
+        <FrameSection id="demo">
+          <VideoShowcase />
+        </FrameSection>
+
+        {/* Install */}
+        <FrameSection id="install">
+          <div className="grid items-center gap-12 px-5 py-16 sm:px-10 sm:py-24 lg:grid-cols-[0.9fr_1.1fr]">
+            <div className="space-y-8">
+              <SectionHeading
+                eyebrow="Install"
+                title="A few lines of code. A whole board."
+                body="Add the SDK, pass your key, and your users can suggest, vote and follow, right inside your app."
+              />
+              <ul className="space-y-3">
+                {INSTALL_POINTS.map((t) => (
+                  <li key={t} className="flex items-start gap-3 text-sm sm:text-base">
+                    <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-primary/12 text-primary">
+                      <Check className="size-3" strokeWidth={3} aria-hidden />
+                    </span>
+                    {t}
+                  </li>
+                ))}
+              </ul>
               <Link
-                href="/docs"
-                className={buttonVariants({
-                  variant: "outline",
-                  size: "lg",
-                  className: " px-7 py-6 border-none",
-                })}
+                href={DOCS_HOME}
+                className="group inline-flex items-center gap-1.5 text-sm font-semibold text-primary"
               >
                 Read the docs
+                <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
               </Link>
             </div>
-            <p className="text-muted-foreground text-sm">
-              Free forever for one app. No credit card.
-            </p>
-            {/* <div className="space-y-3 border-t border-border pt-6">
-              <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                Available for
-              </p>
-              <PlatformPills />
-            </div> */}
+            <CodeTabs />
           </div>
+        </FrameSection>
 
-          {/* <PlatformShowcase /> */}
-          <HeroVideo />
-        </div>
-      </section>
+        {/* Bento */}
+        <FrameSection id="board">
+          <div className="px-5 py-16 sm:px-10 sm:py-20">
+            <SectionHeading
+              eyebrow="The board"
+              title="Everything between “I wish it could…” and “It shipped.”"
+            />
+          </div>
+          <div className="border-t border-border">
+            <Bento />
+          </div>
+        </FrameSection>
 
-      {/* Integrations marquee */}
-      <section className="border-b border-border py-16">
-        <div className="mx-auto w-full max-w-6xl space-y-6 px-5">
-          <p className="text-muted-foreground text-center text-xs font-semibold tracking-[0.2em] uppercase">
-            Works with your stack
-          </p>
-          <div className="space-y-3">
-            <Marquee durationSeconds={32} repeat={3}>
-              {PLATFORMS.map((platform) => (
-                <span
-                  key={platform.id}
-                  className="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm"
+        {/* Pricing */}
+        <FrameSection id="pricing">
+          <div className="lv2-pricing space-y-12 px-5 py-16 sm:px-10 sm:py-24">
+            <SectionHeading
+              eyebrow="Pricing"
+              title="Free for your first app. Simple after that."
+              body="Start free on one platform. Upgrade when you have more apps or want the badge gone."
+            />
+            <PricingPlans />
+          </div>
+        </FrameSection>
+
+        {/* FAQ */}
+        <FrameSection>
+          <div className="grid gap-10 px-5 py-16 sm:px-10 sm:py-24 lg:grid-cols-[0.8fr_1.2fr]">
+            <SectionHeading eyebrow="FAQ" title="Questions, answered." />
+            <div className="divide-y divide-border border-y border-border">
+              {FAQ.map((f) => (
+                <details key={f.q} className="group py-1">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-4 text-base font-medium [&::-webkit-details-marker]:hidden">
+                    {f.q}
+                    <span
+                      aria-hidden
+                      className="relative size-3 shrink-0 before:absolute before:inset-x-0 before:top-1/2 before:h-px before:bg-current after:absolute after:inset-y-0 after:left-1/2 after:w-px after:bg-current after:transition-transform after:duration-300 group-open:after:scale-y-0"
+                    />
+                  </summary>
+                  <p className="pb-5 text-muted-foreground">{f.a}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </FrameSection>
+
+        {/* CTA */}
+        <FrameSection>
+          <div className="relative overflow-hidden px-5 py-24 text-center sm:px-10 sm:py-32">
+            <div aria-hidden className="lv2-diamonds absolute inset-0" />
+            <div className="relative mx-auto max-w-3xl space-y-8">
+              <h2 className="text-[clamp(2.2rem,5.6vw,4.5rem)] leading-[1] font-semibold tracking-[-0.05em] text-balance">
+                Your users already know what to build next.
+              </h2>
+              <p className="mx-auto max-w-lg text-lg text-muted-foreground">Give them somewhere to say it.</p>
+              <div className="flex flex-wrap items-center justify-center gap-3">
+                <Link href="/login" className={buttonVariants({ size: "lg", className: "h-12 px-6 text-base" })}>
+                  Start free
+                  <ArrowRight className="size-4" />
+                </Link>
+                <Link
+                  href={DOCS_HOME}
+                  className={buttonVariants({
+                    variant: "outline",
+                    size: "lg",
+                    className: "h-12 bg-background px-6 text-base",
+                  })}
                 >
-                  <BrandIcon
-                    path={platform.iconPath}
-                    color={platform.iconColor}
-                    className="size-4"
-                  />
-                  {platform.name}
-                </span>
-              ))}
-            </Marquee>
-            <Marquee reverse durationSeconds={36} repeat={3}>
-              {[...PLATFORMS].reverse().map((platform) => (
-                <span
-                  key={platform.id}
-                  className="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm"
-                >
-                  <BrandIcon
-                    path={platform.iconPath}
-                    color={platform.iconColor}
-                    className="size-4"
-                  />
-                  {platform.name}
-                </span>
-              ))}
-            </Marquee>
+                  Read the docs
+                </Link>
+              </div>
+            </div>
           </div>
-        </div>
-      </section>
+        </FrameSection>
+      </main>
 
-      {/* Feature highlights */}
-      <section id="highlights" className="border-b border-border py-24">
-        <div className="mx-auto w-full max-w-6xl space-y-12 px-5">
-          <div className="mx-auto max-w-2xl space-y-3 text-center">
-            <h2 className="text-3xl font-bold text-balance sm:text-4xl">
-              The whole loop, in one tool
-            </h2>
-            <p className="text-muted-foreground">
-              Collect ideas in any language, let votes rank them, reply, ship,
-              and tell people it&apos;s done.
-            </p>
-          </div>
-          <FeatureHighlights />
-        </div>
-      </section>
-
-      {/* Story chapters */}
-      <section id="how" className="border-b border-border py-24">
-        <div className="mx-auto w-full max-w-6xl px-5">
-          <div className="max-w-2xl">
-            <h2 className="text-3xl font-bold sm:text-4xl">
-              From &ldquo;I think people want this&rdquo; to &ldquo;they told
-              me, so I built it.&rdquo;
-            </h2>
-          </div>
-          <div className="mt-14">
-            <BorderGrid cols={2}>
-              {CHAPTERS.map((c) => (
-                <BorderGridCell key={c.step}>
-                  <div className="text-muted-foreground flex items-center gap-3">
-                    <c.icon className="size-5" strokeWidth={1.6} />
-                    <span className="text-xs font-medium tracking-[0.2em]">
-                      {c.step}
-                    </span>
-                  </div>
-                  <h3 className="mt-5 text-xl font-semibold">{c.title}</h3>
-                  <p className="text-muted-foreground mt-3 text-sm leading-relaxed">
-                    {c.body}
-                  </p>
-                </BorderGridCell>
-              ))}
-            </BorderGrid>
-          </div>
-        </div>
-      </section>
-
-      {/* Features */}
-      <section id="features" className="border-b border-border py-24">
-        <div className="mx-auto w-full max-w-6xl space-y-10 px-5">
-          <h2 className="max-w-2xl text-3xl font-bold sm:text-4xl">
-            Everything the board needs, nothing it doesn&apos;t
-          </h2>
-          <BorderGrid cols={3}>
-            {FEATURES.map(({ icon: Icon, title, body }) => (
-              <BorderGridCell key={title}>
-                <div className="space-y-3">
-                  <Icon className="text-primary size-5" />
-                  <h3 className="text-base font-semibold">{title}</h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">
-                    {body}
-                  </p>
-                </div>
-              </BorderGridCell>
-            ))}
-          </BorderGrid>
-        </div>
-      </section>
-
-      {/* Pricing */}
-      <section id="pricing" className="border-b border-border py-24">
-        <div className="mx-auto w-full max-w-6xl space-y-10 px-5 text-center">
-          <div className="mx-auto max-w-2xl space-y-2">
-            <h2 className="text-3xl font-bold sm:text-4xl">Simple pricing</h2>
-            <p className="text-muted-foreground">
-              Free forever for a hobby project. Upgrade once you&apos;re
-              shipping.
-            </p>
-          </div>
-          <PricingPlans />
-          <p className="text-muted-foreground text-sm">
-            <Link
-              href="/pricing"
-              className="hover:text-foreground underline underline-offset-4"
-            >
-              See the full plan comparison
-            </Link>
-          </p>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="border-b border-border py-24">
-        <div className="mx-auto w-full max-w-6xl space-y-10 px-5">
-          <div className="flex items-center gap-3">
-            <h2 className="text-3xl font-bold sm:text-4xl">
-              What indie developers say
-            </h2>
-          </div>
-          <BorderGrid cols={3}>
-            {TESTIMONIALS.map(({ quote, name, role }) => (
-              <BorderGridCell key={name}>
-                <figure className="flex h-full flex-col justify-between gap-6">
-                  <p className="text-[15px] leading-relaxed">
-                    &ldquo;{quote}&rdquo;
-                  </p>
-                  <figcaption>
-                    <p className="text-sm font-semibold">{name}</p>
-                    <p className="text-muted-foreground text-xs">{role}</p>
-                  </figcaption>
-                </figure>
-              </BorderGridCell>
-            ))}
-          </BorderGrid>
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section id="faq" className="border-b border-border py-24">
-        <div className="mx-auto w-full max-w-6xl space-y-10 px-5">
-          <div className="mx-auto max-w-2xl space-y-2 text-center">
-            <h2 className="text-3xl font-bold sm:text-4xl">Questions</h2>
-            <p className="text-muted-foreground">
-              The short answers, before you ask.
-            </p>
-          </div>
-          <div className="space-y-4">
-            <Marquee durationSeconds={45}>
-              {FAQ_ROW_1.map((item) => (
-                <FaqCard key={item.q} q={item.q} a={item.a} />
-              ))}
-            </Marquee>
-            <Marquee reverse durationSeconds={50}>
-              {FAQ_ROW_2.map((item) => (
-                <FaqCard key={item.q} q={item.q} a={item.a} />
-              ))}
-            </Marquee>
-          </div>
-        </div>
-      </section>
-
-      {/* Closing CTA */}
-      <section className="py-24">
-        <div className="mx-auto w-full max-w-3xl space-y-6 px-5 text-center">
-          <h2 className="text-3xl font-bold sm:text-4xl">
-            Ship what your users actually want.
-          </h2>
-          <p className="text-muted-foreground">
-            Free forever for your first app — takes less time to set up than a
-            coffee break.
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <Link
-              href="/login"
-              className={buttonVariants({
-                size: "lg",
-                className: "px-6 py-5 border-none",
-              })}
-            >
-              Start free
-              <ArrowRight className="size-4" />
-            </Link>
-            <Link
-              href="/docs"
-              className={buttonVariants({
-                variant: "outline",
-                size: "lg",
-                className: "px-6 py-5 border-none",
-              })}
-            >
-              Read the docs
-            </Link>
-          </div>
-        </div>
-      </section>
-    </>
+      <SiteFooter />
+    </div>
   );
 }
