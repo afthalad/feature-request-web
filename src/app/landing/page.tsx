@@ -2,17 +2,17 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Check } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
-import { Logo } from "@/components/layout/Logo";
-import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { BrandIcon } from "@/components/marketing/BrandIcon";
 import { PricingPlans } from "@/components/pricing/PricingPlans";
 import { PLATFORMS } from "@/lib/platforms";
 import { FrameSection, Eyebrow, SectionHeading } from "@/components/landing-v2/Frame";
 import { PhysicsPit } from "@/components/landing-v2/PhysicsPit";
 import { ToggleHeadline } from "@/components/landing-v2/ToggleHeadline";
+import { VideoShowcase } from "@/components/landing-v2/VideoShowcase";
 import { CodeTabs } from "@/components/landing-v2/CodeTabs";
 import { Bento } from "@/components/landing-v2/Bento";
-import { BouncyWordmark } from "@/components/landing-v2/BouncyWordmark";
+import { SiteFooter, SiteNav } from "@/components/landing-v2/SiteChrome";
+import { DOCS_HOME, toV2 } from "@/components/docs-v2/nav";
 import "@/components/landing-v2/landing.css";
 
 export const metadata: Metadata = {
@@ -48,48 +48,17 @@ const INSTALL_POINTS = [
   "The same board on iOS, Android, Flutter and the web.",
 ];
 
-function Nav() {
-  return (
-    <header className="sticky top-0 z-40 border-b border-border bg-background/80 px-4 backdrop-blur-md sm:px-6">
-      <div className="mx-auto flex h-16 w-full max-w-[1200px] items-center justify-between gap-4">
-        <Logo />
-        <nav aria-label="Main" className="hidden items-center gap-1 text-sm md:flex">
-          {[
-            { href: "#install", label: "Install" },
-            { href: "#board", label: "The board" },
-            { href: "#pricing", label: "Pricing" },
-            { href: "/docs", label: "Docs" },
-          ].map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
-              className="rounded-md px-3 py-2 text-muted-foreground transition-colors hover:text-foreground"
-            >
-              {l.label}
-            </a>
-          ))}
-        </nav>
-        <div className="flex items-center gap-1.5">
-          <ThemeToggle />
-          <Link
-            href="/login"
-            className={buttonVariants({ variant: "ghost", size: "sm", className: "hidden sm:inline-flex" })}
-          >
-            Log in
-          </Link>
-          <Link href="/login" className={buttonVariants({ size: "sm" })}>
-            Start free
-          </Link>
-        </div>
-      </div>
-    </header>
-  );
-}
+const NAV_LINKS = [
+  { href: "#install", label: "Install" },
+  { href: "#board", label: "The board" },
+  { href: "#pricing", label: "Pricing" },
+  { href: DOCS_HOME, label: "Docs" },
+];
 
 export default function LandingV2() {
   return (
     <div className="flex flex-1 flex-col overflow-x-clip bg-background text-foreground">
-      <Nav />
+      <SiteNav links={NAV_LINKS} />
 
       <main className="flex-1">
         {/* Hero */}
@@ -115,7 +84,7 @@ export default function LandingV2() {
                   <ArrowRight className="size-4" />
                 </Link>
                 <Link
-                  href="/docs"
+                  href={DOCS_HOME}
                   className={buttonVariants({ variant: "outline", size: "lg", className: "h-12 px-6 text-base" })}
                 >
                   Read the docs
@@ -160,7 +129,7 @@ export default function LandingV2() {
                 }
               >
                 <Link
-                  href={p.href ?? "/docs"}
+                  href={toV2(p.href ?? "/docs")}
                   className="group flex h-24 flex-col items-center justify-center gap-2 transition-colors hover:bg-muted/50 sm:h-28"
                 >
                   <BrandIcon
@@ -180,6 +149,11 @@ export default function LandingV2() {
         {/* Toggle headline */}
         <FrameSection innerClassName="px-5 py-20 sm:px-10 sm:py-28">
           <ToggleHeadline />
+        </FrameSection>
+
+        {/* Video */}
+        <FrameSection id="demo">
+          <VideoShowcase />
         </FrameSection>
 
         {/* Install */}
@@ -202,7 +176,7 @@ export default function LandingV2() {
                 ))}
               </ul>
               <Link
-                href="/docs"
+                href={DOCS_HOME}
                 className="group inline-flex items-center gap-1.5 text-sm font-semibold text-primary"
               >
                 Read the docs
@@ -228,7 +202,7 @@ export default function LandingV2() {
 
         {/* Pricing */}
         <FrameSection id="pricing">
-          <div className="space-y-12 px-5 py-16 sm:px-10 sm:py-24">
+          <div className="lv2-pricing space-y-12 px-5 py-16 sm:px-10 sm:py-24">
             <SectionHeading
               eyebrow="Pricing"
               title="Free for your first app. Simple after that."
@@ -274,7 +248,7 @@ export default function LandingV2() {
                   <ArrowRight className="size-4" />
                 </Link>
                 <Link
-                  href="/docs"
+                  href={DOCS_HOME}
                   className={buttonVariants({
                     variant: "outline",
                     size: "lg",
@@ -289,46 +263,7 @@ export default function LandingV2() {
         </FrameSection>
       </main>
 
-      {/* Footer */}
-      <footer>
-        <FrameSection>
-          <div className="grid gap-10 px-5 py-14 sm:grid-cols-2 sm:px-10 lg:grid-cols-[1.4fr_1fr_1fr]">
-            <div className="space-y-3">
-              <Logo />
-              <p className="max-w-xs text-sm text-muted-foreground">
-                Feature requests, votes and a public roadmap for your app.
-              </p>
-            </div>
-            <div>
-              <p className="mb-3 font-mono text-[11px] tracking-[0.16em] text-muted-foreground uppercase">Product</p>
-              <ul className="space-y-2 text-sm">
-                <li><Link className="hover:text-primary" href="/pricing">Pricing</Link></li>
-                <li><Link className="hover:text-primary" href="/docs">Docs</Link></li>
-                <li><Link className="hover:text-primary" href="/login">Log in</Link></li>
-              </ul>
-            </div>
-            <div>
-              <p className="mb-3 font-mono text-[11px] tracking-[0.16em] text-muted-foreground uppercase">Platforms</p>
-              <ul className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
-                {PLATFORMS.map((p) => (
-                  <li key={p.id}>
-                    <Link className="hover:text-primary" href={p.href ?? "/docs"}>
-                      {p.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-          <div className="px-2 pt-6 sm:px-6">
-            <BouncyWordmark />
-          </div>
-          <div className="flex flex-col gap-2 border-t border-border px-5 py-5 text-xs text-muted-foreground sm:flex-row sm:justify-between sm:px-10">
-            <span>© {new Date().getFullYear()} Fewchurs</span>
-            <span>Hover or tap the letters.</span>
-          </div>
-        </FrameSection>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

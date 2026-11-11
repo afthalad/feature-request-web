@@ -1,14 +1,42 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 /** A headline with a real switch in the middle of the sentence. */
 export function ToggleHeadline() {
-  const [on, setOn] = useState(true);
+  // Starts off ("Keep guessing.") and flips itself on one second after it
+  // scrolls into view, so people see the switch actually do something.
+  const [on, setOn] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const touched = useRef(false);
+
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) {
+          clearTimeout(timer);
+          return;
+        }
+        timer = setTimeout(() => {
+          if (!touched.current) setOn(true);
+          io.disconnect();
+        }, 1000);
+      },
+      { threshold: 0.6 },
+    );
+    io.observe(el);
+    return () => {
+      clearTimeout(timer);
+      io.disconnect();
+    };
+  }, []);
 
   return (
-    <div className="space-y-6">
+    <div ref={rootRef} className="space-y-6" data-testid="toggle-headline">
       <h2 className="text-[clamp(2.1rem,5.4vw,4.25rem)] leading-[1.02] font-semibold tracking-[-0.045em] text-balance">
         Stop guessing.{" "}
         <button
@@ -16,7 +44,10 @@ export function ToggleHeadline() {
           role="switch"
           aria-checked={on}
           aria-label="Listen to your users"
-          onClick={() => setOn((v) => !v)}
+          onClick={() => {
+            touched.current = true;
+            setOn((v) => !v);
+          }}
           className={cn(
             "relative mx-1 inline-flex h-[0.82em] w-[1.6em] translate-y-[0.08em] items-center rounded-full align-baseline transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary",
             on ? "bg-primary" : "bg-muted-foreground/30",

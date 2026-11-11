@@ -88,3 +88,12 @@
     animation: none;
   }
 }
+
+/* Pricing: the shared plan cards are white on a white page in light mode,
+   so only the highlighted plan stood out. Give the other plans an edge and a
+   lift here, without changing the shared component. */
+.lv2-pricing .rounded-3xl.bg-card:not(.ring-4) {
+  box-shadow:
+    0 0 0 1px var(--border),
+    0 18px 40px -28px rgba(0, 0, 0, 0.35);
+}

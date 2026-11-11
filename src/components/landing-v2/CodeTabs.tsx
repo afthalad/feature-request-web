@@ -6,14 +6,32 @@ import { BrandIcon } from "@/components/marketing/BrandIcon";
 import { PLATFORMS } from "@/lib/platforms";
 import { cn } from "@/lib/utils";
 
-const TABS = PLATFORMS.filter((p) => p.codeSnippet);
+/** Snippets for platforms whose entry in PLATFORMS has none yet. */
+const EXTRA_SNIPPETS: Record<string, { filename: string; code: string }> = {
+  flutter: {
+    filename: "lib/main.dart",
+    code: `import 'package:fewchurs/fewchurs.dart';
+
+void main() {
+  Fewchurs.configure(apiKey: 'fr_live_xxx');
+  runApp(const MyApp());
+}
+
+// Anywhere in your app
+Fewchurs.showBoard(context);`,
+  },
+};
+
+const TABS = PLATFORMS.map((p) => ({ ...p, codeSnippet: p.codeSnippet ?? EXTRA_SNIPPETS[p.id] })).filter(
+  (p) => p.codeSnippet,
+);
 
 /** Colours string literals and comments; everything else stays plain. */
 function highlight(line: string) {
-  const parts = line.split(/("[^"]*"|'[^']*'|\/\/.*$)/g);
+  const parts = line.split(/("[^"]*"|'[^']*'|(?:^|\s)\/\/.*$)/g);
   return parts.map((part, i) => {
     if (!part) return null;
-    if (part.startsWith("//")) return <span key={i} className="text-muted-foreground italic">{part}</span>;
+    if (part.trimStart().startsWith("//")) return <span key={i} className="text-muted-foreground italic">{part}</span>;
     if (/^["']/.test(part)) return <span key={i} className="text-primary">{part}</span>;
     return <span key={i}>{part}</span>;
   });
@@ -74,7 +92,7 @@ export function CodeTabs() {
             tabIndex={i === active ? 0 : -1}
             onClick={() => select(i)}
             className={cn(
-              "relative flex shrink-0 items-center gap-2 px-4 py-3 text-sm font-medium transition-colors",
+              "relative flex shrink-0 items-center gap-1.5 px-3 py-3 text-sm font-medium transition-colors",
               i === active ? "text-foreground" : "text-muted-foreground hover:text-foreground",
             )}
           >
