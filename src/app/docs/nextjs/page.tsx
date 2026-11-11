@@ -137,8 +137,10 @@ export default function NextJsDocsPage() {
             <CodeBlock code={LAYOUT} filename="app/layout.tsx" />
             <P>
               A <strong>Feedback</strong> button now stays on the bottom right of every page.
-              Pressing it slides in your feature board as a sheet. Inside the board,{" "}
-              <strong>New request</strong> shows the form for adding a request.
+              Pressing it slides in your feature board as a sheet, or from the bottom on phones.
+              Inside the sheet, <strong>New request</strong> shows only the form, and{" "}
+              <strong>Comments</strong> and <strong>Notify me</strong> open in a popup. A popup
+              closes with its × button, Escape, or a click outside it.
             </P>
             <P>
               The board only loads when someone presses the button, and the button doesn&apos;t
@@ -147,7 +149,7 @@ export default function NextJsDocsPage() {
           </Step>
         </Steps>
         <Note>
-          The floating button needs <C>@fewchurs/next</C> 1.3.0 or later. To upgrade, run{" "}
+          The sheet as described here needs <C>@fewchurs/next</C> 1.7.0 or later. To upgrade, run{" "}
           <C>{UPGRADE}</C>.
         </Note>
       </Section>
@@ -307,8 +309,8 @@ export default function NextJsDocsPage() {
 
         <Sub>If something goes wrong</Sub>
         <P>
-          When a call is refused, visitors see &quot;Feedback is unavailable right now.&quot; If the
-          domain is the cause, your server log names it:
+          When a call is refused, the sheet shows <strong>Invalid API key</strong>. If the domain
+          is the cause, the line under it and your server log both name it:
         </P>
         <CodeBlock code={REFUSED_LOG} />
         <P>
@@ -324,8 +326,11 @@ export default function NextJsDocsPage() {
           own when you upgrade to <A href="/pricing">Starter or Pro</A>.
         </P>
         <Note>
-          Stuck? If the sheet says &quot;Something went wrong&quot;, <C>FEWCHURS_API_KEY</C> is
-          usually missing on the server. Check your terminal for a message from Fewchurs.
+          Stuck? If the sheet says &quot;Fewchurs isn&apos;t set up&quot;, <C>FEWCHURS_API_KEY</C>{" "}
+          is missing on the server. Restart your dev server after adding it. If it says
+          &quot;Couldn&apos;t load requests&quot;, check that the route file is at{" "}
+          <C>app/api/fewchurs/[...route]/route.ts</C>, or <C>src/app/api/...</C> if your app uses
+          a <C>src</C> folder.
         </Note>
       </Section>
     </DocsPage>

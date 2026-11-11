@@ -51,18 +51,17 @@ Fewchurs.showBoard()`,
     id: "nextjs",
     name: "Next.js",
     tagline:
-      "A server-rendered board, with your API key staying on the server.",
+      "A floating button that opens your board in a sheet. Your key stays on the server.",
     iconPath: siNextdotjs.path,
     iconColor: `#${siNextdotjs.hex}`,
     href: "/docs/nextjs",
     deviceType: "web",
     codeSnippet: {
-      filename: "app/feedback/page.tsx",
-      code: `import { FewchursBoard } from "@fewchurs/next";
+      filename: "app/layout.tsx",
+      code: `import { FewchursButton } from "@fewchurs/next";
 
-export default function Page() {
-  return <FewchursBoard />;
-}`,
+// in your root layout, after {children}
+<FewchursButton floating />`,
     },
   },
   {
@@ -85,17 +84,17 @@ FewchursBoard()`,
   {
     id: "react",
     name: "React",
-    tagline: "A drop-in board for Vite, CRA — any React app.",
+    tagline: "A floating button that opens your board in a sheet, for any React app.",
     iconPath: siReact.path,
     iconColor: `#${siReact.hex}`,
     href: "/docs/react",
     deviceType: "web",
     codeSnippet: {
       filename: "App.tsx",
-      code: `import { FewchursBoard, FewchursProvider } from "@fewchurs/react";
+      code: `import { FewchursButton, FewchursProvider } from "@fewchurs/react";
 
 <FewchursProvider apiKey="fr_live_xxx">
-  <FewchursBoard />
+  <FewchursButton floating />
 </FewchursProvider>`,
     },
   },

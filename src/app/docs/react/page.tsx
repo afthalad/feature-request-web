@@ -4,16 +4,17 @@ import { A, C, DocsPage, Note, P, Section, Step, Steps, Sub, Table } from "@/com
 
 export const metadata: Metadata = {
   title: "React — Docs — Fewchurs",
-  description: "Add a feature request board to any React app.",
+  description: "Add a floating button to any React app that opens your feature request board in a sheet.",
 };
 
 const TOC = [
   { id: "install", label: "Install" },
-  { id: "show-the-board", label: "Show the board" },
+  { id: "add-the-button", label: "Add the feedback button" },
+  { id: "change-the-look", label: "Change the look" },
+  { id: "own-button", label: "Open the sheet from your own button" },
+  { id: "full-page-board", label: "Use a full page board" },
   { id: "api-key", label: "Keeping the key private" },
   { id: "going-live", label: "Localhost and going live" },
-  { id: "change-the-look", label: "Change the look" },
-  { id: "in-a-dialog", label: "Open it in a dialog" },
   { id: "one-request", label: "Link to one request" },
   { id: "your-own-ui", label: "Build your own UI" },
   { id: "errors", label: "Handling errors" },
@@ -22,6 +23,28 @@ const TOC = [
 ];
 
 const INSTALL = `npm install @fewchurs/react`;
+
+const UPGRADE = `npm install @fewchurs/react@latest`;
+
+const BUTTON = `import { FewchursButton, FewchursProvider } from "@fewchurs/react";
+import "@fewchurs/react/styles.css";
+
+export function App() {
+  return (
+    <FewchursProvider apiKey={import.meta.env.VITE_FEWCHURS_KEY}>
+      {/* the rest of your app */}
+      <FewchursButton floating />
+    </FewchursProvider>
+  );
+}`;
+
+const BUTTON_PROPS = `<FewchursButton
+  floating="left"
+  tabs={["top", "new", "roadmap"]}
+  theme={{ primary: "#0f766e", radius: 8 }}
+>
+  Suggest a feature
+</FewchursButton>`;
 
 const BOARD = `import { FewchursBoard, FewchursProvider } from "@fewchurs/react";
 import "@fewchurs/react/styles.css";
@@ -36,7 +59,7 @@ export function App() {
 
 const PROXY = `// Your server adds the API key. The browser never sees it.
 <FewchursProvider baseUrl="/api/fewchurs">
-  <FewchursBoard />
+  <FewchursButton floating />
 </FewchursProvider>`;
 
 const LOOK = `<FewchursBoard
@@ -67,7 +90,7 @@ export function FeedbackButton() {
   return (
     <FewchursProvider apiKey={import.meta.env.VITE_FEWCHURS_KEY}>
       <button onClick={() => setOpen(true)}>Feedback</button>
-      <FewchursBoardDialog open={open} onClose={() => setOpen(false)} />
+      <FewchursBoardDialog variant="sheet" open={open} onClose={() => setOpen(false)} />
     </FewchursProvider>
   );
 }`;
@@ -108,7 +131,7 @@ export default function ReactDocsPage() {
     <DocsPage
       path="/docs/react"
       title="React"
-      intro="Add a feature request board to any React app: Vite, Create React App, Remix or your own setup."
+      intro="A floating button that opens your feature board in a sheet, for any React app: Vite, Create React App, Remix or your own setup."
       meta="Needs React 18 or later."
       toc={TOC}
     >
@@ -120,12 +143,41 @@ export default function ReactDocsPage() {
         </P>
       </Section>
 
-      <Section id="show-the-board" title="Show the board">
+      <Section id="add-the-button" title="Add the feedback button">
         <P>
-          Wrap the board in <C>FewchursProvider</C> and give it your API key. Import the styles
-          file once.
+          Wrap your app in <C>FewchursProvider</C> with your API key, and add{" "}
+          <C>FewchursButton</C> once. Import the styles file once too.
         </P>
-        <CodeBlock code={BOARD} filename="App.tsx" />
+        <CodeBlock code={BUTTON} filename="App.tsx" />
+        <P>
+          A <strong>Feedback</strong> button now stays on the bottom right of every page.
+          Pressing it slides in your feature board as a sheet, or from the bottom on phones.
+        </P>
+        <Table
+          head={["In the sheet", "What happens"]}
+          rows={[
+            [
+              <strong key="n">New request</strong>,
+              "Shows only the form. The requests come back after Cancel or a successful submit.",
+            ],
+            [
+              <strong key="c">Comments</strong>,
+              "Opens the comments and a comment box in a popup.",
+            ],
+            [
+              <strong key="f">Notify me</strong>,
+              "Opens a popup that asks for an email, to hear when the request ships.",
+            ],
+          ]}
+        />
+        <P>
+          A popup closes with its × button, Escape, or a click outside it. The sheet stays open
+          behind it.
+        </P>
+        <Note>
+          The sheet as described here needs <C>@fewchurs/react</C> 1.7.0 or later. To upgrade, run{" "}
+          <C>{UPGRADE}</C>.
+        </Note>
       </Section>
 
       <Section id="api-key" title="Keeping the key private">
@@ -224,9 +276,9 @@ export default function ReactDocsPage() {
 
         <Sub>If something goes wrong</Sub>
         <P>
-          When a call is refused, visitors see &quot;Feedback is unavailable right now.&quot; To see
-          why, open your browser&apos;s developer tools, go to the Network tab and click the failed
-          call. The response says what&apos;s wrong:
+          When a call is refused, the sheet shows <strong>Invalid API key</strong>. For a domain
+          problem, the line under it names the domain to add. For more detail, open your
+          browser&apos;s developer tools, go to the Network tab and click the failed call:
         </P>
         <Table
           head={["Status", "What it means", "What to do"]}
@@ -250,7 +302,16 @@ export default function ReactDocsPage() {
 
       <Section id="change-the-look" title="Change the look">
         <P>
-          Set colors and text with props. You can also set CSS variables like{" "}
+          Pass your own label as the button&apos;s text. Use <C>floating=&quot;left&quot;</C> for
+          the bottom left, or leave out <C>floating</C> to place the button anywhere in your page.
+          Every other prop goes to the board in the sheet.
+        </P>
+        <CodeBlock code={BUTTON_PROPS} />
+        <P>
+          <C>className</C> and <C>style</C> go on the button itself.
+        </P>
+        <P>
+          The board takes the same props wherever you show it. Set colors and text with props. You can also set CSS variables like{" "}
           <C>--fw-primary</C> and <C>--fw-radius</C>. Light and dark mode follow the
           visitor&apos;s system setting.
         </P>
@@ -262,26 +323,38 @@ export default function ReactDocsPage() {
         </P>
       </Section>
 
-      <Section id="in-a-dialog" title="Open it in a dialog">
+      <Section id="own-button" title="Open the sheet from your own button">
         <P>
-          <C>FewchursBoardDialog</C> puts the whole board in a modal, so a &quot;Feedback&quot;
-          button anywhere in your app can open it. It takes every <C>FewchursBoard</C> prop,
-          plus <C>open</C> and <C>onClose</C>. Escape closes it, and focus returns to the button
-          that opened it.
+          Want to open the sheet from a menu item or a button you already have? Use{" "}
+          <C>FewchursBoardDialog</C>. It takes every board prop, plus <C>open</C> and{" "}
+          <C>onClose</C>. Escape closes it, and focus returns to the button that opened it.
         </P>
         <CodeBlock code={DIALOG} filename="FeedbackButton.tsx" />
+        <P>
+          Leave out <C>variant=&quot;sheet&quot;</C> to show the board in a dialog in the middle of
+          the screen instead.
+        </P>
+      </Section>
+
+      <Section id="full-page-board" title="Use a full page board">
+        <P>
+          Want the board on its own page instead of in a sheet? Use <C>FewchursBoard</C> inside
+          the same provider.
+        </P>
+        <CodeBlock code={BOARD} filename="FeedbackPage.tsx" />
       </Section>
 
       <Section id="one-request" title="Link to one request">
         <P>
           <C>initialFeatureId</C> shows one request above the list, with its comments already
           open. Use it for a link from an email or a changelog straight to the request someone
-          voted on.
+          voted on. It works on <C>FewchursButton</C> and <C>FewchursBoardDialog</C> too.
         </P>
         <CodeBlock code={ONE_REQUEST} />
         <P>
           It works the same on the <A href="/docs/nextjs">Next.js board</A>, where the request is
-          rendered on the server. If the id no longer exists, the board just shows the list. To
+          rendered on the server. If the id no longer exists, the board says &quot;This request no
+          longer exists.&quot; and still shows the list. To
           fetch one request without the board, use <C>useFeature</C>:
         </P>
         <CodeBlock code={ONE_REQUEST_HOOK} />
@@ -332,8 +405,8 @@ export default function ReactDocsPage() {
           own when you upgrade to <A href="/pricing">Starter or Pro</A>.
         </P>
         <Note>
-          Stuck? A board that loads but stays empty usually means the API key is missing. Check
-          that the environment variable is set where your app is built.
+          Stuck? If the sheet says &quot;Fewchurs isn&apos;t set up&quot;, the API key is missing.
+          Check that the environment variable is set where your app is built.
         </Note>
       </Section>
     </DocsPage>
