@@ -93,7 +93,7 @@ export default async function DashboardLayout({
           floating
           theme={{ radius: 8 }}
           userEmail={user?.email}
-          labels={{ title: "Feature request", submit: "share bugs and ideas" }}
+          labels={{ title: "Bugs and ideas", newRequest: "Share an idea", submit: "Send" }}
         />
       </TooltipProvider>
     </AuthGuard>
