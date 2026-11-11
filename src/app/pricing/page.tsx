@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/site";
 import { Check, X } from "lucide-react";
 import {
   Table,
@@ -82,6 +84,13 @@ function Cell({ value }: { value: string | boolean }) {
   }
   return <span>{value}</span>;
 }
+
+export const metadata: Metadata = pageMetadata({
+  title: "Pricing",
+  description:
+    "Free forever for one app. Starter is $14.99 a month for 3 apps, Pro is $29.99 a month for 5 apps with a public board. Yearly saves 20%.",
+  path: "/pricing",
+});
 
 const PLAN_COLUMNS = ["free", "starter", "pro"] as const;
 

@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/site";
 import { resolveAppBySlug } from "@/lib/slug";
 import { listFeaturesForApp } from "@/lib/features/service";
 import { getOwnerPlan, PLAN_LIMITS } from "@/lib/plans/limits";
@@ -17,10 +18,11 @@ export async function generateMetadata({
   const app = await resolveAppBySlug(slug);
   if (!app) return { title: "Board not found" };
 
-  return {
+  return pageMetadata({
     title: `${app.name} — Feature requests`,
     description: `See and vote on feature requests for ${app.name}.`,
-  };
+    path: `/b/${slug}`,
+  });
 }
 
 export default async function PublicBoardPage({

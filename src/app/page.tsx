@@ -7,6 +7,8 @@ import { BrandIcon } from "@/components/marketing/BrandIcon";
 import { PricingPlans } from "@/components/pricing/PricingPlans";
 import { PLATFORMS } from "@/lib/platforms";
 import { getSessionUser } from "@/lib/auth/requireUser";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE } from "@/lib/site";
+import { HomeStructuredData } from "@/components/seo/StructuredData";
 import { FrameSection, Eyebrow, SectionHeading } from "@/components/landing/Frame";
 import { PhysicsPit } from "@/components/landing/PhysicsPit";
 import { ToggleHeadline } from "@/components/landing/ToggleHeadline";
@@ -17,9 +19,11 @@ import { SiteFooter, SiteNav } from "@/components/landing/SiteChrome";
 import "@/components/landing/landing.css";
 
 export const metadata: Metadata = {
-  title: "Fewchurs - Let your users tell you what to build next",
-  description:
-    "Drop the Fewchurs SDK into your app and turn scattered feedback into a ranked, shippable roadmap.",
+  // The home page spells the brand and the category out in full; every other page uses the template.
+  title: { absolute: `${SITE_NAME} — ${SITE_TAGLINE}` },
+  description: SITE_DESCRIPTION,
+  alternates: { canonical: "/" },
+  openGraph: { url: "/", title: `${SITE_NAME} — ${SITE_TAGLINE}`, description: SITE_DESCRIPTION },
 };
 
 const FAQ = [
@@ -60,6 +64,7 @@ export default async function Home() {
 
   return (
     <div className="flex flex-1 flex-col overflow-x-clip bg-background text-foreground">
+      <HomeStructuredData />
       <SiteNav links={NAV_LINKS} />
 
       <main className="flex-1">

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/site";
 import { CodeBlock } from "@/components/docs/CodeBlock";
 import {
   A,
@@ -11,11 +12,12 @@ import {
   Table,
 } from "@/components/docs/Docs";
 
-export const metadata: Metadata = {
-  title: "Fewchurs - How it works ",
+export const metadata: Metadata = pageMetadata({
+  title: "How it works",
   description:
     "The few ideas behind Fewchurs: apps, API keys, requests, votes, statuses and device IDs.",
-};
+  path: "/docs/concepts",
+});
 
 const TOC = [
   { id: "the-pieces", label: "The pieces" },

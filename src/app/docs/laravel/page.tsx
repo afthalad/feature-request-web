@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/site";
 import { CodeBlock } from "@/components/docs/CodeBlock";
 import {
   A,
@@ -13,11 +14,12 @@ import {
   Table,
 } from "@/components/docs/Docs";
 
-export const metadata: Metadata = {
-  title: "Laravel - Docs - Fewchurs",
+export const metadata: Metadata = pageMetadata({
+  title: "Laravel SDK",
   description:
     "Add a feature request board to your Laravel app with one Blade tag.",
-};
+  path: "/docs/laravel",
+});
 
 const TOC = [
   { id: "install", label: "Install" },

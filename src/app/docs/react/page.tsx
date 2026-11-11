@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/site";
 import { CodeBlock } from "@/components/docs/CodeBlock";
 import { A, C, DocsPage, Note, P, Section, Step, Steps, Sub, Table } from "@/components/docs/Docs";
 
-export const metadata: Metadata = {
-  title: "React — Docs — Fewchurs",
-  description: "Add a floating button to any React app that opens your feature request board in a sheet.",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "React SDK",
+  description:
+    "Add a floating button to any React app that opens your feature request board in a sheet.",
+  path: "/docs/react",
+});
 
 const TOC = [
   { id: "install", label: "Install" },

@@ -1,14 +1,17 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/site";
 import type { ReactNode } from "react";
 import { CodeBlock } from "@/components/docs/CodeBlock";
 import { A, C, DocsPage, Note, P, Section, Table } from "@/components/docs/Docs";
 import { API_BASE_URL } from "@/lib/docs/nav";
 import { cn } from "@/lib/utils";
 
-export const metadata: Metadata = {
-  title: "REST API — Docs — Fewchurs",
-  description: "Use Fewchurs from any language with plain HTTP requests.",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "REST API",
+  description:
+    "Use Fewchurs from any language with plain HTTP requests.",
+  path: "/docs/api",
+});
 
 const TOC = [
   { id: "basics", label: "Basics" },

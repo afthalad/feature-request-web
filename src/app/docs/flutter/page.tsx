@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/site";
 import { CodeBlock } from "@/components/docs/CodeBlock";
 import {
   A,
@@ -12,11 +13,12 @@ import {
   Table,
 } from "@/components/docs/Docs";
 
-export const metadata: Metadata = {
-  title: "Flutter - Docs — Fewchurs",
+export const metadata: Metadata = pageMetadata({
+  title: "Flutter SDK",
   description:
     "Add a feature request board to your Flutter app on iOS, Android and the web.",
-};
+  path: "/docs/flutter",
+});
 
 const TOC = [
   { id: "install", label: "Install" },

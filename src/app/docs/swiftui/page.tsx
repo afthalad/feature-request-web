@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/site";
 import { CodeBlock } from "@/components/docs/CodeBlock";
 import { A, C, DocsPage, Note, P, Section, Step, Steps, Table } from "@/components/docs/Docs";
 
-export const metadata: Metadata = {
-  title: "iOS (SwiftUI) — Docs — Fewchurs",
-  description: "Add a feature request board to your iOS app with SwiftUI.",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "iOS SDK (SwiftUI)",
+  description:
+    "Add a feature request board to your iOS app with SwiftUI.",
+  path: "/docs/swiftui",
+});
 
 const TOC = [
   { id: "install", label: "Install" },

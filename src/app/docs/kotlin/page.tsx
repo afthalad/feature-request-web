@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/site";
 import { CodeBlock } from "@/components/docs/CodeBlock";
 import { A, C, DocsPage, Note, P, Section, Step, Steps, Table } from "@/components/docs/Docs";
 
-export const metadata: Metadata = {
-  title: "Android (Kotlin) — Docs — Fewchurs",
-  description: "Add a feature request board to your Android app with Kotlin and Jetpack Compose.",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Android SDK (Kotlin)",
+  description:
+    "Add a feature request board to your Android app with Kotlin and Jetpack Compose.",
+  path: "/docs/kotlin",
+});
 
 const TOC = [
   { id: "install", label: "Install" },

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/site";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { siAndroid, siApple, siFlutter, siLaravel, siNextdotjs, siReact } from "simple-icons";
@@ -6,10 +7,12 @@ import { BrandIcon } from "@/components/marketing/BrandIcon";
 import { A, C, DocsPage, P, Section, Step, Steps } from "@/components/docs/Docs";
 import { cn } from "@/lib/utils";
 
-export const metadata: Metadata = {
-  title: "Docs — Fewchurs",
-  description: "Add a feature request board to your app. Guides for iOS, Android, Flutter, React, Next.js and Laravel.",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Docs",
+  description:
+    "Add a feature request board to your app. Guides for iOS, Android, Flutter, React, Next.js and Laravel.",
+  path: "/docs",
+});
 
 const STACKS = [
   { href: "/docs/swiftui", name: "iOS (SwiftUI)", icon: siApple, line: "Native board view for iPhone apps." },

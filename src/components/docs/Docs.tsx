@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowRight, Info, TriangleAlert } from "lucide-react";
 import { Eyebrow } from "@/components/landing/Frame";
 import { DOCS_NAV, DOCS_PAGES } from "@/lib/docs/nav";
 import { OnThisPage } from "@/components/docs/OnThisPage";
+import { DocsBreadcrumbs } from "@/components/seo/StructuredData";
 import { cn } from "@/lib/utils";
 
 /* Small building blocks so every docs page has the same rhythm. */
@@ -33,6 +34,7 @@ export function DocsPage({
 
   return (
     <div className="flex gap-12">
+      <DocsBreadcrumbs path={path} title={title} />
       <article className="min-w-0 max-w-3xl flex-1">
         <header className="space-y-5 pb-10">
           <Eyebrow>{group}</Eyebrow>
