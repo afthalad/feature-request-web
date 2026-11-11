@@ -2,12 +2,20 @@ import type { Metadata } from "next";
 import { Be_Vietnam_Pro, Geist_Mono } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
-const beVietnamPro = Be_Vietnam_Pro({
+// The GA4 measurement ID is public (it ships in the page anyway). Only the live
+// site reports to it, so local runs and Vercel preview deploys don't skew the numbers;
+// set NEXT_PUBLIC_GA_MEASUREMENT_ID to override it or to turn GA on anywhere else.
+const GA_MEASUREMENT_ID =
+  process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ||
+  (process.env.VERCEL_ENV === "production" ? "G-PCG8J8K4PT" : undefined);
+
+const beVietnamPro =Be_Vietnam_Pro({
   variable: "--font-be-vietnam-pro",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700", "800"],
@@ -60,6 +68,9 @@ export default function RootLayout({
         <SpeedInsights />
         <Analytics />
       </body>
+      {/* Google Analytics 4. Loads after hydration, so it doesn't slow the first paint.
+          See GA_MEASUREMENT_ID above for when it is on. */}
+      {GA_MEASUREMENT_ID && <GoogleAnalytics gaId={GA_MEASUREMENT_ID} />}
     </html>
   );
 }

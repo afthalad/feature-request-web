@@ -190,7 +190,7 @@ export function VideoShowcase() {
               muted
               playsInline
               preload={i === 0 ? "auto" : "metadata"}
-              poster={i === 0 ? "/videos/hero-floating-poster.png" : undefined}
+              poster={i === 0 ? "/videos/hero-floating-poster.webp" : undefined}
               src={load && ext ? `/videos/${clip.name}.${ext}` : undefined}
               className={cn(
                 "absolute inset-0 size-full bg-transparent transition-opacity duration-500",
