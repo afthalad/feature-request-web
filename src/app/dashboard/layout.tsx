@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { FewchursButton } from "@fewchurs/next";
+import "@fewchurs/next/styles.css";
 import { getSessionUser } from "@/lib/auth/requireUser";
 import { adminDb } from "@/lib/firebase/admin";
 import { AuthGuard } from "@/components/layout/AuthGuard";
@@ -87,12 +88,7 @@ export default async function DashboardLayout({
             </main>
           </SidebarInset>
         </SidebarProvider>
-        <FewchursButton
-          floating
-          theme={{ radius: 8 }}
-          userEmail={user?.email}
-          labels={{ title: "Bugs and ideas", newRequest: "Share an idea", submit: "Send" }}
-        />
+        <FewchursButton floating userEmail={user?.email} />
       </TooltipProvider>
     </AuthGuard>
   );
