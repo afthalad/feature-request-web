@@ -44,8 +44,8 @@ export function BillingSummary({
   const [isLoading, setIsLoading] = useState(false);
 
   const isPaid = plan !== "free";
-  // past_due is Polar's failed-payment state; on_hold is Dodo's, for subscribers from before.
-  const isOnHold = subscriptionStatus === "past_due" || subscriptionStatus === "on_hold";
+  // past_due is Polar's failed-payment state: access continues while the payment is retried.
+  const isOnHold = subscriptionStatus === "past_due";
 
   async function handleManageBilling() {
     setIsLoading(true);

@@ -3,7 +3,6 @@ import { FieldValue, type QueryDocumentSnapshot } from "firebase-admin/firestore
 import { adminDb, adminAuth } from "@/lib/firebase/admin";
 import { deleteApp } from "@/lib/admin/apps";
 import { polar, grantsPaidAccess } from "@/lib/polar/client";
-import { dodo } from "@/lib/dodo/client";
 import type { AdminUser, AdminWebhookEvent, App, Plan } from "@/types";
 
 interface ListUsersParams {
@@ -22,7 +21,6 @@ function mapUser(doc: QueryDocumentSnapshot): AdminUser {
     plan: data.plan === "pro" || data.plan === "starter" ? data.plan : "free",
     createdAt: data.createdAt?.toDate().toISOString() ?? new Date(0).toISOString(),
     polarCustomerId: data.polarCustomerId,
-    dodoCustomerId: data.dodoCustomerId,
     subscriptionId: data.subscriptionId,
     subscriptionStatus: data.subscriptionStatus,
     cancelAtPeriodEnd: data.cancelAtPeriodEnd ?? false,
@@ -90,34 +88,19 @@ export async function listAppsForUser(uid: string): Promise<App[]> {
   });
 }
 
-// Polar events are logged by uid; Dodo events (subscribers from before the move to Polar) by
-// Dodo customer ID. Both logs are merged, newest first.
+// Polar webhook events are logged by uid, newest first.
 export async function listWebhookEventsForUser(user: AdminUser): Promise<AdminWebhookEvent[]> {
-  const [polarSnap, dodoSnap] = await Promise.all([
-    adminDb
-      .collection("polarWebhookEvents")
-      .where("uid", "==", user.uid)
-      .orderBy("receivedAt", "desc")
-      .limit(50)
-      .get(),
-    user.dodoCustomerId
-      ? adminDb
-          .collection("dodoWebhookEvents")
-          .where("customerId", "==", user.dodoCustomerId)
-          .orderBy("receivedAt", "desc")
-          .limit(50)
-          .get()
-      : null,
-  ]);
+  const snap = await adminDb
+    .collection("polarWebhookEvents")
+    .where("uid", "==", user.uid)
+    .orderBy("receivedAt", "desc")
+    .limit(50)
+    .get();
 
-  const toEvent = (provider: AdminWebhookEvent["provider"]) => (doc: QueryDocumentSnapshot) => {
+  return snap.docs.map((doc) => {
     const data = doc.data();
-    return { id: doc.id, provider, type: data.type, receivedAt: data.receivedAt.toDate().toISOString() };
-  };
-
-  return [...polarSnap.docs.map(toEvent("polar")), ...(dodoSnap?.docs.map(toEvent("dodo")) ?? [])]
-    .sort((a, b) => b.receivedAt.localeCompare(a.receivedAt))
-    .slice(0, 50);
+    return { id: doc.id, provider: "polar", type: data.type, receivedAt: data.receivedAt.toDate().toISOString() };
+  });
 }
 
 export async function updateUserPlan(
@@ -130,18 +113,12 @@ export async function updateUserPlan(
   await adminDb.collection("users").doc(uid).set(patch, { merge: true });
 }
 
-// Ends a paid subscription right away so a deleted account stops being billed. subscriptionId is
-// Polar's once the user has a Polar customer; otherwise it's a Dodo one from before the move.
+// Ends a paid Polar subscription right away so a deleted account stops being billed.
 async function cancelSubscription(uid: string): Promise<void> {
   const data = (await adminDb.collection("users").doc(uid).get()).data();
-  if (!data?.subscriptionId) return;
-
-  if (data.polarCustomerId) {
-    if (grantsPaidAccess(data.subscriptionStatus)) {
-      await polar.subscriptions.revoke({ id: data.subscriptionId });
-    }
-  } else if (data.dodoCustomerId && (data.plan === "starter" || data.plan === "pro")) {
-    await dodo.subscriptions.update(data.subscriptionId, { status: "cancelled" });
+  if (!data?.subscriptionId || !data.polarCustomerId) return;
+  if (grantsPaidAccess(data.subscriptionStatus)) {
+    await polar.subscriptions.revoke({ id: data.subscriptionId });
   }
 }
 

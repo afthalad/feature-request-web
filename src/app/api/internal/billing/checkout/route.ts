@@ -38,15 +38,6 @@ export async function POST(req: NextRequest) {
     const userData = (await adminDb.collection("users").doc(user.uid).get()).data();
     const hasPaidSubscription = grantsPaidAccess(userData?.subscriptionStatus);
 
-    // Older subscribers stay on their existing plan until it ends.
-    const isPaidPlan = userData?.plan === "starter" || userData?.plan === "pro";
-    if (isPaidPlan && !userData?.polarCustomerId && userData?.dodoCustomerId) {
-      return errorResponse(
-        "validation_failed",
-        "You already have a paid plan. You can change or cancel it from Manage billing, and switch plans here once it ends."
-      );
-    }
-
     // Switches the existing subscription instead of starting a second one.
     if (hasPaidSubscription && userData?.polarCustomerId && userData?.subscriptionId) {
       if (userData.currentProductId === productId) {

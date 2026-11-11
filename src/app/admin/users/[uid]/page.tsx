@@ -14,7 +14,7 @@ export default async function AdminUserDetailPage({
 }) {
   const { uid } = await params;
   // apps only needs uid, not the user doc, so it starts alongside getUser instead of waiting
-  // on it. webhookEvents genuinely depends on the user doc (its Dodo customer ID) and has to follow.
+  // on it. webhookEvents takes the user doc, so it follows.
   const [user, apps] = await Promise.all([getUser(uid), listAppsForUser(uid)]);
   if (!user) notFound();
 
@@ -65,12 +65,6 @@ export default async function AdminUserDetailPage({
             <dt className="text-muted-foreground">Polar customer ID</dt>
             <dd className="truncate">{user.polarCustomerId ?? "—"}</dd>
           </div>
-          {user.dodoCustomerId && (
-            <div>
-              <dt className="text-muted-foreground">Dodo customer ID (legacy)</dt>
-              <dd className="truncate">{user.dodoCustomerId}</dd>
-            </div>
-          )}
           <div>
             <dt className="text-muted-foreground">Subscription ID</dt>
             <dd className="truncate">{user.subscriptionId ?? "—"}</dd>
@@ -119,12 +113,7 @@ export default async function AdminUserDetailPage({
           <ul className="space-y-2">
             {webhookEvents.map((event) => (
               <li key={event.id} className="flex items-center justify-between text-sm">
-                <span className="flex items-center gap-2">
-                  <Badge variant="outline">{event.type}</Badge>
-                  {event.provider === "dodo" && (
-                    <span className="text-muted-foreground text-xs">Dodo</span>
-                  )}
-                </span>
+                <Badge variant="outline">{event.type}</Badge>
                 <span className="text-muted-foreground">
                   {new Date(event.receivedAt).toLocaleString()}
                 </span>

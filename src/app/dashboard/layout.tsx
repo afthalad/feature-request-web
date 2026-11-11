@@ -55,9 +55,7 @@ async function loadSidebarData(): Promise<{
   return {
     apps,
     plan: userPlan === "pro" || userPlan === "starter" ? userPlan : "free",
-    hasBillingAccount: Boolean(
-      userSnap.data()?.polarCustomerId || userSnap.data()?.dodoCustomerId,
-    ),
+    hasBillingAccount: Boolean(userSnap.data()?.polarCustomerId),
   };
 }
 

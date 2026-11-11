@@ -3,7 +3,6 @@ import { adminDb } from "@/lib/firebase/admin";
 import { getUserFromAuthHeader } from "@/lib/auth/requireUser";
 import { polar } from "@/lib/polar/client";
 import { refreshSubscriptionFromPolar } from "@/lib/polar/refreshSubscription";
-import { dodo } from "@/lib/dodo/client";
 import { ok, errorResponse } from "@/lib/api/response";
 
 export async function POST(req: NextRequest) {
@@ -24,14 +23,6 @@ export async function POST(req: NextRequest) {
         returnUrl,
       });
       return ok({ portalUrl: session.customerPortalUrl });
-    }
-
-    // Subscribers from before the move to Polar still manage billing in Dodo's portal.
-    if (userData?.dodoCustomerId) {
-      const session = await dodo.customers.customerPortal.create(userData.dodoCustomerId, {
-        return_url: returnUrl,
-      });
-      return ok({ portalUrl: session.link });
     }
   } catch (error) {
     console.error("Failed to create customer portal session", error);
