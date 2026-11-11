@@ -216,3 +216,24 @@
 @utility animate-rise {
   animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
+
+/* The feedback board follows the site's light and dark theme, not only the OS setting. */
+html .fewchurs.fewchurs {
+  --fw-bg: var(--background);
+  --fw-surface: var(--popover);
+  --fw-muted: var(--muted);
+  --fw-border: var(--border);
+  --fw-text: var(--foreground);
+  --fw-subtle: var(--muted-foreground);
+  --fw-primary: var(--primary);
+  --fw-font: var(--font-be-vietnam-pro), sans-serif;
+}
+
+html .fw-dialog.fw-dialog--sheet {
+  color: var(--foreground);
+  background: var(--background);
+}
+
+html .fw-launcher {
+  --fw-primary: var(--primary);
+}

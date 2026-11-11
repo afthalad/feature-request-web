@@ -1,10 +1,21 @@
 import type { Metadata } from "next";
 import { CodeBlock } from "@/components/docs/CodeBlock";
-import { A, C, DocsPage, Note, P, Section, Step, Steps, Table } from "@/components/docs/Docs";
+import {
+  A,
+  C,
+  DocsPage,
+  Note,
+  P,
+  Section,
+  Step,
+  Steps,
+  Table,
+} from "@/components/docs/Docs";
 
 export const metadata: Metadata = {
-  title: "Flutter — Docs — Fewchurs",
-  description: "Add a feature request board to your Flutter app on mobile, web and desktop.",
+  title: "Flutter - Docs — Fewchurs",
+  description:
+    "Add a feature request board to your Flutter app on mobile, web and desktop.",
 };
 
 const TOC = [
@@ -81,32 +92,37 @@ export default function FlutterDocsPage() {
         <Steps>
           <Step title="Add the package">
             <P>
-              The package is on <A href={PUB_URL}>pub.dev</A>. Add it from your project folder:
+              The package is on <A href={PUB_URL}>pub.dev</A>. Add it from your
+              project folder:
             </P>
             <CodeBlock code={PUB_ADD} />
           </Step>
           <Step title="Or edit pubspec.yaml">
-            <P>If you prefer, add it to your app&apos;s <C>pubspec.yaml</C> yourself:</P>
+            <P>
+              If you prefer, add it to your app&apos;s <C>pubspec.yaml</C>{" "}
+              yourself:
+            </P>
             <CodeBlock code={PUBSPEC} filename="pubspec.yaml" />
             <CodeBlock code={PUB_GET} />
           </Step>
         </Steps>
         <Note>
-          {VERSION} is the latest version. It brings in <C>fewchurs_core</C>, the API client, on
-          its own, so you don&apos;t need to add it.
+          {VERSION} is the latest version. It brings in <C>fewchurs_core</C>,
+          the API client, on its own, so you don&apos;t need to add it.
         </Note>
       </Section>
 
       <Section id="platforms" title="Platform setup">
         <P>
-          <strong>Android:</strong> release builds need the internet permission in{" "}
-          <C>android/app/src/main/AndroidManifest.xml</C>. Debug builds have it already, which is
-          why a missing one only shows up in release.
+          <strong>Android:</strong> release builds need the internet permission
+          in <C>android/app/src/main/AndroidManifest.xml</C>. Debug builds have
+          it already, which is why a missing one only shows up in release.
         </P>
         <CodeBlock code={ANDROID} filename="AndroidManifest.xml" />
         <P>
           <strong>macOS:</strong> allow network access in both{" "}
-          <C>macos/Runner/DebugProfile.entitlements</C> and <C>Release.entitlements</C>:
+          <C>macos/Runner/DebugProfile.entitlements</C> and{" "}
+          <C>Release.entitlements</C>:
         </P>
         <CodeBlock code={MACOS} />
         <P>iOS, web, Windows and Linux need nothing.</P>
@@ -114,16 +130,17 @@ export default function FlutterDocsPage() {
 
       <Section id="set-up" title="Set up">
         <P>
-          Call <C>configure</C> once, before <C>runApp</C>. Use the API key from your dashboard. It
-          makes no network calls, so it doesn&apos;t slow down startup.
+          Call <C>configure</C> once, before <C>runApp</C>. Use the API key from
+          your dashboard. It makes no network calls, so it doesn&apos;t slow
+          down startup.
         </P>
         <CodeBlock code={CONFIGURE} filename="main.dart" />
       </Section>
 
       <Section id="show-the-board" title="Show the board">
         <P>
-          Open the board as a full-screen page. It handles everything inside: the Top and New tabs,
-          votes, comments and new requests.
+          Open the board as a full-screen page. It handles everything inside:
+          the Top and New tabs, votes, comments and new requests.
         </P>
         <CodeBlock code={SHOW} />
         <P>Or as a bottom sheet:</P>
@@ -133,30 +150,34 @@ export default function FlutterDocsPage() {
         </P>
         <CodeBlock code={WIDGET} />
         <P>
-          On tablets, web and desktop the board shows the list and the open request side by side.
+          On tablets, web and desktop the board shows the list and the open
+          request side by side.
         </P>
         <P>
-          To open one request, for example from a deep link or a notification, pass its ID:
+          To open one request, for example from a deep link or a notification,
+          pass its ID:
         </P>
         <CodeBlock code={DEEP_LINK} />
       </Section>
 
       <Section id="colors" title="Colors and theme">
         <P>
-          By default the board follows your app&apos;s <C>Theme</C>: colors, fonts and light or dark
-          mode. To change it, add a <C>FewchursThemeData</C> to your theme&apos;s extensions.
+          By default the board follows your app&apos;s <C>Theme</C>: colors,
+          fonts and light or dark mode. To change it, add a{" "}
+          <C>FewchursThemeData</C> to your theme&apos;s extensions.
         </P>
         <CodeBlock code={THEME} />
         <P>
-          The <A href={PUB_URL}>package README</A> covers every option: tabs, copy and
-          translations, iOS-style widgets, custom pieces of the board, and building your own UI.
+          The <A href={PUB_URL}>package README</A> covers every option: tabs,
+          copy and translations, iOS-style widgets, custom pieces of the board,
+          and building your own UI.
         </P>
       </Section>
 
       <Section id="badge" title="What your plan changes">
         <P>
-          Your plan is applied on our servers, so you never need to change code or update the
-          package when it changes.
+          Your plan is applied on our servers, so you never need to change code
+          or update the package when it changes.
         </P>
         <Table
           head={["", "Free", "Starter", "Pro"]}
@@ -166,25 +187,30 @@ export default function FlutterDocsPage() {
           ]}
         />
         <P>
-          Newer requests are still saved and show in your dashboard. A request someone just
-          submitted appears on their board straight away, but once the app is past its limit it
-          leaves the list on the next refresh. See <A href="/pricing">pricing</A>.
+          Newer requests are still saved and show in your dashboard. A request
+          someone just submitted appears on their board straight away, but once
+          the app is past its limit it leaves the list on the next refresh. See{" "}
+          <A href="/pricing">pricing</A>.
         </P>
       </Section>
 
       <Section id="api-key" title="About the API key">
         <P>
-          It&apos;s fine to put this key in your app. It can only do what the board does: list,
-          vote, comment and suggest. It can&apos;t change your settings or read anything private.
+          It&apos;s fine to put this key in your app. It can only do what the
+          board does: list, vote, comment and suggest. It can&apos;t change your
+          settings or read anything private.
         </P>
         <P>
-          The key only works in the apps you added in the dashboard. Your Android package name is
-          the <C>applicationId</C> in <C>android/app/build.gradle</C>. Your iOS Bundle ID is in
-          Xcode under Runner → General. See <A href="/docs/concepts#app-ids">find your app IDs</A>.
+          The key only works in the apps you added in the dashboard. Your
+          Android package name is the <C>applicationId</C> in{" "}
+          <C>android/app/build.gradle</C>. Your iOS Bundle ID is in Xcode under
+          Runner → General. See{" "}
+          <A href="/docs/concepts#app-ids">find your app IDs</A>.
         </P>
         <Note>
-          The package gives each device a random ID and saves it on the device. That is how it
-          remembers votes without an account. Read more in <A href="/docs/concepts">How it works</A>.
+          The package gives each device a random ID and saves it on the device.
+          That is how it remembers votes without an account. Read more in{" "}
+          <A href="/docs/concepts">How it works</A>.
         </Note>
       </Section>
     </DocsPage>

@@ -1,4 +1,6 @@
 import { cookies } from "next/headers";
+import { FewchursButton } from "@fewchurs/next";
+import "@fewchurs/next/styles.css";
 import { getSessionUser } from "@/lib/auth/requireUser";
 import { adminDb } from "@/lib/firebase/admin";
 import { AuthGuard } from "@/components/layout/AuthGuard";
@@ -75,6 +77,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
             <main className="mx-auto w-full max-w-[1100px] flex-1 px-4 py-8">{children}</main>
           </SidebarInset>
         </SidebarProvider>
+        <FewchursButton floating userEmail={user?.email} />
       </TooltipProvider>
     </AuthGuard>
   );
