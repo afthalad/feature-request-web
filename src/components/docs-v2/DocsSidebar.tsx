@@ -2,9 +2,45 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronDown } from "lucide-react";
+import { BookOpen, Braces, ChevronDown, Workflow, type LucideIcon } from "lucide-react";
+import { siAndroid, siApple, siFlutter, siLaravel, siNextdotjs, siReact, type SimpleIcon } from "simple-icons";
+import { BrandIcon } from "@/components/marketing/BrandIcon";
 import { DOCS_V2_NAV, DOCS_V2_PAGES } from "@/components/docs-v2/nav";
 import { cn } from "@/lib/utils";
+
+/**
+ * An icon in front of every docs link, so a stack can be spotted at a glance.
+ * Apple and Next.js logos are black, so they follow the text colour instead
+ * of their brand colour (otherwise they vanish in dark mode).
+ */
+const ICONS: Record<string, { brand: SimpleIcon; mono?: boolean } | { lucide: LucideIcon }> = {
+  "/docs-v2": { lucide: BookOpen },
+  "/docs-v2/concepts": { lucide: Workflow },
+  "/docs-v2/swiftui": { brand: siApple, mono: true },
+  "/docs-v2/kotlin": { brand: siAndroid },
+  "/docs-v2/flutter": { brand: siFlutter },
+  "/docs-v2/react": { brand: siReact },
+  "/docs-v2/nextjs": { brand: siNextdotjs, mono: true },
+  "/docs-v2/laravel": { brand: siLaravel },
+  "/docs-v2/api": { lucide: Braces },
+};
+
+function NavIcon({ href, active }: { href: string; active: boolean }) {
+  const icon = ICONS[href];
+  if (!icon) return null;
+  if ("lucide" in icon) {
+    const Icon = icon.lucide;
+    return <Icon aria-hidden className={cn("size-4 shrink-0", active && "text-primary")} strokeWidth={1.75} />;
+  }
+  return (
+    <BrandIcon
+      aria-hidden
+      path={icon.brand.path}
+      color={icon.mono ? undefined : `#${icon.brand.hex}`}
+      className="size-4 shrink-0"
+    />
+  );
+}
 
 function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
@@ -26,13 +62,14 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
                     onClick={onNavigate}
                     aria-current={active ? "page" : undefined}
                     className={cn(
-                      "relative flex items-center rounded-md px-3 py-1.5 transition-colors",
+                      "relative flex items-center gap-2.5 rounded-md px-3 py-1.5 transition-colors",
                       active
                         ? "bg-primary/[0.08] font-medium text-foreground"
                         : "text-muted-foreground hover:bg-muted/60 hover:text-foreground",
                     )}
                   >
                     {active && <span aria-hidden className="absolute inset-y-1.5 left-0 w-0.5 rounded-full bg-primary" />}
+                    <NavIcon href={item.href} active={active} />
                     {item.label}
                   </Link>
                 </li>
