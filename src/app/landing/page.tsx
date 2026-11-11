@@ -5,11 +5,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { BrandIcon } from "@/components/marketing/BrandIcon";
 import { PricingPlans } from "@/components/pricing/PricingPlans";
 import { PLATFORMS } from "@/lib/platforms";
-import {
-  FrameSection,
-  Eyebrow,
-  SectionHeading,
-} from "@/components/landing-v2/Frame";
+import { FrameSection, Eyebrow, SectionHeading } from "@/components/landing-v2/Frame";
 import { PhysicsPit } from "@/components/landing-v2/PhysicsPit";
 import { ToggleHeadline } from "@/components/landing-v2/ToggleHeadline";
 import { VideoShowcase } from "@/components/landing-v2/VideoShowcase";
@@ -17,6 +13,7 @@ import { CodeTabs } from "@/components/landing-v2/CodeTabs";
 import { Bento } from "@/components/landing-v2/Bento";
 import { SiteFooter, SiteNav } from "@/components/landing-v2/SiteChrome";
 import { DOCS_HOME, toV2 } from "@/components/docs-v2/nav";
+import "@/components/landing-v2/landing.css";
 
 export const metadata: Metadata = {
   title: "Fewchurs - Let your users tell you what to build next",
@@ -28,26 +25,17 @@ export const metadata: Metadata = {
 };
 
 const FAQ = [
-  {
-    q: "Do I need a backend?",
-    a: "No. Fewchurs is the backend. Add the SDK and you're done.",
-  },
+  { q: "Do I need a backend?", a: "No. Fewchurs is the backend. Add the SDK and you're done." },
   {
     q: "What's on the free plan?",
     a: "One app on one platform, the first 5 feature requests visible, unlimited votes and comments. Free forever.",
   },
-  {
-    q: "Can users vote without an account?",
-    a: "Yes, anonymously by device. No login required for anyone but you.",
-  },
+  { q: "Can users vote without an account?", a: "Yes, anonymously by device. No login required for anyone but you." },
   {
     q: "Do I need to build the UI?",
     a: "No. The SDK renders the whole board. On Pro you can also link to a public web board.",
   },
-  {
-    q: "Can I remove the badge?",
-    a: 'Yes, on Starter and Pro. The "Powered by" badge only shows on Free.',
-  },
+  { q: "Can I remove the badge?", a: 'Yes, on Starter and Pro. The "Powered by" badge only shows on Free.' },
   {
     q: "What if I have more than one app?",
     a: "Free covers 1 app on one platform. Starter covers 3 apps and Pro 5, all on every platform. Every app gets its own board and API key.",
@@ -77,52 +65,32 @@ export default function LandingV2() {
         <FrameSection corners={false} className="[&>div]:border-t-0">
           <div className="grid lg:grid-cols-[1fr_1.08fr]">
             <div className="flex flex-col justify-center gap-7 px-5 py-14 sm:px-10 sm:py-20 lg:py-24">
-              <Eyebrow className="lv2-rise">
-                Feature requests for your app
-              </Eyebrow>
+              <Eyebrow className="lv2-rise">Feature requests for your app</Eyebrow>
               <h1
                 className="lv2-rise text-[clamp(2.6rem,6.4vw,5rem)] leading-[0.98] font-semibold tracking-[-0.05em] text-balance"
                 style={{ animationDelay: "60ms" }}
               >
-                Let your users tell you what to build{" "}
-                <span className="text-primary">next.</span>
+                Let your users tell you what to build <span className="text-primary">next.</span>
               </h1>
               <p
                 className="lv2-rise max-w-md text-lg leading-relaxed text-muted-foreground"
                 style={{ animationDelay: "120ms" }}
               >
-                Drop the Fewchurs SDK into your app and turn scattered feedback
-                into a ranked, shippable roadmap.
+                Drop the Fewchurs SDK into your app and turn scattered feedback into a ranked, shippable roadmap.
               </p>
-              <div
-                className="lv2-rise flex flex-wrap items-center gap-3"
-                style={{ animationDelay: "180ms" }}
-              >
-                <Link
-                  href="/login"
-                  className={buttonVariants({
-                    size: "lg",
-                    className: "h-12 px-6 text-base",
-                  })}
-                >
+              <div className="lv2-rise flex flex-wrap items-center gap-3" style={{ animationDelay: "180ms" }}>
+                <Link href="/login" className={buttonVariants({ size: "lg", className: "h-12 px-6 text-base" })}>
                   Start free
                   <ArrowRight className="size-4" />
                 </Link>
                 <Link
                   href={DOCS_HOME}
-                  className={buttonVariants({
-                    variant: "outline",
-                    size: "lg",
-                    className: "h-12 px-6 text-base",
-                  })}
+                  className={buttonVariants({ variant: "outline", size: "lg", className: "h-12 px-6 text-base" })}
                 >
                   Read the docs
                 </Link>
               </div>
-              <p
-                className="lv2-rise text-sm text-muted-foreground"
-                style={{ animationDelay: "240ms" }}
-              >
+              <p className="lv2-rise text-sm text-muted-foreground" style={{ animationDelay: "240ms" }}>
                 Free forever for one app. No credit card.
               </p>
             </div>
@@ -130,13 +98,9 @@ export default function LandingV2() {
             <div className="relative flex flex-col border-t border-border lg:border-t-0 lg:border-l">
               <div className="flex items-center justify-between border-b border-border px-4 py-2.5">
                 <div className="flex gap-1 text-xs font-medium" aria-hidden>
-                  <span className="rounded-md bg-muted px-2.5 py-1 text-foreground">
-                    Top
-                  </span>
+                  <span className="rounded-md bg-muted px-2.5 py-1 text-foreground">Top</span>
                   <span className="px-2.5 py-1 text-muted-foreground">New</span>
-                  <span className="px-2.5 py-1 text-muted-foreground">
-                    Roadmap
-                  </span>
+                  <span className="px-2.5 py-1 text-muted-foreground">Roadmap</span>
                 </div>
                 <span className="font-mono text-[10px] tracking-[0.14em] text-muted-foreground uppercase">
                   Drag · throw · vote
@@ -151,9 +115,7 @@ export default function LandingV2() {
         <FrameSection id="platforms" aria-label="Platforms">
           <div className="flex flex-col gap-1 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-10">
             <Eyebrow>Works where your app lives</Eyebrow>
-            <p className="text-sm text-muted-foreground">
-              One SDK per platform, the same board everywhere.
-            </p>
+            <p className="text-sm text-muted-foreground">One SDK per platform, the same board everywhere.</p>
           </div>
           <ul className="grid grid-cols-3 border-t border-border md:grid-cols-6">
             {PLATFORMS.map((p, i) => (
@@ -205,10 +167,7 @@ export default function LandingV2() {
               />
               <ul className="space-y-3">
                 {INSTALL_POINTS.map((t) => (
-                  <li
-                    key={t}
-                    className="flex items-start gap-3 text-sm sm:text-base"
-                  >
+                  <li key={t} className="flex items-start gap-3 text-sm sm:text-base">
                     <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-primary/12 text-primary">
                       <Check className="size-3" strokeWidth={3} aria-hidden />
                     </span>
@@ -282,17 +241,9 @@ export default function LandingV2() {
               <h2 className="text-[clamp(2.2rem,5.6vw,4.5rem)] leading-[1] font-semibold tracking-[-0.05em] text-balance">
                 Your users already know what to build next.
               </h2>
-              <p className="mx-auto max-w-lg text-lg text-muted-foreground">
-                Give them somewhere to say it.
-              </p>
+              <p className="mx-auto max-w-lg text-lg text-muted-foreground">Give them somewhere to say it.</p>
               <div className="flex flex-wrap items-center justify-center gap-3">
-                <Link
-                  href="/login"
-                  className={buttonVariants({
-                    size: "lg",
-                    className: "h-12 px-6 text-base",
-                  })}
-                >
+                <Link href="/login" className={buttonVariants({ size: "lg", className: "h-12 px-6 text-base" })}>
                   Start free
                   <ArrowRight className="size-4" />
                 </Link>

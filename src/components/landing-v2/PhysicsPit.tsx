@@ -87,7 +87,7 @@ export function PhysicsPit({ className }: { className?: string }) {
             ref={(el) => {
               cardRefs.current[i] = el;
             }}
-            className="lv2-card flex items-center gap-3 rounded-xl bg-popover py-2 pr-3.5 pl-2 whitespace-nowrap text-popover-foreground shadow-[0_1px_2px_rgba(0,0,0,0.06),0_10px_28px_-12px_rgba(0,0,0,0.28)] dark:shadow-[0_12px_32px_-10px_rgba(0,0,0,0.85)]"
+            className="lv2-card flex items-center gap-3 rounded-xl border border-border bg-popover py-2 pr-3.5 pl-2 whitespace-nowrap text-popover-foreground shadow-[0_1px_0_rgba(0,0,0,0.04),0_8px_24px_-12px_rgba(0,0,0,0.25)]"
           >
             <button
               type="button"
@@ -96,10 +96,10 @@ export function PhysicsPit({ className }: { className?: string }) {
               aria-label={`${voted[i] ? "Remove vote for" : "Vote for"} ${card.title}, ${count} votes`}
               onClick={() => toggleVote(i)}
               className={cn(
-                "flex w-10 flex-col items-center rounded-lg py-1 text-xs font-semibold tabular-nums transition-colors",
+                "flex w-10 flex-col items-center rounded-lg border py-1 text-xs font-semibold tabular-nums transition-colors",
                 voted[i]
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted hover:text-primary",
+                  ? "border-primary bg-primary text-primary-foreground"
+                  : "border-border bg-background hover:border-primary/60 hover:text-primary",
               )}
             >
               <ChevronUp aria-hidden className="size-3.5" strokeWidth={2.5} />
