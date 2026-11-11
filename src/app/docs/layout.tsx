@@ -1,23 +1,15 @@
-import type { Metadata } from "next";
-import { SiteNav, SiteFooter } from "@/components/landing-v2/SiteChrome";
-import { DocsMobileNav, DocsSidebar } from "@/components/docs-v2/DocsSidebar";
-import { DOCS_HOME } from "@/components/docs-v2/nav";
-import "@/components/landing-v2/landing.css";
-
-export const metadata: Metadata = {
-  // A design preview of /docs: keep it out of search results so it doesn't
-  // compete with the real docs.
-  robots: { index: false, follow: true },
-};
+import { SiteNav, SiteFooter } from "@/components/landing/SiteChrome";
+import { DocsMobileNav, DocsSidebar } from "@/components/docs/DocsSidebar";
+import "@/components/landing/landing.css";
 
 const LINKS = [
-  { href: "/landing#install", label: "Install" },
-  { href: "/landing#board", label: "The board" },
-  { href: "/landing#pricing", label: "Pricing" },
-  { href: DOCS_HOME, label: "Docs" },
+  { href: "/#install", label: "Install" },
+  { href: "/#board", label: "The board" },
+  { href: "/pricing", label: "Pricing" },
+  { href: "/docs", label: "Docs" },
 ];
 
-export default function DocsV2Layout({ children }: { children: React.ReactNode }) {
+export default function DocsLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex flex-1 flex-col overflow-x-clip bg-background text-foreground">
       <SiteNav links={LINKS} />

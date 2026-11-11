@@ -1,16 +1,12 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, Info, TriangleAlert } from "lucide-react";
-import { Eyebrow } from "@/components/landing-v2/Frame";
-import { DOCS_V2_PAGES, toV2 } from "@/components/docs-v2/nav";
-import { OnThisPage } from "@/components/docs-v2/OnThisPage";
+import { Eyebrow } from "@/components/landing/Frame";
+import { DOCS_NAV, DOCS_PAGES } from "@/lib/docs/nav";
+import { OnThisPage } from "@/components/docs/OnThisPage";
 import { cn } from "@/lib/utils";
 
-/*
- * Same building blocks (and the same props) as components/docs/Docs.tsx,
- * drawn in the new landing-page style. Pages copied from /docs only need
- * their import path changed.
- */
+/* Small building blocks so every docs page has the same rhythm. */
 
 export interface TocItem {
   id: string;
@@ -25,7 +21,7 @@ export function DocsPage({
   toc,
   children,
 }: {
-  /** This page's route under /docs; mapped to /docs-v2 for the previous/next links. */
+  /** This page's route, used for the previous/next links. */
   path: string;
   title: string;
   intro: ReactNode;
@@ -33,8 +29,7 @@ export function DocsPage({
   toc?: TocItem[];
   children: ReactNode;
 }) {
-  const here = toV2(path);
-  const group = DOCS_V2_PAGES.find((p) => p.href === here)?.group ?? "Docs";
+  const group = DOCS_NAV.find((g) => g.items.some((item) => item.href === path))?.title ?? "Docs";
 
   return (
     <div className="flex gap-12">
@@ -52,7 +47,7 @@ export function DocsPage({
           )}
         </header>
         <div className="space-y-14 border-t border-border pt-10">{children}</div>
-        <PrevNext path={here} />
+        <PrevNext path={path} />
       </article>
       {toc && toc.length > 0 && (
         <aside className="hidden w-52 shrink-0 xl:block">
@@ -101,7 +96,7 @@ export function C({ children }: { children: ReactNode }) {
 export function A({ href, children }: { href: string; children: ReactNode }) {
   return (
     <Link
-      href={toV2(href)}
+      href={href}
       className="font-medium text-foreground underline decoration-primary/40 underline-offset-4 transition-colors hover:text-primary hover:decoration-primary"
     >
       {children}
@@ -186,9 +181,9 @@ export function Table({ head, rows }: { head: string[]; rows: ReactNode[][] }) {
 }
 
 function PrevNext({ path }: { path: string }) {
-  const index = DOCS_V2_PAGES.findIndex((page) => page.href === path);
-  const prev = index > 0 ? DOCS_V2_PAGES[index - 1] : null;
-  const next = index >= 0 && index < DOCS_V2_PAGES.length - 1 ? DOCS_V2_PAGES[index + 1] : null;
+  const index = DOCS_PAGES.findIndex((page) => page.href === path);
+  const prev = index > 0 ? DOCS_PAGES[index - 1] : null;
+  const next = index >= 0 && index < DOCS_PAGES.length - 1 ? DOCS_PAGES[index + 1] : null;
 
   return (
     <nav aria-label="Previous and next page" className="mt-20 grid border border-border sm:grid-cols-2">

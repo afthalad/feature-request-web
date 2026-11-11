@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { BookOpen, Braces, ChevronDown, Workflow, type LucideIcon } from "lucide-react";
 import { siAndroid, siApple, siFlutter, siLaravel, siNextdotjs, siReact, type SimpleIcon } from "simple-icons";
 import { BrandIcon } from "@/components/marketing/BrandIcon";
-import { DOCS_V2_NAV, DOCS_V2_PAGES } from "@/components/docs-v2/nav";
+import { DOCS_NAV, DOCS_PAGES } from "@/lib/docs/nav";
 import { cn } from "@/lib/utils";
 
 /**
@@ -14,15 +14,15 @@ import { cn } from "@/lib/utils";
  * of their brand colour (otherwise they vanish in dark mode).
  */
 const ICONS: Record<string, { brand: SimpleIcon; mono?: boolean } | { lucide: LucideIcon }> = {
-  "/docs-v2": { lucide: BookOpen },
-  "/docs-v2/concepts": { lucide: Workflow },
-  "/docs-v2/swiftui": { brand: siApple, mono: true },
-  "/docs-v2/kotlin": { brand: siAndroid },
-  "/docs-v2/flutter": { brand: siFlutter },
-  "/docs-v2/react": { brand: siReact },
-  "/docs-v2/nextjs": { brand: siNextdotjs, mono: true },
-  "/docs-v2/laravel": { brand: siLaravel },
-  "/docs-v2/api": { lucide: Braces },
+  "/docs": { lucide: BookOpen },
+  "/docs/concepts": { lucide: Workflow },
+  "/docs/swiftui": { brand: siApple, mono: true },
+  "/docs/kotlin": { brand: siAndroid },
+  "/docs/flutter": { brand: siFlutter },
+  "/docs/react": { brand: siReact },
+  "/docs/nextjs": { brand: siNextdotjs, mono: true },
+  "/docs/laravel": { brand: siLaravel },
+  "/docs/api": { lucide: Braces },
 };
 
 function NavIcon({ href, active }: { href: string; active: boolean }) {
@@ -47,7 +47,7 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
 
   return (
     <nav aria-label="Docs" className="space-y-7 text-sm">
-      {DOCS_V2_NAV.map((group) => (
+      {DOCS_NAV.map((group) => (
         <div key={group.title}>
           <p className="mb-2 px-3 font-mono text-[10.5px] tracking-[0.16em] text-muted-foreground uppercase">
             <span className="text-primary">[</span> {group.title} <span className="text-primary">]</span>
@@ -96,7 +96,7 @@ export function DocsSidebar() {
 /** Collapsible menu above the page content on small screens. */
 export function DocsMobileNav() {
   const pathname = usePathname();
-  const current = DOCS_V2_PAGES.find((page) => page.href === pathname);
+  const current = DOCS_PAGES.find((page) => page.href === pathname);
 
   return (
     <details className="group border-b border-border lg:hidden" data-docs-menu>

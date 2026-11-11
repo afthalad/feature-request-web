@@ -1,27 +1,25 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { ArrowRight, Check } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { BrandIcon } from "@/components/marketing/BrandIcon";
 import { PricingPlans } from "@/components/pricing/PricingPlans";
 import { PLATFORMS } from "@/lib/platforms";
-import { FrameSection, Eyebrow, SectionHeading } from "@/components/landing-v2/Frame";
-import { PhysicsPit } from "@/components/landing-v2/PhysicsPit";
-import { ToggleHeadline } from "@/components/landing-v2/ToggleHeadline";
-import { VideoShowcase } from "@/components/landing-v2/VideoShowcase";
-import { CodeTabs } from "@/components/landing-v2/CodeTabs";
-import { Bento } from "@/components/landing-v2/Bento";
-import { SiteFooter, SiteNav } from "@/components/landing-v2/SiteChrome";
-import { DOCS_HOME, toV2 } from "@/components/docs-v2/nav";
-import "@/components/landing-v2/landing.css";
+import { getSessionUser } from "@/lib/auth/requireUser";
+import { FrameSection, Eyebrow, SectionHeading } from "@/components/landing/Frame";
+import { PhysicsPit } from "@/components/landing/PhysicsPit";
+import { ToggleHeadline } from "@/components/landing/ToggleHeadline";
+import { VideoShowcase } from "@/components/landing/VideoShowcase";
+import { CodeTabs } from "@/components/landing/CodeTabs";
+import { Bento } from "@/components/landing/Bento";
+import { SiteFooter, SiteNav } from "@/components/landing/SiteChrome";
+import "@/components/landing/landing.css";
 
 export const metadata: Metadata = {
   title: "Fewchurs - Let your users tell you what to build next",
   description:
     "Drop the Fewchurs SDK into your app and turn scattered feedback into a ranked, shippable roadmap.",
-  // A design preview of the home page: keep it out of search results so it
-  // doesn't compete with "/".
-  robots: { index: false, follow: true },
 };
 
 const FAQ = [
@@ -52,10 +50,14 @@ const NAV_LINKS = [
   { href: "#install", label: "Install" },
   { href: "#board", label: "The board" },
   { href: "#pricing", label: "Pricing" },
-  { href: DOCS_HOME, label: "Docs" },
+  { href: "/docs", label: "Docs" },
 ];
 
-export default function LandingV2() {
+export default async function Home() {
+  // Signed-in developers go straight to their dashboard, as before.
+  const user = await getSessionUser();
+  if (user) redirect("/dashboard");
+
   return (
     <div className="flex flex-1 flex-col overflow-x-clip bg-background text-foreground">
       <SiteNav links={NAV_LINKS} />
@@ -84,7 +86,7 @@ export default function LandingV2() {
                   <ArrowRight className="size-4" />
                 </Link>
                 <Link
-                  href={DOCS_HOME}
+                  href="/docs"
                   className={buttonVariants({ variant: "outline", size: "lg", className: "h-12 px-6 text-base" })}
                 >
                   Read the docs
@@ -129,7 +131,7 @@ export default function LandingV2() {
                 }
               >
                 <Link
-                  href={toV2(p.href ?? "/docs")}
+                  href={p.href ?? "/docs"}
                   className="group flex h-24 flex-col items-center justify-center gap-2 transition-colors hover:bg-muted/50 sm:h-28"
                 >
                   <BrandIcon
@@ -176,7 +178,7 @@ export default function LandingV2() {
                 ))}
               </ul>
               <Link
-                href={DOCS_HOME}
+                href="/docs"
                 className="group inline-flex items-center gap-1.5 text-sm font-semibold text-primary"
               >
                 Read the docs
@@ -248,7 +250,7 @@ export default function LandingV2() {
                   <ArrowRight className="size-4" />
                 </Link>
                 <Link
-                  href={DOCS_HOME}
+                  href="/docs"
                   className={buttonVariants({
                     variant: "outline",
                     size: "lg",

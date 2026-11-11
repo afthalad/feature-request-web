@@ -1,18 +1,17 @@
 import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
 import { Logo } from "@/components/layout/Logo";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
+import { NavAccount } from "@/components/landing/NavAccount";
 import { PLATFORMS } from "@/lib/platforms";
-import { FrameSection } from "@/components/landing-v2/Frame";
-import { BouncyWordmark } from "@/components/landing-v2/BouncyWordmark";
-import { DOCS_HOME, toV2 } from "@/components/docs-v2/nav";
+import { FrameSection } from "@/components/landing/Frame";
+import { BouncyWordmark } from "@/components/landing/BouncyWordmark";
 
-/** Header shared by the new landing page and the new docs. */
+/** Header shared by the home page and the docs. */
 export function SiteNav({ links }: { links: { href: string; label: string }[] }) {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/80 px-4 backdrop-blur-md sm:px-6">
       <div className="mx-auto flex h-16 w-full max-w-[1200px] items-center justify-between gap-4">
-        <Logo href="/landing" />
+        <Logo />
         <nav aria-label="Main" className="hidden items-center gap-1 text-sm md:flex">
           {links.map((l) => (
             <Link
@@ -26,15 +25,7 @@ export function SiteNav({ links }: { links: { href: string; label: string }[] })
         </nav>
         <div className="flex items-center gap-1.5">
           <ThemeToggle />
-          <Link
-            href="/login"
-            className={buttonVariants({ variant: "ghost", size: "sm", className: "hidden sm:inline-flex" })}
-          >
-            Log in
-          </Link>
-          <Link href="/login" className={buttonVariants({ size: "sm" })}>
-            Start free
-          </Link>
+          <NavAccount />
         </div>
       </div>
     </header>
@@ -48,7 +39,7 @@ export function SiteFooter() {
       <FrameSection>
         <div className="grid gap-10 px-5 py-14 sm:grid-cols-2 sm:px-10 lg:grid-cols-[1.4fr_1fr_1fr]">
           <div className="space-y-3">
-            <Logo href="/landing" />
+            <Logo />
             <p className="max-w-xs text-sm text-muted-foreground">
               Feature requests, votes and a public roadmap for your app.
             </p>
@@ -57,12 +48,12 @@ export function SiteFooter() {
             <p className="mb-3 font-mono text-[11px] tracking-[0.16em] text-muted-foreground uppercase">Product</p>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link className="hover:text-primary" href="/landing#pricing">
+                <Link className="hover:text-primary" href="/pricing">
                   Pricing
                 </Link>
               </li>
               <li>
-                <Link className="hover:text-primary" href={DOCS_HOME}>
+                <Link className="hover:text-primary" href="/docs">
                   Docs
                 </Link>
               </li>
@@ -78,7 +69,7 @@ export function SiteFooter() {
             <ul className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
               {PLATFORMS.map((p) => (
                 <li key={p.id}>
-                  <Link className="hover:text-primary" href={toV2(p.href ?? "/docs")}>
+                  <Link className="hover:text-primary" href={p.href ?? "/docs"}>
                     {p.name}
                   </Link>
                 </li>

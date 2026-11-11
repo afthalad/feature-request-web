@@ -41,7 +41,7 @@ Fewchurs.showBoard()`,
   {
     id: "flutter",
     name: "Flutter",
-    tagline: "One codebase for mobile, web and desktop.",
+    tagline: "One package for iOS, Android and the web.",
     iconPath: siFlutter.path,
     iconColor: `#${siFlutter.hex}`,
     href: "/docs/flutter",

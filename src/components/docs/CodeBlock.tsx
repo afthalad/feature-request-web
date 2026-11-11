@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Check, Copy } from "lucide-react";
 
-/** Same props as components/docs/CodeBlock, in the light card style of the new landing page. */
+/** A code sample with a copy button, in the light card style of the home page. */
 export function CodeBlock({ code, filename }: { code: string; filename?: string }) {
   const [copied, setCopied] = useState(false);
   const lines = code.split("\n");

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { siAndroid, siApple, siFlutter, siLaravel, siNextdotjs, siReact } from "simple-icons";
 import { BrandIcon } from "@/components/marketing/BrandIcon";
-import { A, C, DocsPage, P, Section, Step, Steps } from "@/components/docs-v2/Docs";
+import { A, C, DocsPage, P, Section, Step, Steps } from "@/components/docs/Docs";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -12,12 +12,12 @@ export const metadata: Metadata = {
 };
 
 const STACKS = [
-  { href: "/docs-v2/swiftui", name: "iOS (SwiftUI)", icon: siApple, line: "Native board view for iPhone apps." },
-  { href: "/docs-v2/kotlin", name: "Android (Kotlin)", icon: siAndroid, line: "Add the board to your Android app with Kotlin." },
-  { href: "/docs-v2/flutter", name: "Flutter", icon: siFlutter, line: "One codebase for mobile, web and desktop." },
-  { href: "/docs-v2/react", name: "React", icon: siReact, line: "Board component and hooks for any React app." },
-  { href: "/docs-v2/nextjs", name: "Next.js", icon: siNextdotjs, line: "Server-rendered board. Your key stays on the server." },
-  { href: "/docs-v2/laravel", name: "Laravel", icon: siLaravel, line: "Server-side board. Your key stays on the server." },
+  { href: "/docs/swiftui", name: "iOS (SwiftUI)", icon: siApple, line: "Native board view for iPhone apps." },
+  { href: "/docs/kotlin", name: "Android (Kotlin)", icon: siAndroid, line: "Add the board to your Android app with Kotlin." },
+  { href: "/docs/flutter", name: "Flutter", icon: siFlutter, line: "One package for iOS, Android and the web." },
+  { href: "/docs/react", name: "React", icon: siReact, line: "Board component and hooks for any React app." },
+  { href: "/docs/nextjs", name: "Next.js", icon: siNextdotjs, line: "Server-rendered board. Your key stays on the server." },
+  { href: "/docs/laravel", name: "Laravel", icon: siLaravel, line: "Server-side board. Your key stays on the server." },
 ];
 
 const TOC = [
@@ -26,7 +26,7 @@ const TOC = [
   { id: "no-code", label: "No code at all" },
 ];
 
-export default function DocsV2OverviewPage() {
+export default function DocsOverviewPage() {
   return (
     <DocsPage
       path="/docs"

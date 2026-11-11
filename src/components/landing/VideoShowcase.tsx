@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Pause, Play } from "lucide-react";
-import { SectionHeading } from "@/components/landing-v2/Frame";
+import { SectionHeading } from "@/components/landing/Frame";
 import { cn } from "@/lib/utils";
 
 /** The transparent-background clips in public/videos, played as one playlist. */

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Eyebrow } from "@/components/landing-v2/Frame";
+import { Eyebrow } from "@/components/landing/Frame";
 import { cn } from "@/lib/utils";
 
 /** Right-hand table of contents that highlights the section you're reading. */

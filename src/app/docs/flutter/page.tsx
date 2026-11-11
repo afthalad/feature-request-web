@@ -15,7 +15,7 @@ import {
 export const metadata: Metadata = {
   title: "Flutter - Docs — Fewchurs",
   description:
-    "Add a feature request board to your Flutter app on mobile, web and desktop.",
+    "Add a feature request board to your Flutter app on iOS, Android and the web.",
 };
 
 const TOC = [
@@ -40,9 +40,6 @@ const PUBSPEC = `dependencies:
 const PUB_GET = `flutter pub get`;
 
 const ANDROID = `<uses-permission android:name="android.permission.INTERNET"/>`;
-
-const MACOS = `<key>com.apple.security.network.client</key>
-<true/>`;
 
 const CONFIGURE = `import 'package:fewchurs/fewchurs.dart';
 import 'package:flutter/material.dart';
@@ -85,7 +82,7 @@ export default function FlutterDocsPage() {
       path="/docs/flutter"
       title="Flutter"
       intro="Add a native feature request board to your Flutter app. One package, one line of setup."
-      meta="Needs Flutter 3.10 or later and Dart 3.0 or later. Runs on Android, iOS, web, macOS, Windows and Linux."
+      meta="Needs Flutter 3.10 or later and Dart 3.0 or later. Runs on iOS, Android and the web."
       toc={TOC}
     >
       <Section id="install" title="Install">
@@ -119,13 +116,7 @@ export default function FlutterDocsPage() {
           it already, which is why a missing one only shows up in release.
         </P>
         <CodeBlock code={ANDROID} filename="AndroidManifest.xml" />
-        <P>
-          <strong>macOS:</strong> allow network access in both{" "}
-          <C>macos/Runner/DebugProfile.entitlements</C> and{" "}
-          <C>Release.entitlements</C>:
-        </P>
-        <CodeBlock code={MACOS} />
-        <P>iOS, web, Windows and Linux need nothing.</P>
+        <P>iOS and web need nothing.</P>
       </Section>
 
       <Section id="set-up" title="Set up">
@@ -150,7 +141,7 @@ export default function FlutterDocsPage() {
         </P>
         <CodeBlock code={WIDGET} />
         <P>
-          On tablets, web and desktop the board shows the list and the open
+          On tablets and on the web the board shows the list and the open
           request side by side.
         </P>
         <P>
