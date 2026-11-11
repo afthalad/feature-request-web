@@ -49,6 +49,7 @@ export default async function AppSettingsPage({
       </SettingsSection>
       <Separator />
       <SettingsSection
+        id="api-key"
         title="API key"
         description="Your app sends this key to load its board. You only see the full key once."
       >

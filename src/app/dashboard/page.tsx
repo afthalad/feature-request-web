@@ -12,6 +12,7 @@ import { PLAN_LIMITS } from "@/lib/plans/limits";
 import { AppCard } from "@/components/apps/AppCard";
 import { NewAppButton } from "@/components/apps/NewAppButton";
 import { RecentPendingFeatures } from "@/components/apps/RecentPendingFeatures";
+import { SetupChecklist } from "@/components/apps/SetupChecklist";
 
 import { CheckoutStatusRefresher } from "@/components/billing/CheckoutStatusRefresher";
 import { DashboardStatsGrid } from "@/components/billing/DashboardStatsGrid";
@@ -88,19 +89,23 @@ export default async function DashboardPage() {
   const atAppLimit = apps.length >= maxApps;
   const appLimitMessage = `You've reached the ${maxApps}-app limit on the ${plan} plan. Upgrade to create more apps.`;
 
+  // Until the first request arrives, zero-filled stats and an upgrade pitch say nothing useful:
+  // guide the newest app through setup instead. The usual dashboard returns by itself after that.
+  const settingUp = stats.totalFeatures === 0;
+
   return (
     <div className="space-y-6">
       <Suspense fallback={null}>
         <CheckoutStatusRefresher plan={plan} />
       </Suspense>
 
-      <DashboardStatsGrid stats={stats} />
+      {settingUp ? <SetupChecklist app={apps[0]} /> : <DashboardStatsGrid stats={stats} />}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-xl font-semibold">Your apps</h1>
         <NewAppButton
           atLimit={atAppLimit}
           limitMessage={appLimitMessage}
-          className={buttonVariants({ variant: "default" })}
+          className={buttonVariants({ variant: settingUp ? "outline" : "default" })}
         >
           New App
         </NewAppButton>
@@ -110,7 +115,7 @@ export default async function DashboardPage() {
           <AppCard key={app.id} app={app} />
         ))}
       </div>
-      {plan === "free" && (
+      {plan === "free" && !settingUp && (
         <UpgradeBanner message="Upgrade for more apps, higher feature limits, and more monthly emails." />
       )}
       <RecentPendingFeatures features={recentPendingFeatures} />
