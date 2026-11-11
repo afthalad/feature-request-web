@@ -21,7 +21,14 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { buttonVariants } from "@/components/ui/button";
 import type { App, Plan } from "@/types";
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ layouts?: string }>;
+}) {
+  // The setup-layout switcher shows in development, or on the live site with ?layouts=1.
+  const showLayoutSwitcher =
+    process.env.NODE_ENV !== "production" || (await searchParams).layouts === "1";
   const user = await getSessionUser();
   if (!user) redirect("/login");
 
@@ -99,7 +106,11 @@ export default async function DashboardPage() {
         <CheckoutStatusRefresher plan={plan} />
       </Suspense>
 
-      {settingUp ? <SetupChecklist app={apps[0]} /> : <DashboardStatsGrid stats={stats} />}
+      {settingUp ? (
+        <SetupChecklist app={apps[0]} showSwitcher={showLayoutSwitcher} />
+      ) : (
+        <DashboardStatsGrid stats={stats} />
+      )}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-xl font-semibold">Your apps</h1>
         <NewAppButton
