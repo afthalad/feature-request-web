@@ -125,7 +125,7 @@ function RankingDemo() {
               if (el) rows.current.set(it.id, el);
               else rows.current.delete(it.id);
             }}
-            className="flex items-center gap-3 rounded-xl border border-border bg-popover px-2.5 py-2 shadow-sm"
+            className="flex items-center gap-3 rounded-xl bg-popover px-2.5 py-2 shadow-[0_1px_2px_rgba(0,0,0,0.05),0_10px_28px_-14px_rgba(0,0,0,0.22)] dark:shadow-none"
           >
             <button
               type="button"
@@ -137,10 +137,10 @@ function RankingDemo() {
                 vote(it.id, was ? -1 : 1);
               }}
               className={cn(
-                "flex w-10 flex-col items-center rounded-lg border py-0.5 text-xs font-semibold tabular-nums transition-colors",
+                "flex w-10 flex-col items-center rounded-lg py-0.5 text-xs font-semibold tabular-nums transition-colors",
                 mine === it.id
-                  ? "border-primary bg-primary text-primary-foreground"
-                  : "border-border bg-background hover:text-primary",
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-muted hover:text-primary",
               )}
             >
               <ChevronUp aria-hidden className="size-3.5" strokeWidth={2.5} />
@@ -178,7 +178,7 @@ function StatusDemo() {
 
   const s = STATUSES[step];
   return (
-    <div ref={ref} className="w-full max-w-[340px] rounded-xl border border-border bg-popover p-4 shadow-sm">
+    <div ref={ref} className="w-full max-w-[340px] rounded-xl bg-popover p-4 shadow-[0_1px_2px_rgba(0,0,0,0.05),0_10px_28px_-14px_rgba(0,0,0,0.22)] dark:shadow-none">
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="text-sm font-semibold">Offline sync</p>
@@ -246,7 +246,7 @@ function NotifyDemo() {
         <div
           key={n}
           className={cn(
-            "flex items-center gap-3 rounded-xl border border-border bg-popover p-3 shadow-sm transition-opacity duration-500",
+            "flex items-center gap-3 rounded-xl bg-popover p-3 shadow-[0_1px_2px_rgba(0,0,0,0.05),0_10px_28px_-14px_rgba(0,0,0,0.22)] dark:shadow-none transition-opacity duration-500",
             i === 0 && "lv2-rise",
             i > 0 && "opacity-60",
             i > 1 && "opacity-30",
@@ -288,8 +288,8 @@ function ThemeDemo() {
     <div className="flex w-full max-w-[320px] flex-col gap-3">
       <div
         className={cn(
-          "border p-3 shadow-sm transition-all duration-500",
-          dark ? "border-white/10 bg-neutral-900 text-white" : "border-neutral-200 bg-white text-neutral-900",
+          "p-3 shadow-[0_1px_2px_rgba(0,0,0,0.05),0_10px_28px_-14px_rgba(0,0,0,0.22)] dark:shadow-none transition-all duration-500",
+          dark ? "bg-neutral-900 text-white" : "bg-white text-neutral-900",
         )}
         style={{ borderRadius: radius + 4 }}
       >
@@ -306,8 +306,8 @@ function ThemeDemo() {
           <div
             key={t}
             className={cn(
-              "flex items-center gap-2 border p-1.5 transition-all duration-500 not-last:mb-1.5",
-              dark ? "border-white/10" : "border-neutral-200",
+              "flex items-center gap-2 p-1.5 transition-all duration-500 not-last:mb-1.5",
+              dark ? "bg-white/[0.06]" : "bg-neutral-100",
             )}
             style={{ borderRadius: radius }}
           >
@@ -327,7 +327,7 @@ function ThemeDemo() {
         ))}
       </div>
 
-      <div className="flex items-center justify-between rounded-full border border-border bg-popover px-2 py-1.5 shadow-sm">
+      <div className="flex items-center justify-between rounded-full bg-popover px-2 py-1.5 shadow-[0_1px_2px_rgba(0,0,0,0.05),0_10px_28px_-14px_rgba(0,0,0,0.22)] dark:shadow-none">
         <div className="flex gap-1.5" role="radiogroup" aria-label="Accent colour">
           {SWATCHES.map((s, i) => (
             <button

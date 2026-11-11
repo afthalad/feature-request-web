@@ -24,7 +24,7 @@ export function ToggleHeadline() {
         timer = setTimeout(() => {
           if (!touched.current) setOn(true);
           io.disconnect();
-        }, 1000);
+        }, 500);
       },
       { threshold: 0.6 },
     );
@@ -65,7 +65,9 @@ export function ToggleHeadline() {
           <span
             className={cn(
               "col-start-1 row-start-1 transition-all duration-500",
-              on ? "translate-y-0 opacity-100 blur-0" : "-translate-y-3 opacity-0 blur-sm",
+              on
+                ? "translate-y-0 opacity-100 blur-0"
+                : "-translate-y-3 opacity-0 blur-sm",
             )}
             aria-hidden={!on}
           >
@@ -74,7 +76,9 @@ export function ToggleHeadline() {
           <span
             className={cn(
               "col-start-1 row-start-1 text-muted-foreground transition-all duration-500",
-              on ? "translate-y-3 opacity-0 blur-sm" : "translate-y-0 opacity-100 blur-0",
+              on
+                ? "translate-y-3 opacity-0 blur-sm"
+                : "translate-y-0 opacity-100 blur-0",
             )}
             aria-hidden={on}
           >

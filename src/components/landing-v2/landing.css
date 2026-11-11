@@ -90,10 +90,15 @@
 }
 
 /* Pricing: the shared plan cards are white on a white page in light mode,
-   so only the highlighted plan stood out. Give the other plans an edge and a
-   lift here, without changing the shared component. */
+   so only the highlighted plan stood out. Lift the other plans with a soft
+   shadow (no border) here, without changing the shared component. In dark
+   mode the card colour already differs from the page, so they need nothing. */
 .lv2-pricing .rounded-3xl.bg-card:not(.ring-4) {
   box-shadow:
-    0 0 0 1px var(--border),
-    0 18px 40px -28px rgba(0, 0, 0, 0.35);
+    0 1px 2px rgba(0, 0, 0, 0.05),
+    0 22px 48px -26px rgba(0, 0, 0, 0.3);
+}
+
+.dark .lv2-pricing .rounded-3xl.bg-card:not(.ring-4) {
+  box-shadow: none;
 }
