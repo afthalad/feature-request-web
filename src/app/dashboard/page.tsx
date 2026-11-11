@@ -110,15 +110,15 @@ export default async function DashboardPage() {
           <AppCard key={app.id} app={app} />
         ))}
       </div>
+      {plan === "free" && (
+        <UpgradeBanner message="Upgrade for more apps, higher feature limits, and more monthly emails." />
+      )}
       {stats.totalFeatures === 0 && (
         <EmptyState
           icon={Inbox}
           title="Waiting for your first feedback"
           description="When your users share an idea, it will show up here."
         />
-      )}
-      {plan === "free" && (
-        <UpgradeBanner message="Upgrade for more apps, higher feature limits, and more monthly emails." />
       )}
       <RecentPendingFeatures features={recentPendingFeatures} />
     </div>

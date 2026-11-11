@@ -52,6 +52,9 @@ export function UpgradeDialog({
   const [loadingPlan, setLoadingPlan] = useState<PaidPlan | null>(null);
 
   async function handleUpgrade(plan: PaidPlan) {
+    // Right after a page load Firebase is still restoring the signed-in user, and currentUser
+    // is null until it has: without waiting, a quick click sent signed-in people to /login.
+    await auth.authStateReady();
     if (!auth.currentUser) {
       router.push("/login");
       return;
