@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { LayoutGrid } from "lucide-react";
+import { Inbox, LayoutGrid } from "lucide-react";
 import { getSessionUser } from "@/lib/auth/requireUser";
 import { adminDb } from "@/lib/firebase/admin";
 import {
@@ -110,6 +110,13 @@ export default async function DashboardPage() {
           <AppCard key={app.id} app={app} />
         ))}
       </div>
+      {stats.totalFeatures === 0 && (
+        <EmptyState
+          icon={Inbox}
+          title="Waiting for your first feedback"
+          description="When your users share an idea, it will show up here."
+        />
+      )}
       {plan === "free" && (
         <UpgradeBanner message="Upgrade for more apps, higher feature limits, and more monthly emails." />
       )}
