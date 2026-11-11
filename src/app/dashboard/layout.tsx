@@ -1,12 +1,15 @@
 import { cookies } from "next/headers";
 import { FewchursButton } from "@fewchurs/next";
-import "@fewchurs/next/styles.css";
 import { getSessionUser } from "@/lib/auth/requireUser";
 import { adminDb } from "@/lib/firebase/admin";
 import { AuthGuard } from "@/components/layout/AuthGuard";
 import { AppSidebar, type SidebarApp } from "@/components/layout/AppSidebar";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
-import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import type { Plan } from "@/types";
 
@@ -30,7 +33,8 @@ async function loadSidebarData(): Promise<{
   const newCounts = await Promise.all(
     liveApps.map((doc) => {
       const lastViewed = doc.get("featuresLastViewedAt");
-      if (!lastViewed) return Promise.resolve((doc.get("featureCount") as number) ?? 0);
+      if (!lastViewed)
+        return Promise.resolve((doc.get("featureCount") as number) ?? 0);
       return doc.ref
         .collection("features")
         .where("createdAt", ">", lastViewed)
@@ -51,11 +55,17 @@ async function loadSidebarData(): Promise<{
   return {
     apps,
     plan: userPlan === "pro" || userPlan === "starter" ? userPlan : "free",
-    hasBillingAccount: Boolean(userSnap.data()?.polarCustomerId || userSnap.data()?.dodoCustomerId),
+    hasBillingAccount: Boolean(
+      userSnap.data()?.polarCustomerId || userSnap.data()?.dodoCustomerId,
+    ),
   };
 }
 
-export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
+export default async function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [sidebar, cookieStore, user] = await Promise.all([
     loadSidebarData(),
     cookies(),
@@ -74,10 +84,17 @@ export default async function DashboardLayout({ children }: { children: React.Re
               <SidebarTrigger />
               <ThemeToggle />
             </header>
-            <main className="mx-auto w-full max-w-[1100px] flex-1 px-4 py-8">{children}</main>
+            <main className="mx-auto w-full max-w-[1100px] flex-1 px-4 py-8">
+              {children}
+            </main>
           </SidebarInset>
         </SidebarProvider>
-        <FewchursButton floating userEmail={user?.email} />
+        <FewchursButton
+          floating
+          theme={{ radius: 8 }}
+          userEmail={user?.email}
+          labels={{ title: "Feature request", submit: "share bugs and ideas" }}
+        />
       </TooltipProvider>
     </AuthGuard>
   );
