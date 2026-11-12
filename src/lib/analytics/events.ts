@@ -14,6 +14,7 @@ export type AnalyticsEvent =
   | "sign_in_clicked"
   // Acquisition (server): only the first sign-in of a new account
   | "signed_up"
+  | "welcome_email_sent"
   // Activation
   | "app_create_started" // browser: opened the new-app form
   | "app_create_blocked" // browser: hit the plan's app or platform limit while creating

@@ -1,8 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse, after } from "next/server";
 import { FieldValue } from "firebase-admin/firestore";
 import { adminAuth, adminDb } from "@/lib/firebase/admin";
 import { SESSION_COOKIE_NAME } from "@/lib/auth/requireUser";
 import { trackServer } from "@/lib/analytics/server";
+import { sendWelcomeEmail } from "@/lib/email/welcome";
 
 const SESSION_EXPIRES_IN_MS = 14 * 24 * 60 * 60 * 1000;
 
@@ -31,6 +32,10 @@ export async function POST(req: NextRequest) {
       $set: { email: profile.email, name: profile.displayName, plan: "free" },
       $set_once: { signed_up_at: new Date().toISOString() },
     });
+    // After the response, so the email never slows down or breaks sign-in.
+    after(() =>
+      sendWelcomeEmail({ uid: decoded.uid, email: profile.email, displayName: profile.displayName })
+    );
   }
 
   const sessionCookie = await adminAuth.createSessionCookie(idToken, {
