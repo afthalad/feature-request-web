@@ -18,7 +18,7 @@ import {
   Tag,
 } from "lucide-react";
 import { toast } from "sonner";
-import { auth } from "@/lib/firebase/client";
+import { auth, getCurrentIdToken } from "@/lib/firebase/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Collapsible,
@@ -65,6 +65,14 @@ interface AppSidebarProps {
   plan: Plan;
   /** Whether a billing account exists, so "Manage billing" has somewhere to go. */
   hasBillingAccount: boolean;
+  /** Name, email and photo from the server session, shown until Firebase restores the user. */
+  profile?: SidebarProfile;
+}
+
+export interface SidebarProfile {
+  name?: string;
+  email?: string;
+  picture?: string;
 }
 
 const PLAN_LABEL: Record<Plan, string> = {
@@ -73,7 +81,7 @@ const PLAN_LABEL: Record<Plan, string> = {
   pro: "Pro",
 };
 
-export function AppSidebar({ apps, plan, hasBillingAccount }: AppSidebarProps) {
+export function AppSidebar({ apps, plan, hasBillingAccount, profile }: AppSidebarProps) {
   const pathname = usePathname();
 
   return (
@@ -147,7 +155,7 @@ export function AppSidebar({ apps, plan, hasBillingAccount }: AppSidebarProps) {
       <SidebarFooter>
         <SidebarMenu>
           <PlanItem plan={plan} hasBillingAccount={hasBillingAccount} />
-          <AccountMenu plan={plan} hasBillingAccount={hasBillingAccount} />
+          <AccountMenu plan={plan} hasBillingAccount={hasBillingAccount} profile={profile} />
         </SidebarMenu>
       </SidebarFooter>
       <SidebarRail />
@@ -246,7 +254,7 @@ function useBillingPortal() {
   async function open() {
     setIsOpening(true);
     try {
-      const idToken = await auth.currentUser?.getIdToken();
+      const idToken = await getCurrentIdToken();
       if (!idToken) throw new Error("Not signed in.");
       const response = await fetch("/api/internal/billing/portal", {
         method: "POST",
@@ -320,9 +328,11 @@ function PlanItem({
 function AccountMenu({
   plan,
   hasBillingAccount,
+  profile,
 }: {
   plan: Plan;
   hasBillingAccount: boolean;
+  profile?: SidebarProfile;
 }) {
   const router = useRouter();
   const { isMobile } = useSidebar();
@@ -343,22 +353,23 @@ function AccountMenu({
     }
   }
 
-  const name = user?.displayName ?? "Account";
-  const initial = (
-    user?.displayName?.[0] ??
-    user?.email?.[0] ??
-    "?"
-  ).toUpperCase();
+  // Until Firebase has restored the user, fall back to the server session's profile so the
+  // footer renders with the real name and email instead of filling in after load.
+  const displayName = user ? user.displayName : (profile?.name ?? null);
+  const email = user ? user.email : (profile?.email ?? null);
+  const photoURL = user ? user.photoURL : (profile?.picture ?? null);
+  const name = displayName ?? "Account";
+  const initial = (displayName?.[0] ?? email?.[0] ?? "?").toUpperCase();
   const identity = (
     <>
       <Avatar className="size-8 rounded-lg">
-        <AvatarImage src={user?.photoURL ?? undefined} alt="" />
+        <AvatarImage src={photoURL ?? undefined} alt="" />
         <AvatarFallback className="rounded-lg">{initial}</AvatarFallback>
       </Avatar>
       <div className="grid min-w-0 flex-1 text-left text-sm leading-tight">
         <span className="truncate font-medium">{name}</span>
         <span className="text-muted-foreground truncate text-xs">
-          {user?.email}
+          {email}
         </span>
       </div>
     </>

@@ -2,10 +2,20 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { onAuthStateChanged, signInWithPopup, type User } from "firebase/auth";
-import { FirebaseError } from "firebase/app";
+import type { User } from "firebase/auth";
 import { toast } from "sonner";
-import { auth, googleAuthProvider } from "@/lib/firebase/client";
+
+/**
+ * Firebase Auth is one of the biggest modules on the page, so it isn't part of the first bundle:
+ * it loads right after the page has rendered (the hook starts it on mount), and is ready long
+ * before anyone clicks. One shared promise, so every caller gets the same instance.
+ */
+let firebaseModules: Promise<typeof import("@/lib/firebase/signIn")> | null = null;
+
+function loadFirebase() {
+  firebaseModules ??= import("@/lib/firebase/signIn");
+  return firebaseModules;
+}
 
 /** Errors that just mean the user backed out — no toast for these. */
 const CANCEL_CODES = new Set([
@@ -69,23 +79,43 @@ export function useGoogleSignIn({ resumeSession = false }: { resumeSession?: boo
 
   useEffect(() => () => cleanupRef.current(), []);
 
+  // Start loading Firebase as soon as the page is up, so a click finds it ready.
+  useEffect(() => {
+    loadFirebase().catch(() => {
+      // A failed chunk load is retried on click.
+      firebaseModules = null;
+    });
+  }, []);
+
   // Already signed in to Firebase: renew the session and go straight back to the dashboard.
   useEffect(() => {
     if (!resumeSession) return;
     let done = false;
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (!user || done || stageRef.current !== "idle" || recentlyResumed()) return;
-      done = true;
-      markResumed();
-      setIsSigningIn(true);
-      try {
-        await createSession(user);
-        router.replace("/dashboard");
-      } catch {
-        setIsSigningIn(false);
-      }
-    });
-    return unsubscribe;
+    let cancelled = false;
+    let unsubscribe = () => {};
+    loadFirebase()
+      .then(({ auth, onAuthStateChanged }) => {
+        if (cancelled) return;
+        unsubscribe = onAuthStateChanged(auth, async (user) => {
+          if (!user || done || stageRef.current !== "idle" || recentlyResumed()) return;
+          done = true;
+          markResumed();
+          setIsSigningIn(true);
+          try {
+            await createSession(user);
+            router.replace("/dashboard");
+          } catch {
+            setIsSigningIn(false);
+          }
+        });
+      })
+      .catch(() => {
+        // Firebase didn't load: nothing to resume; the button still retries the load.
+      });
+    return () => {
+      cancelled = true;
+      unsubscribe();
+    };
   }, [router, resumeSession]);
 
   function reset(attempt: number) {
@@ -120,8 +150,11 @@ export function useGoogleSignIn({ resumeSession = false }: { resumeSession?: boo
     setIsSigningIn(true);
     watchForCancel(attempt);
 
+    let FirebaseError: Awaited<ReturnType<typeof loadFirebase>>["FirebaseError"] | null = null;
     try {
-      const credential = await signInWithPopup(auth, googleAuthProvider);
+      const firebase = await loadFirebase();
+      FirebaseError = firebase.FirebaseError;
+      const credential = await firebase.signInWithPopup(firebase.auth, firebase.googleAuthProvider);
       if (attempt !== attemptRef.current) return;
       stageRef.current = "session";
       cleanupRef.current();
@@ -134,8 +167,10 @@ export function useGoogleSignIn({ resumeSession = false }: { resumeSession?: boo
     } catch (error) {
       if (attempt !== attemptRef.current) return;
       reset(attempt);
-      if (error instanceof FirebaseError && CANCEL_CODES.has(error.code)) return;
-      if (error instanceof FirebaseError && error.code === "auth/popup-blocked") {
+      if (!FirebaseError) firebaseModules = null; // The chunk failed to load; retry next click.
+      const code = FirebaseError && error instanceof FirebaseError ? error.code : null;
+      if (code && CANCEL_CODES.has(code)) return;
+      if (code === "auth/popup-blocked") {
         toast.error("Your browser blocked the sign-in popup. Allow popups for this site and try again.");
         return;
       }

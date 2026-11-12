@@ -8,7 +8,8 @@ import { PublicBoardSettings } from "@/components/apps/PublicBoardSettings";
 import { DeleteAppSection } from "@/components/apps/DeleteAppSection";
 import { Separator } from "@/components/ui/separator";
 import { SettingsSection } from "@/components/apps/SettingsSection";
-import { getUserPlan, PLAN_LIMITS } from "@/lib/plans/limits";
+import { PLAN_LIMITS } from "@/lib/plans/limits";
+import { getUserSnapshot, planFromUserData } from "@/lib/dashboard/data";
 import { readAppIds } from "@/lib/apps/appIds";
 
 export default async function AppSettingsPage({
@@ -17,9 +18,13 @@ export default async function AppSettingsPage({
   params: Promise<{ appId: string }>;
 }) {
   const { appId } = await params;
-  const [user, appSnap] = await Promise.all([
-    getSessionUser(),
+  // The plan read starts as soon as the session is known (and is shared with the layout's
+  // sidebar read), instead of waiting for the app document first.
+  const userPromise = getSessionUser();
+  const [user, appSnap, userSnap] = await Promise.all([
+    userPromise,
     adminDb.collection("apps").doc(appId).get(),
+    userPromise.then((u) => (u ? getUserSnapshot(u.uid) : null)),
   ]);
   if (!user) redirect("/login");
   if (
@@ -31,7 +36,7 @@ export default async function AppSettingsPage({
   }
 
   const app = appSnap.data()!;
-  const plan = await getUserPlan(user.uid);
+  const plan = planFromUserData(userSnap?.data());
 
   return (
     <div className="max-w-xl space-y-10">

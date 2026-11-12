@@ -3,7 +3,11 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Inbox, LayoutGrid } from "lucide-react";
 import { getSessionUser } from "@/lib/auth/requireUser";
-import { adminDb } from "@/lib/firebase/admin";
+import {
+  getOwnedAppsSnapshot,
+  getUserSnapshot,
+  planFromUserData,
+} from "@/lib/dashboard/data";
 import {
   getDashboardStats,
   listRecentPendingFeatures,
@@ -24,15 +28,12 @@ export default async function DashboardPage() {
   const user = await getSessionUser();
   if (!user) redirect("/login");
 
+  // The layout makes the same two reads for the sidebar; these share them (cached per request).
   const [appsSnapshot, userSnapshot] = await Promise.all([
-    adminDb.collection("apps").where("ownerUid", "==", user.uid).get(),
-    adminDb.collection("users").doc(user.uid).get(),
+    getOwnedAppsSnapshot(user.uid),
+    getUserSnapshot(user.uid),
   ]);
-  const userData = userSnapshot.data();
-  const plan: Plan =
-    userData?.plan === "pro" || userData?.plan === "starter"
-      ? userData.plan
-      : "free";
+  const plan: Plan = planFromUserData(userSnapshot.data());
 
   const apps: App[] = appsSnapshot.docs
     .filter((doc) => doc.get("deleted") !== true)

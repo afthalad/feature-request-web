@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import Link from "next/link";
 import { Inbox, Loader2Icon } from "lucide-react";
-import { auth } from "@/lib/firebase/client";
+import { getCurrentIdToken } from "@/lib/firebase/client";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
@@ -91,7 +91,7 @@ export function FeatureList({
     setIsLoading(true);
     if (!append) setIsSwitchingTab(true);
     try {
-      const idToken = await auth.currentUser?.getIdToken();
+      const idToken = await getCurrentIdToken();
       const params = new URLSearchParams({
         status: pageFilters.status,
         sort: pageFilters.sort,

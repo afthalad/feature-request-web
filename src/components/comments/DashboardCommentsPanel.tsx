@@ -3,7 +3,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { toast } from "sonner";
 import { MessageCircle, Send } from "lucide-react";
-import { auth } from "@/lib/firebase/client";
+import { getCurrentIdToken } from "@/lib/firebase/client";
 import { CommentItem } from "@/components/comments/CommentItem";
 import { AvatarListSkeleton } from "@/components/ui/avatar-list-skeleton";
 import { Input } from "@/components/ui/input";
@@ -45,7 +45,7 @@ export function DashboardCommentsPanel({
   useEffect(() => {
     if (!open) return;
     (async () => {
-      const idToken = await auth.currentUser?.getIdToken();
+      const idToken = await getCurrentIdToken();
       const response = await fetch(
         `/api/internal/features/${featureId}/comments?appId=${appId}&limit=${PAGE_SIZE}`,
         { headers: { Authorization: `Bearer ${idToken}` } }
@@ -59,7 +59,7 @@ export function DashboardCommentsPanel({
   async function handleLoadMore() {
     setIsLoadingMore(true);
     try {
-      const idToken = await auth.currentUser?.getIdToken();
+      const idToken = await getCurrentIdToken();
       const response = await fetch(
         `/api/internal/features/${featureId}/comments?appId=${appId}&limit=${PAGE_SIZE}&cursor=${cursor}`,
         { headers: { Authorization: `Bearer ${idToken}` } }
@@ -76,7 +76,7 @@ export function DashboardCommentsPanel({
     event.preventDefault();
     setIsSubmitting(true);
     try {
-      const idToken = await auth.currentUser?.getIdToken();
+      const idToken = await getCurrentIdToken();
       const response = await fetch(`/api/internal/features/${featureId}/comments`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${idToken}` },
@@ -98,7 +98,7 @@ export function DashboardCommentsPanel({
 
   async function handleDelete(commentId: string) {
     try {
-      const idToken = await auth.currentUser?.getIdToken();
+      const idToken = await getCurrentIdToken();
       const response = await fetch(`/api/internal/features/${featureId}/comments/${commentId}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${idToken}` },

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Users } from "lucide-react";
-import { auth } from "@/lib/firebase/client";
+import { getCurrentIdToken } from "@/lib/firebase/client";
 import { FollowerItem } from "@/components/followers/FollowerItem";
 import { AvatarListSkeleton } from "@/components/ui/avatar-list-skeleton";
 import { Button } from "@/components/ui/button";
@@ -39,7 +39,7 @@ export function FollowersPanel({
   useEffect(() => {
     if (!open) return;
     (async () => {
-      const idToken = await auth.currentUser?.getIdToken();
+      const idToken = await getCurrentIdToken();
       const response = await fetch(
         `/api/internal/features/${featureId}/followers?appId=${appId}&limit=${PAGE_SIZE}`,
         { headers: { Authorization: `Bearer ${idToken}` } }
@@ -53,7 +53,7 @@ export function FollowersPanel({
   async function handleLoadMore() {
     setIsLoadingMore(true);
     try {
-      const idToken = await auth.currentUser?.getIdToken();
+      const idToken = await getCurrentIdToken();
       const response = await fetch(
         `/api/internal/features/${featureId}/followers?appId=${appId}&limit=${PAGE_SIZE}&cursor=${cursor}`,
         { headers: { Authorization: `Bearer ${idToken}` } }

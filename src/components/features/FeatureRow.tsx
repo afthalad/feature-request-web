@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { MessageSquare, Users, Languages, Crown, Trash2 } from "lucide-react";
 import { toast } from "sonner";
-import { auth } from "@/lib/firebase/client";
+import { getCurrentIdToken } from "@/lib/firebase/client";
 import { FeatureVoteIndicator } from "@/components/features/FeatureVoteIndicator";
 import { StatusSelect } from "@/components/features/StatusSelect";
 import { DashboardCommentsPanel } from "@/components/comments/DashboardCommentsPanel";
@@ -36,6 +36,10 @@ function browserLang(): string {
   return navigator.language?.split("-")[0] || "en";
 }
 
+function noopSubscribe() {
+  return () => {};
+}
+
 export function FeatureRow({
   appId,
   appName,
@@ -52,14 +56,23 @@ export function FeatureRow({
   const [isTranslating, setIsTranslating] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  // A list renders many rows, each with a closed dialog and two closed sheets. Mount those once
+  // the browser is idle after load (or right away if opened first), so hydrating the list stays
+  // light and the first interactions don't wait behind them.
+  const panelsReady = useIdleMount();
+  const mountDelete = panelsReady || showDeleteConfirm;
+  const mountComments = panelsReady || showComments;
+  const mountFollowers = panelsReady || showFollowers;
 
-  const targetLang = browserLang();
+  // Rows are server-rendered, so hydrate with the server's "en" and switch to the browser's
+  // language right after; reading navigator during render would mismatch the server HTML.
+  const targetLang = useSyncExternalStore(noopSubscribe, browserLang, () => "en");
   const isOtherLanguage = feature.lang?.split("-")[0] !== targetLang;
 
   async function handleDelete() {
     setIsDeleting(true);
     try {
-      const idToken = await auth.currentUser?.getIdToken();
+      const idToken = await getCurrentIdToken();
       if (!idToken) throw new Error("Not signed in.");
 
       const response = await fetch(
@@ -89,7 +102,7 @@ export function FeatureRow({
 
     setIsTranslating(true);
     try {
-      const idToken = await auth.currentUser?.getIdToken();
+      const idToken = await getCurrentIdToken();
       if (!idToken) throw new Error("Not signed in.");
 
       const response = await fetch(`/api/internal/features/${feature.id}/translate`, {
@@ -202,40 +215,60 @@ export function FeatureRow({
           <span className="sr-only">Delete feature request</span>
         </Button>
       </div>
-      <Dialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Delete this feature request?</DialogTitle>
-            <DialogDescription>
-              &quot;{feature.title}&quot; and all its votes, comments, and followers will be
-              permanently deleted. This can&apos;t be undone.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowDeleteConfirm(false)}>
-              Cancel
-            </Button>
-            <Button variant="destructive" onClick={handleDelete} disabled={isDeleting}>
-              {isDeleting ? "Deleting..." : "Delete"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-      <DashboardCommentsPanel
-        appId={appId}
-        featureId={feature.id}
-        featureTitle={feature.title}
-        open={showComments}
-        onOpenChange={setShowComments}
-        onCountChange={(delta) => onCommentCountChange(feature.id, delta)}
-      />
-      <FollowersPanel
-        appId={appId}
-        featureId={feature.id}
-        featureTitle={feature.title}
-        open={showFollowers}
-        onOpenChange={setShowFollowers}
-      />
+      {mountDelete && (
+        <Dialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Delete this feature request?</DialogTitle>
+              <DialogDescription>
+                &quot;{feature.title}&quot; and all its votes, comments, and followers will be
+                permanently deleted. This can&apos;t be undone.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setShowDeleteConfirm(false)}>
+                Cancel
+              </Button>
+              <Button variant="destructive" onClick={handleDelete} disabled={isDeleting}>
+                {isDeleting ? "Deleting..." : "Delete"}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+      {mountComments && (
+        <DashboardCommentsPanel
+          appId={appId}
+          featureId={feature.id}
+          featureTitle={feature.title}
+          open={showComments}
+          onOpenChange={setShowComments}
+          onCountChange={(delta) => onCommentCountChange(feature.id, delta)}
+        />
+      )}
+      {mountFollowers && (
+        <FollowersPanel
+          appId={appId}
+          featureId={feature.id}
+          featureTitle={feature.title}
+          open={showFollowers}
+          onOpenChange={setShowFollowers}
+        />
+      )}
     </div>
   );
+}
+
+/** False during hydration, true once the browser has had an idle moment after it. */
+function useIdleMount() {
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    if (typeof window.requestIdleCallback === "function") {
+      const id = window.requestIdleCallback(() => setReady(true), { timeout: 2000 });
+      return () => window.cancelIdleCallback(id);
+    }
+    const id = window.setTimeout(() => setReady(true), 200);
+    return () => window.clearTimeout(id);
+  }, []);
+  return ready;
 }

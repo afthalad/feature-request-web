@@ -1,12 +1,8 @@
-"use client";
-
 import Link from "next/link";
-import { ArrowLeft, Check, ChevronUp, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ArrowLeft, Check, ChevronUp } from "lucide-react";
 import { Logo } from "@/components/layout/Logo";
-import { GoogleIcon } from "@/components/marketing/GoogleIcon";
-import { useGoogleSignIn } from "@/lib/auth/useGoogleSignIn";
 import { cn } from "@/lib/utils";
+import { GoogleSignInButton } from "./GoogleSignInButton";
 
 const PREVIEW_ROWS = [
   { title: "Dark mode", votes: 42, status: "Planned", dot: "bg-blue-500", top: true },
@@ -16,9 +12,8 @@ const PREVIEW_ROWS = [
 
 const PERKS = ["Free forever for one app", "No credit card needed", "Three lines of code to set up"];
 
+// A server component: only the sign-in button ships as client JavaScript.
 export default function LoginPage() {
-  const { signIn, isSigningIn } = useGoogleSignIn({ resumeSession: true });
-
   return (
     <div className="bg-muted relative flex min-h-dvh flex-col items-center justify-center overflow-hidden px-4 py-10">
       {/* soft brand glow behind the card */}
@@ -49,19 +44,7 @@ export default function LoginPage() {
             </div>
 
             <div className="space-y-3">
-              <Button
-                onClick={signIn}
-                disabled={isSigningIn}
-                variant="outline"
-                className="h-11 w-full gap-2.5 text-sm font-semibold"
-              >
-                {isSigningIn ? (
-                  <Loader2 className="size-4 animate-spin" />
-                ) : (
-                  <GoogleIcon className="size-4" />
-                )}
-                {isSigningIn ? "Signing in…" : "Continue with Google"}
-              </Button>
+              <GoogleSignInButton />
               <p className="text-muted-foreground text-center text-xs">
                 We only use your Google account to sign you in.
               </p>

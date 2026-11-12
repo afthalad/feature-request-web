@@ -3,6 +3,7 @@ import Link from "next/link";
 import { FieldValue } from "firebase-admin/firestore";
 import { getSessionUser } from "@/lib/auth/requireUser";
 import { adminDb } from "@/lib/firebase/admin";
+import { getUserSnapshot, planFromUserData } from "@/lib/dashboard/data";
 import { listFeaturesForOwner } from "@/lib/features/service";
 import { FeatureList } from "@/components/features/FeatureList";
 import { UpgradeBanner } from "@/components/billing/UpgradeBanner";
@@ -22,9 +23,13 @@ export default async function AppPage({
 }) {
   const { appId } = await params;
 
-  const [user, appSnap] = await Promise.all([
-    getSessionUser(),
+  // The plan read starts as soon as the session is known (and is shared with the layout's
+  // sidebar read), instead of waiting for the app document first.
+  const userPromise = getSessionUser();
+  const [user, appSnap, userSnap] = await Promise.all([
+    userPromise,
     adminDb.collection("apps").doc(appId).get(),
+    userPromise.then((u) => (u ? getUserSnapshot(u.uid) : null)),
   ]);
   if (!user) redirect("/login");
   if (
@@ -40,10 +45,7 @@ export default async function AppPage({
     ? app.featuresLastViewedAt.toDate().toISOString()
     : null;
 
-  const userSnap = await adminDb.collection("users").doc(user.uid).get();
-  const userPlan = userSnap.data()?.plan;
-  const plan: Plan =
-    userPlan === "pro" || userPlan === "starter" ? userPlan : "free";
+  const plan: Plan = planFromUserData(userSnap?.data());
   const hasPublicBoard = PLAN_LIMITS[plan].publicBoard;
   const appPlatforms = listAppPlatforms(readAppIds(app));
   const requestPlatforms =

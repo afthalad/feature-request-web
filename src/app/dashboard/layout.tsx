@@ -2,7 +2,11 @@ import { cookies } from "next/headers";
 import { FewchursButton } from "@fewchurs/next";
 import "@fewchurs/next/styles.css";
 import { getSessionUser } from "@/lib/auth/requireUser";
-import { adminDb } from "@/lib/firebase/admin";
+import {
+  getOwnedAppsSnapshot,
+  getUserSnapshot,
+  planFromUserData,
+} from "@/lib/dashboard/data";
 import { AuthGuard } from "@/components/layout/AuthGuard";
 import { AppSidebar, type SidebarApp } from "@/components/layout/AppSidebar";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
@@ -25,10 +29,9 @@ async function loadSidebarData(): Promise<{
   if (!user) return { apps: [], plan: "free", hasBillingAccount: false };
 
   const [appsSnap, userSnap] = await Promise.all([
-    adminDb.collection("apps").where("ownerUid", "==", user.uid).get(),
-    adminDb.collection("users").doc(user.uid).get(),
+    getOwnedAppsSnapshot(user.uid),
+    getUserSnapshot(user.uid),
   ]);
-  const userPlan = userSnap.data()?.plan;
   const liveApps = appsSnap.docs.filter((doc) => doc.get("deleted") !== true);
   // "New" matches the dashboard's New badge: arrived since the owner last opened the app.
   const newCounts = await Promise.all(
@@ -55,7 +58,7 @@ async function loadSidebarData(): Promise<{
 
   return {
     apps,
-    plan: userPlan === "pro" || userPlan === "starter" ? userPlan : "free",
+    plan: planFromUserData(userSnap.data()),
     hasBillingAccount: Boolean(userSnap.data()?.polarCustomerId),
   };
 }
@@ -77,7 +80,18 @@ export default async function DashboardLayout({
     <AuthGuard sessionIssuedAt={user ? user.iat * 1000 : null}>
       <TooltipProvider>
         <SidebarProvider defaultOpen={defaultOpen}>
-          <AppSidebar {...sidebar} />
+          <AppSidebar
+            {...sidebar}
+            profile={
+              user
+                ? {
+                    name: typeof user.name === "string" ? user.name : undefined,
+                    email: user.email,
+                    picture: user.picture,
+                  }
+                : undefined
+            }
+          />
           <SidebarInset>
             <header className="bg-background sticky top-0 z-10 flex h-14 items-center justify-between border-b px-4 md:rounded-t-xl">
               <SidebarTrigger />

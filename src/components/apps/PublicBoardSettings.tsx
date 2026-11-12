@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, useSyncExternalStore, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { auth } from "@/lib/firebase/client";
+import { getCurrentIdToken } from "@/lib/firebase/client";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -31,14 +31,20 @@ export function PublicBoardSettings({
   const [hideVoteCounts, setHideVoteCounts] = useState(initialHideVoteCounts);
   const [isSavingHideVoteCounts, setIsSavingHideVoteCounts] = useState(false);
 
-  const boardUrl =
-    typeof window !== "undefined" ? `${window.location.origin}/b/${savedSlug}` : `/b/${savedSlug}`;
+  // This page is server-rendered, so hydrate with the server's relative URL and fill in the
+  // origin straight after; reading window during render would mismatch the server HTML.
+  const origin = useSyncExternalStore(
+    noopSubscribe,
+    () => window.location.origin,
+    () => "",
+  );
+  const boardUrl = `${origin}/b/${savedSlug}`;
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
     setIsSaving(true);
     try {
-      const idToken = await auth.currentUser?.getIdToken();
+      const idToken = await getCurrentIdToken();
       if (!idToken) throw new Error("Not signed in.");
 
       const response = await fetch(`/api/internal/apps/${appId}`, {
@@ -68,7 +74,7 @@ export function PublicBoardSettings({
     setHideVoteCounts(checked);
     setIsSavingHideVoteCounts(true);
     try {
-      const idToken = await auth.currentUser?.getIdToken();
+      const idToken = await getCurrentIdToken();
       if (!idToken) throw new Error("Not signed in.");
 
       const response = await fetch(`/api/internal/apps/${appId}`, {
@@ -142,4 +148,8 @@ export function PublicBoardSettings({
       </div>
     </div>
   );
+}
+
+function noopSubscribe() {
+  return () => {};
 }

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-import { auth } from "@/lib/firebase/client";
+import { getCurrentIdToken } from "@/lib/firebase/client";
 import {
   Select,
   SelectContent,
@@ -56,7 +56,7 @@ export function StatusSelect({
     onStatusChange(nextStatus);
     setIsSaving(true);
     try {
-      const idToken = await auth.currentUser?.getIdToken();
+      const idToken = await getCurrentIdToken();
       if (!idToken) throw new Error("Not signed in.");
 
       const response = await fetch(`/api/internal/features/${featureId}`, {

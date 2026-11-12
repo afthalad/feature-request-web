@@ -20,7 +20,10 @@ interface AuthGuardProps {
 
 export function AuthGuard({ children, sessionIssuedAt }: AuthGuardProps) {
   const router = useRouter();
-  const [isAuthed, setIsAuthed] = useState(false);
+  // With a server session the layout and page already checked it, so show them straight away
+  // (server-rendered, no skeleton swap). Firebase still confirms below and sends anyone it
+  // finds signed out to /login. Without a session, wait for Firebase as before.
+  const [isAuthed, setIsAuthed] = useState(sessionIssuedAt !== null);
   const issuedAtRef = useRef(sessionIssuedAt);
   const isRenewingRef = useRef(false);
 

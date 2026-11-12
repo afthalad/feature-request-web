@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-import { auth } from "@/lib/firebase/client";
+import { getCurrentIdToken } from "@/lib/firebase/client";
 import {
   Dialog,
   DialogContent,
@@ -26,7 +26,7 @@ export function RegenerateKeyDialog({ appId, onRegenerated }: RegenerateKeyDialo
   async function handleConfirm() {
     setIsSubmitting(true);
     try {
-      const idToken = await auth.currentUser?.getIdToken();
+      const idToken = await getCurrentIdToken();
       if (!idToken) throw new Error("Not signed in.");
 
       const response = await fetch(`/api/internal/apps/${appId}/key`, {

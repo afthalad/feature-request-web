@@ -11,3 +11,13 @@ const firebaseConfig = {
 export const firebaseApp = getApps().length ? getApp() : initializeApp(firebaseConfig);
 export const auth = getAuth(firebaseApp);
 export const googleAuthProvider = new GoogleAuthProvider();
+
+/**
+ * The signed-in user's ID token. Dashboard pages render from the server session before Firebase
+ * has restored the user in the browser, so wait for that first: a click straight after load
+ * would otherwise find currentUser still null.
+ */
+export async function getCurrentIdToken(): Promise<string | undefined> {
+  await auth.authStateReady();
+  return auth.currentUser?.getIdToken();
+}
