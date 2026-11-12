@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { onAuthStateChanged, signOut, type User } from "firebase/auth";
+import { resetAnalytics } from "@/lib/analytics/client";
 import { auth } from "@/lib/firebase/client";
 import { Logo } from "@/components/layout/Logo";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
@@ -35,6 +36,7 @@ export function MarketingHeader() {
 
   async function handleSignOut() {
     await signOut(auth);
+    resetAnalytics();
     await fetch("/api/auth/session", { method: "DELETE" });
     router.push("/login");
   }

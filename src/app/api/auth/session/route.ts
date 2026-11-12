@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { FieldValue } from "firebase-admin/firestore";
 import { adminAuth, adminDb } from "@/lib/firebase/admin";
 import { SESSION_COOKIE_NAME } from "@/lib/auth/requireUser";
+import { trackServer } from "@/lib/analytics/server";
 
 const SESSION_EXPIRES_IN_MS = 14 * 24 * 60 * 60 * 1000;
 
@@ -18,11 +19,19 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "invalid idToken" }, { status: 401 });
   }
 
-  await upsertUserProfile(decoded.uid, {
+  const profile = {
     email: decoded.email ?? "",
     displayName: decoded.name ?? "",
     photoURL: decoded.picture ?? "",
-  });
+  };
+  const isNewUser = await upsertUserProfile(decoded.uid, profile);
+  if (isNewUser) {
+    trackServer(decoded.uid, "signed_up", {
+      method: decoded.firebase?.sign_in_provider ?? "unknown",
+      $set: { email: profile.email, name: profile.displayName, plan: "free" },
+      $set_once: { signed_up_at: new Date().toISOString() },
+    });
+  }
 
   const sessionCookie = await adminAuth.createSessionCookie(idToken, {
     expiresIn: SESSION_EXPIRES_IN_MS,
@@ -48,13 +57,14 @@ export async function DELETE() {
 async function upsertUserProfile(
   uid: string,
   profile: { email: string; displayName: string; photoURL: string }
-) {
+): Promise<boolean> {
   const userRef = adminDb.collection("users").doc(uid);
   const userSnap = await userRef.get();
 
   if (!userSnap.exists) {
     await userRef.set({ ...profile, plan: "free", createdAt: FieldValue.serverTimestamp() });
-  } else {
-    await userRef.set(profile, { merge: true });
+    return true;
   }
+  await userRef.set(profile, { merge: true });
+  return false;
 }

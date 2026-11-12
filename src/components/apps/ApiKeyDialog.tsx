@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Check, Copy } from "lucide-react";
 import { toast } from "sonner";
+import { track } from "@/lib/analytics/client";
 import {
   Dialog,
   DialogContent,
@@ -25,6 +26,7 @@ export function ApiKeyDialog({ apiKey, onClose }: ApiKeyDialogProps) {
     if (!apiKey) return;
     await navigator.clipboard.writeText(apiKey);
     setCopied(true);
+    track("api_key_copied");
     toast.success("API key copied");
     setTimeout(() => setCopied(false), 2000);
   }

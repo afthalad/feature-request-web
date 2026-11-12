@@ -7,6 +7,7 @@ import { generateUniqueSlug } from "@/lib/slug";
 import { createAppSchema } from "@/lib/validation/schemas";
 import { ok, errorResponse } from "@/lib/api/response";
 import { checkAppLimit, checkPlatformLimit, getUserPlan } from "@/lib/plans/limits";
+import { trackServer } from "@/lib/analytics/server";
 
 export async function POST(req: NextRequest) {
   const user = await getUserFromAuthHeader(req);
@@ -23,7 +24,8 @@ export async function POST(req: NextRequest) {
   }
 
   const { name, iosBundleId, androidPackageName, webDomain } = parsed.data;
-  const platformCheck = checkPlatformLimit(await getUserPlan(user.uid), {
+  const plan = await getUserPlan(user.uid);
+  const platformCheck = checkPlatformLimit(plan, {
     iosBundleId: iosBundleId ?? null,
     androidPackageName: androidPackageName ?? null,
     webDomain: webDomain ?? null,
@@ -62,6 +64,19 @@ export async function POST(req: NextRequest) {
     const appSnap = await appRef.get();
     const appData = appSnap.data();
     if (!appData) throw new Error("App not found after creation");
+
+    const platforms = [
+      iosBundleId && "ios",
+      androidPackageName && "android",
+      webDomain && "web",
+    ].filter(Boolean);
+    trackServer(user.uid, "app_created", {
+      app_id: appRef.id,
+      platforms,
+      platform_count: platforms.length,
+      plan,
+      $set_once: { first_app_created_at: new Date().toISOString() },
+    });
 
     return ok(
       {

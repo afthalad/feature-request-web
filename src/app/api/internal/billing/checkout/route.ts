@@ -6,6 +6,7 @@ import { polar, grantsPaidAccess } from "@/lib/polar/client";
 import { productIdFor } from "@/lib/polar/products";
 import { refreshSubscriptionFromPolar } from "@/lib/polar/refreshSubscription";
 import { ok, errorResponse } from "@/lib/api/response";
+import { trackServer } from "@/lib/analytics/server";
 
 const checkoutSchema = z.object({
   plan: z.enum(["starter", "pro"]),
@@ -47,6 +48,13 @@ export async function POST(req: NextRequest) {
         id: userData.subscriptionId,
         subscriptionUpdate: { productId, prorationBehavior: "invoice" },
       });
+      trackServer(user.uid, "plan_switched", {
+        from_plan: userData.plan ?? null,
+        from_period: userData.billingPeriod ?? null,
+        plan,
+        period,
+        $set: { plan },
+      });
       return ok({ checkoutUrl: successUrl });
     }
 
@@ -60,6 +68,11 @@ export async function POST(req: NextRequest) {
       returnUrl: `${process.env.NEXT_PUBLIC_APP_URL}/pricing`,
     });
 
+    trackServer(user.uid, "checkout_started", {
+      plan,
+      period,
+      current_plan: userData?.plan ?? "free",
+    });
     return ok({ checkoutUrl: checkout.url });
   } catch (error) {
     console.error("Failed to start Polar checkout", error);

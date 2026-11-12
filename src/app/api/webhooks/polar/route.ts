@@ -7,6 +7,19 @@ import {
   saveSubscriptionToUser,
   type PolarSubscription,
 } from "@/lib/polar/saveSubscription";
+import { planFromProductId } from "@/lib/polar/products";
+import { trackServer } from "@/lib/analytics/server";
+import type { AnalyticsEvent } from "@/lib/analytics/events";
+
+// Polar events that are a step in the revenue funnel, and what analytics calls them.
+const ANALYTICS_EVENTS: Partial<Record<string, AnalyticsEvent>> = {
+  "subscription.active": "subscription_purchased",
+  "subscription.cycled": "subscription_renewed",
+  "subscription.canceled": "subscription_canceled",
+  "subscription.uncanceled": "subscription_uncanceled",
+  "subscription.past_due": "subscription_payment_failed",
+  "subscription.revoked": "subscription_ended",
+};
 
 const SUBSCRIPTION_EVENTS = new Set([
   "subscription.created",
@@ -48,11 +61,13 @@ export async function POST(req: NextRequest) {
   }
   const subscription = event.data as PolarSubscription;
 
+  let ownerUid: string | null = null;
   try {
-    await adminDb.runTransaction(async (tx) => {
+    ownerUid = await adminDb.runTransaction(async (tx) => {
       const eventRef = adminDb.collection("polarWebhookEvents").doc(webhookId);
       const eventSnap = await tx.get(eventRef);
-      if (eventSnap.exists) return;
+      // Already handled: return null so a retried delivery isn't counted twice.
+      if (eventSnap.exists) return null;
 
       const userRef = await findSubscriptionOwner(tx, subscription);
       if (userRef) await saveSubscriptionToUser(tx, userRef, subscription);
@@ -65,10 +80,27 @@ export async function POST(req: NextRequest) {
         status: subscription.status,
         receivedAt: FieldValue.serverTimestamp(),
       });
+      return userRef?.id ?? null;
     });
   } catch (error) {
     console.error("Failed to process Polar webhook", error);
     return NextResponse.json({ error: "Processing failed" }, { status: 503 });
+  }
+
+  const analyticsEvent = ANALYTICS_EVENTS[event.type];
+  if (ownerUid && analyticsEvent) {
+    const mapped = planFromProductId(subscription.product_id);
+    const plan = mapped?.plan ?? null;
+    trackServer(ownerUid, analyticsEvent, {
+      plan,
+      period: mapped?.period ?? subscription.recurring_interval ?? null,
+      // Dollars, so PostHog can sum revenue directly.
+      revenue: typeof subscription.amount === "number" ? subscription.amount / 100 : null,
+      currency: subscription.currency ?? null,
+      subscription_id: subscription.id,
+      ...(analyticsEvent === "subscription_purchased" && plan && { $set: { plan } }),
+      ...(analyticsEvent === "subscription_ended" && { $set: { plan: "free" } }),
+    });
   }
 
   return NextResponse.json({ received: true });

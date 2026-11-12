@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { User } from "firebase/auth";
 import { toast } from "sonner";
+import { identifyUser, track } from "@/lib/analytics/client";
 
 /**
  * Firebase Auth is one of the biggest modules on the page, so it isn't part of the first bundle:
@@ -100,6 +101,7 @@ export function useGoogleSignIn({ resumeSession = false }: { resumeSession?: boo
           if (!user || done || stageRef.current !== "idle" || recentlyResumed()) return;
           done = true;
           markResumed();
+          identifyUser(user);
           setIsSigningIn(true);
           try {
             await createSession(user);
@@ -149,6 +151,7 @@ export function useGoogleSignIn({ resumeSession = false }: { resumeSession?: boo
     stageRef.current = "popup";
     setIsSigningIn(true);
     watchForCancel(attempt);
+    track("sign_in_clicked", { page: window.location.pathname });
 
     let FirebaseError: Awaited<ReturnType<typeof loadFirebase>>["FirebaseError"] | null = null;
     try {
@@ -158,6 +161,7 @@ export function useGoogleSignIn({ resumeSession = false }: { resumeSession?: boo
       if (attempt !== attemptRef.current) return;
       stageRef.current = "session";
       cleanupRef.current();
+      identifyUser(credential.user);
       // The focus watcher may have reset the button while the popup was finishing up.
       setIsSigningIn(true);
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -15,6 +15,8 @@ import {
 } from "@/components/ui/dialog";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { track } from "@/lib/analytics/client";
+import type { UpgradeReason } from "@/lib/analytics/events";
 
 type PaidPlan = "starter" | "pro";
 
@@ -40,6 +42,8 @@ interface UpgradeDialogProps {
   onOpenChange: (open: boolean) => void;
   title?: string;
   description: string;
+  /** Which limit opened this dialog, for the upgrade funnel in analytics. */
+  reason: UpgradeReason;
 }
 
 export function UpgradeDialog({
@@ -47,14 +51,20 @@ export function UpgradeDialog({
   onOpenChange,
   title = "Upgrade to keep going",
   description,
+  reason,
 }: UpgradeDialogProps) {
   const router = useRouter();
   const [loadingPlan, setLoadingPlan] = useState<PaidPlan | null>(null);
+
+  useEffect(() => {
+    if (open) track("upgrade_prompt_shown", { reason, surface: "dialog" });
+  }, [open, reason]);
 
   async function handleUpgrade(plan: PaidPlan) {
     // Right after a page load Firebase is still restoring the signed-in user, and currentUser
     // is null until it has: without waiting, a quick click sent signed-in people to /login.
     await auth.authStateReady();
+    track("upgrade_clicked", { plan, period: "monthly", source: "upgrade_dialog", reason });
     if (!auth.currentUser) {
       router.push("/login");
       return;
@@ -76,6 +86,7 @@ export function UpgradeDialog({
 
       window.location.href = data.checkoutUrl;
     } catch (error) {
+      track("checkout_failed", { plan, period: "monthly", source: "upgrade_dialog", reason });
       toast.error(error instanceof Error ? error.message : "We couldn't start checkout. Please try again.");
       setLoadingPlan(null);
     }

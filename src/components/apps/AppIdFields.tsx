@@ -197,6 +197,7 @@ export function AppIdFields({ value, onChange, disabled, maxPlatforms }: AppIdFi
         );
       })}
       <UpgradeDialog
+        reason="platform_limit"
         open={showUpgrade}
         onOpenChange={setShowUpgrade}
         title="Add more platforms"

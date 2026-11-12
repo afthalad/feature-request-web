@@ -13,6 +13,10 @@ export interface PolarSubscription {
   customer?: { id: string; external_id?: string | null };
   metadata?: Record<string, unknown>;
   cancel_at_period_end?: boolean;
+  /** Price per period, in the currency's smallest unit (cents). */
+  amount?: number | null;
+  currency?: string | null;
+  recurring_interval?: string | null;
   current_period_end?: string | null;
   created_at: string;
   modified_at?: string | null;

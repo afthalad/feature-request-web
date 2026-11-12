@@ -1,13 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { CreateAppForm } from "@/components/apps/CreateAppForm";
 import { ApiKeyDialog } from "@/components/apps/ApiKeyDialog";
+import { track } from "@/lib/analytics/client";
 
 export function NewAppFlow({ maxPlatforms }: { maxPlatforms: number }) {
   const router = useRouter();
   const [apiKey, setApiKey] = useState<string | null>(null);
+
+  useEffect(() => {
+    track("app_create_started");
+  }, []);
 
   function handleClose() {
     setApiKey(null);

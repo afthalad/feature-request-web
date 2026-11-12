@@ -91,6 +91,7 @@ export function ExportReportButton({ appId, plan }: ExportReportButtonProps) {
         </DropdownMenuContent>
       </DropdownMenu>
       <UpgradeDialog
+        reason="csv_export"
         open={showUpgrade}
         onOpenChange={setShowUpgrade}
         title="CSV export is a Pro feature"

@@ -10,6 +10,7 @@ import { UpgradeDialog } from "@/components/billing/UpgradeDialog";
 import { AppIdFields, EMPTY_APP_ID_VALUES, toAppIds } from "@/components/apps/AppIdFields";
 import { hasAppId } from "@/lib/apps/appIds";
 import type { ApiErrorBody } from "@/types";
+import { track } from "@/lib/analytics/client";
 
 interface CreateAppFormProps {
   onCreated: (apiKey: string) => void;
@@ -42,6 +43,7 @@ export function CreateAppForm({ onCreated, maxPlatforms }: CreateAppFormProps) {
       const data: { apiKey?: string } & Partial<ApiErrorBody> = await response.json();
       if (!response.ok) {
         if (data.error?.code === "limit_reached") {
+          track("app_create_blocked", { message: data.error.message });
           setLimitMessage(data.error.message);
           return;
         }
@@ -80,6 +82,7 @@ export function CreateAppForm({ onCreated, maxPlatforms }: CreateAppFormProps) {
         </Button>
       </form>
       <UpgradeDialog
+        reason="app_limit"
         open={limitMessage !== null}
         onOpenChange={(open) => !open && setLimitMessage(null)}
         title="You've hit your app limit"

@@ -112,7 +112,7 @@ export default async function DashboardPage() {
         ))}
       </div>
       {plan === "free" && (
-        <UpgradeBanner message="Upgrade for more apps, higher feature limits, and more monthly emails." />
+        <UpgradeBanner reason="dashboard_banner" message="Upgrade for more apps, higher feature limits, and more monthly emails." />
       )}
       {stats.totalFeatures === 0 && (
         <EmptyState

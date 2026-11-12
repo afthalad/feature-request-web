@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Rocket, Sparkles, Sprout } from "lucide-react";
 import { toast } from "sonner";
 import { auth } from "@/lib/firebase/client";
 import { PlanCard } from "@/components/pricing/PlanCard";
 import { cn } from "@/lib/utils";
+import { identifyUser, track } from "@/lib/analytics/client";
 
 const FREE_FEATURES = [
   "1 app on one platform",
@@ -47,10 +48,34 @@ export function PricingPlans() {
   const [period, setPeriod] = useState<Period>("monthly");
   const [loadingPlan, setLoadingPlan] = useState<PaidPlan | null>(null);
 
+  useEffect(() => {
+    let cancelled = false;
+    auth.authStateReady().then(() => {
+      if (cancelled) return;
+      const user = auth.currentUser;
+      if (user) identifyUser(user);
+      track("pricing_viewed", { signed_in: Boolean(user) });
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  function changePeriod(value: Period) {
+    if (value !== period) track("pricing_period_changed", { period: value });
+    setPeriod(value);
+  }
+
   async function handleUpgrade(plan: PaidPlan) {
     // Right after a page load Firebase is still restoring the signed-in user, and currentUser
     // is null until it has: without waiting, a quick click sent signed-in people to /login.
     await auth.authStateReady();
+    track("upgrade_clicked", {
+      plan,
+      period,
+      source: "pricing_page",
+      signed_in: Boolean(auth.currentUser),
+    });
     if (!auth.currentUser) {
       router.push("/login");
       return;
@@ -73,6 +98,7 @@ export function PricingPlans() {
 
       window.location.href = data.checkoutUrl;
     } catch (error) {
+      track("checkout_failed", { plan, period, source: "pricing_page" });
       toast.error(
         error instanceof Error ? error.message : "We couldn't start checkout. Please try again.",
       );
@@ -118,7 +144,7 @@ export function PricingPlans() {
               type="button"
               role="radio"
               aria-checked={period === value}
-              onClick={() => setPeriod(value)}
+              onClick={() => changePeriod(value)}
               className={cn(
                 "relative z-10 flex items-center justify-center gap-2 rounded-full px-5 py-2 font-medium transition-colors",
                 period === value

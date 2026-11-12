@@ -10,6 +10,7 @@ import {
 import { adminDb } from "@/lib/firebase/admin";
 import { sendNewFeatureRequestEmail } from "@/lib/email/send";
 import { followFeature } from "@/lib/followers/service";
+import { trackServer } from "@/lib/analytics/server";
 import type { Plan } from "@/lib/plans/limits";
 import {
   forgetVisibleIds,
@@ -494,6 +495,7 @@ export async function createFeatureForApp({
   const appRef = adminDb.collection("apps").doc(appId);
   const appSnap = await appRef.get();
   if (!appSnap.exists) throw new NotFoundError();
+  const isFirstRequest = (appSnap.data()?.featureCount ?? 0) === 0;
 
   // Submissions are never turned away for volume — the plan's feature-request cap now limits
   // how many are visible in the owner's dashboard (see listFeaturesForOwner), not whether an
@@ -531,6 +533,15 @@ export async function createFeatureForApp({
 
   if (email) {
     await followFeature(appId, featureRef.id, deviceId, email);
+  }
+
+  const ownerUid = appSnap.data()?.ownerUid;
+  if (isFirstRequest && typeof ownerUid === "string") {
+    trackServer(ownerUid, "first_feature_request_received", {
+      app_id: appId,
+      platform,
+      $set_once: { first_feature_request_at: new Date().toISOString() },
+    });
   }
 
   const featureSnap = await featureRef.get();

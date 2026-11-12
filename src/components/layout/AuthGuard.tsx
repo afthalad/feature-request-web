@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { onAuthStateChanged, type User } from "firebase/auth";
 import { auth } from "@/lib/firebase/client";
 import { Skeleton } from "@/components/ui/skeleton";
+import { identifyUser } from "@/lib/analytics/client";
 
 /**
  * The server session lasts a fixed 14 days from when it was made, so swap in a fresh one once
@@ -59,6 +60,7 @@ export function AuthGuard({ children, sessionIssuedAt }: AuthGuardProps) {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       currentUser = user;
       if (user) {
+        identifyUser(user);
         setIsAuthed(true);
         renewIfDue();
       } else {

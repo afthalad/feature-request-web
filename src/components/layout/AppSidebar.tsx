@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { onAuthStateChanged, signOut, type User } from "firebase/auth";
+import { resetAnalytics } from "@/lib/analytics/client";
 import {
   BookOpen,
   ChevronDown,
@@ -346,6 +347,7 @@ function AccountMenu({
     setIsSigningOut(true);
     try {
       await signOut(auth);
+      resetAnalytics();
       await fetch("/api/auth/session", { method: "DELETE" });
       router.push("/login");
     } catch {

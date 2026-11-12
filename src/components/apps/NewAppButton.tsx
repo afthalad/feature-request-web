@@ -28,6 +28,7 @@ export function NewAppButton({ atLimit, limitMessage, className, children }: New
         {children}
       </button>
       <UpgradeDialog
+        reason="app_limit"
         open={open}
         onOpenChange={setOpen}
         title="You've hit your app limit"

@@ -236,6 +236,7 @@ export function FeatureList({
 
       {hiddenCount > 0 && !isSwitchingTab && (
         <UpgradeBanner
+          reason="locked_requests"
           title={`${hiddenCount} feature request${hiddenCount === 1 ? " is" : "s are"} locked`}
           message="Your plan shows this app's first requests. Upgrade to see all of them."
         />
