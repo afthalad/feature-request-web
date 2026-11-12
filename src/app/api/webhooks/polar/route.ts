@@ -8,7 +8,7 @@ import {
   type PolarSubscription,
 } from "@/lib/polar/saveSubscription";
 import { planFromProductId } from "@/lib/polar/products";
-import { trackServer } from "@/lib/analytics/server";
+import { captureServerError, trackServer } from "@/lib/analytics/server";
 import type { AnalyticsEvent } from "@/lib/analytics/events";
 
 // Polar events that are a step in the revenue funnel, and what analytics calls them.
@@ -52,6 +52,9 @@ export async function POST(req: NextRequest) {
   });
   if (!signed) {
     console.error("Polar webhook signature verification failed");
+    captureServerError(new Error("Polar webhook signature verification failed"), {
+      step: "polar_webhook",
+    });
     return NextResponse.json({ error: "Invalid signature" }, { status: 403 });
   }
 
@@ -84,6 +87,11 @@ export async function POST(req: NextRequest) {
     });
   } catch (error) {
     console.error("Failed to process Polar webhook", error);
+    captureServerError(error, {
+      step: "polar_webhook",
+      webhook_type: event.type,
+      subscription_id: subscription.id,
+    });
     return NextResponse.json({ error: "Processing failed" }, { status: 503 });
   }
 

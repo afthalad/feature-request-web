@@ -7,7 +7,7 @@ import { generateUniqueSlug } from "@/lib/slug";
 import { createAppSchema } from "@/lib/validation/schemas";
 import { ok, errorResponse } from "@/lib/api/response";
 import { checkAppLimit, checkPlatformLimit, getUserPlan } from "@/lib/plans/limits";
-import { trackServer } from "@/lib/analytics/server";
+import { captureServerError, trackServer } from "@/lib/analytics/server";
 
 export async function POST(req: NextRequest) {
   const user = await getUserFromAuthHeader(req);
@@ -100,6 +100,7 @@ export async function POST(req: NextRequest) {
     );
   } catch (error) {
     console.error("Failed to create app", error);
+    captureServerError(error, { distinctId: user.uid, step: "create_app" });
     return errorResponse("internal", "Failed to create app.");
   }
 }

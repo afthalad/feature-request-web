@@ -6,7 +6,7 @@ import { polar, grantsPaidAccess } from "@/lib/polar/client";
 import { productIdFor } from "@/lib/polar/products";
 import { refreshSubscriptionFromPolar } from "@/lib/polar/refreshSubscription";
 import { ok, errorResponse } from "@/lib/api/response";
-import { trackServer } from "@/lib/analytics/server";
+import { captureServerError, trackServer } from "@/lib/analytics/server";
 
 const checkoutSchema = z.object({
   plan: z.enum(["starter", "pro"]),
@@ -76,6 +76,7 @@ export async function POST(req: NextRequest) {
     return ok({ checkoutUrl: checkout.url });
   } catch (error) {
     console.error("Failed to start Polar checkout", error);
+    captureServerError(error, { distinctId: user.uid, step: "checkout", plan, period });
     return errorResponse("internal", "We couldn't start checkout. Please try again.");
   }
 }

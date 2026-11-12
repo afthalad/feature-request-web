@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { track } from "@/lib/analytics/client";
+import { captureError, track } from "@/lib/analytics/client";
 import type { UpgradeReason } from "@/lib/analytics/events";
 
 type PaidPlan = "starter" | "pro";
@@ -87,6 +87,7 @@ export function UpgradeDialog({
       window.location.href = data.checkoutUrl;
     } catch (error) {
       track("checkout_failed", { plan, period: "monthly", source: "upgrade_dialog", reason });
+      captureError(error, { plan, period: "monthly", source: "upgrade_dialog", reason });
       toast.error(error instanceof Error ? error.message : "We couldn't start checkout. Please try again.");
       setLoadingPlan(null);
     }

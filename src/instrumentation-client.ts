@@ -15,5 +15,9 @@ if (key) {
     defaults: "2026-08-30",
     // Client-side navigations count as page views too.
     capture_pageview: "history_change",
+    // Uncaught errors and unhandled promise rejections go to PostHog Error tracking, on the same
+    // person as their funnel events. (There are no React error boundaries, so render crashes
+    // reach the window too.)
+    capture_exceptions: true,
   });
 }

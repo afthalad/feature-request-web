@@ -32,6 +32,32 @@ export function trackServer(
   after(() => sendServerEvent(distinctId, event, properties));
 }
 
+/**
+ * Reports an error the code caught and handled (so Next.js never sees it) to PostHog Error
+ * tracking. Like trackServer, it runs in after() and never affects the response.
+ */
+export function captureServerError(
+  error: unknown,
+  options: { distinctId?: string; [property: string]: unknown } = {}
+): void {
+  if (!getClient()) return;
+  const { distinctId, ...properties } = options;
+  after(() => sendServerError(error, distinctId, properties));
+}
+
+/** Sends an error now and resolves when done. Never throws. */
+export async function sendServerError(
+  error: unknown,
+  distinctId?: string,
+  properties?: AnalyticsProperties
+): Promise<void> {
+  const posthog = getClient();
+  if (!posthog) return;
+  await posthog
+    .captureExceptionImmediate(error, distinctId, properties)
+    .catch((sendError) => console.error("[analytics] failed to send an error", sendError));
+}
+
 /** Sends now and resolves when done. For code already running inside after(). Never throws. */
 export async function sendServerEvent(
   distinctId: string,

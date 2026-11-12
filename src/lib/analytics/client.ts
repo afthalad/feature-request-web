@@ -19,6 +19,16 @@ export function track(event: AnalyticsEvent, properties?: AnalyticsProperties): 
   }
 }
 
+/** Reports an error the UI caught (and showed a toast for) to PostHog Error tracking. */
+export function captureError(error: unknown, properties?: AnalyticsProperties): void {
+  if (!ready()) return;
+  try {
+    posthog.captureException(error, properties);
+  } catch {
+    // Ignore.
+  }
+}
+
 /**
  * Ties this browser to the signed-in account, so the anonymous visits before sign-up and the
  * server-side events (sent with the Firebase uid) land on one person in PostHog.

@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { auth } from "@/lib/firebase/client";
 import { PlanCard } from "@/components/pricing/PlanCard";
 import { cn } from "@/lib/utils";
-import { identifyUser, track } from "@/lib/analytics/client";
+import { captureError, identifyUser, track } from "@/lib/analytics/client";
 
 const FREE_FEATURES = [
   "1 app on one platform",
@@ -99,6 +99,7 @@ export function PricingPlans() {
       window.location.href = data.checkoutUrl;
     } catch (error) {
       track("checkout_failed", { plan, period, source: "pricing_page" });
+      captureError(error, { plan, period, source: "pricing_page" });
       toast.error(
         error instanceof Error ? error.message : "We couldn't start checkout. Please try again.",
       );

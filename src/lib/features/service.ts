@@ -10,7 +10,7 @@ import {
 import { adminDb } from "@/lib/firebase/admin";
 import { sendNewFeatureRequestEmail } from "@/lib/email/send";
 import { followFeature } from "@/lib/followers/service";
-import { trackServer } from "@/lib/analytics/server";
+import { sendServerError, trackServer } from "@/lib/analytics/server";
 import type { Plan } from "@/lib/plans/limits";
 import {
   forgetVisibleIds,
@@ -560,7 +560,13 @@ export async function createFeatureForApp({
       submitterEmail: email,
     })
       .then(() => console.log(`[email] new-feature-request email settled for app ${appId}, feature ${featureRef.id}`))
-      .catch((error) => console.error(`[email] new-feature-request email FAILED for app ${appId}, feature ${featureRef.id}:`, error)),
+      .catch((error) => {
+        console.error(`[email] new-feature-request email FAILED for app ${appId}, feature ${featureRef.id}:`, error);
+        return sendServerError(error, typeof ownerUid === "string" ? ownerUid : undefined, {
+          step: "new_feature_email",
+          app_id: appId,
+        });
+      }),
   );
 
   return {
