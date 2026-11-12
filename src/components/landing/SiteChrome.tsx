@@ -43,6 +43,12 @@ export function SiteFooter() {
             <p className="max-w-xs text-sm text-muted-foreground">
               Feature requests, votes and a public roadmap for your app.
             </p>
+            <p className="text-sm text-muted-foreground">
+              Support:{" "}
+              <a className="text-foreground hover:text-primary" href="mailto:support@fewchurs.com">
+                support@fewchurs.com
+              </a>
+            </p>
           </div>
           <div>
             <p className="mb-3 font-mono text-[11px] tracking-[0.16em] text-muted-foreground uppercase">Product</p>

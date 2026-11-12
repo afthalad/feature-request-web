@@ -53,7 +53,7 @@ export function HomeStructuredData() {
               "@type": "AggregateOffer",
               priceCurrency: "USD",
               lowPrice: "0",
-              highPrice: "29.99",
+              highPrice: "24",
               offerCount: 3,
             },
           },

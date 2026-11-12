@@ -8,10 +8,10 @@ interface PlanCardProps {
   name: string;
   icon: LucideIcon;
   tagline: string;
-  /** Amount in dollars, e.g. 14.99. */
+  /** Amount in dollars, e.g. 9. */
   price: number;
   period: string;
-  /** Small line under the price, e.g. "$11.99/mo, billed yearly". */
+  /** Small line under the price, e.g. "$7.50/mo, billed yearly". */
   note?: string;
   /** A struck-through comparison price, e.g. the monthly cost over a year. */
   compareAt?: number;
@@ -92,7 +92,7 @@ export function PlanCard({
       </div>
       <p className="text-muted-foreground mt-2 min-h-5 text-xs">
         {compareAt !== undefined && (
-          <span className="mr-1.5 line-through">${compareAt.toFixed(2)}</span>
+          <span className="mr-1.5 line-through">${Number.isInteger(compareAt) ? compareAt : compareAt.toFixed(2)}</span>
         )}
         {note}
       </p>

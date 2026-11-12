@@ -38,8 +38,8 @@ Subscriptions run on [Polar](https://polar.sh) as Merchant of Record. Build and 
 [sandbox](https://sandbox.polar.sh/start) organization first (`POLAR_SERVER=sandbox`), then repeat
 the setup in your production organization.
 
-1. Create four recurring products — Starter Monthly ($14.99), Starter Yearly ($143.90), Pro
-   Monthly ($29.99), Pro Yearly ($287.90) — and put their IDs in the `POLAR_PRODUCT_*` env vars.
+1. Create four recurring products — Starter Monthly ($9), Starter Yearly ($90), Pro
+   Monthly ($24), Pro Yearly ($240) — and put their IDs in the `POLAR_PRODUCT_*` env vars.
    Prices shown on `/pricing` live in `src/components/pricing/PricingPlans.tsx`.
 2. Create an Organization Access Token (scopes: `checkouts:write`, `customer_sessions:write`,
    `subscriptions:write`, `products:read`, `customers:read`) → `POLAR_ACCESS_TOKEN`.

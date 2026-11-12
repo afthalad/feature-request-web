@@ -32,12 +32,12 @@ const PRO_FEATURES = [
 ];
 
 // Keep in sync with the Polar products (amounts in dollars).
-// Yearly is 20% off twelve months of monthly.
+// Yearly is ten months of monthly (two months free).
 const PRICES = {
-  starter: { monthly: 14.99, yearly: 143.9 },
-  pro: { monthly: 29.99, yearly: 287.9 },
+  starter: { monthly: 9, yearly: 90 },
+  pro: { monthly: 24, yearly: 240 },
 };
-const YEARLY_SAVING = "Save 20%";
+const YEARLY_SAVING = "2 months free";
 
 type Period = "monthly" | "yearly";
 type PaidPlan = "starter" | "pro";
@@ -93,7 +93,7 @@ export function PricingPlans() {
           price: yearly,
           period: "/ year",
           compareAt: monthly * 12,
-          note: `$${(yearly / 12).toFixed(2)}/mo, billed yearly`,
+          note: `$${Number.isInteger(yearly / 12) ? yearly / 12 : (yearly / 12).toFixed(2)}/mo, billed yearly`,
         };
   };
 

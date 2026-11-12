@@ -88,7 +88,7 @@ function Cell({ value }: { value: string | boolean }) {
 export const metadata: Metadata = pageMetadata({
   title: "Pricing",
   description:
-    "Free forever for one app. Starter is $14.99 a month for 3 apps, Pro is $29.99 a month for 5 apps with a public board. Yearly saves 20%.",
+    "Free forever for one app. Starter is $9 a month for 3 apps, Pro is $24 a month for 5 apps with a public board. Yearly gets 2 months free.",
   path: "/pricing",
 });
 
