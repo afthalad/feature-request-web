@@ -307,10 +307,12 @@ export default function HomeV2() {
         {/* Pricing */}
         <section id="pricing" className="scroll-mt-8 px-4 pb-20 sm:px-8 sm:pb-28">
           <div className="mx-auto max-w-6xl space-y-10">
-            <Reveal>
+            <Reveal className="text-center">
               <Eyebrow>Pricing</Eyebrow>
-              <h2 className="mt-3 text-4xl leading-[1.05] tracking-[-0.04em] sm:text-5xl">Free for your first app.</h2>
-              <p className="mt-4 text-[var(--v2-fg-2)]">Upgrade when you have more apps or want the badge gone. Cancel any time.</p>
+              <h2 className="mt-3 text-4xl leading-[1.05] tracking-[-0.04em] text-balance sm:text-5xl">Free for your first app.</h2>
+              <p className="mx-auto mt-4 max-w-2xl text-balance text-[var(--v2-fg-2)]">
+                Upgrade when you have more apps or want the badge gone. Cancel any time.
+              </p>
             </Reveal>
             <PricingPlans />
           </div>
