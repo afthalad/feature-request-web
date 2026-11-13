@@ -163,3 +163,26 @@
     transition: none;
   }
 }
+
+/* ---------- docs-v2 ---------- */
+
+/* Page content still uses a few site tokens (borders, muted text): point them at v2's. */
+.v2-docs {
+  --primary: var(--v2-orange);
+  --ring: var(--v2-orange);
+  --border: var(--v2-line);
+  --muted: var(--v2-chip);
+  --muted-foreground: var(--v2-fg-3);
+  --foreground: var(--v2-fg);
+  --background: var(--v2-bg);
+  --popover: var(--v2-raised);
+}
+
+/* Code samples sit on a dark card in both themes. */
+.v2-code {
+  background: oklch(0.19 0.004 60);
+  box-shadow: var(--v2-shadow);
+}
+.dark .v2-code {
+  background: oklch(0.205 0 0);
+}

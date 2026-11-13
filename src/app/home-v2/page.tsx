@@ -1,18 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
-import { Plus_Jakarta_Sans } from "next/font/google";
 import { ArrowRight, Check, ChevronUp, Mail } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { BrandIcon } from "@/components/marketing/BrandIcon";
 import { PricingPlans } from "@/components/pricing/PricingPlans";
-import { NavAccount } from "@/components/landing/NavAccount";
-import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { PLATFORMS } from "@/lib/platforms";
 import { Halftone } from "@/components/landing-v2/Halftone";
 import { RequestCarousel } from "@/components/landing-v2/RequestCarousel";
 import { ResponsiveBoard } from "@/components/landing-v2/ResponsiveBoard";
-import { siWebflow, siWordpress } from "simple-icons";
+import { COMING_SOON, V2Footer, V2Nav } from "@/components/landing-v2/Chrome";
+import { jakarta } from "@/components/landing-v2/fonts";
 import { Reveal } from "@/components/landing-v2/Reveal";
 import "@/components/landing-v2/v2.css";
 
@@ -20,8 +17,6 @@ import "@/components/landing-v2/v2.css";
  * Experimental redesign of the home page. Lives at /home-v2 so the live home
  * page at / is untouched; kept out of search until it replaces it.
  */
-
-const jakarta = Plus_Jakarta_Sans({ variable: "--font-jakarta", subsets: ["latin"], weight: ["400", "500", "600", "700", "800"] });
 
 export const metadata: Metadata = {
   title: "Home (preview)",
@@ -32,7 +27,7 @@ const NAV = [
   { href: "#how", label: "How it works" },
   { href: "#board", label: "The board" },
   { href: "#pricing", label: "Pricing" },
-  { href: "/docs", label: "Docs" },
+  { href: "/docs-preview", label: "Docs" },
 ];
 
 const HERO_ICONS = ["swiftui", "kotlin", "flutter", "react"];
@@ -47,13 +42,6 @@ const CALLOUTS_RIGHT = [
   { title: "They hear back", body: "Followers get an email when the status changes." },
   { title: "Fits every screen", body: "The same board reflows for phones, tablets and the web." },
   { title: "Native everywhere", body: "SwiftUI, Kotlin, Flutter, React, Next.js and Laravel. WordPress, Webflow and Bubble soon." },
-];
-
-/** Platforms on the way. Bubble has no icon in simple-icons, so it gets a monogram. */
-const COMING_SOON: { id: string; name: string; path?: string; color?: string }[] = [
-  { id: "wordpress", name: "WordPress", path: siWordpress.path, color: `#${siWordpress.hex}` },
-  { id: "webflow", name: "Webflow", path: siWebflow.path, color: `#${siWebflow.hex}` },
-  { id: "bubble", name: "Bubble" },
 ];
 
 const DIY = [
@@ -85,26 +73,7 @@ export default function HomeV2() {
 
   return (
     <div className={`${jakarta.variable} v2-root flex flex-1 flex-col overflow-x-clip`}>
-      {/* Nav */}
-      <header className="absolute inset-x-0 top-0 z-40 px-4 sm:px-8">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4">
-          <Link href="/home-v2" className="flex items-center gap-2 text-lg font-extrabold tracking-[-0.03em]">
-            <Image src="/logo-mark.svg" alt="" width={28} height={28} priority className="size-7" />
-            fewchurs
-          </Link>
-          <nav aria-label="Main" className="hidden items-center gap-1 text-sm font-semibold md:flex">
-            {NAV.map((l) => (
-              <Link key={l.href} href={l.href} className="rounded-md px-3 py-2 text-[var(--v2-fg)] hover:text-[var(--v2-fg)]">
-                {l.label}
-              </Link>
-            ))}
-          </nav>
-          <div className="flex items-center gap-1.5">
-            <ThemeToggle />
-            <NavAccount />
-          </div>
-        </div>
-      </header>
+      <V2Nav links={NAV} />
 
       <main className="flex-1">
         {/* Hero */}
@@ -112,7 +81,7 @@ export default function HomeV2() {
           <Halftone mode="corners" className="-z-10 h-[760px]" />
           <div className="mx-auto flex max-w-4xl flex-col items-center px-4 text-center">
             <div
-              className="v2-appear flex items-center gap-2.5 rounded-full border border-[var(--v2-line)] bg-[var(--v2-card)] shadow-sm py-1.5 pr-4 pl-1.5 text-sm text-[var(--v2-fg-2)]"
+              className="v2-appear flex items-center gap-2.5 rounded-full bg-[var(--v2-card)] shadow-sm py-1.5 pr-4 pl-1.5 text-sm text-[var(--v2-fg-2)]"
               style={{ "--d": "0ms" } as React.CSSProperties}
             >
               <span className="flex -space-x-1.5">
@@ -190,8 +159,8 @@ export default function HomeV2() {
                       <span
                         key={p.id}
                         className={
-                          "inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-semibold " +
-                          (i === 0 ? "border-[var(--v2-orange)]/60 bg-[var(--v2-orange)]/10 text-[var(--v2-fg)]" : "border-[var(--v2-line)] text-[var(--v2-fg-2)]")
+                          "inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold " +
+                          (i === 0 ? "bg-[var(--v2-orange)]/12 text-[var(--v2-fg)]" : "bg-[var(--v2-chip)] text-[var(--v2-fg-2)]")
                         }
                       >
                         <BrandIcon path={p.iconPath} color={iconFill(p.iconColor)} className="size-3" />
@@ -201,7 +170,7 @@ export default function HomeV2() {
                     {COMING_SOON.map((p) => (
                       <span
                         key={p.id}
-                        className="inline-flex items-center gap-1.5 rounded-lg border border-dashed border-[var(--v2-line-strong)] px-2.5 py-1.5 text-xs font-semibold text-[var(--v2-fg-3)]"
+                        className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--v2-chip)] px-2.5 py-1.5 text-xs font-semibold text-[var(--v2-fg-3)]"
                       >
                         <SoonIcon {...p} />
                         {p.name}
@@ -221,7 +190,7 @@ export default function HomeV2() {
                       ["Home screen widget", 119],
                       ["Export to CSV", 96],
                     ].map(([t, v], i) => (
-                      <div key={t} className="flex items-center gap-3 rounded-lg border border-[var(--v2-line)] bg-[var(--v2-chip)] px-2.5 py-2">
+                      <div key={t} className="flex items-center gap-3 rounded-lg bg-[var(--v2-chip)] px-2.5 py-2">
                         <span
                           className={
                             "flex w-11 items-center justify-center gap-0.5 rounded-md py-1 text-xs font-bold tabular-nums " +
@@ -245,7 +214,7 @@ export default function HomeV2() {
                       ["In progress", "bg-amber-400", "CSV export"],
                       ["Done", "bg-emerald-400", "Dark mode"],
                     ].map(([s, dot, t]) => (
-                      <div key={s} className="flex items-center justify-between rounded-lg border border-[var(--v2-line)] bg-[var(--v2-chip)] px-3 py-2">
+                      <div key={s} className="flex items-center justify-between rounded-lg bg-[var(--v2-chip)] px-3 py-2">
                         <span className="flex items-center gap-2 text-[var(--v2-fg-2)]">
                           <span className={`size-1.5 rounded-full ${dot}`} />
                           {s}
@@ -292,7 +261,7 @@ export default function HomeV2() {
             </Reveal>
 
             <Reveal className="mt-10">
-              <div className="grid overflow-hidden rounded-2xl border border-[var(--v2-line)] md:grid-cols-[1.3fr_1fr]">
+              <div className="grid overflow-hidden rounded-2xl shadow-[var(--v2-shadow)] md:grid-cols-[1.3fr_1fr]">
                 <div className="bg-[var(--v2-card)] p-6 sm:p-8">
                   <p className="text-sm font-semibold text-[var(--v2-fg-2)]">Building it yourself</p>
                   <ul className="mt-5 divide-y divide-[var(--v2-line)]">
@@ -313,7 +282,7 @@ export default function HomeV2() {
                     </span>
                   </div>
                 </div>
-                <div className="relative flex flex-col justify-between gap-8 overflow-hidden border-t border-[var(--v2-line)] bg-[var(--v2-orange-wash)] p-6 sm:p-8 md:border-t-0 md:border-l">
+                <div className="relative flex flex-col justify-between gap-8 overflow-hidden bg-[var(--v2-orange-wash)] p-6 sm:p-8">
                   <div className="absolute -top-24 -right-24 size-64 rounded-full bg-[var(--v2-orange)]/25 blur-3xl" />
                   <div className="relative">
                     <p className="text-sm font-semibold text-[var(--v2-orange)]">Fewchurs Free</p>
@@ -374,7 +343,7 @@ export default function HomeV2() {
         {/* CTA */}
         <section className="px-4 pb-20 sm:px-8 sm:pb-24">
           <Reveal className="mx-auto max-w-6xl">
-            <div className="relative isolate grid overflow-hidden rounded-3xl border border-[var(--v2-line)] bg-[var(--v2-raised)] shadow-[var(--v2-shadow)] lg:grid-cols-[1.1fr_1fr]">
+            <div className="relative isolate grid overflow-hidden rounded-3xl bg-[var(--v2-raised)] shadow-[var(--v2-shadow)] lg:grid-cols-[1.1fr_1fr]">
               <Halftone mode="right" className="-z-10" />
               <div className="p-8 sm:p-12">
                 <h2 className="max-w-md text-4xl leading-[1.05] tracking-[-0.04em] sm:text-5xl">
@@ -391,7 +360,7 @@ export default function HomeV2() {
                     Start free
                     <ArrowRight className="size-4" />
                   </Link>
-                  <Link href="/docs" className="px-3 text-sm font-semibold text-[var(--v2-fg)] hover:text-[var(--v2-fg)]">
+                  <Link href="/docs-preview" className="px-3 text-sm font-semibold text-[var(--v2-fg)] hover:text-[var(--v2-fg)]">
                     Read the docs
                   </Link>
                 </div>
@@ -404,7 +373,7 @@ export default function HomeV2() {
                 ].map((k) => (
                   <div
                     key={k.t}
-                    className="v2-float absolute w-52 rounded-2xl border border-[var(--v2-line)] bg-[var(--v2-raised)] p-4 shadow-[var(--v2-shadow)]"
+                    className="v2-float absolute w-52 rounded-2xl bg-[var(--v2-raised)] p-4 shadow-[var(--v2-shadow)]"
                     style={{ left: k.x, top: k.y, "--r": k.r, "--d": k.d } as React.CSSProperties}
                   >
                     <div className="flex items-center gap-3">
@@ -428,46 +397,7 @@ export default function HomeV2() {
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-[var(--v2-line)] px-4 sm:px-8">
-        <div className="mx-auto grid max-w-6xl gap-10 py-14 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
-          <div className="space-y-3">
-            <span className="flex items-center gap-2 text-lg font-extrabold tracking-[-0.03em]">
-              <Image src="/logo-mark.svg" alt="" width={24} height={24} className="size-6" />
-              fewchurs
-            </span>
-            <p className="max-w-xs text-sm text-[var(--v2-fg-3)]">Feature requests, votes and a public roadmap for your app.</p>
-          </div>
-          <FooterCol title="Product">
-            <FooterLink href="#how">How it works</FooterLink>
-            <FooterLink href="/pricing">Pricing</FooterLink>
-            <FooterLink href="/docs">Docs</FooterLink>
-            <FooterLink href="/login">Log in</FooterLink>
-          </FooterCol>
-          <FooterCol title="Platforms">
-            {PLATFORMS.map((p) => (
-              <FooterLink key={p.id} href={p.href ?? "/docs"}>
-                {p.name}
-              </FooterLink>
-            ))}
-            {COMING_SOON.map((p) => (
-              <li key={p.id} className="text-[var(--v2-fg-3)]">
-                {p.name} <span className="text-[10px] font-bold tracking-wide text-[var(--v2-orange)] uppercase">Soon</span>
-              </li>
-            ))}
-          </FooterCol>
-          <FooterCol title="Support">
-            <li>
-              <a className="text-[var(--v2-fg-2)] hover:text-[var(--v2-fg)]" href="mailto:support@fewchurs.com">
-                support@fewchurs.com
-              </a>
-            </li>
-          </FooterCol>
-        </div>
-        <div className="mx-auto max-w-6xl border-t border-[var(--v2-line)] py-6 text-xs text-[var(--v2-fg-3)]">
-          © {new Date().getFullYear()} Fewchurs
-        </div>
-      </footer>
+      <V2Footer />
     </div>
   );
 }
@@ -478,7 +408,7 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
 
 function StepCard({ n, title, body, children }: { n: string; title: string; body: string; children: React.ReactNode }) {
   return (
-    <div className="flex h-full flex-col rounded-2xl border border-[var(--v2-line)] bg-[var(--v2-card)] p-6 shadow-[var(--v2-shadow)]">
+    <div className="flex h-full flex-col rounded-2xl bg-[var(--v2-card)] p-6 shadow-[var(--v2-shadow)]">
       <div className="min-h-[148px]">{children}</div>
       <p className="mt-6 font-mono text-sm text-[var(--v2-orange)]">{n}</p>
       <h3 className="mt-2 text-xl tracking-[-0.02em]">{title}</h3>
@@ -493,24 +423,5 @@ function SoonIcon({ path, color }: { path?: string; color?: string }) {
     <span className="grid size-3 place-items-center rounded-full bg-[var(--v2-fg-3)] text-[8px] leading-none font-extrabold text-[var(--v2-bg)]">
       b
     </span>
-  );
-}
-
-function FooterCol({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div>
-      <p className="mb-3 font-mono text-[11px] tracking-[0.16em] text-[var(--v2-fg-3)] uppercase">{title}</p>
-      <ul className="space-y-2 text-sm">{children}</ul>
-    </div>
-  );
-}
-
-function FooterLink({ href, children }: { href: string; children: React.ReactNode }) {
-  return (
-    <li>
-      <Link className="text-[var(--v2-fg-2)] hover:text-[var(--v2-fg)]" href={href}>
-        {children}
-      </Link>
-    </li>
   );
 }
