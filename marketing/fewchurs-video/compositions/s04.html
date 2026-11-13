@@ -1,0 +1,148 @@
+<template>
+  <style>@font-face{font-family:'Be Vietnam Pro';font-weight:400;font-style:normal;src:url('assets/fonts/BeVietnamPro-400.woff2') format('woff2');}@font-face{font-family:'Be Vietnam Pro';font-weight:500;font-style:normal;src:url('assets/fonts/BeVietnamPro-500.woff2') format('woff2');}@font-face{font-family:'Be Vietnam Pro';font-weight:600;font-style:normal;src:url('assets/fonts/BeVietnamPro-600.woff2') format('woff2');}@font-face{font-family:'Be Vietnam Pro';font-weight:700;font-style:normal;src:url('assets/fonts/BeVietnamPro-700.woff2') format('woff2');}@font-face{font-family:'Be Vietnam Pro';font-weight:800;font-style:normal;src:url('assets/fonts/BeVietnamPro-800.woff2') format('woff2');}
+#root{position:absolute;inset:0;font-family:'Be Vietnam Pro',sans-serif;color:#2a2826;-webkit-font-smoothing:antialiased}
+#root *{box-sizing:border-box;margin:0;padding:0}
+.stage{position:absolute;left:0;top:0;width:1152px;height:1080px}
+.abs{position:absolute}
+.card{background:#fff;border-radius:22px;border:1px solid #e7e6e4;box-shadow:0 1px 2px rgba(0,0,0,.05),0 30px 70px -40px rgba(0,0,0,.35)}
+.mono{font-family:'JetBrains Mono',monospace}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;background:#ed5f18;color:#fff;font-weight:600;border-radius:10px;font-size:17px}
+.chip{display:flex;align-items:center;justify-content:center;gap:8px;border:1.5px solid #e7e6e4;border-radius:10px;font-size:16px;font-weight:500;background:#fff;height:44px}
+.vote{width:48px;height:48px;border-radius:10px;background:rgba(237,95,24,.1);color:#ed5f18;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:14px;font-weight:600;gap:1px;flex-shrink:0}
+.row{background:rgba(0,0,0,.045);border-radius:12px;padding:15px 18px;display:flex;align-items:center;gap:14px}
+.row .t{font-weight:600;font-size:18px}
+.row .d{color:#6b6762;font-size:14.5px;margin-top:3px}
+.row .m{color:#6b6762;font-size:13px;margin-top:6px;display:flex;gap:16px}
+.status{display:inline-flex;align-items:center;gap:8px;font-size:15px;border:1px solid #e7e6e4;border-radius:9px;padding:7px 12px;background:#fff;white-space:nowrap}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+.phone{width:400px;height:820px;border-radius:56px;background:#111;padding:13px;box-shadow:0 50px 90px -40px rgba(0,0,0,.55)}
+.screen{width:100%;height:100%;border-radius:44px;background:#fff;overflow:hidden;position:relative}
+.notch{position:absolute;top:12px;left:137px;width:100px;height:30px;border-radius:20px;background:#111;z-index:5}
+.sbar{height:54px;display:flex;justify-content:space-between;align-items:center;padding:8px 30px 0;font-size:14px;font-weight:600}
+.label{font-size:14.5px;font-weight:600;margin-bottom:8px}
+.input{border:1.5px solid #e7e6e4;border-radius:10px;padding:0 14px;font-size:17px;background:#fff;height:46px;display:flex;align-items:center}
+.cursor{position:absolute;left:0;top:0;width:34px;height:34px;z-index:50}
+.side{width:250px;background:#f8f8f7;border-right:1px solid #e7e6e4;padding:18px 12px;display:flex;flex-direction:column;gap:4px;font-size:15px}
+.side .it{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;color:#3a3836}
+.side .it.act{background:rgba(0,0,0,.06);font-weight:600}
+.side .gl{font-size:12.5px;color:#6b6762;padding:14px 10px 6px;display:flex;justify-content:space-between}
+.sq{width:18px;height:18px;border-radius:5px;background:rgba(0,0,0,.07);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.badge{margin-left:auto;font-size:12px;color:#6b6762}
+.win{position:absolute;left:56px;top:160px;width:1040px;height:760px;overflow:hidden;display:flex;flex-direction:column}
+.tbar{height:40px;border-bottom:1px solid #e7e6e4;display:flex;align-items:center;gap:8px;padding:0 16px;background:#fbfbfa;flex-shrink:0}
+.url{margin:0 auto;font-size:13px;color:#6b6762;background:#f0efed;border-radius:7px;padding:4px 60px}
+</style>
+  <div id="root" data-composition-id="s04" data-width="1920" data-height="1080">
+    <div class="stage">
+<div id="s04-win" class="card win">
+  <div class="tbar"><span class="dot" style="width:12px;height:12px;background:#ff5f57"></span><span class="dot" style="width:12px;height:12px;background:#febc2e"></span><span class="dot" style="width:12px;height:12px;background:#28c840"></span><span class="url">fewchurs.com/dashboard</span></div>
+  <div style="flex:1;display:flex;min-height:0">
+    
+<div class="side">
+  <div class="it" style="font-weight:700;font-size:16.5px;padding-bottom:12px"><img  src="assets/logo-mark.svg" style="width:24px;height:24px;display:block" alt="" /> Fewchurs</div>
+  <div class="it act"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> Dashboard</div>
+  <div class="gl"><span>Apps</span><span style="font-size:15px;color:#555">+</span></div>
+  <div class="it "><span class="sq">H</span>Habit Tracker<span class="badge" style="">0</span></div>
+  <div class="gl"><span>Resources ⌄</span></div>
+  <div class="it"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2zM22 4h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"/></svg> Docs</div>
+  <div class="it"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg> API reference</div>
+  <div class="it"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L2 12V2h10l8.6 8.6a2 2 0 0 1 0 2.8z"/><circle cx="7" cy="7" r="1.5"/></svg> Pricing</div>
+  <div style="flex:1"></div>
+  <div class="it"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3 1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2z"/></svg> Upgrade<span class="badge" style="background:rgba(237,95,24,.1);color:#ed5f18;border-radius:999px;padding:2px 7px;font-weight:600">Free</span></div>
+  <div class="it"><span style="width:32px;height:32px;border-radius:8px;background:#f1c9b3;display:flex;align-items:center;justify-content:center;font-weight:700;color:#8a3b12">A</span><span style="line-height:1.25"><b style="font-weight:600">Alex</b><br><span style="font-size:12.5px;color:#6b6762">alex@habit.app</span></span></div>
+</div>
+    <div class="abs" style="left:250px;top:40px;right:0;bottom:0;padding:44px 60px">
+      <div id="s04-empty" class="abs" style="left:60px;top:44px;right:60px">
+        <div style="font-size:32px;font-weight:800;letter-spacing:-.02em">Welcome, Alex</div>
+        <div style="color:#6b6762;font-size:16px;margin-top:6px">You don't have any apps yet.</div>
+        <div id="s04-new" class="btn abs" style="left:250px;top:200px;width:170px;height:46px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg> New app</div>
+      </div>
+      <div id="s04-form" data-layout-allow-overlap class="abs" style="left:60px;top:44px;right:60px;height:600px">
+        <div class="abs" style="top:0;font-size:32px;font-weight:800;letter-spacing:-.02em">Create a new app</div>
+        <div class="abs" style="top:46px;color:#6b6762;font-size:16px">Takes about 30 seconds. You'll get an API key at the end.</div>
+        <div class="abs label" style="top:100px">App name</div>
+        <div id="s04-name" class="abs input" style="top:126px;left:0;right:0"><span id="s04-nametext"></span><span id="s04-caret" style="display:inline-block;width:2px;height:20px;background:#ed5f18;margin-left:2px"></span></div>
+        <div class="abs label" style="top:196px">Platforms</div>
+        <div id="s04-ios" class="abs chip" style="top:222px;left:0;width:110px"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.6c0-2.6 2.1-3.8 2.2-3.9-1.2-1.8-3.1-2-3.7-2-1.6-.2-3.1.9-3.9.9-.8 0-2-.9-3.4-.9-1.7 0-3.3 1-4.2 2.6-1.8 3.1-.5 7.7 1.3 10.2.8 1.2 1.8 2.6 3.1 2.5 1.2 0 1.7-.8 3.2-.8s1.9.8 3.2.8c1.3 0 2.2-1.2 3-2.4.9-1.4 1.3-2.7 1.3-2.8 0 0-2.6-1-2.6-4.2zM13.9 5.1c.7-.8 1.1-1.9 1-3.1-1 0-2.2.7-2.9 1.5-.6.7-1.2 1.9-1 3 1.1.1 2.2-.6 2.9-1.4z"/></svg> iOS</div>
+        <div id="s04-and" class="abs chip" style="top:222px;left:122px;width:140px"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.6 9.5 19.4 6.3a.4.4 0 0 0-.7-.4l-1.8 3.2a11 11 0 0 0-9.8 0L5.3 5.9a.4.4 0 0 0-.7.4l1.8 3.2A10 10 0 0 0 1 17.5h22a10 10 0 0 0-5.4-8zM7 14.8a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm10 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/></svg> Android</div>
+        <div id="s04-web" class="abs chip" style="top:222px;left:274px;width:110px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg> Web</div>
+        <div class="abs" style="top:278px;color:#6b6762;font-size:14px">Pick every place your app runs.</div>
+        <div id="s04-f1" class="abs" style="top:316px;left:0;width:205px"><div class="label">iOS Bundle ID</div><div class="input mono" style="font-size:14px">com.habit.app</div></div>
+        <div id="s04-f2" class="abs" style="top:316px;left:220px;width:225px"><div class="label">Android package</div><div class="input mono" style="font-size:14px">com.habit.app</div></div>
+        <div id="s04-f3" class="abs" style="top:316px;left:460px;width:210px"><div class="label">Website domain</div><div class="input mono" style="font-size:14px">habit.app</div></div>
+        <div id="s04-create" class="abs btn" style="top:420px;left:0;right:0;height:52px"><span id="s04-ctext">Create app</span></div>
+      </div>
+    </div>
+  </div>
+  <div id="s04-dim" class="abs" style="left:0;top:0;right:0;bottom:0;background:rgba(20,18,16,.38)"></div>
+  <div id="s04-dialog" data-layout-allow-overlap data-layout-allow-occlusion class="card abs" style="left:220px;top:230px;width:600px;padding:32px">
+    <div style="font-size:24px;font-weight:700">Your API key</div>
+    <div style="color:#6b6762;font-size:16px;margin:6px 0 20px">Copy it now and add it to your app.</div>
+    <div style="display:flex;align-items:center;gap:10px;border:1px solid #e7e6e4;background:#f6f6f5;border-radius:10px;padding:12px 14px">
+      <code class="mono" style="flex:1;font-size:17px">fr_live_8kQ2…x9Tm</code>
+      <span style="position:relative;width:40px;height:40px"><span class="abs" style="inset:0;border-radius:8px;border:1px solid #e7e6e4;background:#fff;display:flex;align-items:center;justify-content:center;color:#555"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span><span id="s04-copied" class="abs" style="inset:0;border-radius:8px;background:#10b981;color:#fff;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span></span>
+    </div>
+    <div style="display:flex;justify-content:flex-end;margin-top:22px"><span class="btn" style="padding:12px 24px">Done</span></div>
+  </div>
+</div>
+<div id="s04-toast" class="card abs" style="left:870px;top:860px;padding:14px 20px;font-size:17px;font-weight:600;display:flex;gap:10px;align-items:center;border-radius:12px"><span style="color:#10b981"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Copied</div>
+<svg id="s04-cur" class="cursor" viewBox="0 0 24 24"><path d="M4 2l15 9-6.5 1.6L9.8 19z" fill="#111" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>
+    </div>
+  </div>
+  <script>
+const tl = gsap.timeline({ paused: true });
+const $ = (s) => document.querySelector(s);
+function typeText(sel, text, at, dur) {
+  const el = $(sel); const o = { n: 0 };
+  tl.fromTo(o, { n: 0 }, { n: text.length, duration: dur, ease: "none", immediateRender: false,
+    onUpdate() { el.textContent = text.slice(0, Math.round(o.n)); } }, at);
+}
+function countUp(sel, from, to, at, dur, dec) {
+  const el = $(sel); const o = { v: from };
+  tl.fromTo(o, { v: from }, { v: to, duration: dur, ease: "power2.out", immediateRender: false,
+    onUpdate() { el.textContent = o.v.toFixed(dec || 0); } }, at);
+}
+function enter(sel, at, opts) {
+  opts = opts || {};
+  tl.fromTo(sel, Object.assign({ opacity: 0, filter: "blur(10px)", scale: opts.scale || 0.96 }, opts.from || {}),
+    Object.assign({ opacity: 1, filter: "blur(0px)", scale: 1, duration: opts.dur || 0.8, ease: "expo.out" }, opts.to || {}), at);
+}
+function leave(sel, at, opts) {
+  opts = opts || {};
+  tl.to(sel, Object.assign({ opacity: 0, filter: "blur(10px)", duration: 0.28, ease: "power3.in" }, opts), at);
+}
+function cursorTo(sel, x, y, at, dur) { tl.to(sel, { x: x, y: y, duration: dur || 0.6, ease: "power2.inOut" }, at); }
+function press(sel, at) { tl.to(sel, { scale: 0.94, duration: 0.08, ease: "power2.out" }, at).to(sel, { scale: 1, duration: 0.16, ease: "power2.out" }, at + 0.08); }
+function pop(sel, at, from) { tl.fromTo(sel, { opacity: 0, scale: from || 0.6 }, { opacity: 1, scale: 1, duration: 0.45, ease: "back.out(1.7)" }, at); }
+
+tl.fromTo("#s04-win", { opacity: 0, scale: 1.05, filter: "blur(12px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.8, ease: "expo.out" }, 0.05);
+gsap.set(["#s04-form", "#s04-dim", "#s04-dialog", "#s04-toast", "#s04-copied", "#s04-f1", "#s04-f2", "#s04-f3"], { opacity: 0 });
+gsap.set("#s04-caret", { opacity: 0 });
+tl.fromTo("#s04-cur", { x: 960, y: 940, opacity: 0 }, { opacity: 1, duration: 0.3 }, 1.2);
+cursorTo("#s04-cur", 690, 470, 1.5, 0.65);
+press("#s04-new", 2.2);
+tl.to("#s04-empty", { opacity: 0, filter: "blur(6px)", duration: 0.15 }, 2.3);
+tl.fromTo("#s04-form", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2 }, 2.38);
+cursorTo("#s04-cur", 560, 392, 2.7, 0.55);
+tl.to("#s04-name", { borderColor: "#ed5f18", boxShadow: "0 0 0 4px rgba(237,95,24,.15)", duration: 0.15 }, 3.3);
+tl.set("#s04-caret", { opacity: 1 }, 3.3);
+typeText("#s04-nametext", "Habit Tracker", 3.45, 0.65);
+cursorTo("#s04-cur", 416, 490, 4.0, 0.42);
+tl.to("#s04-ios", { borderColor: "#ed5f18", backgroundColor: "#fdf3ec", color: "#ed5f18", duration: 0.12 }, 4.5); press("#s04-ios", 4.5); tl.fromTo("#s04-f1", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.25 }, 4.55);
+tl.to("#s04-and", { borderColor: "#ed5f18", backgroundColor: "#fdf3ec", color: "#ed5f18", duration: 0.12 }, 4.78); press("#s04-and", 4.78); tl.fromTo("#s04-f2", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.25 }, 4.83);
+tl.to("#s04-web", { borderColor: "#ed5f18", backgroundColor: "#fdf3ec", color: "#ed5f18", duration: 0.12 }, 5.93); press("#s04-web", 5.93); tl.fromTo("#s04-f3", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.25 }, 5.9799999999999995);
+cursorTo("#s04-cur", 553, 490, 4.55, 0.2);
+cursorTo("#s04-cur", 690, 490, 5.45, 0.45);
+cursorTo("#s04-cur", 700, 690, 6.05, 0.5);
+press("#s04-create", 6.6);
+tl.set("#s04-ctext", { opacity: 0.6 }, 6.65);
+tl.to("#s04-dim", { opacity: 1, duration: 0.25 }, 6.95);
+tl.fromTo("#s04-dialog", { opacity: 0, scale: 0.92 }, { opacity: 1, scale: 1, duration: 0.45, ease: "expo.out" }, 7.0);
+cursorTo("#s04-cur", 812, 540, 7.15, 0.5);
+tl.to("#s04-copied", { opacity: 1, duration: 0.1 }, 7.8);
+pop("#s04-toast", 7.88, 0.8);
+leave(["#s04-win", "#s04-toast", "#s04-cur"], 8.45);
+
+window.__timelines["s04"] = tl;
+  </script>
+</template>

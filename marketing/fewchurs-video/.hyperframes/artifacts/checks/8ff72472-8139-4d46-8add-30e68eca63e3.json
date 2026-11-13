@@ -1,0 +1,5715 @@
+{
+  "ok": false,
+  "strict": false,
+  "browserSkipped": false,
+  "lint": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 3,
+    "infoCount": 0,
+    "findings": [
+      {
+        "code": "gsap_repeated_fromto_without_baseline",
+        "severity": "warning",
+        "message": "2 tl.fromTo() calls target \"proxy (unresolved DOM association)\" with no stable baseline. The last-authored fromTo \"from\" values become the element's resting state for any seek before the first tween actually runs, because GSAP applies fromTo from-values at authoring time (immediateRender), not at tween position.",
+        "selector": "proxy (unresolved DOM association)",
+        "dataAttributes": {},
+        "sourceFile": "/Users/ahmatafthal/Desktop/feature-request-web/marketing/fewchurs-video/compositions/s06.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Add `immediateRender: false` to every fromTo except the earliest-positioned one (at 3.95s), so pre-first-tween seeks keep its \"from\" values. A hiding `tl.set(..., 0)` baseline trips gsap_timeline_set_initial_hide, and a `gsap.set` authored before the fromTo calls is overwritten by them."
+      },
+      {
+        "code": "gsap_timeline_set_initial_hide",
+        "severity": "warning",
+        "message": "Initial hidden state for \"#s09-st-planned, #s09-st-in_progress, #s09-st-done, #s09-donev\" is set via tl.set(...) at position 0 inside the paused timeline. A zero-duration set at 0 does not render while the playhead sits exactly at 0, so frame 0 shows the un-hidden state.",
+        "selector": "#s09-st-planned, #s09-st-in_progress, #s09-st-done, #s09-donev",
+        "dataAttributes": {},
+        "sourceFile": "/Users/ahmatafthal/Desktop/feature-request-web/marketing/fewchurs-video/compositions/s09.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Use gsap.set(...) (immediate, outside the timeline) for initial states, or author the hidden state directly in CSS/attributes."
+      },
+      {
+        "code": "gsap_timeline_set_initial_hide",
+        "severity": "warning",
+        "message": "Initial hidden state for \"#s09-cf0, #s09-cf1, #s09-cf2, #s09-cf3, #s09-cf4, #s09-cf5, #s09-cf6, #s09-cf7, #s09-cf8, #s09-cf9, #s09-cf10, #s09-cf11, #s09-cf12, #s09-cf13, #s09-cf14, #s09-cf15, #s09-cf16, #s09-cf17, #s09-cf18, #s09-cf19, #s09-cf20, #s09-cf21, #s09-cf22, #s09-cf23, #s09-cf24, #s09-cf25, #s09-cf26, #s09-cf27\" is set via tl.set(...) at position 0 inside the paused timeline. A zero-duration set at 0 does not render while the playhead sits exactly at 0, so frame 0 shows the un-hidden state.",
+        "selector": "#s09-cf0, #s09-cf1, #s09-cf2, #s09-cf3, #s09-cf4, #s09-cf5, #s09-cf6, #s09-cf7, #s09-cf8, #s09-cf9, #s09-cf10, #s09-cf11, #s09-cf12, #s09-cf13, #s09-cf14, #s09-cf15, #s09-cf16, #s09-cf17, #s09-cf18, #s09-cf19, #s09-cf20, #s09-cf21, #s09-cf22, #s09-cf23, #s09-cf24, #s09-cf25, #s09-cf26, #s09-cf27",
+        "dataAttributes": {},
+        "sourceFile": "/Users/ahmatafthal/Desktop/feature-request-web/marketing/fewchurs-video/compositions/s09.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Use gsap.set(...) (immediate, outside the timeline) for initial states, or author the hidden state directly in CSS/attributes."
+      }
+    ],
+    "filesScanned": 14
+  },
+  "runtime": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 18,
+    "infoCount": 0,
+    "findings": [
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"vo\" is 95.76s but its slot (data-duration) is 96.00s — the slot is shortened to the media length when rendered. Set data-duration to ~95.76s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "main",
+          "data-start": "0",
+          "data-duration": "96",
+          "data-width": "1920",
+          "data-height": "1080"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      },
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx11\" is 0.37s but its slot (data-duration) is 0.60s — the slot is shortened to the media length when rendered. Set data-duration to ~0.37s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "main",
+          "data-start": "0",
+          "data-duration": "96",
+          "data-width": "1920",
+          "data-height": "1080"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      },
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx13\" is 0.37s but its slot (data-duration) is 0.60s — the slot is shortened to the media length when rendered. Set data-duration to ~0.37s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "main",
+          "data-start": "0",
+          "data-duration": "96",
+          "data-width": "1920",
+          "data-height": "1080"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      },
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx14\" is 0.37s but its slot (data-duration) is 0.60s — the slot is shortened to the media length when rendered. Set data-duration to ~0.37s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "main",
+          "data-start": "0",
+          "data-duration": "96",
+          "data-width": "1920",
+          "data-height": "1080"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      },
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx16\" is 0.37s but its slot (data-duration) is 0.60s — the slot is shortened to the media length when rendered. Set data-duration to ~0.37s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "main",
+          "data-start": "0",
+          "data-duration": "96",
+          "data-width": "1920",
+          "data-height": "1080"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      },
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx17\" is 0.37s but its slot (data-duration) is 0.60s — the slot is shortened to the media length when rendered. Set data-duration to ~0.37s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "main",
+          "data-start": "0",
+          "data-duration": "96",
+          "data-width": "1920",
+          "data-height": "1080"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      },
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx18\" is 0.37s but its slot (data-duration) is 0.60s — the slot is shortened to the media length when rendered. Set data-duration to ~0.37s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "main",
+          "data-start": "0",
+          "data-duration": "96",
+          "data-width": "1920",
+          "data-height": "1080"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      },
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx19\" is 0.37s but its slot (data-duration) is 0.60s — the slot is shortened to the media length when rendered. Set data-duration to ~0.37s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "main",
+          "data-start": "0",
+          "data-duration": "96",
+          "data-width": "1920",
+          "data-height": "1080"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      },
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx20\" is 0.37s but its slot (data-duration) is 0.60s — the slot is shortened to the media length when rendered. Set data-duration to ~0.37s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "main",
+          "data-start": "0",
+          "data-duration": "96",
+          "data-width": "1920",
+          "data-height": "1080"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      },
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx23\" is 0.40s but its slot (data-duration) is 0.60s — the slot is shortened to the media length when rendered. Set data-duration to ~0.40s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "main",
+          "data-start": "0",
+          "data-duration": "96",
+          "data-width": "1920",
+          "data-height": "1080"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      },
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx24\" is 0.40s but its slot (data-duration) is 0.60s — the slot is shortened to the media length when rendered. Set data-duration to ~0.40s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "main",
+          "data-start": "0",
+          "data-duration": "96",
+          "data-width": "1920",
+          "data-height": "1080"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      },
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx25\" is 0.40s but its slot (data-duration) is 0.60s — the slot is shortened to the media length when rendered. Set data-duration to ~0.40s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "main",
+          "data-start": "0",
+          "data-duration": "96",
+          "data-width": "1920",
+          "data-height": "1080"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      },
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx26\" is 0.40s but its slot (data-duration) is 0.60s — the slot is shortened to the media length when rendered. Set data-duration to ~0.40s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "main",
+          "data-start": "0",
+          "data-duration": "96",
+          "data-width": "1920",
+          "data-height": "1080"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      },
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx29\" is 0.37s but its slot (data-duration) is 0.60s — the slot is shortened to the media length when rendered. Set data-duration to ~0.37s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "main",
+          "data-start": "0",
+          "data-duration": "96",
+          "data-width": "1920",
+          "data-height": "1080"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      },
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx33\" is 0.37s but its slot (data-duration) is 0.60s — the slot is shortened to the media length when rendered. Set data-duration to ~0.37s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "main",
+          "data-start": "0",
+          "data-duration": "96",
+          "data-width": "1920",
+          "data-height": "1080"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      },
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx45\" is 0.37s but its slot (data-duration) is 0.60s — the slot is shortened to the media length when rendered. Set data-duration to ~0.37s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "main",
+          "data-start": "0",
+          "data-duration": "96",
+          "data-width": "1920",
+          "data-height": "1080"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      },
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx47\" is 0.37s but its slot (data-duration) is 0.60s — the slot is shortened to the media length when rendered. Set data-duration to ~0.37s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "main",
+          "data-start": "0",
+          "data-duration": "96",
+          "data-width": "1920",
+          "data-height": "1080"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      },
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx49\" is 0.37s but its slot (data-duration) is 0.60s — the slot is shortened to the media length when rendered. Set data-duration to ~0.37s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "main",
+          "data-start": "0",
+          "data-duration": "96",
+          "data-width": "1920",
+          "data-height": "1080"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      }
+    ]
+  },
+  "layout": {
+    "ok": false,
+    "errorCount": 12,
+    "warningCount": 1,
+    "infoCount": 32,
+    "findings": [
+      {
+        "code": "content_overlap",
+        "severity": "error",
+        "time": 23.191,
+        "selector": "#s03-phone > div:nth-of-type(1) > div:nth-of-type(2) > span:nth-of-type(1)",
+        "message": "Two text blocks overlap and may render unreadable.",
+        "rect": {
+          "left": 703,
+          "top": 165,
+          "right": 733.02,
+          "bottom": 183,
+          "width": 30.02,
+          "height": 18
+        },
+        "containerSelector": "#s03-sheet > div:nth-of-type(1) > span:nth-of-type(1)",
+        "text": "9:41",
+        "fixHint": "Give each block its own zone, or put data-layout-allow-overlap on the text or on a container inside the scene. A marker on the scene root does not apply. Decoration nobody needs to read can take data-layout-ignore.",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s03.html",
+        "bbox": {
+          "x": 703,
+          "y": 165,
+          "width": 30.02,
+          "height": 18
+        },
+        "firstSeen": 23.191,
+        "lastSeen": 24.809,
+        "occurrences": 4,
+        "heldMs": 1618.000000000002,
+        "times": [
+          23.191,
+          23.73,
+          24.27,
+          24.809
+        ]
+      },
+      {
+        "code": "content_overlap",
+        "severity": "error",
+        "time": 23.191,
+        "selector": "#s03-phone > div:nth-of-type(1) > div:nth-of-type(2) > span:nth-of-type(2)",
+        "message": "Two text blocks overlap and may render unreadable.",
+        "rect": {
+          "left": 985.7,
+          "top": 165,
+          "right": 1017,
+          "bottom": 183,
+          "width": 31.3,
+          "height": 18
+        },
+        "containerSelector": "#s03-sheet > div:nth-of-type(1) > span:nth-of-type(2)",
+        "text": "▮▮▮",
+        "fixHint": "Give each block its own zone, or put data-layout-allow-overlap on the text or on a container inside the scene. A marker on the scene root does not apply. Decoration nobody needs to read can take data-layout-ignore.",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s03.html",
+        "bbox": {
+          "x": 985.7,
+          "y": 165,
+          "width": 31.3,
+          "height": 18
+        },
+        "firstSeen": 23.191,
+        "lastSeen": 24.809,
+        "occurrences": 4,
+        "heldMs": 1618.000000000002,
+        "times": [
+          23.191,
+          23.73,
+          24.27,
+          24.809
+        ]
+      },
+      {
+        "code": "content_overlap",
+        "severity": "error",
+        "time": 23.191,
+        "selector": "#s03-phone > div:nth-of-type(1) > div:nth-of-type(3) > div:nth-of-type(1)",
+        "message": "Two text blocks overlap and may render unreadable.",
+        "rect": {
+          "left": 697,
+          "top": 221,
+          "right": 895.05,
+          "bottom": 256,
+          "width": 198.05,
+          "height": 35
+        },
+        "containerSelector": "#s03-sheet > div:nth-of-type(2) > div:nth-of-type(1)",
+        "text": "Habit Tracker",
+        "fixHint": "Give each block its own zone, or put data-layout-allow-overlap on the text or on a container inside the scene. A marker on the scene root does not apply. Decoration nobody needs to read can take data-layout-ignore.",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s03.html",
+        "bbox": {
+          "x": 697,
+          "y": 221,
+          "width": 198.05,
+          "height": 35
+        },
+        "firstSeen": 23.191,
+        "lastSeen": 24.809,
+        "occurrences": 4,
+        "heldMs": 1618.000000000002,
+        "times": [
+          23.191,
+          23.73,
+          24.27,
+          24.809
+        ]
+      },
+      {
+        "code": "content_overlap",
+        "severity": "error",
+        "time": 23.191,
+        "selector": "#s03-phone > div:nth-of-type(1) > div:nth-of-type(3) > div:nth-of-type(3)",
+        "message": "Two text blocks overlap and may render unreadable.",
+        "rect": {
+          "left": 749,
+          "top": 317,
+          "right": 841.56,
+          "bottom": 337,
+          "width": 92.56,
+          "height": 20
+        },
+        "containerSelector": "#s03-r0 > div:nth-of-type(2) > div:nth-of-type(1)",
+        "text": "Morning run",
+        "fixHint": "Give each block its own zone, or put data-layout-allow-overlap on the text or on a container inside the scene. A marker on the scene root does not apply. Decoration nobody needs to read can take data-layout-ignore.",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s03.html",
+        "bbox": {
+          "x": 749,
+          "y": 317,
+          "width": 92.56,
+          "height": 20
+        },
+        "firstSeen": 23.191,
+        "lastSeen": 24.809,
+        "occurrences": 4,
+        "heldMs": 1618.000000000002,
+        "times": [
+          23.191,
+          23.73,
+          24.27,
+          24.809
+        ]
+      },
+      {
+        "code": "content_overlap",
+        "severity": "error",
+        "time": 23.73,
+        "selector": "div.screen > div:nth-of-type(3) > div:nth-of-type(4)",
+        "message": "Two text blocks overlap and may render unreadable.",
+        "rect": {
+          "left": 749,
+          "top": 383,
+          "right": 867.31,
+          "bottom": 403,
+          "width": 118.31,
+          "height": 20
+        },
+        "containerSelector": "#s03-r1 > div:nth-of-type(2) > div:nth-of-type(1)",
+        "text": "Read 20 pages",
+        "fixHint": "Give each block its own zone, or put data-layout-allow-overlap on the text or on a container inside the scene. A marker on the scene root does not apply. Decoration nobody needs to read can take data-layout-ignore.",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s03.html",
+        "bbox": {
+          "x": 749,
+          "y": 383,
+          "width": 118.31,
+          "height": 20
+        },
+        "firstSeen": 23.73,
+        "lastSeen": 24.809,
+        "occurrences": 3,
+        "heldMs": 1079.0000000000007,
+        "times": [
+          23.73,
+          24.27,
+          24.809
+        ]
+      },
+      {
+        "code": "content_overlap",
+        "severity": "error",
+        "time": 32.36,
+        "selector": "#s04-form > div:nth-of-type(5)",
+        "message": "Two text blocks overlap and may render unreadable.",
+        "rect": {
+          "left": 367,
+          "top": 441,
+          "right": 437.31,
+          "bottom": 460,
+          "width": 70.31,
+          "height": 19
+        },
+        "containerSelector": "#s04-dialog > div:nth-of-type(1)",
+        "text": "Platforms",
+        "fixHint": "Give each block its own zone, or put data-layout-allow-overlap on the text or on a container inside the scene. A marker on the scene root does not apply. Decoration nobody needs to read can take data-layout-ignore.",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s04.html",
+        "bbox": {
+          "x": 367,
+          "y": 441,
+          "width": 70.31,
+          "height": 19
+        },
+        "firstSeen": 32.36,
+        "lastSeen": 33.438,
+        "occurrences": 3,
+        "heldMs": 1078.000000000003,
+        "times": [
+          32.36,
+          32.899,
+          33.438
+        ]
+      },
+      {
+        "code": "content_overlap",
+        "severity": "error",
+        "time": 32.36,
+        "selector": "#s04-form > div:nth-of-type(9)",
+        "message": "Two text blocks overlap and may render unreadable.",
+        "rect": {
+          "left": 367,
+          "top": 523,
+          "right": 578.63,
+          "bottom": 541,
+          "width": 211.63,
+          "height": 18
+        },
+        "containerSelector": "code.mono",
+        "text": "Pick every place your app runs.",
+        "fixHint": "Give each block its own zone, or put data-layout-allow-overlap on the text or on a container inside the scene. A marker on the scene root does not apply. Decoration nobody needs to read can take data-layout-ignore.",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s04.html",
+        "bbox": {
+          "x": 367,
+          "y": 523,
+          "width": 211.63,
+          "height": 18
+        },
+        "firstSeen": 32.36,
+        "lastSeen": 33.438,
+        "occurrences": 3,
+        "heldMs": 1078.000000000003,
+        "times": [
+          32.36,
+          32.899,
+          33.438
+        ]
+      },
+      {
+        "code": "content_overlap",
+        "severity": "error",
+        "time": 48,
+        "selector": "#s06-home > div:nth-of-type(1) > span:nth-of-type(1)",
+        "message": "Two text blocks overlap and may render unreadable.",
+        "rect": {
+          "left": 419,
+          "top": 165,
+          "right": 449.02,
+          "bottom": 183,
+          "width": 30.02,
+          "height": 18
+        },
+        "containerSelector": "#s06-form > div:nth-of-type(1) > span:nth-of-type(1)",
+        "text": "9:41",
+        "fixHint": "Give each block its own zone, or put data-layout-allow-overlap on the text or on a container inside the scene. A marker on the scene root does not apply. Decoration nobody needs to read can take data-layout-ignore.",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s06.html",
+        "bbox": {
+          "x": 419,
+          "y": 165,
+          "width": 30.02,
+          "height": 18
+        },
+        "firstSeen": 46.382,
+        "lastSeen": 51.775,
+        "occurrences": 11,
+        "heldMs": 5393.000000000001,
+        "times": [
+          46.382,
+          46.921,
+          47.461,
+          48,
+          48.539,
+          49.079,
+          49.618,
+          50.157,
+          50.697,
+          51.236,
+          51.775
+        ]
+      },
+      {
+        "code": "content_overlap",
+        "severity": "error",
+        "time": 48,
+        "selector": "#s06-home > div:nth-of-type(1) > span:nth-of-type(2)",
+        "message": "Two text blocks overlap and may render unreadable.",
+        "rect": {
+          "left": 701.7,
+          "top": 165,
+          "right": 733,
+          "bottom": 183,
+          "width": 31.3,
+          "height": 18
+        },
+        "containerSelector": "#s06-form > div:nth-of-type(1) > span:nth-of-type(2)",
+        "text": "▮▮▮",
+        "fixHint": "Give each block its own zone, or put data-layout-allow-overlap on the text or on a container inside the scene. A marker on the scene root does not apply. Decoration nobody needs to read can take data-layout-ignore.",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s06.html",
+        "bbox": {
+          "x": 701.7,
+          "y": 165,
+          "width": 31.3,
+          "height": 18
+        },
+        "firstSeen": 46.382,
+        "lastSeen": 51.775,
+        "occurrences": 11,
+        "heldMs": 5393.000000000001,
+        "times": [
+          46.382,
+          46.921,
+          47.461,
+          48,
+          48.539,
+          49.079,
+          49.618,
+          50.157,
+          50.697,
+          51.236,
+          51.775
+        ]
+      },
+      {
+        "code": "content_overlap",
+        "severity": "error",
+        "time": 48,
+        "selector": "#s06-home > div:nth-of-type(2) > div:nth-of-type(1)",
+        "message": "Two text blocks overlap and may render unreadable.",
+        "rect": {
+          "left": 413,
+          "top": 221,
+          "right": 611.05,
+          "bottom": 256,
+          "width": 198.05,
+          "height": 35
+        },
+        "containerSelector": "#s06-form > div:nth-of-type(2) > div:nth-of-type(1) > span:nth-of-type(1)",
+        "text": "Habit Tracker",
+        "fixHint": "Give each block its own zone, or put data-layout-allow-overlap on the text or on a container inside the scene. A marker on the scene root does not apply. Decoration nobody needs to read can take data-layout-ignore.",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s06.html",
+        "bbox": {
+          "x": 413,
+          "y": 221,
+          "width": 198.05,
+          "height": 35
+        },
+        "firstSeen": 46.382,
+        "lastSeen": 51.775,
+        "occurrences": 11,
+        "heldMs": 5393.000000000001,
+        "times": [
+          46.382,
+          46.921,
+          47.461,
+          48,
+          48.539,
+          49.079,
+          49.618,
+          50.157,
+          50.697,
+          51.236,
+          51.775
+        ]
+      },
+      {
+        "code": "content_overlap",
+        "severity": "error",
+        "time": 48,
+        "selector": "#s06-home > div:nth-of-type(2) > div:nth-of-type(2)",
+        "message": "Two text blocks overlap and may render unreadable.",
+        "rect": {
+          "left": 413,
+          "top": 260,
+          "right": 557.34,
+          "bottom": 279,
+          "width": 144.34,
+          "height": 19
+        },
+        "containerSelector": "#s06-form > div:nth-of-type(2) > div:nth-of-type(2)",
+        "text": "Good morning, Sam",
+        "fixHint": "Give each block its own zone, or put data-layout-allow-overlap on the text or on a container inside the scene. A marker on the scene root does not apply. Decoration nobody needs to read can take data-layout-ignore.",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s06.html",
+        "bbox": {
+          "x": 413,
+          "y": 260,
+          "width": 144.34,
+          "height": 19
+        },
+        "firstSeen": 46.382,
+        "lastSeen": 51.775,
+        "occurrences": 11,
+        "heldMs": 5393.000000000001,
+        "times": [
+          46.382,
+          46.921,
+          47.461,
+          48,
+          48.539,
+          49.079,
+          49.618,
+          50.157,
+          50.697,
+          51.236,
+          51.775
+        ]
+      },
+      {
+        "code": "content_overlap",
+        "severity": "error",
+        "time": 51.236,
+        "selector": "#s06-form > div:nth-of-type(2) > div:nth-of-type(1) > span:nth-of-type(2)",
+        "message": "Two text blocks overlap and may render unreadable.",
+        "rect": {
+          "left": 492.95,
+          "top": 221.5,
+          "right": 653.83,
+          "bottom": 244.5,
+          "width": 160.88,
+          "height": 23
+        },
+        "containerSelector": "#s06-toast",
+        "text": "Request a feature",
+        "fixHint": "Give each block its own zone, or put data-layout-allow-overlap on the text or on a container inside the scene. A marker on the scene root does not apply. Decoration nobody needs to read can take data-layout-ignore.",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s06.html",
+        "bbox": {
+          "x": 492.95,
+          "y": 221.5,
+          "width": 160.88,
+          "height": 23
+        },
+        "firstSeen": 51.236,
+        "lastSeen": 51.775,
+        "occurrences": 2,
+        "heldMs": 539.0000000000015,
+        "times": [
+          51.236,
+          51.775
+        ]
+      },
+      {
+        "code": "container_overflow",
+        "severity": "warning",
+        "time": 5.333,
+        "selector": "#pr-arm",
+        "message": "Element extends outside a clipping layout container.",
+        "rect": {
+          "left": 1189.81,
+          "top": 1034.84,
+          "right": 1401.31,
+          "bottom": 1424.53,
+          "width": 211.5,
+          "height": 389.69
+        },
+        "containerSelector": "#pr-svg",
+        "fixHint": "Resize/reposition the child or container, or mark intentional overflow with data-layout-allow-overflow.",
+        "containerRect": {
+          "left": 1176,
+          "top": 24,
+          "right": 1896,
+          "bottom": 1056,
+          "width": 720,
+          "height": 1032
+        },
+        "overflow": {
+          "bottom": 368.53
+        },
+        "dataAttributes": {
+          "data-svg-origin": "213.0209563973067 710.8026796421775"
+        },
+        "sourceFile": "compositions/presenter.html",
+        "bbox": {
+          "x": 1189.81,
+          "y": 1034.84,
+          "width": 211.5,
+          "height": 389.69
+        },
+        "firstSeen": 5.333,
+        "lastSeen": 90.667,
+        "occurrences": 9,
+        "heldMs": 0,
+        "times": [
+          5.333,
+          16,
+          26.667,
+          37.333,
+          48,
+          58.667,
+          69.333,
+          80,
+          90.667
+        ]
+      },
+      {
+        "code": "escaped_container",
+        "severity": "info",
+        "time": 26.667,
+        "selector": "#s04-new",
+        "message": "Positioned element renders far outside its offset parent — its coordinates were likely computed in a different frame (canvas/viewport pixels).",
+        "rect": {
+          "left": 617,
+          "top": 445,
+          "right": 787,
+          "bottom": 491,
+          "width": 170,
+          "height": 46
+        },
+        "containerSelector": "#s04-empty",
+        "text": "New app",
+        "fixHint": "Compute left/top in the offset parent's frame (subtract its rect), or mark intentional placement with data-layout-allow-overflow.",
+        "containerRect": {
+          "left": 367,
+          "top": 245,
+          "right": 1035,
+          "bottom": 311,
+          "width": 668,
+          "height": 66
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/s04.html",
+        "bbox": {
+          "x": 617,
+          "y": 445,
+          "width": 170,
+          "height": 46
+        },
+        "firstSeen": 26.667,
+        "lastSeen": 26.667,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          26.667
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 48,
+        "selector": "#s06-home > div:nth-of-type(1) > span:nth-of-type(1)",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 419,
+          "top": 165,
+          "right": 449.02,
+          "bottom": 183,
+          "width": 30.02,
+          "height": 18
+        },
+        "containerSelector": "#s06-form",
+        "text": "9:41",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 1,
+        "dataAttributes": {},
+        "sourceFile": "compositions/s06.html",
+        "bbox": {
+          "x": 419,
+          "y": 165,
+          "width": 30.02,
+          "height": 18
+        },
+        "firstSeen": 48,
+        "lastSeen": 48,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          48
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 48,
+        "selector": "#s06-home > div:nth-of-type(1) > span:nth-of-type(2)",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 701.7,
+          "top": 165,
+          "right": 733,
+          "bottom": 183,
+          "width": 31.3,
+          "height": 18
+        },
+        "containerSelector": "#s06-form",
+        "text": "▮▮▮",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 1,
+        "dataAttributes": {},
+        "sourceFile": "compositions/s06.html",
+        "bbox": {
+          "x": 701.7,
+          "y": 165,
+          "width": 31.3,
+          "height": 18
+        },
+        "firstSeen": 48,
+        "lastSeen": 48,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          48
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 48,
+        "selector": "#s06-home > div:nth-of-type(2) > div:nth-of-type(1)",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 413,
+          "top": 221,
+          "right": 611.05,
+          "bottom": 256,
+          "width": 198.05,
+          "height": 35
+        },
+        "containerSelector": "#s06-form",
+        "text": "Habit Tracker",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 1,
+        "dataAttributes": {},
+        "sourceFile": "compositions/s06.html",
+        "bbox": {
+          "x": 413,
+          "y": 221,
+          "width": 198.05,
+          "height": 35
+        },
+        "firstSeen": 48,
+        "lastSeen": 48,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          48
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 48,
+        "selector": "#s06-home > div:nth-of-type(2) > div:nth-of-type(2)",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 413,
+          "top": 260,
+          "right": 557.34,
+          "bottom": 279,
+          "width": 144.34,
+          "height": 19
+        },
+        "containerSelector": "#s06-form",
+        "text": "Good morning, Sam",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 1,
+        "dataAttributes": {},
+        "sourceFile": "compositions/s06.html",
+        "bbox": {
+          "x": 413,
+          "y": 260,
+          "width": 144.34,
+          "height": 19
+        },
+        "firstSeen": 48,
+        "lastSeen": 48,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          48
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 48,
+        "selector": "#s06-home > div:nth-of-type(2) > div:nth-of-type(3)",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 465,
+          "top": 317,
+          "right": 557.56,
+          "bottom": 337,
+          "width": 92.56,
+          "height": 20
+        },
+        "containerSelector": "#s06-title",
+        "text": "Morning run",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 1,
+        "dataAttributes": {},
+        "sourceFile": "compositions/s06.html",
+        "bbox": {
+          "x": 465,
+          "y": 317,
+          "width": 92.56,
+          "height": 20
+        },
+        "firstSeen": 48,
+        "lastSeen": 48,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          48
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 48,
+        "selector": "#s06-home > div:nth-of-type(2) > div:nth-of-type(4)",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 465,
+          "top": 383,
+          "right": 583.31,
+          "bottom": 403,
+          "width": 118.31,
+          "height": 20
+        },
+        "containerSelector": "#s06-form > div:nth-of-type(2) > div:nth-of-type(5)",
+        "text": "Read 20 pages",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 1,
+        "dataAttributes": {},
+        "sourceFile": "compositions/s06.html",
+        "bbox": {
+          "x": 465,
+          "y": 383,
+          "width": 118.31,
+          "height": 20
+        },
+        "firstSeen": 48,
+        "lastSeen": 48,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          48
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 48,
+        "selector": "#s06-home > div:nth-of-type(2) > div:nth-of-type(5)",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 465,
+          "top": 449,
+          "right": 556.56,
+          "bottom": 469,
+          "width": 91.56,
+          "height": 20
+        },
+        "containerSelector": "#s06-form > div:nth-of-type(2) > div:nth-of-type(5)",
+        "text": "Drink water",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 1,
+        "dataAttributes": {},
+        "sourceFile": "compositions/s06.html",
+        "bbox": {
+          "x": 465,
+          "y": 449,
+          "width": 91.56,
+          "height": 20
+        },
+        "firstSeen": 48,
+        "lastSeen": 48,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          48
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 48,
+        "selector": "#s06-req",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 510.72,
+          "top": 854.5,
+          "right": 669.28,
+          "bottom": 877.5,
+          "width": 158.56,
+          "height": 23
+        },
+        "containerSelector": "#s06-form",
+        "text": "Request a feature",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 1,
+        "dataAttributes": {},
+        "sourceFile": "compositions/s06.html",
+        "bbox": {
+          "x": 510.72,
+          "y": 854.5,
+          "width": 158.56,
+          "height": 23
+        },
+        "firstSeen": 48,
+        "lastSeen": 48,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          48
+        ]
+      },
+      {
+        "code": "canvas_overflow",
+        "severity": "info",
+        "time": 69.333,
+        "selector": "#s09-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1)",
+        "message": "Text extends outside the composition canvas.",
+        "rect": {
+          "left": -231.46,
+          "top": 247.67,
+          "right": -118.3,
+          "bottom": 277.49,
+          "width": 113.16,
+          "height": 29.82
+        },
+        "containerSelector": "#root",
+        "text": "Fewchurs",
+        "fixHint": "Move the text inward, reduce its size, or mark intentional off-canvas animation with data-layout-allow-overflow.",
+        "containerRect": {
+          "left": 0,
+          "top": 0,
+          "right": 1920,
+          "bottom": 1080,
+          "width": 1920,
+          "height": 1080
+        },
+        "overflow": {
+          "left": 231.46
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": -231.46,
+          "y": 247.67,
+          "width": 113.16,
+          "height": 29.82
+        },
+        "firstSeen": 69.333,
+        "lastSeen": 69.333,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "canvas_overflow",
+        "severity": "info",
+        "time": 69.333,
+        "selector": "#s09-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(2)",
+        "message": "Text extends outside the composition canvas.",
+        "rect": {
+          "left": -242.82,
+          "top": 313.7,
+          "right": -127.98,
+          "bottom": 340.68,
+          "width": 114.84,
+          "height": 26.98
+        },
+        "containerSelector": "#root",
+        "text": "Dashboard",
+        "fixHint": "Move the text inward, reduce its size, or mark intentional off-canvas animation with data-layout-allow-overflow.",
+        "containerRect": {
+          "left": 0,
+          "top": 0,
+          "right": 1920,
+          "bottom": 1080,
+          "width": 1920,
+          "height": 1080
+        },
+        "overflow": {
+          "left": 242.82
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": -242.82,
+          "y": 313.7,
+          "width": 114.84,
+          "height": 26.98
+        },
+        "firstSeen": 69.333,
+        "lastSeen": 69.333,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "canvas_overflow",
+        "severity": "info",
+        "time": 69.333,
+        "selector": "#s09-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(3) > span:nth-of-type(1)",
+        "message": "Text extends outside the composition canvas.",
+        "rect": {
+          "left": -279.74,
+          "top": 377.6,
+          "right": -234.5,
+          "bottom": 400.32,
+          "width": 45.24,
+          "height": 22.72
+        },
+        "containerSelector": "#root",
+        "text": "Apps",
+        "fixHint": "Move the text inward, reduce its size, or mark intentional off-canvas animation with data-layout-allow-overflow.",
+        "containerRect": {
+          "left": 0,
+          "top": 0,
+          "right": 1920,
+          "bottom": 1080,
+          "width": 1920,
+          "height": 1080
+        },
+        "overflow": {
+          "left": 279.74
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": -279.74,
+          "y": 377.6,
+          "width": 45.24,
+          "height": 22.72
+        },
+        "firstSeen": 69.333,
+        "lastSeen": 69.333,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "canvas_overflow",
+        "severity": "info",
+        "time": 69.333,
+        "selector": "#s09-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(4)",
+        "message": "Text extends outside the composition canvas.",
+        "rect": {
+          "left": -239.98,
+          "top": 430.14,
+          "right": -94.27,
+          "bottom": 457.12,
+          "width": 145.71,
+          "height": 26.98
+        },
+        "containerSelector": "#root",
+        "text": "Habit Tracker",
+        "fixHint": "Move the text inward, reduce its size, or mark intentional off-canvas animation with data-layout-allow-overflow.",
+        "containerRect": {
+          "left": 0,
+          "top": 0,
+          "right": 1920,
+          "bottom": 1080,
+          "width": 1920,
+          "height": 1080
+        },
+        "overflow": {
+          "left": 239.98
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": -239.98,
+          "y": 430.14,
+          "width": 145.71,
+          "height": 26.98
+        },
+        "firstSeen": 69.333,
+        "lastSeen": 69.333,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "canvas_overflow",
+        "severity": "info",
+        "time": 69.333,
+        "selector": "#s09-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(4) > span:nth-of-type(1)",
+        "message": "Text extends outside the composition canvas.",
+        "rect": {
+          "left": -272.17,
+          "top": 434.4,
+          "right": -261.77,
+          "bottom": 452.86,
+          "width": 10.4,
+          "height": 18.46
+        },
+        "containerSelector": "#root",
+        "text": "H",
+        "fixHint": "Move the text inward, reduce its size, or mark intentional off-canvas animation with data-layout-allow-overflow.",
+        "containerRect": {
+          "left": 0,
+          "top": 0,
+          "right": 1920,
+          "bottom": 1080,
+          "width": 1920,
+          "height": 1080
+        },
+        "overflow": {
+          "left": 272.17
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": -272.17,
+          "y": 434.4,
+          "width": 10.4,
+          "height": 18.46
+        },
+        "firstSeen": 69.333,
+        "lastSeen": 69.333,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "canvas_overflow",
+        "severity": "info",
+        "time": 69.333,
+        "selector": "#s09-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(4) > span:nth-of-type(2)",
+        "message": "Text extends outside the composition canvas.",
+        "rect": {
+          "left": -10.07,
+          "top": 432.98,
+          "right": 1.42,
+          "bottom": 454.28,
+          "width": 11.49,
+          "height": 21.3
+        },
+        "containerSelector": "#root",
+        "text": "3",
+        "fixHint": "Move the text inward, reduce its size, or mark intentional off-canvas animation with data-layout-allow-overflow.",
+        "containerRect": {
+          "left": 0,
+          "top": 0,
+          "right": 1920,
+          "bottom": 1080,
+          "width": 1920,
+          "height": 1080
+        },
+        "overflow": {
+          "left": 10.07
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": -10.07,
+          "y": 432.98,
+          "width": 11.49,
+          "height": 21.3
+        },
+        "firstSeen": 69.333,
+        "lastSeen": 69.333,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "canvas_overflow",
+        "severity": "info",
+        "time": 69.333,
+        "selector": "#s09-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(5) > span:nth-of-type(1)",
+        "message": "Text extends outside the composition canvas.",
+        "rect": {
+          "left": -279.74,
+          "top": 494.04,
+          "right": -176.3,
+          "bottom": 516.76,
+          "width": 103.44,
+          "height": 22.72
+        },
+        "containerSelector": "#root",
+        "text": "Resources ⌄",
+        "fixHint": "Move the text inward, reduce its size, or mark intentional off-canvas animation with data-layout-allow-overflow.",
+        "containerRect": {
+          "left": 0,
+          "top": 0,
+          "right": 1920,
+          "bottom": 1080,
+          "width": 1920,
+          "height": 1080
+        },
+        "overflow": {
+          "left": 279.74
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": -279.74,
+          "y": 494.04,
+          "width": 103.44,
+          "height": 22.72
+        },
+        "firstSeen": 69.333,
+        "lastSeen": 69.333,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "canvas_overflow",
+        "severity": "info",
+        "time": 69.333,
+        "selector": "#s09-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(6)",
+        "message": "Text extends outside the composition canvas.",
+        "rect": {
+          "left": -242.82,
+          "top": 542.32,
+          "right": -189.86,
+          "bottom": 569.3,
+          "width": 52.96,
+          "height": 26.98
+        },
+        "containerSelector": "#root",
+        "text": "Docs",
+        "fixHint": "Move the text inward, reduce its size, or mark intentional off-canvas animation with data-layout-allow-overflow.",
+        "containerRect": {
+          "left": 0,
+          "top": 0,
+          "right": 1920,
+          "bottom": 1080,
+          "width": 1920,
+          "height": 1080
+        },
+        "overflow": {
+          "left": 242.82
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": -242.82,
+          "y": 542.32,
+          "width": 52.96,
+          "height": 26.98
+        },
+        "firstSeen": 69.333,
+        "lastSeen": 69.333,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "canvas_overflow",
+        "severity": "info",
+        "time": 69.333,
+        "selector": "#s09-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(7)",
+        "message": "Text extends outside the composition canvas.",
+        "rect": {
+          "left": -242.82,
+          "top": 597.7,
+          "right": -104.15,
+          "bottom": 624.68,
+          "width": 138.67,
+          "height": 26.98
+        },
+        "containerSelector": "#root",
+        "text": "API reference",
+        "fixHint": "Move the text inward, reduce its size, or mark intentional off-canvas animation with data-layout-allow-overflow.",
+        "containerRect": {
+          "left": 0,
+          "top": 0,
+          "right": 1920,
+          "bottom": 1080,
+          "width": 1920,
+          "height": 1080
+        },
+        "overflow": {
+          "left": 242.82
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": -242.82,
+          "y": 597.7,
+          "width": 138.67,
+          "height": 26.98
+        },
+        "firstSeen": 69.333,
+        "lastSeen": 69.333,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "canvas_overflow",
+        "severity": "info",
+        "time": 69.333,
+        "selector": "#s09-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(8)",
+        "message": "Text extends outside the composition canvas.",
+        "rect": {
+          "left": -242.82,
+          "top": 653.08,
+          "right": -170.11,
+          "bottom": 680.06,
+          "width": 72.71,
+          "height": 26.98
+        },
+        "containerSelector": "#root",
+        "text": "Pricing",
+        "fixHint": "Move the text inward, reduce its size, or mark intentional off-canvas animation with data-layout-allow-overflow.",
+        "containerRect": {
+          "left": 0,
+          "top": 0,
+          "right": 1920,
+          "bottom": 1080,
+          "width": 1920,
+          "height": 1080
+        },
+        "overflow": {
+          "left": 242.82
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": -242.82,
+          "y": 653.08,
+          "width": 72.71,
+          "height": 26.98
+        },
+        "firstSeen": 69.333,
+        "lastSeen": 69.333,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "canvas_overflow",
+        "severity": "info",
+        "time": 69.333,
+        "selector": "#s09-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(10)",
+        "message": "Text extends outside the composition canvas.",
+        "rect": {
+          "left": -242.82,
+          "top": 1082.63,
+          "right": -152.07,
+          "bottom": 1109.61,
+          "width": 90.75,
+          "height": 26.98
+        },
+        "containerSelector": "#root",
+        "text": "Upgrade",
+        "fixHint": "Move the text inward, reduce its size, or mark intentional off-canvas animation with data-layout-allow-overflow.",
+        "containerRect": {
+          "left": 0,
+          "top": 0,
+          "right": 1920,
+          "bottom": 1080,
+          "width": 1920,
+          "height": 1080
+        },
+        "overflow": {
+          "left": 242.82,
+          "bottom": 29.61
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": -242.82,
+          "y": 1082.63,
+          "width": 90.75,
+          "height": 26.98
+        },
+        "firstSeen": 69.333,
+        "lastSeen": 69.333,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "canvas_overflow",
+        "severity": "info",
+        "time": 69.333,
+        "selector": "#s09-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(10) > span:nth-of-type(1)",
+        "message": "Text extends outside the composition canvas.",
+        "rect": {
+          "left": -36.05,
+          "top": 1085.47,
+          "right": 1.42,
+          "bottom": 1106.77,
+          "width": 37.47,
+          "height": 21.3
+        },
+        "containerSelector": "#root",
+        "text": "Free",
+        "fixHint": "Move the text inward, reduce its size, or mark intentional off-canvas animation with data-layout-allow-overflow.",
+        "containerRect": {
+          "left": 0,
+          "top": 0,
+          "right": 1920,
+          "bottom": 1080,
+          "width": 1920,
+          "height": 1080
+        },
+        "overflow": {
+          "left": 36.05,
+          "bottom": 26.77
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": -36.05,
+          "y": 1085.47,
+          "width": 37.47,
+          "height": 21.3
+        },
+        "firstSeen": 69.333,
+        "lastSeen": 69.333,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "canvas_overflow",
+        "severity": "info",
+        "time": 69.333,
+        "selector": "#s09-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(11) > span:nth-of-type(1)",
+        "message": "Text extends outside the composition canvas.",
+        "rect": {
+          "left": -265.23,
+          "top": 1151.15,
+          "right": -248.83,
+          "bottom": 1178.13,
+          "width": 16.4,
+          "height": 26.98
+        },
+        "containerSelector": "#root",
+        "text": "A",
+        "fixHint": "Move the text inward, reduce its size, or mark intentional off-canvas animation with data-layout-allow-overflow.",
+        "containerRect": {
+          "left": 0,
+          "top": 0,
+          "right": 1920,
+          "bottom": 1080,
+          "width": 1920,
+          "height": 1080
+        },
+        "overflow": {
+          "left": 265.23,
+          "bottom": 98.13
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": -265.23,
+          "y": 1151.15,
+          "width": 16.4,
+          "height": 26.98
+        },
+        "firstSeen": 69.333,
+        "lastSeen": 69.333,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "canvas_overflow",
+        "severity": "info",
+        "time": 69.333,
+        "selector": "#s09-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(11) > span:nth-of-type(2) > b:nth-of-type(1)",
+        "message": "Text extends outside the composition canvas.",
+        "rect": {
+          "left": -220.1,
+          "top": 1136.59,
+          "right": -173.17,
+          "bottom": 1163.57,
+          "width": 46.93,
+          "height": 26.98
+        },
+        "containerSelector": "#root",
+        "text": "Alex",
+        "fixHint": "Move the text inward, reduce its size, or mark intentional off-canvas animation with data-layout-allow-overflow.",
+        "containerRect": {
+          "left": 0,
+          "top": 0,
+          "right": 1920,
+          "bottom": 1080,
+          "width": 1920,
+          "height": 1080
+        },
+        "overflow": {
+          "left": 220.1,
+          "bottom": 83.57
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": -220.1,
+          "y": 1136.59,
+          "width": 46.93,
+          "height": 26.98
+        },
+        "firstSeen": 69.333,
+        "lastSeen": 69.333,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "canvas_overflow",
+        "severity": "info",
+        "time": 69.333,
+        "selector": "#s09-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(11) > span:nth-of-type(2) > span:nth-of-type(1)",
+        "message": "Text extends outside the composition canvas.",
+        "rect": {
+          "left": -220.1,
+          "top": 1166.05,
+          "right": -81.1,
+          "bottom": 1188.77,
+          "width": 139,
+          "height": 22.72
+        },
+        "containerSelector": "#root",
+        "text": "alex@habit.app",
+        "fixHint": "Move the text inward, reduce its size, or mark intentional off-canvas animation with data-layout-allow-overflow.",
+        "containerRect": {
+          "left": 0,
+          "top": 0,
+          "right": 1920,
+          "bottom": 1080,
+          "width": 1920,
+          "height": 1080
+        },
+        "overflow": {
+          "left": 220.1,
+          "bottom": 108.77
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": -220.1,
+          "y": 1166.05,
+          "width": 139,
+          "height": 22.72
+        },
+        "firstSeen": 69.333,
+        "lastSeen": 69.333,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "canvas_overflow",
+        "severity": "info",
+        "time": 69.333,
+        "selector": "#s09-row4 > div:nth-of-type(1) > div:nth-of-type(1) > span:nth-of-type(1)",
+        "message": "Text extends outside the composition canvas.",
+        "rect": {
+          "left": 149.77,
+          "top": 1079.08,
+          "right": 171.15,
+          "bottom": 1104.64,
+          "width": 21.38,
+          "height": 25.56
+        },
+        "containerSelector": "#root",
+        "text": "12",
+        "fixHint": "Move the text inward, reduce its size, or mark intentional off-canvas animation with data-layout-allow-overflow.",
+        "containerRect": {
+          "left": 0,
+          "top": 0,
+          "right": 1920,
+          "bottom": 1080,
+          "width": 1920,
+          "height": 1080
+        },
+        "overflow": {
+          "bottom": 24.64
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": 149.77,
+          "y": 1079.08,
+          "width": 21.38,
+          "height": 25.56
+        },
+        "firstSeen": 69.333,
+        "lastSeen": 69.333,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "canvas_overflow",
+        "severity": "info",
+        "time": 69.333,
+        "selector": "#s09-row4 > div:nth-of-type(2) > div:nth-of-type(2)",
+        "message": "Text extends outside the composition canvas.",
+        "rect": {
+          "left": 214.42,
+          "top": 1069.14,
+          "right": 442.35,
+          "bottom": 1096.12,
+          "width": 227.93,
+          "height": 26.98
+        },
+        "containerSelector": "#root",
+        "text": "Pick an emoji per habit",
+        "fixHint": "Move the text inward, reduce its size, or mark intentional off-canvas animation with data-layout-allow-overflow.",
+        "containerRect": {
+          "left": 0,
+          "top": 0,
+          "right": 1920,
+          "bottom": 1080,
+          "width": 1920,
+          "height": 1080
+        },
+        "overflow": {
+          "bottom": 16.12
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": 214.42,
+          "y": 1069.14,
+          "width": 227.93,
+          "height": 26.98
+        },
+        "firstSeen": 69.333,
+        "lastSeen": 69.333,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "canvas_overflow",
+        "severity": "info",
+        "time": 69.333,
+        "selector": "#s09-row4 > div:nth-of-type(2) > div:nth-of-type(3) > span:nth-of-type(1)",
+        "message": "Text extends outside the composition canvas.",
+        "rect": {
+          "left": 241.4,
+          "top": 1104.64,
+          "right": 347.46,
+          "bottom": 1127.36,
+          "width": 106.06,
+          "height": 22.72
+        },
+        "containerSelector": "#root",
+        "text": "1 comments",
+        "fixHint": "Move the text inward, reduce its size, or mark intentional off-canvas animation with data-layout-allow-overflow.",
+        "containerRect": {
+          "left": 0,
+          "top": 0,
+          "right": 1920,
+          "bottom": 1080,
+          "width": 1920,
+          "height": 1080
+        },
+        "overflow": {
+          "bottom": 47.36
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": 241.4,
+          "y": 1104.64,
+          "width": 106.06,
+          "height": 22.72
+        },
+        "firstSeen": 69.333,
+        "lastSeen": 69.333,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "canvas_overflow",
+        "severity": "info",
+        "time": 69.333,
+        "selector": "#s09-row4 > div:nth-of-type(2) > div:nth-of-type(3) > span:nth-of-type(2)",
+        "message": "Text extends outside the composition canvas.",
+        "rect": {
+          "left": 397.16,
+          "top": 1104.64,
+          "right": 497.22,
+          "bottom": 1127.36,
+          "width": 100.06,
+          "height": 22.72
+        },
+        "containerSelector": "#root",
+        "text": "4 following",
+        "fixHint": "Move the text inward, reduce its size, or mark intentional off-canvas animation with data-layout-allow-overflow.",
+        "containerRect": {
+          "left": 0,
+          "top": 0,
+          "right": 1920,
+          "bottom": 1080,
+          "width": 1920,
+          "height": 1080
+        },
+        "overflow": {
+          "bottom": 47.36
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": 397.16,
+          "y": 1104.64,
+          "width": 100.06,
+          "height": 22.72
+        },
+        "firstSeen": 69.333,
+        "lastSeen": 69.333,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "canvas_overflow",
+        "severity": "info",
+        "time": 69.333,
+        "selector": "#s09-row4 > span:nth-of-type(1)",
+        "message": "Text extends outside the composition canvas.",
+        "rect": {
+          "left": 948.67,
+          "top": 1066.3,
+          "right": 1032.34,
+          "bottom": 1093.28,
+          "width": 83.67,
+          "height": 26.98
+        },
+        "containerSelector": "#root",
+        "text": "Pending",
+        "fixHint": "Move the text inward, reduce its size, or mark intentional off-canvas animation with data-layout-allow-overflow.",
+        "containerRect": {
+          "left": 0,
+          "top": 0,
+          "right": 1920,
+          "bottom": 1080,
+          "width": 1920,
+          "height": 1080
+        },
+        "overflow": {
+          "bottom": 13.28
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": 948.67,
+          "y": 1066.3,
+          "width": 83.67,
+          "height": 26.98
+        },
+        "firstSeen": 69.333,
+        "lastSeen": 69.333,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "panel_out_of_canvas",
+        "severity": "info",
+        "time": 69.333,
+        "selector": "#s09-win",
+        "message": "Painted panel extends outside the composition canvas.",
+        "rect": {
+          "left": -312.4,
+          "top": 150.4,
+          "right": 1164.4,
+          "bottom": 1229.6,
+          "width": 1476.8,
+          "height": 1079.2
+        },
+        "containerSelector": "#root",
+        "text": "fewchurs.com/dashboard Fewchurs Dashboard Apps +",
+        "fixHint": "Move the panel inward, or mark intentional off-canvas animation with data-layout-allow-overflow.",
+        "containerRect": {
+          "left": 0,
+          "top": 0,
+          "right": 1920,
+          "bottom": 1080,
+          "width": 1920,
+          "height": 1080
+        },
+        "overflow": {
+          "left": 312.4,
+          "bottom": 149.6
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": -312.4,
+          "y": 150.4,
+          "width": 1476.8,
+          "height": 1079.2
+        },
+        "firstSeen": 69.333,
+        "lastSeen": 69.333,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "panel_out_of_canvas",
+        "severity": "info",
+        "time": 69.333,
+        "selector": "#s09-win > div:nth-of-type(2) > div:nth-of-type(1)",
+        "message": "Painted panel extends outside the composition canvas.",
+        "rect": {
+          "left": -310.98,
+          "top": 208.62,
+          "right": 44.02,
+          "bottom": 1228.18,
+          "width": 355,
+          "height": 1019.56
+        },
+        "containerSelector": "#root",
+        "text": "Fewchurs Dashboard Apps + H Habit Tracker 3 Reso",
+        "fixHint": "Move the panel inward, or mark intentional off-canvas animation with data-layout-allow-overflow.",
+        "containerRect": {
+          "left": 0,
+          "top": 0,
+          "right": 1920,
+          "bottom": 1080,
+          "width": 1920,
+          "height": 1080
+        },
+        "overflow": {
+          "left": 310.98,
+          "bottom": 148.18
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": -310.98,
+          "y": 208.62,
+          "width": 355,
+          "height": 1019.56
+        },
+        "firstSeen": 69.333,
+        "lastSeen": 69.333,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "panel_out_of_canvas",
+        "severity": "info",
+        "time": 69.333,
+        "selector": "#s09-row4 > div:nth-of-type(1) > div:nth-of-type(1)",
+        "message": "Painted panel extends outside the composition canvas.",
+        "rect": {
+          "left": 126.38,
+          "top": 1045.71,
+          "right": 194.54,
+          "bottom": 1113.87,
+          "width": 68.16,
+          "height": 68.16
+        },
+        "containerSelector": "#root",
+        "text": "12",
+        "fixHint": "Move the panel inward, or mark intentional off-canvas animation with data-layout-allow-overflow.",
+        "containerRect": {
+          "left": 0,
+          "top": 0,
+          "right": 1920,
+          "bottom": 1080,
+          "width": 1920,
+          "height": 1080
+        },
+        "overflow": {
+          "bottom": 33.87
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": 126.38,
+          "y": 1045.71,
+          "width": 68.16,
+          "height": 68.16
+        },
+        "firstSeen": 69.333,
+        "lastSeen": 69.333,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          69.333
+        ]
+      }
+    ],
+    "duration": 96,
+    "samples": [
+      5.333,
+      16,
+      26.667,
+      37.333,
+      48,
+      58.667,
+      69.333,
+      80,
+      90.667
+    ],
+    "transitionSamples": [],
+    "transitionSamplesDropped": 0,
+    "tolerance": 2,
+    "totalIssueCount": 45,
+    "truncated": false
+  },
+  "motion": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": [],
+    "enabled": false,
+    "samples": 0
+  },
+  "contrast": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 39,
+    "infoCount": 0,
+    "findings": [
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 4.1:1; WCAG AA requires 4.5:1.",
+        "text": "fewchurs.com/dashboard",
+        "fg": "rgb(119,115,110)",
+        "bg": "rgb(240,239,237)",
+        "ratio": 4.1,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(112,108,104)",
+        "large": false,
+        "selector": "div > div:nth-of-type(5) > div > div > div:nth-of-type(1) > div:nth-of-type(1) > span:nth-of-type(4)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s04.html",
+        "bbox": {
+          "x": 463.84375,
+          "y": 168.5,
+          "width": 284.3125,
+          "height": 24
+        },
+        "time": 26.667,
+        "times": [
+          26.667
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 4.43:1; WCAG AA requires 4.5:1.",
+        "text": "Apps",
+        "fg": "rgb(119,115,110)",
+        "bg": "rgb(248,248,247)",
+        "ratio": 4.43,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(117,113,108)",
+        "large": false,
+        "selector": "div > div:nth-of-type(5) > div > div > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(3) > span:nth-of-type(1)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s04.html",
+        "bbox": {
+          "x": 79,
+          "y": 320,
+          "width": 31.859375,
+          "height": 19
+        },
+        "time": 26.667,
+        "times": [
+          26.667
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 4.43:1; WCAG AA requires 4.5:1.",
+        "text": "0",
+        "fg": "rgb(119,115,110)",
+        "bg": "rgb(248,248,247)",
+        "ratio": 4.43,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(117,113,108)",
+        "large": false,
+        "selector": "div > div:nth-of-type(5) > div > div > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(4) > span:nth-of-type(2)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s04.html",
+        "bbox": {
+          "x": 275.875,
+          "y": 359,
+          "width": 8.125,
+          "height": 15
+        },
+        "time": 26.667,
+        "times": [
+          26.667
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 4.43:1; WCAG AA requires 4.5:1.",
+        "text": "Resources ⌄",
+        "fg": "rgb(119,115,110)",
+        "bg": "rgb(248,248,247)",
+        "ratio": 4.43,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(117,113,108)",
+        "large": false,
+        "selector": "div > div:nth-of-type(5) > div > div > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(5) > span",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s04.html",
+        "bbox": {
+          "x": 79,
+          "y": 402,
+          "width": 72.84375,
+          "height": 16
+        },
+        "time": 26.667,
+        "times": [
+          26.667
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 2.81:1; WCAG AA requires 4.5:1.",
+        "text": "Free",
+        "fg": "rgb(237,95,24)",
+        "bg": "rgb(247,232,224)",
+        "ratio": 2.81,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(180,72,18)",
+        "large": false,
+        "selector": "div > div:nth-of-type(5) > div > div > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(10) > span",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s04.html",
+        "bbox": {
+          "x": 243.609375,
+          "y": 816.5,
+          "width": 40.390625,
+          "height": 19
+        },
+        "time": 26.667,
+        "times": [
+          26.667
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 4.43:1; WCAG AA requires 4.5:1.",
+        "text": "alex@habit.app",
+        "fg": "rgb(119,115,110)",
+        "bg": "rgb(248,248,247)",
+        "ratio": 4.43,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(117,113,108)",
+        "large": false,
+        "selector": "div > div:nth-of-type(5) > div > div > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(11) > span:nth-of-type(2) > span",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s04.html",
+        "bbox": {
+          "x": 121,
+          "y": 875.25,
+          "width": 97.890625,
+          "height": 16
+        },
+        "time": 26.667,
+        "times": [
+          26.667
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 3.36:1; WCAG AA requires 4.5:1.",
+        "text": "New app",
+        "fg": "rgb(255,255,255)",
+        "bg": "rgb(237,95,24)",
+        "ratio": 3.36,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(38,38,38)",
+        "large": false,
+        "selector": "#s04-new",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s04.html",
+        "bbox": {
+          "x": 617,
+          "y": 445,
+          "width": 170,
+          "height": 46
+        },
+        "time": 26.667,
+        "times": [
+          26.667
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 3.36:1; WCAG AA requires 4.5:1.",
+        "text": "Request a feature",
+        "fg": "rgb(255,255,255)",
+        "bg": "rgb(237,95,24)",
+        "ratio": 3.36,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(38,38,38)",
+        "large": false,
+        "selector": "#s06-req",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s06.html",
+        "bbox": {
+          "x": 413,
+          "y": 835,
+          "width": 326,
+          "height": 62
+        },
+        "time": 48,
+        "times": [
+          48
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 2.85:1; WCAG AA requires 4.5:1.",
+        "text": "✕",
+        "fg": "rgb(153,153,153)",
+        "bg": "rgb(255,255,255)",
+        "ratio": 2.85,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(118,118,118)",
+        "large": false,
+        "selector": "div > div:nth-of-type(7) > div > div > div > div > div:nth-of-type(3) > div:nth-of-type(2) > div:nth-of-type(1) > span:nth-of-type(1)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s06.html",
+        "bbox": {
+          "x": 413,
+          "y": 219,
+          "width": 16.78125,
+          "height": 28
+        },
+        "time": 48,
+        "times": [
+          48
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 2.32:1; WCAG AA requires 4.5:1.",
+        "text": "Get notified when this ships",
+        "fg": "rgb(170,170,170)",
+        "bg": "rgb(255,255,255)",
+        "ratio": 2.32,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(118,118,118)",
+        "large": false,
+        "selector": "div > div:nth-of-type(7) > div > div > div > div > div:nth-of-type(3) > div:nth-of-type(2) > div:nth-of-type(7)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s06.html",
+        "bbox": {
+          "x": 413,
+          "y": 542,
+          "width": 326,
+          "height": 46
+        },
+        "time": 48,
+        "times": [
+          48
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 3.36:1; WCAG AA requires 4.5:1.",
+        "text": "Submit",
+        "fg": "rgb(255,255,255)",
+        "bg": "rgb(237,95,24)",
+        "ratio": 3.36,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(38,38,38)",
+        "large": false,
+        "selector": "#s06-submit",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s06.html",
+        "bbox": {
+          "x": 413,
+          "y": 614,
+          "width": 326,
+          "height": 58
+        },
+        "time": 48,
+        "times": [
+          48
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 1.92:1; WCAG AA requires 4.5:1.",
+        "text": "Powered by  Fewchurs",
+        "fg": "rgb(187,187,187)",
+        "bg": "rgb(255,255,255)",
+        "ratio": 1.92,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(118,118,118)",
+        "large": false,
+        "selector": "div > div:nth-of-type(7) > div > div > div > div > div:nth-of-type(3) > div:nth-of-type(2) > div:nth-of-type(9)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s06.html",
+        "bbox": {
+          "x": 413,
+          "y": 742,
+          "width": 326,
+          "height": 15
+        },
+        "time": 48,
+        "times": [
+          48
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 4.1:1; WCAG AA requires 4.5:1.",
+        "text": "fewchurs.com/dashboard",
+        "fg": "rgb(119,115,110)",
+        "bg": "rgb(240,239,237)",
+        "ratio": 4.1,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(112,108,104)",
+        "large": false,
+        "selector": "div > div:nth-of-type(10) > div > div > div:nth-of-type(1) > div > div:nth-of-type(1) > span:nth-of-type(4)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": 463.84375,
+          "y": 168.5,
+          "width": 284.3125,
+          "height": 24
+        },
+        "time": 69.333,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 4.43:1; WCAG AA requires 4.5:1.",
+        "text": "Apps",
+        "fg": "rgb(119,115,110)",
+        "bg": "rgb(248,248,247)",
+        "ratio": 4.43,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(117,113,108)",
+        "large": false,
+        "selector": "div > div:nth-of-type(10) > div > div > div:nth-of-type(1) > div > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(3) > span:nth-of-type(1)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": 79,
+          "y": 320,
+          "width": 31.859375,
+          "height": 19
+        },
+        "time": 69.333,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 3.91:1; WCAG AA requires 4.5:1.",
+        "text": "3",
+        "fg": "rgb(255,255,255)",
+        "bg": "rgb(229,72,77)",
+        "ratio": 3.91,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(24,24,24)",
+        "large": false,
+        "selector": "div > div:nth-of-type(10) > div > div > div:nth-of-type(1) > div > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(4) > span:nth-of-type(2)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": 261.90625,
+          "y": 358,
+          "width": 22.09375,
+          "height": 17
+        },
+        "time": 69.333,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 4.43:1; WCAG AA requires 4.5:1.",
+        "text": "Resources ⌄",
+        "fg": "rgb(119,115,110)",
+        "bg": "rgb(248,248,247)",
+        "ratio": 4.43,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(117,113,108)",
+        "large": false,
+        "selector": "div > div:nth-of-type(10) > div > div > div:nth-of-type(1) > div > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(5) > span",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": 79,
+          "y": 402,
+          "width": 72.84375,
+          "height": 16
+        },
+        "time": 69.333,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 2.81:1; WCAG AA requires 4.5:1.",
+        "text": "Free",
+        "fg": "rgb(237,95,24)",
+        "bg": "rgb(247,232,224)",
+        "ratio": 2.81,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(180,72,18)",
+        "large": false,
+        "selector": "div > div:nth-of-type(10) > div > div > div:nth-of-type(1) > div > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(10) > span",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": 243.609375,
+          "y": 816.5,
+          "width": 40.390625,
+          "height": 19
+        },
+        "time": 69.333,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 4.43:1; WCAG AA requires 4.5:1.",
+        "text": "alex@habit.app",
+        "fg": "rgb(119,115,110)",
+        "bg": "rgb(248,248,247)",
+        "ratio": 4.43,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(117,113,108)",
+        "large": false,
+        "selector": "div > div:nth-of-type(10) > div > div > div:nth-of-type(1) > div > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(11) > span:nth-of-type(2) > span",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": 121,
+          "y": 875.25,
+          "width": 97.890625,
+          "height": 16
+        },
+        "time": 69.333,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 2.73:1; WCAG AA requires 4.5:1.",
+        "text": "127",
+        "fg": "rgb(237,95,24)",
+        "bg": "rgb(243,229,222)",
+        "ratio": 2.73,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(177,71,18)",
+        "large": false,
+        "selector": "div > div:nth-of-type(10) > div > div > div:nth-of-type(1) > div > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(3) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > span",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": 377.3125,
+          "y": 386,
+          "width": 23.375,
+          "height": 18
+        },
+        "time": 69.333,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 3.36:1; WCAG AA requires 4.5:1.",
+        "text": "New",
+        "fg": "rgb(255,255,255)",
+        "bg": "rgb(237,95,24)",
+        "ratio": 3.36,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(38,38,38)",
+        "large": false,
+        "selector": "div > div:nth-of-type(10) > div > div > div:nth-of-type(1) > div > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(3) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(1) > span",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": 532.78125,
+          "y": 356.734375,
+          "width": 36.0625,
+          "height": 19
+        },
+        "time": 69.333,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 4.28:1; WCAG AA requires 4.5:1.",
+        "text": "Easier on the eyes at night",
+        "fg": "rgb(119,115,110)",
+        "bg": "rgb(244,244,244)",
+        "ratio": 4.28,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(115,111,107)",
+        "large": false,
+        "selector": "div > div:nth-of-type(10) > div > div > div:nth-of-type(1) > div > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(3) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": 427,
+          "y": 379,
+          "width": 446,
+          "height": 19
+        },
+        "time": 69.333,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 4.28:1; WCAG AA requires 4.5:1.",
+        "text": "14 comments",
+        "fg": "rgb(119,115,110)",
+        "bg": "rgb(244,244,244)",
+        "ratio": 4.28,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(115,111,107)",
+        "large": false,
+        "selector": "div > div:nth-of-type(10) > div > div > div:nth-of-type(1) > div > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(3) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(3) > span:nth-of-type(1)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": 427,
+          "y": 404,
+          "width": 102.90625,
+          "height": 16
+        },
+        "time": 69.333,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 4.28:1; WCAG AA requires 4.5:1.",
+        "text": "42 following",
+        "fg": "rgb(119,115,110)",
+        "bg": "rgb(244,244,244)",
+        "ratio": 4.28,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(115,111,107)",
+        "large": false,
+        "selector": "div > div:nth-of-type(10) > div > div > div:nth-of-type(1) > div > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(3) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(3) > span:nth-of-type(2)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": 545.90625,
+          "y": 404,
+          "width": 97.671875,
+          "height": 16
+        },
+        "time": 69.333,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 2.73:1; WCAG AA requires 4.5:1.",
+        "text": "89",
+        "fg": "rgb(237,95,24)",
+        "bg": "rgb(243,229,222)",
+        "ratio": 2.73,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(177,71,18)",
+        "large": false,
+        "selector": "div > div:nth-of-type(10) > div > div > div:nth-of-type(1) > div > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(3) > div:nth-of-type(2) > div:nth-of-type(1) > div > span",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": 379.546875,
+          "y": 493,
+          "width": 18.890625,
+          "height": 18
+        },
+        "time": 69.333,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 4.28:1; WCAG AA requires 4.5:1.",
+        "text": "Check off habits from my wrist",
+        "fg": "rgb(119,115,110)",
+        "bg": "rgb(244,244,244)",
+        "ratio": 4.28,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(115,111,107)",
+        "large": false,
+        "selector": "div > div:nth-of-type(10) > div > div > div:nth-of-type(1) > div > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(3) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": 427,
+          "y": 486,
+          "width": 473.078125,
+          "height": 19
+        },
+        "time": 69.333,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 4.28:1; WCAG AA requires 4.5:1.",
+        "text": "9 comments",
+        "fg": "rgb(119,115,110)",
+        "bg": "rgb(244,244,244)",
+        "ratio": 4.28,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(115,111,107)",
+        "large": false,
+        "selector": "div > div:nth-of-type(10) > div > div > div:nth-of-type(1) > div > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(3) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(3) > span:nth-of-type(1)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": 427,
+          "y": 511,
+          "width": 97.515625,
+          "height": 16
+        },
+        "time": 69.333,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 4.28:1; WCAG AA requires 4.5:1.",
+        "text": "30 following",
+        "fg": "rgb(119,115,110)",
+        "bg": "rgb(244,244,244)",
+        "ratio": 4.28,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(115,111,107)",
+        "large": false,
+        "selector": "div > div:nth-of-type(10) > div > div > div:nth-of-type(1) > div > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(3) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(3) > span:nth-of-type(2)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": 540.515625,
+          "y": 511,
+          "width": 97.46875,
+          "height": 16
+        },
+        "time": 69.333,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 2.73:1; WCAG AA requires 4.5:1.",
+        "text": "51",
+        "fg": "rgb(237,95,24)",
+        "bg": "rgb(243,229,222)",
+        "ratio": 2.73,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(177,71,18)",
+        "large": false,
+        "selector": "div > div:nth-of-type(10) > div > div > div:nth-of-type(1) > div > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(3) > div:nth-of-type(3) > div:nth-of-type(1) > div > span",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": 381.375,
+          "y": 600,
+          "width": 15.25,
+          "height": 18
+        },
+        "time": 69.333,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 4.28:1; WCAG AA requires 4.5:1.",
+        "text": "A nudge on Sunday evening",
+        "fg": "rgb(119,115,110)",
+        "bg": "rgb(244,244,244)",
+        "ratio": 4.28,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(115,111,107)",
+        "large": false,
+        "selector": "div > div:nth-of-type(10) > div > div > div:nth-of-type(1) > div > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(3) > div:nth-of-type(3) > div:nth-of-type(2) > div:nth-of-type(2)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": 427,
+          "y": 593,
+          "width": 473.078125,
+          "height": 19
+        },
+        "time": 69.333,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 4.28:1; WCAG AA requires 4.5:1.",
+        "text": "5 comments",
+        "fg": "rgb(119,115,110)",
+        "bg": "rgb(244,244,244)",
+        "ratio": 4.28,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(115,111,107)",
+        "large": false,
+        "selector": "div > div:nth-of-type(10) > div > div > div:nth-of-type(1) > div > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(3) > div:nth-of-type(3) > div:nth-of-type(2) > div:nth-of-type(3) > span:nth-of-type(1)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": 427,
+          "y": 618,
+          "width": 97.25,
+          "height": 16
+        },
+        "time": 69.333,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 4.28:1; WCAG AA requires 4.5:1.",
+        "text": "16 following",
+        "fg": "rgb(119,115,110)",
+        "bg": "rgb(244,244,244)",
+        "ratio": 4.28,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(115,111,107)",
+        "large": false,
+        "selector": "div > div:nth-of-type(10) > div > div > div:nth-of-type(1) > div > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(3) > div:nth-of-type(3) > div:nth-of-type(2) > div:nth-of-type(3) > span:nth-of-type(2)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": 540.25,
+          "y": 618,
+          "width": 94.078125,
+          "height": 16
+        },
+        "time": 69.333,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 2.73:1; WCAG AA requires 4.5:1.",
+        "text": "24",
+        "fg": "rgb(237,95,24)",
+        "bg": "rgb(243,229,222)",
+        "ratio": 2.73,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(177,71,18)",
+        "large": false,
+        "selector": "div > div:nth-of-type(10) > div > div > div:nth-of-type(1) > div > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(3) > div:nth-of-type(4) > div:nth-of-type(1) > div > span",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": 379.484375,
+          "y": 707,
+          "width": 19.015625,
+          "height": 18
+        },
+        "time": 69.333,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 4.28:1; WCAG AA requires 4.5:1.",
+        "text": "Back up my history",
+        "fg": "rgb(119,115,110)",
+        "bg": "rgb(244,244,244)",
+        "ratio": 4.28,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(115,111,107)",
+        "large": false,
+        "selector": "div > div:nth-of-type(10) > div > div > div:nth-of-type(1) > div > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(3) > div:nth-of-type(4) > div:nth-of-type(2) > div:nth-of-type(2)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": 427,
+          "y": 700,
+          "width": 473.078125,
+          "height": 19
+        },
+        "time": 69.333,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 4.28:1; WCAG AA requires 4.5:1.",
+        "text": "2 comments",
+        "fg": "rgb(119,115,110)",
+        "bg": "rgb(244,244,244)",
+        "ratio": 4.28,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(115,111,107)",
+        "large": false,
+        "selector": "div > div:nth-of-type(10) > div > div > div:nth-of-type(1) > div > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(3) > div:nth-of-type(4) > div:nth-of-type(2) > div:nth-of-type(3) > span:nth-of-type(1)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": 427,
+          "y": 725,
+          "width": 97.140625,
+          "height": 16
+        },
+        "time": 69.333,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 4.28:1; WCAG AA requires 4.5:1.",
+        "text": "8 following",
+        "fg": "rgb(119,115,110)",
+        "bg": "rgb(244,244,244)",
+        "ratio": 4.28,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(115,111,107)",
+        "large": false,
+        "selector": "div > div:nth-of-type(10) > div > div > div:nth-of-type(1) > div > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(3) > div:nth-of-type(4) > div:nth-of-type(2) > div:nth-of-type(3) > span:nth-of-type(2)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": 540.140625,
+          "y": 725,
+          "width": 88.484375,
+          "height": 16
+        },
+        "time": 69.333,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 2.73:1; WCAG AA requires 4.5:1.",
+        "text": "12",
+        "fg": "rgb(237,95,24)",
+        "bg": "rgb(243,229,222)",
+        "ratio": 2.73,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(177,71,18)",
+        "large": false,
+        "selector": "div > div:nth-of-type(10) > div > div > div:nth-of-type(1) > div > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(3) > div:nth-of-type(5) > div:nth-of-type(1) > div > span",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": 381.46875,
+          "y": 814,
+          "width": 15.0625,
+          "height": 18
+        },
+        "time": 69.333,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 4.28:1; WCAG AA requires 4.5:1.",
+        "text": "Pick an emoji per habit",
+        "fg": "rgb(119,115,110)",
+        "bg": "rgb(244,244,244)",
+        "ratio": 4.28,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(115,111,107)",
+        "large": false,
+        "selector": "div > div:nth-of-type(10) > div > div > div:nth-of-type(1) > div > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(3) > div:nth-of-type(5) > div:nth-of-type(2) > div:nth-of-type(2)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": 427,
+          "y": 807,
+          "width": 473.078125,
+          "height": 19
+        },
+        "time": 69.333,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 4.28:1; WCAG AA requires 4.5:1.",
+        "text": "1 comments",
+        "fg": "rgb(119,115,110)",
+        "bg": "rgb(244,244,244)",
+        "ratio": 4.28,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(115,111,107)",
+        "large": false,
+        "selector": "div > div:nth-of-type(10) > div > div > div:nth-of-type(1) > div > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(3) > div:nth-of-type(5) > div:nth-of-type(2) > div:nth-of-type(3) > span:nth-of-type(1)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": 427,
+          "y": 832,
+          "width": 93.6875,
+          "height": 16
+        },
+        "time": 69.333,
+        "times": [
+          69.333
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 4.28:1; WCAG AA requires 4.5:1.",
+        "text": "4 following",
+        "fg": "rgb(119,115,110)",
+        "bg": "rgb(244,244,244)",
+        "ratio": 4.28,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(115,111,107)",
+        "large": false,
+        "selector": "div > div:nth-of-type(10) > div > div > div:nth-of-type(1) > div > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(3) > div:nth-of-type(5) > div:nth-of-type(2) > div:nth-of-type(3) > span:nth-of-type(2)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": 536.6875,
+          "y": 832,
+          "width": 89.46875,
+          "height": 16
+        },
+        "time": 69.333,
+        "times": [
+          69.333
+        ]
+      }
+    ],
+    "enabled": true,
+    "samples": [
+      5.333,
+      26.667,
+      48,
+      69.333,
+      90.667
+    ],
+    "checked": 100,
+    "passed": 61
+  },
+  "craft": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 14,
+    "infoCount": 0,
+    "findings": [
+      {
+        "code": "first_frame_empty",
+        "severity": "warning",
+        "message": "Frame 0 shows only the background, and the first frame is the thumbnail on social players: have the title or key image already on screen at 0 s instead of entering from nothing; see references/review.md.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0
+      },
+      {
+        "code": "text_below_floor",
+        "severity": "warning",
+        "message": "Type floor is 28 px (2.6% of the 1080 px short side, what a phone can read) and \"PRODUCT ROADMAP · Q3\" renders at 14 px for 8.97 s: set reading text to at least 28 px, or put data-layout-ignore on text that is texture rather than reading; see references/look.md.",
+        "text": "PRODUCT ROADMAP · Q3",
+        "selector": "#s01-doc > div:nth-of-type(1)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s01.html",
+        "bbox": {
+          "x": 232.06,
+          "y": 172.41,
+          "width": 209.37,
+          "height": 17.74
+        },
+        "time": 0.16,
+        "times": [
+          0.16
+        ],
+        "fontPx": 13.8,
+        "floorPx": 28,
+        "seconds": 8.975,
+        "elements": [
+          {
+            "selector": "#s01-doc > div:nth-of-type(1)",
+            "text": "PRODUCT ROADMAP · Q3",
+            "fontPx": 13.8,
+            "time": 0.16,
+            "seconds": 8.975
+          }
+        ]
+      },
+      {
+        "code": "text_below_floor",
+        "severity": "warning",
+        "message": "Type floor is 28 px (2.6% of the 1080 px short side, what a phone can read) and 9 text elements stay under it for 0.5 s or more, the smallest \"Daily active users who opened it\" at 16 px: set reading text to at least 28 px, or put data-layout-ignore on text that is texture rather than reading; see references/look.md.",
+        "text": "Daily active users who opened it",
+        "selector": "#s02-graph > div:nth-of-type(2)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s02.html",
+        "bbox": {
+          "x": 193.69,
+          "y": 445.58,
+          "width": 248.16,
+          "height": 19.66
+        },
+        "time": 11.86,
+        "times": [
+          9.456,
+          9.456,
+          9.456,
+          11.219,
+          11.86,
+          11.86,
+          12.501,
+          15.386,
+          15.386
+        ],
+        "fontPx": 15.72,
+        "floorPx": 28,
+        "seconds": 5.449,
+        "elements": [
+          {
+            "selector": "#s02-graph > div:nth-of-type(2)",
+            "text": "Daily active users who opened it",
+            "fontPx": 15.72,
+            "time": 11.86,
+            "seconds": 5.449
+          },
+          {
+            "selector": "#s02-inbox > span:nth-of-type(3)",
+            "text": "for this feature",
+            "fontPx": 17,
+            "time": 15.386,
+            "seconds": 1.923
+          },
+          {
+            "selector": "#s02-shipped > div:nth-of-type(2) > div:nth-of-type(2)",
+            "text": "6 months of work · 4 engineers",
+            "fontPx": 18,
+            "time": 11.219,
+            "seconds": 6.09
+          },
+          {
+            "selector": "#s02-launch",
+            "text": "Launch day",
+            "fontPx": 18,
+            "time": 12.501,
+            "seconds": 4.808
+          },
+          {
+            "selector": "#s02-progress > div:nth-of-type(1) > div:nth-of-type(2)",
+            "text": "Month of 6",
+            "fontPx": 18.87,
+            "time": 9.456,
+            "seconds": 1.762
+          },
+          {
+            "selector": "#s02-month",
+            "text": "1",
+            "fontPx": 18.87,
+            "time": 9.456,
+            "seconds": 1.762
+          },
+          {
+            "selector": "#s02-inbox > span:nth-of-type(2)",
+            "text": "0 user requests",
+            "fontPx": 20,
+            "time": 15.386,
+            "seconds": 1.923
+          },
+          {
+            "selector": "#s02-graph > div:nth-of-type(1) > div:nth-of-type(1)",
+            "text": "Feature usage",
+            "fontPx": 20.64,
+            "time": 11.86,
+            "seconds": 5.449
+          },
+          {
+            "selector": "#s02-progress > div:nth-of-type(1) > div:nth-of-type(1)",
+            "text": "Building: AI chat assistant",
+            "fontPx": 25.82,
+            "time": 9.456,
+            "seconds": 1.762
+          }
+        ]
+      },
+      {
+        "code": "text_below_floor",
+        "severity": "warning",
+        "message": "Type floor is 28 px (2.6% of the 1080 px short side, what a phone can read) and 20 text elements stay under it for 0.5 s or more, the smallest \"Check off habits from my wrist\" at 13 px: set reading text to at least 28 px, or put data-layout-ignore on text that is texture rather than reading; see references/look.md.",
+        "text": "Check off habits from my wrist",
+        "selector": "#s03-r0 > div:nth-of-type(2) > div:nth-of-type(2)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s03.html",
+        "bbox": {
+          "x": 766,
+          "y": 534.94,
+          "width": 194.13,
+          "height": 16
+        },
+        "time": 22.918,
+        "times": [
+          17.469,
+          17.469,
+          17.469,
+          20.194,
+          20.194,
+          20.194,
+          22.918,
+          22.918,
+          22.918,
+          22.918,
+          22.918,
+          22.918,
+          22.918,
+          22.918,
+          22.918,
+          22.918,
+          22.918,
+          22.918,
+          22.918,
+          22.918
+        ],
+        "fontPx": 13,
+        "floorPx": 28,
+        "seconds": 2.244,
+        "elements": [
+          {
+            "selector": "#s03-r0 > div:nth-of-type(2) > div:nth-of-type(2)",
+            "text": "Check off habits from my wrist",
+            "fontPx": 13,
+            "time": 22.918,
+            "seconds": 2.244
+          },
+          {
+            "selector": "#s03-r1 > div:nth-of-type(2) > div:nth-of-type(2)",
+            "text": "A nudge on Sunday evening",
+            "fontPx": 13,
+            "time": 22.918,
+            "seconds": 2.244
+          },
+          {
+            "selector": "#s03-r2 > div:nth-of-type(2) > div:nth-of-type(2)",
+            "text": "Back up my history",
+            "fontPx": 13,
+            "time": 22.918,
+            "seconds": 2.244
+          },
+          {
+            "selector": "#s03-phone > div:nth-of-type(1) > div:nth-of-type(2) > span:nth-of-type(1)",
+            "text": "9:41",
+            "fontPx": 14,
+            "time": 17.469,
+            "seconds": 7.693
+          },
+          {
+            "selector": "#s03-sheet > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "9:41",
+            "fontPx": 14,
+            "time": 22.918,
+            "seconds": 2.244
+          },
+          {
+            "selector": "#s03-sheet > div:nth-of-type(2) > div:nth-of-type(2)",
+            "text": "Vote for what you want next",
+            "fontPx": 14,
+            "time": 22.918,
+            "seconds": 2.244
+          },
+          {
+            "selector": "#s03-c0",
+            "text": "84",
+            "fontPx": 14,
+            "time": 22.918,
+            "seconds": 2.244
+          },
+          {
+            "selector": "#s03-c1",
+            "text": "48",
+            "fontPx": 14,
+            "time": 22.918,
+            "seconds": 2.244
+          },
+          {
+            "selector": "#s03-c2",
+            "text": "23",
+            "fontPx": 14,
+            "time": 22.918,
+            "seconds": 2.244
+          },
+          {
+            "selector": "#s03-c3",
+            "text": "12",
+            "fontPx": 14,
+            "time": 22.918,
+            "seconds": 2.244
+          },
+          {
+            "selector": "#s03-phone > div:nth-of-type(1) > div:nth-of-type(3) > div:nth-of-type(2)",
+            "text": "Good morning, Sam",
+            "fontPx": 15,
+            "time": 17.469,
+            "seconds": 7.693
+          },
+          {
+            "selector": "#s03-phone > div:nth-of-type(1) > div:nth-of-type(3) > div:nth-of-type(3)",
+            "text": "Morning run",
+            "fontPx": 16,
+            "time": 17.469,
+            "seconds": 7.693
+          },
+          {
+            "selector": "div.screen > div:nth-of-type(3) > div:nth-of-type(4)",
+            "text": "Read 20 pages",
+            "fontPx": 16,
+            "time": 20.194,
+            "seconds": 4.968
+          },
+          {
+            "selector": "div.screen > div:nth-of-type(3) > div:nth-of-type(5)",
+            "text": "Drink water",
+            "fontPx": 16,
+            "time": 20.194,
+            "seconds": 4.968
+          },
+          {
+            "selector": "#s03-r0 > div:nth-of-type(2) > div:nth-of-type(1)",
+            "text": "Apple Watch app",
+            "fontPx": 16,
+            "time": 22.918,
+            "seconds": 2.244
+          },
+          {
+            "selector": "#s03-r1 > div:nth-of-type(2) > div:nth-of-type(1)",
+            "text": "Weekly streak reminders",
+            "fontPx": 16,
+            "time": 22.918,
+            "seconds": 2.244
+          },
+          {
+            "selector": "#s03-r2 > div:nth-of-type(2) > div:nth-of-type(1)",
+            "text": "Export to CSV",
+            "fontPx": 16,
+            "time": 22.918,
+            "seconds": 2.244
+          },
+          {
+            "selector": "#s03-r3 > div:nth-of-type(2) > div:nth-of-type(1)",
+            "text": "Custom habit icons",
+            "fontPx": 16,
+            "time": 22.918,
+            "seconds": 2.244
+          },
+          {
+            "selector": "#s03-req",
+            "text": "Request a feature",
+            "fontPx": 17.17,
+            "time": 20.194,
+            "seconds": 4.968
+          },
+          {
+            "selector": "#s03-sheet > div:nth-of-type(2) > div:nth-of-type(1)",
+            "text": "Feature requests",
+            "fontPx": 24,
+            "time": 22.918,
+            "seconds": 2.244
+          }
+        ]
+      },
+      {
+        "code": "text_below_floor",
+        "severity": "warning",
+        "message": "Type floor is 28 px (2.6% of the 1080 px short side, what a phone can read) and 38 text elements stay under it for 0.5 s or more, the smallest \"H\" at 10 px: set reading text to at least 28 px, or put data-layout-ignore on text that is texture rather than reading; see references/look.md.",
+        "text": "H",
+        "selector": "#s04-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(4) > span:nth-of-type(1)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s04.html",
+        "bbox": {
+          "x": 80.59,
+          "y": 358.63,
+          "width": 7.39,
+          "height": 13.1
+        },
+        "time": 25.482,
+        "times": [
+          25.482,
+          25.482,
+          25.482,
+          25.482,
+          25.482,
+          25.482,
+          25.482,
+          25.482,
+          25.482,
+          25.482,
+          25.482,
+          25.482,
+          25.482,
+          25.482,
+          25.482,
+          25.482,
+          25.482,
+          25.482,
+          27.726,
+          27.726,
+          27.726,
+          27.726,
+          27.726,
+          27.726,
+          27.726,
+          27.726,
+          28.848,
+          29.97,
+          29.97,
+          30.29,
+          30.29,
+          31.412,
+          31.412,
+          32.374,
+          32.374,
+          32.374,
+          32.374,
+          33.175
+        ],
+        "fontPx": 10,
+        "floorPx": 28,
+        "seconds": 8.494,
+        "elements": [
+          {
+            "selector": "#s04-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(4) > span:nth-of-type(1)",
+            "text": "H",
+            "fontPx": 10,
+            "time": 25.482,
+            "seconds": 8.494
+          },
+          {
+            "selector": "#s04-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(4) > span:nth-of-type(2)",
+            "text": "0",
+            "fontPx": 12,
+            "time": 25.482,
+            "seconds": 8.494
+          },
+          {
+            "selector": "#s04-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(10) > span:nth-of-type(1)",
+            "text": "Free",
+            "fontPx": 12,
+            "time": 25.482,
+            "seconds": 8.494
+          },
+          {
+            "selector": "#s04-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(3) > span:nth-of-type(1)",
+            "text": "Apps",
+            "fontPx": 12.5,
+            "time": 25.482,
+            "seconds": 8.494
+          },
+          {
+            "selector": "#s04-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(5) > span:nth-of-type(1)",
+            "text": "Resources ⌄",
+            "fontPx": 12.5,
+            "time": 25.482,
+            "seconds": 8.494
+          },
+          {
+            "selector": "#s04-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(11) > span:nth-of-type(2) > span:nth-of-type(1)",
+            "text": "alex@habit.app",
+            "fontPx": 12.5,
+            "time": 25.482,
+            "seconds": 8.494
+          },
+          {
+            "selector": "#s04-win > div:nth-of-type(1) > span:nth-of-type(4)",
+            "text": "fewchurs.com/dashboard",
+            "fontPx": 13,
+            "time": 25.482,
+            "seconds": 8.494
+          },
+          {
+            "selector": "#s04-form > div:nth-of-type(9)",
+            "text": "Pick every place your app runs.",
+            "fontPx": 14,
+            "time": 27.726,
+            "seconds": 6.25
+          },
+          {
+            "selector": "#s04-f1 > div:nth-of-type(2)",
+            "text": "com.habit.app",
+            "fontPx": 14,
+            "time": 29.97,
+            "seconds": 4.006
+          },
+          {
+            "selector": "#s04-f2 > div:nth-of-type(2)",
+            "text": "com.habit.app",
+            "fontPx": 14,
+            "time": 30.29,
+            "seconds": 3.686
+          },
+          {
+            "selector": "#s04-f3 > div:nth-of-type(2)",
+            "text": "habit.app",
+            "fontPx": 14,
+            "time": 31.412,
+            "seconds": 2.564
+          },
+          {
+            "selector": "#s04-form > div:nth-of-type(3)",
+            "text": "App name",
+            "fontPx": 14.5,
+            "time": 27.726,
+            "seconds": 6.25
+          },
+          {
+            "selector": "#s04-form > div:nth-of-type(5)",
+            "text": "Platforms",
+            "fontPx": 14.5,
+            "time": 27.726,
+            "seconds": 6.25
+          },
+          {
+            "selector": "#s04-f1 > div:nth-of-type(1)",
+            "text": "iOS Bundle ID",
+            "fontPx": 14.5,
+            "time": 29.97,
+            "seconds": 4.006
+          },
+          {
+            "selector": "#s04-f2 > div:nth-of-type(1)",
+            "text": "Android package",
+            "fontPx": 14.5,
+            "time": 30.29,
+            "seconds": 3.686
+          },
+          {
+            "selector": "#s04-f3 > div:nth-of-type(1)",
+            "text": "Website domain",
+            "fontPx": 14.5,
+            "time": 31.412,
+            "seconds": 2.564
+          },
+          {
+            "selector": "#s04-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(2)",
+            "text": "Dashboard",
+            "fontPx": 15,
+            "time": 25.482,
+            "seconds": 8.494
+          },
+          {
+            "selector": "#s04-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(4)",
+            "text": "Habit Tracker",
+            "fontPx": 15,
+            "time": 25.482,
+            "seconds": 8.494
+          },
+          {
+            "selector": "#s04-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(6)",
+            "text": "Docs",
+            "fontPx": 15,
+            "time": 25.482,
+            "seconds": 8.494
+          },
+          {
+            "selector": "#s04-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(7)",
+            "text": "API reference",
+            "fontPx": 15,
+            "time": 25.482,
+            "seconds": 8.494
+          },
+          {
+            "selector": "#s04-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(8)",
+            "text": "Pricing",
+            "fontPx": 15,
+            "time": 25.482,
+            "seconds": 8.494
+          },
+          {
+            "selector": "#s04-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(10)",
+            "text": "Upgrade",
+            "fontPx": 15,
+            "time": 25.482,
+            "seconds": 8.494
+          },
+          {
+            "selector": "#s04-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(11) > span:nth-of-type(1)",
+            "text": "A",
+            "fontPx": 15,
+            "time": 25.482,
+            "seconds": 8.494
+          },
+          {
+            "selector": "#s04-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(11) > span:nth-of-type(2) > b:nth-of-type(1)",
+            "text": "Alex",
+            "fontPx": 15,
+            "time": 25.482,
+            "seconds": 8.494
+          },
+          {
+            "selector": "#s04-ios",
+            "text": "iOS",
+            "fontPx": 15.36,
+            "time": 27.726,
+            "seconds": 6.25
+          },
+          {
+            "selector": "#s04-web",
+            "text": "Web",
+            "fontPx": 15.4,
+            "time": 27.726,
+            "seconds": 6.25
+          },
+          {
+            "selector": "#s04-and",
+            "text": "Android",
+            "fontPx": 15.6,
+            "time": 27.726,
+            "seconds": 6.25
+          },
+          {
+            "selector": "#s04-dialog > div:nth-of-type(2)",
+            "text": "Copy it now and add it to your app.",
+            "fontPx": 15.91,
+            "time": 32.374,
+            "seconds": 1.602
+          },
+          {
+            "selector": "#s04-toast",
+            "text": "Copied",
+            "fontPx": 15.94,
+            "time": 33.175,
+            "seconds": 0.801
+          },
+          {
+            "selector": "#s04-ctext",
+            "text": "Create app",
+            "fontPx": 15.99,
+            "time": 27.726,
+            "seconds": 6.25
+          },
+          {
+            "selector": "#s04-empty > div:nth-of-type(2)",
+            "text": "You don't have any apps yet.",
+            "fontPx": 16,
+            "time": 25.482,
+            "seconds": 2.244
+          },
+          {
+            "selector": "#s04-form > div:nth-of-type(2)",
+            "text": "Takes about 30 seconds. You'll get an API key at the end.",
+            "fontPx": 16,
+            "time": 27.726,
+            "seconds": 6.25
+          },
+          {
+            "selector": "#s04-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1)",
+            "text": "Fewchurs",
+            "fontPx": 16.5,
+            "time": 25.482,
+            "seconds": 8.494
+          },
+          {
+            "selector": "#s04-new",
+            "text": "New app",
+            "fontPx": 16.7,
+            "time": 25.482,
+            "seconds": 2.244
+          },
+          {
+            "selector": "code.mono",
+            "text": "fr_live_8kQ2…x9Tm",
+            "fontPx": 16.9,
+            "time": 32.374,
+            "seconds": 1.602
+          },
+          {
+            "selector": "span.btn",
+            "text": "Done",
+            "fontPx": 16.9,
+            "time": 32.374,
+            "seconds": 1.602
+          },
+          {
+            "selector": "#s04-nametext",
+            "text": "Habi",
+            "fontPx": 17,
+            "time": 28.848,
+            "seconds": 5.128
+          },
+          {
+            "selector": "#s04-dialog > div:nth-of-type(1)",
+            "text": "Your API key",
+            "fontPx": 23.86,
+            "time": 32.374,
+            "seconds": 1.602
+          }
+        ]
+      },
+      {
+        "code": "text_below_floor",
+        "severity": "warning",
+        "message": "Type floor is 28 px (2.6% of the 1080 px short side, what a phone can read) and 28 text elements stay under it for 0.5 s or more, the smallest \"lib/main.dart\" at 14 px: set reading text to at least 28 px, or put data-layout-ignore on text that is texture rather than reading; see references/look.md.",
+        "text": "lib/main.dart",
+        "selector": "span.mono",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s05.html",
+        "bbox": {
+          "x": 942.31,
+          "y": 221,
+          "width": 109.21,
+          "height": 18
+        },
+        "time": 34.297,
+        "times": [
+          34.297,
+          34.297,
+          34.297,
+          34.297,
+          34.297,
+          34.297,
+          34.297,
+          35.419,
+          35.419,
+          35.419,
+          35.579,
+          35.74,
+          35.74,
+          35.74,
+          35.9,
+          35.9,
+          35.9,
+          36.22,
+          36.22,
+          36.22,
+          36.381,
+          36.541,
+          36.701,
+          36.701,
+          37.022,
+          37.022,
+          43.112,
+          43.112
+        ],
+        "fontPx": 14,
+        "floorPx": 28,
+        "seconds": 9.936,
+        "elements": [
+          {
+            "selector": "span.mono",
+            "text": "lib/main.dart",
+            "fontPx": 14,
+            "time": 34.297,
+            "seconds": 9.936
+          },
+          {
+            "selector": "#s05-t0",
+            "text": "SwiftUI",
+            "fontPx": 16,
+            "time": 34.297,
+            "seconds": 9.936
+          },
+          {
+            "selector": "#s05-t1",
+            "text": "Kotlin",
+            "fontPx": 16,
+            "time": 34.297,
+            "seconds": 9.936
+          },
+          {
+            "selector": "#s05-t2",
+            "text": "Flutter",
+            "fontPx": 16,
+            "time": 34.297,
+            "seconds": 9.936
+          },
+          {
+            "selector": "#s05-t3",
+            "text": "React",
+            "fontPx": 16,
+            "time": 34.297,
+            "seconds": 9.936
+          },
+          {
+            "selector": "#s05-t4",
+            "text": "Next.js",
+            "fontPx": 16,
+            "time": 34.297,
+            "seconds": 9.936
+          },
+          {
+            "selector": "#s05-t5",
+            "text": "Laravel",
+            "fontPx": 16,
+            "time": 34.297,
+            "seconds": 9.936
+          },
+          {
+            "selector": "#s05-ok > span:nth-of-type(3)",
+            "text": "Habit Tracker · just now",
+            "fontPx": 17.7,
+            "time": 43.112,
+            "seconds": 1.121
+          },
+          {
+            "selector": "#s05-ed > div:nth-of-type(2) > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "1",
+            "fontPx": 21,
+            "time": 35.419,
+            "seconds": 8.814
+          },
+          {
+            "selector": "#s05-ed > div:nth-of-type(2) > div:nth-of-type(1) > span:nth-of-type(2)",
+            "text": "import",
+            "fontPx": 21,
+            "time": 35.419,
+            "seconds": 8.814
+          },
+          {
+            "selector": "div.s05-cl > span:nth-of-type(3)",
+            "text": "'package:fewchurs/fewchurs.dart'",
+            "fontPx": 21,
+            "time": 35.419,
+            "seconds": 8.814
+          },
+          {
+            "selector": "#s05-ed > div:nth-of-type(2) > div:nth-of-type(2) > span:nth-of-type(1)",
+            "text": "2",
+            "fontPx": 21,
+            "time": 35.579,
+            "seconds": 8.654
+          },
+          {
+            "selector": "#s05-ed > div:nth-of-type(2) > div:nth-of-type(3)",
+            "text": "main() {",
+            "fontPx": 21,
+            "time": 35.74,
+            "seconds": 8.493
+          },
+          {
+            "selector": "#s05-ed > div:nth-of-type(2) > div:nth-of-type(3) > span:nth-of-type(1)",
+            "text": "3",
+            "fontPx": 21,
+            "time": 35.74,
+            "seconds": 8.493
+          },
+          {
+            "selector": "#s05-ed > div:nth-of-type(2) > div:nth-of-type(3) > span:nth-of-type(2)",
+            "text": "void",
+            "fontPx": 21,
+            "time": 35.74,
+            "seconds": 8.493
+          },
+          {
+            "selector": "#s05-ed > div:nth-of-type(2) > div:nth-of-type(4)",
+            "text": "Fewchurs.configure(apiKey: );",
+            "fontPx": 21,
+            "time": 35.9,
+            "seconds": 8.333
+          },
+          {
+            "selector": "#s05-ed > div:nth-of-type(2) > div:nth-of-type(4) > span:nth-of-type(1)",
+            "text": "4",
+            "fontPx": 21,
+            "time": 35.9,
+            "seconds": 8.333
+          },
+          {
+            "selector": "#s05-ed > div:nth-of-type(2) > div:nth-of-type(4) > span:nth-of-type(2)",
+            "text": "'fr_live_xxx'",
+            "fontPx": 21,
+            "time": 35.9,
+            "seconds": 8.333
+          },
+          {
+            "selector": "#s05-ed > div:nth-of-type(2) > div:nth-of-type(5)",
+            "text": "runApp( MyApp());",
+            "fontPx": 21,
+            "time": 36.22,
+            "seconds": 8.013
+          },
+          {
+            "selector": "#s05-ed > div:nth-of-type(2) > div:nth-of-type(5) > span:nth-of-type(1)",
+            "text": "5",
+            "fontPx": 21,
+            "time": 36.22,
+            "seconds": 8.013
+          },
+          {
+            "selector": "#s05-ed > div:nth-of-type(2) > div:nth-of-type(5) > span:nth-of-type(2)",
+            "text": "const",
+            "fontPx": 21,
+            "time": 36.22,
+            "seconds": 8.013
+          },
+          {
+            "selector": "#s05-ed > div:nth-of-type(2) > div:nth-of-type(6) > span:nth-of-type(1)",
+            "text": "6",
+            "fontPx": 21,
+            "time": 36.381,
+            "seconds": 7.852
+          },
+          {
+            "selector": "#s05-ed > div:nth-of-type(2) > div:nth-of-type(7) > span:nth-of-type(1)",
+            "text": "7",
+            "fontPx": 21,
+            "time": 36.541,
+            "seconds": 7.692
+          },
+          {
+            "selector": "#s05-ed > div:nth-of-type(2) > div:nth-of-type(8) > span:nth-of-type(1)",
+            "text": "8",
+            "fontPx": 21,
+            "time": 36.701,
+            "seconds": 7.532
+          },
+          {
+            "selector": "#s05-ed > div:nth-of-type(2) > div:nth-of-type(8) > span:nth-of-type(2)",
+            "text": "// Anywhere in your app",
+            "fontPx": 21,
+            "time": 36.701,
+            "seconds": 7.532
+          },
+          {
+            "selector": "#s05-ed > div:nth-of-type(2) > div:nth-of-type(9)",
+            "text": "Fewchurs.showBoard(context);",
+            "fontPx": 21,
+            "time": 37.022,
+            "seconds": 7.211
+          },
+          {
+            "selector": "#s05-ed > div:nth-of-type(2) > div:nth-of-type(9) > span:nth-of-type(1)",
+            "text": "9",
+            "fontPx": 21,
+            "time": 37.022,
+            "seconds": 7.211
+          },
+          {
+            "selector": "#s05-ok > span:nth-of-type(2)",
+            "text": "SDK connected",
+            "fontPx": 23.6,
+            "time": 43.112,
+            "seconds": 1.121
+          }
+        ]
+      },
+      {
+        "code": "text_below_floor",
+        "severity": "warning",
+        "message": "Type floor is 28 px (2.6% of the 1080 px short side, what a phone can read) and 17 text elements stay under it for 0.5 s or more, the smallest \"Powered by Fewchurs\" at 12 px: set reading text to at least 28 px, or put data-layout-ignore on text that is texture rather than reading; see references/look.md.",
+        "text": "Powered by Fewchurs",
+        "selector": "#s06-form > div:nth-of-type(2) > div:nth-of-type(9)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s06.html",
+        "bbox": {
+          "x": 610.51,
+          "y": 742,
+          "width": 150.78,
+          "height": 15
+        },
+        "time": 46.157,
+        "times": [
+          44.554,
+          44.554,
+          44.554,
+          44.554,
+          44.554,
+          44.554,
+          46.157,
+          46.157,
+          46.157,
+          46.157,
+          46.157,
+          46.157,
+          46.157,
+          46.157,
+          48.401,
+          49.202,
+          50.965
+        ],
+        "fontPx": 12,
+        "floorPx": 28,
+        "seconds": 5.93,
+        "elements": [
+          {
+            "selector": "#s06-form > div:nth-of-type(2) > div:nth-of-type(9)",
+            "text": "Powered by Fewchurs",
+            "fontPx": 12,
+            "time": 46.157,
+            "seconds": 5.93
+          },
+          {
+            "selector": "#s06-home > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "9:41",
+            "fontPx": 13.54,
+            "time": 44.554,
+            "seconds": 7.533
+          },
+          {
+            "selector": "#s06-form > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "9:41",
+            "fontPx": 14,
+            "time": 46.157,
+            "seconds": 5.93
+          },
+          {
+            "selector": "#s06-form > div:nth-of-type(2) > div:nth-of-type(2)",
+            "text": "Title",
+            "fontPx": 14.5,
+            "time": 46.157,
+            "seconds": 5.93
+          },
+          {
+            "selector": "#s06-form > div:nth-of-type(2) > div:nth-of-type(4)",
+            "text": "Description (optional)",
+            "fontPx": 14.5,
+            "time": 46.157,
+            "seconds": 5.93
+          },
+          {
+            "selector": "#s06-form > div:nth-of-type(2) > div:nth-of-type(6)",
+            "text": "Email (optional)",
+            "fontPx": 14.5,
+            "time": 46.157,
+            "seconds": 5.93
+          },
+          {
+            "selector": "#s06-home > div:nth-of-type(2) > div:nth-of-type(2)",
+            "text": "Good morning, Sam",
+            "fontPx": 14.51,
+            "time": 44.554,
+            "seconds": 7.533
+          },
+          {
+            "selector": "#s06-form > div:nth-of-type(2) > div:nth-of-type(7)",
+            "text": "Get notified when this ships",
+            "fontPx": 15,
+            "time": 46.157,
+            "seconds": 5.93
+          },
+          {
+            "selector": "#s06-home > div:nth-of-type(2) > div:nth-of-type(3)",
+            "text": "Morning run",
+            "fontPx": 15.47,
+            "time": 44.554,
+            "seconds": 7.533
+          },
+          {
+            "selector": "#s06-home > div:nth-of-type(2) > div:nth-of-type(4)",
+            "text": "Read 20 pages",
+            "fontPx": 15.47,
+            "time": 44.554,
+            "seconds": 7.533
+          },
+          {
+            "selector": "#s06-home > div:nth-of-type(2) > div:nth-of-type(5)",
+            "text": "Drink water",
+            "fontPx": 15.47,
+            "time": 44.554,
+            "seconds": 7.533
+          },
+          {
+            "selector": "#s06-dt",
+            "text": "My e",
+            "fontPx": 16,
+            "time": 49.202,
+            "seconds": 2.885
+          },
+          {
+            "selector": "#s06-toast",
+            "text": "Request sent. Thank you!",
+            "fontPx": 16,
+            "time": 50.965,
+            "seconds": 1.122
+          },
+          {
+            "selector": "#s06-tt",
+            "text": "D",
+            "fontPx": 17,
+            "time": 48.401,
+            "seconds": 3.686
+          },
+          {
+            "selector": "#s06-req",
+            "text": "Request a feature",
+            "fontPx": 17.05,
+            "time": 44.554,
+            "seconds": 7.533
+          },
+          {
+            "selector": "#s06-submit",
+            "text": "Submit",
+            "fontPx": 17.54,
+            "time": 46.157,
+            "seconds": 5.93
+          },
+          {
+            "selector": "#s06-form > div:nth-of-type(2) > div:nth-of-type(1) > span:nth-of-type(2)",
+            "text": "Request a feature",
+            "fontPx": 18,
+            "time": 46.157,
+            "seconds": 5.93
+          }
+        ]
+      },
+      {
+        "code": "text_below_floor",
+        "severity": "warning",
+        "message": "Type floor is 28 px (2.6% of the 1080 px short side, what a phone can read) and 20 text elements stay under it for 0.5 s or more, the smallest \"New\" at 10 px: set reading text to at least 28 px, or put data-layout-ignore on text that is texture rather than reading; see references/look.md.",
+        "text": "New",
+        "selector": "#s07-r4 > div:nth-of-type(2) > div:nth-of-type(1) > span:nth-of-type(1)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s07.html",
+        "bbox": {
+          "x": 838.31,
+          "y": 661.27,
+          "width": 22.07,
+          "height": 13
+        },
+        "time": 52.407,
+        "times": [
+          52.407,
+          52.407,
+          52.407,
+          52.407,
+          52.407,
+          52.407,
+          52.407,
+          52.407,
+          52.407,
+          52.407,
+          52.407,
+          52.407,
+          52.407,
+          52.407,
+          52.407,
+          52.407,
+          52.407,
+          52.407,
+          52.407,
+          57.215
+        ],
+        "fontPx": 10,
+        "floorPx": 28,
+        "seconds": 7.693,
+        "elements": [
+          {
+            "selector": "#s07-r4 > div:nth-of-type(2) > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "New",
+            "fontPx": 10,
+            "time": 52.407,
+            "seconds": 7.693
+          },
+          {
+            "selector": "#s07-r0 > div:nth-of-type(2) > div:nth-of-type(2)",
+            "text": "Check off habits from my wrist",
+            "fontPx": 13,
+            "time": 52.407,
+            "seconds": 7.693
+          },
+          {
+            "selector": "#s07-r1 > div:nth-of-type(2) > div:nth-of-type(2)",
+            "text": "A nudge on Sunday evening",
+            "fontPx": 13,
+            "time": 52.407,
+            "seconds": 7.693
+          },
+          {
+            "selector": "#s07-r2 > div:nth-of-type(2) > div:nth-of-type(2)",
+            "text": "Back up my history",
+            "fontPx": 13,
+            "time": 52.407,
+            "seconds": 7.693
+          },
+          {
+            "selector": "#s07-r3 > div:nth-of-type(2) > div:nth-of-type(2)",
+            "text": "Pick an emoji per habit",
+            "fontPx": 13,
+            "time": 52.407,
+            "seconds": 7.693
+          },
+          {
+            "selector": "#s07-r4 > div:nth-of-type(2) > div:nth-of-type(2)",
+            "text": "Easier on the eyes at night",
+            "fontPx": 13,
+            "time": 52.407,
+            "seconds": 7.693
+          },
+          {
+            "selector": "#s07-phone > div:nth-of-type(1) > div:nth-of-type(2) > span:nth-of-type(1)",
+            "text": "9:41",
+            "fontPx": 14,
+            "time": 52.407,
+            "seconds": 7.693
+          },
+          {
+            "selector": "#s07-phone > div:nth-of-type(1) > div:nth-of-type(3) > div:nth-of-type(2)",
+            "text": "Vote for what you want next",
+            "fontPx": 14,
+            "time": 52.407,
+            "seconds": 7.693
+          },
+          {
+            "selector": "#s07-c0",
+            "text": "84",
+            "fontPx": 14,
+            "time": 52.407,
+            "seconds": 7.693
+          },
+          {
+            "selector": "#s07-c1",
+            "text": "48",
+            "fontPx": 14,
+            "time": 52.407,
+            "seconds": 7.693
+          },
+          {
+            "selector": "#s07-c2",
+            "text": "23",
+            "fontPx": 14,
+            "time": 52.407,
+            "seconds": 7.693
+          },
+          {
+            "selector": "#s07-c3",
+            "text": "12",
+            "fontPx": 14,
+            "time": 52.407,
+            "seconds": 7.693
+          },
+          {
+            "selector": "#s07-c4",
+            "text": "1",
+            "fontPx": 14,
+            "time": 52.407,
+            "seconds": 7.693
+          },
+          {
+            "selector": "#s07-r0 > div:nth-of-type(2) > div:nth-of-type(1)",
+            "text": "Apple Watch app",
+            "fontPx": 16,
+            "time": 52.407,
+            "seconds": 7.693
+          },
+          {
+            "selector": "#s07-r1 > div:nth-of-type(2) > div:nth-of-type(1)",
+            "text": "Weekly streak reminders",
+            "fontPx": 16,
+            "time": 52.407,
+            "seconds": 7.693
+          },
+          {
+            "selector": "#s07-r2 > div:nth-of-type(2) > div:nth-of-type(1)",
+            "text": "Export to CSV",
+            "fontPx": 16,
+            "time": 52.407,
+            "seconds": 7.693
+          },
+          {
+            "selector": "#s07-r3 > div:nth-of-type(2) > div:nth-of-type(1)",
+            "text": "Custom habit icons",
+            "fontPx": 16,
+            "time": 52.407,
+            "seconds": 7.693
+          },
+          {
+            "selector": "#s07-r4 > div:nth-of-type(2) > div:nth-of-type(1)",
+            "text": "Dark mode",
+            "fontPx": 16,
+            "time": 52.407,
+            "seconds": 7.693
+          },
+          {
+            "selector": "#s07-sheet > div:nth-of-type(1)",
+            "text": "roadmap_final_v3.xlsx",
+            "fontPx": 17,
+            "time": 57.215,
+            "seconds": 1.442
+          },
+          {
+            "selector": "#s07-phone > div:nth-of-type(1) > div:nth-of-type(3) > div:nth-of-type(1)",
+            "text": "Feature requests",
+            "fontPx": 24,
+            "time": 52.407,
+            "seconds": 7.693
+          }
+        ]
+      },
+      {
+        "code": "line_unread",
+        "severity": "warning",
+        "message": "\"Maybe users want themes?\" (4 words) is on screen 1.00 s (±0.01 s), under its 1.27 s floor: hold it about 0.5 s + 0.3 s a word (1.70 s here) before it leaves or changes; see references/motion.md.",
+        "text": "Maybe users want themes?",
+        "selector": "#s07-note",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s07.html",
+        "bbox": {
+          "x": 117.56,
+          "y": 642.24,
+          "width": 210.81,
+          "height": 72.85000000000002
+        },
+        "time": 58.507,
+        "words": 4,
+        "seconds": 1.002,
+        "floorSeconds": 1.275,
+        "measured": [
+          {
+            "time": 58.177,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 58.337,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 58.497,
+            "opacity": 0.25,
+            "heightPx": 100
+          },
+          {
+            "time": 58.658,
+            "opacity": 1,
+            "heightPx": 73
+          },
+          {
+            "time": 58.818,
+            "opacity": 1,
+            "heightPx": 73
+          },
+          {
+            "time": 58.978,
+            "opacity": 1,
+            "heightPx": 74
+          },
+          {
+            "time": 59.139,
+            "opacity": 1,
+            "heightPx": 74
+          },
+          {
+            "time": 59.299,
+            "opacity": 0.99,
+            "heightPx": 75
+          },
+          {
+            "time": 59.459,
+            "opacity": 0.71,
+            "heightPx": 109
+          },
+          {
+            "time": 59.619,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 59.78,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 59.94,
+            "opacity": null,
+            "heightPx": null
+          }
+        ]
+      },
+      {
+        "code": "text_below_floor",
+        "severity": "warning",
+        "message": "Type floor is 28 px (2.6% of the 1080 px short side, what a phone can read) and 50 text elements stay under it for 0.5 s or more, the smallest \"H\" at 10 px: set reading text to at least 28 px, or put data-layout-ignore on text that is texture rather than reading; see references/look.md.",
+        "text": "H",
+        "selector": "#s08-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(4) > span:nth-of-type(1)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s08.html",
+        "bbox": {
+          "x": 78.13,
+          "y": 357.73,
+          "width": 7.42,
+          "height": 13.17
+        },
+        "time": 60.421,
+        "times": [
+          60.421,
+          60.421,
+          60.421,
+          60.421,
+          60.421,
+          60.421,
+          60.421,
+          60.421,
+          60.421,
+          60.421,
+          60.421,
+          60.421,
+          60.421,
+          60.421,
+          60.421,
+          60.421,
+          60.421,
+          60.421,
+          60.421,
+          61.863,
+          61.863,
+          61.863,
+          61.863,
+          61.863,
+          61.863,
+          61.863,
+          61.863,
+          61.863,
+          61.863,
+          61.863,
+          61.863,
+          61.863,
+          62.023,
+          62.023,
+          62.023,
+          62.023,
+          62.023,
+          62.023,
+          62.184,
+          62.184,
+          62.184,
+          62.184,
+          62.184,
+          62.184,
+          62.184,
+          62.184,
+          62.184,
+          62.184,
+          62.184,
+          62.184
+        ],
+        "fontPx": 10,
+        "floorPx": 28,
+        "seconds": 8.013,
+        "elements": [
+          {
+            "selector": "#s08-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(4) > span:nth-of-type(1)",
+            "text": "H",
+            "fontPx": 10,
+            "time": 60.421,
+            "seconds": 8.013
+          },
+          {
+            "selector": "#s08-row0 > div:nth-of-type(2) > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "New",
+            "fontPx": 10,
+            "time": 61.863,
+            "seconds": 6.571
+          },
+          {
+            "selector": "#s08-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(4) > span:nth-of-type(2)",
+            "text": "3",
+            "fontPx": 12,
+            "time": 60.421,
+            "seconds": 8.013
+          },
+          {
+            "selector": "#s08-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(10) > span:nth-of-type(1)",
+            "text": "Free",
+            "fontPx": 12,
+            "time": 60.421,
+            "seconds": 8.013
+          },
+          {
+            "selector": "#s08-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(3) > span:nth-of-type(1)",
+            "text": "Apps",
+            "fontPx": 12.5,
+            "time": 60.421,
+            "seconds": 8.013
+          },
+          {
+            "selector": "#s08-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(5) > span:nth-of-type(1)",
+            "text": "Resources ⌄",
+            "fontPx": 12.5,
+            "time": 60.421,
+            "seconds": 8.013
+          },
+          {
+            "selector": "#s08-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(11) > span:nth-of-type(2) > span:nth-of-type(1)",
+            "text": "alex@habit.app",
+            "fontPx": 12.5,
+            "time": 60.421,
+            "seconds": 8.013
+          },
+          {
+            "selector": "#s08-win > div:nth-of-type(1) > span:nth-of-type(4)",
+            "text": "fewchurs.com/dashboard",
+            "fontPx": 13,
+            "time": 60.421,
+            "seconds": 8.013
+          },
+          {
+            "selector": "#s08-row0 > div:nth-of-type(2) > div:nth-of-type(3) > span:nth-of-type(1)",
+            "text": "14 comments",
+            "fontPx": 13,
+            "time": 61.863,
+            "seconds": 6.571
+          },
+          {
+            "selector": "#s08-row0 > div:nth-of-type(2) > div:nth-of-type(3) > span:nth-of-type(2)",
+            "text": "42 following",
+            "fontPx": 13,
+            "time": 61.863,
+            "seconds": 6.571
+          },
+          {
+            "selector": "#s08-row1 > div:nth-of-type(2) > div:nth-of-type(3) > span:nth-of-type(1)",
+            "text": "9 comments",
+            "fontPx": 13,
+            "time": 61.863,
+            "seconds": 6.571
+          },
+          {
+            "selector": "#s08-row1 > div:nth-of-type(2) > div:nth-of-type(3) > span:nth-of-type(2)",
+            "text": "30 following",
+            "fontPx": 13,
+            "time": 61.863,
+            "seconds": 6.571
+          },
+          {
+            "selector": "#s08-row2 > div:nth-of-type(2) > div:nth-of-type(3) > span:nth-of-type(1)",
+            "text": "5 comments",
+            "fontPx": 13,
+            "time": 62.023,
+            "seconds": 6.411
+          },
+          {
+            "selector": "#s08-row2 > div:nth-of-type(2) > div:nth-of-type(3) > span:nth-of-type(2)",
+            "text": "16 following",
+            "fontPx": 13,
+            "time": 62.023,
+            "seconds": 6.411
+          },
+          {
+            "selector": "#s08-row3 > div:nth-of-type(2) > div:nth-of-type(3) > span:nth-of-type(1)",
+            "text": "2 comments",
+            "fontPx": 13,
+            "time": 62.184,
+            "seconds": 6.25
+          },
+          {
+            "selector": "#s08-row3 > div:nth-of-type(2) > div:nth-of-type(3) > span:nth-of-type(2)",
+            "text": "8 following",
+            "fontPx": 13,
+            "time": 62.184,
+            "seconds": 6.25
+          },
+          {
+            "selector": "#s08-row4 > div:nth-of-type(2) > div:nth-of-type(3) > span:nth-of-type(1)",
+            "text": "1 comments",
+            "fontPx": 13,
+            "time": 62.184,
+            "seconds": 6.25
+          },
+          {
+            "selector": "#s08-row4 > div:nth-of-type(2) > div:nth-of-type(3) > span:nth-of-type(2)",
+            "text": "4 following",
+            "fontPx": 13,
+            "time": 62.184,
+            "seconds": 6.25
+          },
+          {
+            "selector": "#s08-row0 > div:nth-of-type(1) > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "127",
+            "fontPx": 14,
+            "time": 61.863,
+            "seconds": 6.571
+          },
+          {
+            "selector": "#s08-row1 > div:nth-of-type(1) > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "89",
+            "fontPx": 14,
+            "time": 61.863,
+            "seconds": 6.571
+          },
+          {
+            "selector": "#s08-row2 > div:nth-of-type(1) > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "51",
+            "fontPx": 14,
+            "time": 62.023,
+            "seconds": 6.411
+          },
+          {
+            "selector": "#s08-row3 > div:nth-of-type(1) > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "24",
+            "fontPx": 14,
+            "time": 62.184,
+            "seconds": 6.25
+          },
+          {
+            "selector": "#s08-row4 > div:nth-of-type(1) > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "12",
+            "fontPx": 14,
+            "time": 62.184,
+            "seconds": 6.25
+          },
+          {
+            "selector": "#s08-row0 > div:nth-of-type(2) > div:nth-of-type(2)",
+            "text": "Easier on the eyes at night",
+            "fontPx": 14.5,
+            "time": 61.863,
+            "seconds": 6.571
+          },
+          {
+            "selector": "#s08-row1 > div:nth-of-type(2) > div:nth-of-type(2)",
+            "text": "Check off habits from my wrist",
+            "fontPx": 14.5,
+            "time": 61.863,
+            "seconds": 6.571
+          },
+          {
+            "selector": "#s08-row2 > div:nth-of-type(2) > div:nth-of-type(2)",
+            "text": "A nudge on Sunday evening",
+            "fontPx": 14.5,
+            "time": 62.023,
+            "seconds": 6.411
+          },
+          {
+            "selector": "#s08-row3 > div:nth-of-type(2) > div:nth-of-type(2)",
+            "text": "Back up my history",
+            "fontPx": 14.5,
+            "time": 62.184,
+            "seconds": 6.25
+          },
+          {
+            "selector": "#s08-row4 > div:nth-of-type(2) > div:nth-of-type(2)",
+            "text": "Pick an emoji per habit",
+            "fontPx": 14.5,
+            "time": 62.184,
+            "seconds": 6.25
+          },
+          {
+            "selector": "#s08-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(2)",
+            "text": "Dashboard",
+            "fontPx": 15,
+            "time": 60.421,
+            "seconds": 8.013
+          },
+          {
+            "selector": "#s08-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(4)",
+            "text": "Habit Tracker",
+            "fontPx": 15,
+            "time": 60.421,
+            "seconds": 8.013
+          },
+          {
+            "selector": "#s08-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(6)",
+            "text": "Docs",
+            "fontPx": 15,
+            "time": 60.421,
+            "seconds": 8.013
+          },
+          {
+            "selector": "#s08-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(7)",
+            "text": "API reference",
+            "fontPx": 15,
+            "time": 60.421,
+            "seconds": 8.013
+          },
+          {
+            "selector": "#s08-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(8)",
+            "text": "Pricing",
+            "fontPx": 15,
+            "time": 60.421,
+            "seconds": 8.013
+          },
+          {
+            "selector": "#s08-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(10)",
+            "text": "Upgrade",
+            "fontPx": 15,
+            "time": 60.421,
+            "seconds": 8.013
+          },
+          {
+            "selector": "#s08-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(11) > span:nth-of-type(1)",
+            "text": "A",
+            "fontPx": 15,
+            "time": 60.421,
+            "seconds": 8.013
+          },
+          {
+            "selector": "#s08-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(11) > span:nth-of-type(2) > b:nth-of-type(1)",
+            "text": "Alex",
+            "fontPx": 15,
+            "time": 60.421,
+            "seconds": 8.013
+          },
+          {
+            "selector": "#s08-win > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "⇩ Export CSV",
+            "fontPx": 15,
+            "time": 60.421,
+            "seconds": 8.013
+          },
+          {
+            "selector": "#s08-st-open",
+            "text": "Pending",
+            "fontPx": 15,
+            "time": 61.863,
+            "seconds": 6.571
+          },
+          {
+            "selector": "#s08-row1 > span:nth-of-type(1)",
+            "text": "Pending",
+            "fontPx": 15,
+            "time": 61.863,
+            "seconds": 6.571
+          },
+          {
+            "selector": "#s08-row2 > span:nth-of-type(1)",
+            "text": "Pending",
+            "fontPx": 15,
+            "time": 62.023,
+            "seconds": 6.411
+          },
+          {
+            "selector": "#s08-row3 > span:nth-of-type(1)",
+            "text": "Pending",
+            "fontPx": 15,
+            "time": 62.184,
+            "seconds": 6.25
+          },
+          {
+            "selector": "#s08-row4 > span:nth-of-type(1)",
+            "text": "Pending",
+            "fontPx": 15,
+            "time": 62.184,
+            "seconds": 6.25
+          },
+          {
+            "selector": "#s08-win > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > span:nth-of-type(1)",
+            "text": "Requests",
+            "fontPx": 15.5,
+            "time": 60.421,
+            "seconds": 8.013
+          },
+          {
+            "selector": "#s08-win > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > span:nth-of-type(2)",
+            "text": "Settings",
+            "fontPx": 15.5,
+            "time": 60.421,
+            "seconds": 8.013
+          },
+          {
+            "selector": "#s08-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1)",
+            "text": "Fewchurs",
+            "fontPx": 16.5,
+            "time": 60.421,
+            "seconds": 8.013
+          },
+          {
+            "selector": "#s08-row0 > div:nth-of-type(2) > div:nth-of-type(1)",
+            "text": "Dark mode",
+            "fontPx": 18,
+            "time": 61.863,
+            "seconds": 6.571
+          },
+          {
+            "selector": "#s08-row1 > div:nth-of-type(2) > div:nth-of-type(1)",
+            "text": "Apple Watch app",
+            "fontPx": 18,
+            "time": 61.863,
+            "seconds": 6.571
+          },
+          {
+            "selector": "#s08-row2 > div:nth-of-type(2) > div:nth-of-type(1)",
+            "text": "Weekly streak reminders",
+            "fontPx": 18,
+            "time": 62.023,
+            "seconds": 6.411
+          },
+          {
+            "selector": "#s08-row3 > div:nth-of-type(2) > div:nth-of-type(1)",
+            "text": "Export to CSV",
+            "fontPx": 18,
+            "time": 62.184,
+            "seconds": 6.25
+          },
+          {
+            "selector": "#s08-row4 > div:nth-of-type(2) > div:nth-of-type(1)",
+            "text": "Custom habit icons",
+            "fontPx": 18,
+            "time": 62.184,
+            "seconds": 6.25
+          }
+        ]
+      },
+      {
+        "code": "line_unread",
+        "severity": "warning",
+        "message": "\"Alex alex@habit.app\" (4 words) is on screen 0.53 s (±0.01 s), under its 1.27 s floor: hold it about 0.5 s + 0.3 s a word (1.70 s here) before it leaves or changes; see references/motion.md.",
+        "text": "Alex alex@habit.app",
+        "selector": "#s09-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(11) > span:nth-of-type(2)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": 120.52,
+          "y": 854.9,
+          "width": 97.95,
+          "height": 36.76999999999998
+        },
+        "time": 68.304,
+        "words": 4,
+        "seconds": 0.531,
+        "floorSeconds": 1.275,
+        "measured": [
+          {
+            "time": 67.953,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 68.114,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 68.274,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 68.434,
+            "opacity": 1,
+            "heightPx": 37
+          },
+          {
+            "time": 68.594,
+            "opacity": 1,
+            "heightPx": 37
+          },
+          {
+            "time": 68.755,
+            "opacity": 1,
+            "heightPx": 41
+          },
+          {
+            "time": 68.915,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 69.075,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 69.235,
+            "opacity": null,
+            "heightPx": null
+          }
+        ]
+      },
+      {
+        "code": "text_below_floor",
+        "severity": "warning",
+        "message": "Type floor is 28 px (2.6% of the 1080 px short side, what a phone can read) and 39 text elements stay under it for 0.5 s or more, the smallest \"New\" at 10 px: set reading text to at least 28 px, or put data-layout-ignore on text that is texture rather than reading; see references/look.md.",
+        "text": "New",
+        "selector": "#s09-row0 > div:nth-of-type(2) > div:nth-of-type(1) > span:nth-of-type(1)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s09.html",
+        "bbox": {
+          "x": 539.55,
+          "y": 359.84,
+          "width": 22.08,
+          "height": 13
+        },
+        "time": 68.434,
+        "times": [
+          68.434,
+          68.434,
+          68.434,
+          68.434,
+          68.434,
+          68.434,
+          68.434,
+          68.434,
+          68.434,
+          68.434,
+          68.434,
+          68.434,
+          68.434,
+          68.434,
+          68.434,
+          68.434,
+          68.434,
+          68.434,
+          68.434,
+          68.434,
+          68.434,
+          68.434,
+          68.434,
+          68.434,
+          68.434,
+          68.434,
+          68.434,
+          68.434,
+          68.434,
+          68.434,
+          68.434,
+          68.434,
+          68.434,
+          68.434,
+          68.434,
+          68.434,
+          68.434,
+          70.197,
+          71.159
+        ],
+        "fontPx": 10.01,
+        "floorPx": 28,
+        "seconds": 4.327,
+        "elements": [
+          {
+            "selector": "#s09-row0 > div:nth-of-type(2) > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "New",
+            "fontPx": 10.01,
+            "time": 68.434,
+            "seconds": 4.327
+          },
+          {
+            "selector": "#s09-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(4) > span:nth-of-type(2)",
+            "text": "3",
+            "fontPx": 12.01,
+            "time": 68.434,
+            "seconds": 4.327
+          },
+          {
+            "selector": "#s09-win > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(10) > span:nth-of-type(1)",
+            "text": "Free",
+            "fontPx": 12.01,
+            "time": 68.434,
+            "seconds": 0.801
+          },
+          {
+            "selector": "#s09-win > div:nth-of-type(1) > span:nth-of-type(4)",
+            "text": "fewchurs.com/dashboard",
+            "fontPx": 13.01,
+            "time": 68.434,
+            "seconds": 4.327
+          },
+          {
+            "selector": "#s09-row0 > div:nth-of-type(2) > div:nth-of-type(3) > span:nth-of-type(1)",
+            "text": "14 comments",
+            "fontPx": 13.01,
+            "time": 68.434,
+            "seconds": 4.327
+          },
+          {
+            "selector": "#s09-row0 > div:nth-of-type(2) > div:nth-of-type(3) > span:nth-of-type(2)",
+            "text": "42 following",
+            "fontPx": 13.01,
+            "time": 68.434,
+            "seconds": 4.327
+          },
+          {
+            "selector": "#s09-row1 > div:nth-of-type(2) > div:nth-of-type(3) > span:nth-of-type(1)",
+            "text": "9 comments",
+            "fontPx": 13.01,
+            "time": 68.434,
+            "seconds": 4.327
+          },
+          {
+            "selector": "#s09-row1 > div:nth-of-type(2) > div:nth-of-type(3) > span:nth-of-type(2)",
+            "text": "30 following",
+            "fontPx": 13.01,
+            "time": 68.434,
+            "seconds": 4.327
+          },
+          {
+            "selector": "#s09-row2 > div:nth-of-type(2) > div:nth-of-type(3) > span:nth-of-type(1)",
+            "text": "5 comments",
+            "fontPx": 13.01,
+            "time": 68.434,
+            "seconds": 4.327
+          },
+          {
+            "selector": "#s09-row2 > div:nth-of-type(2) > div:nth-of-type(3) > span:nth-of-type(2)",
+            "text": "16 following",
+            "fontPx": 13.01,
+            "time": 68.434,
+            "seconds": 4.327
+          },
+          {
+            "selector": "#s09-row3 > div:nth-of-type(2) > div:nth-of-type(3) > span:nth-of-type(1)",
+            "text": "2 comments",
+            "fontPx": 13.01,
+            "time": 68.434,
+            "seconds": 4.327
+          },
+          {
+            "selector": "#s09-row3 > div:nth-of-type(2) > div:nth-of-type(3) > span:nth-of-type(2)",
+            "text": "8 following",
+            "fontPx": 13.01,
+            "time": 68.434,
+            "seconds": 4.327
+          },
+          {
+            "selector": "#s09-row4 > div:nth-of-type(2) > div:nth-of-type(3) > span:nth-of-type(1)",
+            "text": "1 comments",
+            "fontPx": 13.01,
+            "time": 68.434,
+            "seconds": 0.641
+          },
+          {
+            "selector": "#s09-row4 > div:nth-of-type(2) > div:nth-of-type(3) > span:nth-of-type(2)",
+            "text": "4 following",
+            "fontPx": 13.01,
+            "time": 68.434,
+            "seconds": 0.641
+          },
+          {
+            "selector": "#s09-row0 > div:nth-of-type(1) > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "127",
+            "fontPx": 14.01,
+            "time": 68.434,
+            "seconds": 4.327
+          },
+          {
+            "selector": "#s09-row1 > div:nth-of-type(1) > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "89",
+            "fontPx": 14.01,
+            "time": 68.434,
+            "seconds": 4.327
+          },
+          {
+            "selector": "#s09-row2 > div:nth-of-type(1) > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "51",
+            "fontPx": 14.01,
+            "time": 68.434,
+            "seconds": 4.327
+          },
+          {
+            "selector": "#s09-row3 > div:nth-of-type(1) > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "24",
+            "fontPx": 14.01,
+            "time": 68.434,
+            "seconds": 4.327
+          },
+          {
+            "selector": "#s09-row4 > div:nth-of-type(1) > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "12",
+            "fontPx": 14.01,
+            "time": 68.434,
+            "seconds": 4.327
+          },
+          {
+            "selector": "#s09-row0 > div:nth-of-type(2) > div:nth-of-type(2)",
+            "text": "Easier on the eyes at night",
+            "fontPx": 14.51,
+            "time": 68.434,
+            "seconds": 4.327
+          },
+          {
+            "selector": "#s09-row1 > div:nth-of-type(2) > div:nth-of-type(2)",
+            "text": "Check off habits from my wrist",
+            "fontPx": 14.51,
+            "time": 68.434,
+            "seconds": 4.327
+          },
+          {
+            "selector": "#s09-row2 > div:nth-of-type(2) > div:nth-of-type(2)",
+            "text": "A nudge on Sunday evening",
+            "fontPx": 14.51,
+            "time": 68.434,
+            "seconds": 4.327
+          },
+          {
+            "selector": "#s09-row3 > div:nth-of-type(2) > div:nth-of-type(2)",
+            "text": "Back up my history",
+            "fontPx": 14.51,
+            "time": 68.434,
+            "seconds": 4.327
+          },
+          {
+            "selector": "#s09-row4 > div:nth-of-type(2) > div:nth-of-type(2)",
+            "text": "Pick an emoji per habit",
+            "fontPx": 14.51,
+            "time": 68.434,
+            "seconds": 4.327
+          },
+          {
+            "selector": "#s09-win > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "⇩ Export CSV",
+            "fontPx": 15.01,
+            "time": 68.434,
+            "seconds": 4.327
+          },
+          {
+            "selector": "#s09-st-open",
+            "text": "Pending",
+            "fontPx": 15.01,
+            "time": 68.434,
+            "seconds": 1.763
+          },
+          {
+            "selector": "#s09-row1 > span:nth-of-type(1)",
+            "text": "Pending",
+            "fontPx": 15.01,
+            "time": 68.434,
+            "seconds": 4.327
+          },
+          {
+            "selector": "#s09-row2 > span:nth-of-type(1)",
+            "text": "Pending",
+            "fontPx": 15.01,
+            "time": 68.434,
+            "seconds": 4.327
+          },
+          {
+            "selector": "#s09-row3 > span:nth-of-type(1)",
+            "text": "Pending",
+            "fontPx": 15.01,
+            "time": 68.434,
+            "seconds": 4.327
+          },
+          {
+            "selector": "#s09-row4 > span:nth-of-type(1)",
+            "text": "Pending",
+            "fontPx": 15.01,
+            "time": 68.434,
+            "seconds": 4.327
+          },
+          {
+            "selector": "#s09-win > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > span:nth-of-type(1)",
+            "text": "Requests",
+            "fontPx": 15.51,
+            "time": 68.434,
+            "seconds": 4.327
+          },
+          {
+            "selector": "#s09-win > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > span:nth-of-type(2)",
+            "text": "Settings",
+            "fontPx": 15.51,
+            "time": 68.434,
+            "seconds": 4.327
+          },
+          {
+            "selector": "#s09-row0 > div:nth-of-type(2) > div:nth-of-type(1)",
+            "text": "Dark mode",
+            "fontPx": 18.01,
+            "time": 68.434,
+            "seconds": 4.327
+          },
+          {
+            "selector": "#s09-row1 > div:nth-of-type(2) > div:nth-of-type(1)",
+            "text": "Apple Watch app",
+            "fontPx": 18.01,
+            "time": 68.434,
+            "seconds": 4.327
+          },
+          {
+            "selector": "#s09-row2 > div:nth-of-type(2) > div:nth-of-type(1)",
+            "text": "Weekly streak reminders",
+            "fontPx": 18.01,
+            "time": 68.434,
+            "seconds": 4.327
+          },
+          {
+            "selector": "#s09-row3 > div:nth-of-type(2) > div:nth-of-type(1)",
+            "text": "Export to CSV",
+            "fontPx": 18.01,
+            "time": 68.434,
+            "seconds": 4.327
+          },
+          {
+            "selector": "#s09-row4 > div:nth-of-type(2) > div:nth-of-type(1)",
+            "text": "Custom habit icons",
+            "fontPx": 18.01,
+            "time": 68.434,
+            "seconds": 4.327
+          },
+          {
+            "selector": "#s09-st-planned",
+            "text": "Planned",
+            "fontPx": 20.66,
+            "time": 70.197,
+            "seconds": 0.961
+          },
+          {
+            "selector": "#s09-st-in_progress",
+            "text": "In progress",
+            "fontPx": 21.06,
+            "time": 71.159,
+            "seconds": 1.121
+          }
+        ]
+      },
+      {
+        "code": "text_below_floor",
+        "severity": "warning",
+        "message": "Type floor is 28 px (2.6% of the 1080 px short side, what a phone can read) and 19 text elements stay under it for 0.5 s or more, the smallest \"now\" at 13 px: set reading text to at least 28 px, or put data-layout-ignore on text that is texture rather than reading; see references/look.md.",
+        "text": "now",
+        "selector": "#s10-notif > div:nth-of-type(2) > div:nth-of-type(1)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s10.html",
+        "bbox": {
+          "x": 962.14,
+          "y": 370.63,
+          "width": 26.86,
+          "height": 16
+        },
+        "time": 73.883,
+        "times": [
+          72.922,
+          73.883,
+          73.883,
+          73.883,
+          73.883,
+          76.127,
+          76.127,
+          76.127,
+          76.127,
+          76.287,
+          76.287,
+          76.287,
+          76.447,
+          76.447,
+          77.73,
+          77.73,
+          79.012,
+          79.012,
+          79.012
+        ],
+        "fontPx": 13,
+        "floorPx": 28,
+        "seconds": 6.411,
+        "elements": [
+          {
+            "selector": "#s10-notif > div:nth-of-type(2) > div:nth-of-type(1)",
+            "text": "now",
+            "fontPx": 13,
+            "time": 73.883,
+            "seconds": 6.411
+          },
+          {
+            "selector": "#s10-c",
+            "text": "89",
+            "fontPx": 13.76,
+            "time": 79.012,
+            "seconds": 1.282
+          },
+          {
+            "selector": "#s10-notif > div:nth-of-type(2) > div:nth-of-type(1) > b:nth-of-type(1)",
+            "text": "Habit Tracker",
+            "fontPx": 14,
+            "time": 73.883,
+            "seconds": 6.411
+          },
+          {
+            "selector": "#s10-notif > div:nth-of-type(2) > div:nth-of-type(3)",
+            "text": "The feature you voted for just landed.",
+            "fontPx": 14,
+            "time": 73.883,
+            "seconds": 6.411
+          },
+          {
+            "selector": "#s10-again > div:nth-of-type(2) > div:nth-of-type(2)",
+            "text": "Sam just voted",
+            "fontPx": 14.5,
+            "time": 79.012,
+            "seconds": 1.282
+          },
+          {
+            "selector": "#s10-fol > div:nth-of-type(1) > span:nth-of-type(7)",
+            "text": "+36",
+            "fontPx": 15,
+            "time": 76.447,
+            "seconds": 3.847
+          },
+          {
+            "selector": "#s10-reply > span:nth-of-type(1)",
+            "text": "S",
+            "fontPx": 15.42,
+            "time": 77.73,
+            "seconds": 2.564
+          },
+          {
+            "selector": "#s10-notif > div:nth-of-type(2) > div:nth-of-type(2)",
+            "text": "Shipped! Dark mode is live",
+            "fontPx": 16,
+            "time": 73.883,
+            "seconds": 6.411
+          },
+          {
+            "selector": "#s10-fol > div:nth-of-type(3)",
+            "text": "\"Dark mode\" moved to Done",
+            "fontPx": 16,
+            "time": 76.127,
+            "seconds": 4.167
+          },
+          {
+            "selector": "#s10-fol > div:nth-of-type(1) > span:nth-of-type(5)",
+            "text": "L",
+            "fontPx": 16.62,
+            "time": 76.287,
+            "seconds": 4.007
+          },
+          {
+            "selector": "#s10-fol > div:nth-of-type(1) > span:nth-of-type(2)",
+            "text": "M",
+            "fontPx": 17.56,
+            "time": 76.127,
+            "seconds": 4.167
+          },
+          {
+            "selector": "#s10-phone > div:nth-of-type(1) > div:nth-of-type(3) > div:nth-of-type(2)",
+            "text": "Thursday, 12 November",
+            "fontPx": 17.6,
+            "time": 72.922,
+            "seconds": 7.211
+          },
+          {
+            "selector": "#s10-again > div:nth-of-type(2) > div:nth-of-type(1)",
+            "text": "Apple Watch app",
+            "fontPx": 18,
+            "time": 79.012,
+            "seconds": 1.282
+          },
+          {
+            "selector": "#s10-fol > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "S",
+            "fontPx": 19,
+            "time": 76.127,
+            "seconds": 4.167
+          },
+          {
+            "selector": "#s10-fol > div:nth-of-type(1) > span:nth-of-type(3)",
+            "text": "J",
+            "fontPx": 19,
+            "time": 76.287,
+            "seconds": 4.007
+          },
+          {
+            "selector": "#s10-fol > div:nth-of-type(1) > span:nth-of-type(4)",
+            "text": "R",
+            "fontPx": 19,
+            "time": 76.287,
+            "seconds": 4.007
+          },
+          {
+            "selector": "#s10-fol > div:nth-of-type(1) > span:nth-of-type(6)",
+            "text": "K",
+            "fontPx": 19,
+            "time": 76.447,
+            "seconds": 3.847
+          },
+          {
+            "selector": "#s10-reply > div:nth-of-type(1)",
+            "text": "Finally!! You actually listened.",
+            "fontPx": 19.27,
+            "time": 77.73,
+            "seconds": 2.564
+          },
+          {
+            "selector": "#s10-fol > div:nth-of-type(2)",
+            "text": "42 followers notified",
+            "fontPx": 22,
+            "time": 76.127,
+            "seconds": 4.167
+          }
+        ]
+      },
+      {
+        "code": "text_below_floor",
+        "severity": "warning",
+        "message": "Type floor is 28 px (2.6% of the 1080 px short side, what a phone can read) and \"Start free →\" renders at 25 px for 7.05 s: set reading text to at least 28 px, or put data-layout-ignore on text that is texture rather than reading; see references/look.md.",
+        "text": "Start free →",
+        "selector": "#s12-btn",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s12.html",
+        "bbox": {
+          "x": 500.93,
+          "y": 653.92,
+          "width": 150.14,
+          "height": 31.5
+        },
+        "time": 88.948,
+        "times": [
+          88.948
+        ],
+        "fontPx": 24.81,
+        "floorPx": 28,
+        "seconds": 7.052,
+        "elements": [
+          {
+            "selector": "#s12-btn",
+            "text": "Start free →",
+            "fontPx": 24.81,
+            "time": 88.948,
+            "seconds": 7.052
+          }
+        ]
+      }
+    ],
+    "enabled": true,
+    "step": 0.16000000000000014,
+    "samples": 599
+  },
+  "audio": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 1,
+    "infoCount": 0,
+    "findings": [
+      {
+        "code": "audio_clip_silent",
+        "severity": "warning",
+        "message": "assets/sfx/riser.mp3 is silent for the whole part this clip plays (7-10 s of the file).",
+        "selector": "#sfx57",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 83.22,
+        "timeRange": [
+          83.22,
+          86.22
+        ],
+        "fixHint": "Check the file has sound there, or move data-media-start to where it does."
+      }
+    ]
+  },
+  "hdr": {
+    "autoPromotion": null,
+    "inspection": "available"
+  },
+  "snapshots": {
+    "enabled": false,
+    "files": [],
+    "times": [],
+    "findingFiles": []
+  }
+}

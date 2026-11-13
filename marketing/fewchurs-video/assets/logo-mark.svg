@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="325 324 620 620">
+  <defs>
+    <linearGradient id="fw-top" gradientUnits="userSpaceOnUse" x1="355" y1="500" x2="925" y2="350">
+      <stop offset="0" stop-color="#FF530A"/>
+      <stop offset="1" stop-color="#FFAA00"/>
+    </linearGradient>
+    <linearGradient id="fw-mid" gradientUnits="userSpaceOnUse" x1="345" y1="700" x2="630" y2="560">
+      <stop offset="0" stop-color="#F7820F"/>
+      <stop offset="1" stop-color="#FFA800"/>
+    </linearGradient>
+    <linearGradient id="fw-mid-overlap" gradientUnits="userSpaceOnUse" x1="580" y1="560" x2="760" y2="700">
+      <stop offset="0" stop-color="#FF7A0C"/>
+      <stop offset="1" stop-color="#FF560A"/>
+    </linearGradient>
+    <linearGradient id="fw-bottom" gradientUnits="userSpaceOnUse" x1="345" y1="780" x2="525" y2="900">
+      <stop offset="0" stop-color="#FFA800"/>
+      <stop offset="1" stop-color="#FF560A"/>
+    </linearGradient>
+  </defs>
+  <path fill="url(#fw-top)" d="M530 343H905Q925 343 921 360C900 440 835 512 755 512H368Q352 512 357 496C385 405 450 343 530 343Z"/>
+  <path fill="url(#fw-mid)" d="M475 553H742Q762 553 758 572C740 650 680 713 610 713H360Q345 713 345 698V680C345 610 400 553 475 553Z"/>
+  <path fill="url(#fw-mid-overlap)" d="M627 553H742Q762 553 758 572C740 650 680 713 610 713H565C605 680 628 610 627 553Z"/>
+  <path fill="url(#fw-bottom)" d="M415 755H510Q525 755 522 770C510 850 445 925 368 925H360Q345 925 345 910V825C345 785 375 755 415 755Z"/>
+</svg>

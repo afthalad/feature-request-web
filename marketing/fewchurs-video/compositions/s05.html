@@ -1,0 +1,90 @@
+<template>
+  <style>@font-face{font-family:'Be Vietnam Pro';font-weight:400;font-style:normal;src:url('assets/fonts/BeVietnamPro-400.woff2') format('woff2');}@font-face{font-family:'Be Vietnam Pro';font-weight:500;font-style:normal;src:url('assets/fonts/BeVietnamPro-500.woff2') format('woff2');}@font-face{font-family:'Be Vietnam Pro';font-weight:600;font-style:normal;src:url('assets/fonts/BeVietnamPro-600.woff2') format('woff2');}@font-face{font-family:'Be Vietnam Pro';font-weight:700;font-style:normal;src:url('assets/fonts/BeVietnamPro-700.woff2') format('woff2');}@font-face{font-family:'Be Vietnam Pro';font-weight:800;font-style:normal;src:url('assets/fonts/BeVietnamPro-800.woff2') format('woff2');}
+#root{position:absolute;inset:0;font-family:'Be Vietnam Pro',sans-serif;color:#2a2826;-webkit-font-smoothing:antialiased}
+#root *{box-sizing:border-box;margin:0;padding:0}
+.stage{position:absolute;left:0;top:0;width:1152px;height:1080px}
+.abs{position:absolute}
+.card{background:#fff;border-radius:22px;border:1px solid #e7e6e4;box-shadow:0 1px 2px rgba(0,0,0,.05),0 30px 70px -40px rgba(0,0,0,.35)}
+.mono{font-family:'JetBrains Mono',monospace}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;background:#ed5f18;color:#fff;font-weight:600;border-radius:10px;font-size:17px}
+.chip{display:flex;align-items:center;justify-content:center;gap:8px;border:1.5px solid #e7e6e4;border-radius:10px;font-size:16px;font-weight:500;background:#fff;height:44px}
+.vote{width:48px;height:48px;border-radius:10px;background:rgba(237,95,24,.1);color:#ed5f18;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:14px;font-weight:600;gap:1px;flex-shrink:0}
+.row{background:rgba(0,0,0,.045);border-radius:12px;padding:15px 18px;display:flex;align-items:center;gap:14px}
+.row .t{font-weight:600;font-size:18px}
+.row .d{color:#6b6762;font-size:14.5px;margin-top:3px}
+.row .m{color:#6b6762;font-size:13px;margin-top:6px;display:flex;gap:16px}
+.status{display:inline-flex;align-items:center;gap:8px;font-size:15px;border:1px solid #e7e6e4;border-radius:9px;padding:7px 12px;background:#fff;white-space:nowrap}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+.phone{width:400px;height:820px;border-radius:56px;background:#111;padding:13px;box-shadow:0 50px 90px -40px rgba(0,0,0,.55)}
+.screen{width:100%;height:100%;border-radius:44px;background:#fff;overflow:hidden;position:relative}
+.notch{position:absolute;top:12px;left:137px;width:100px;height:30px;border-radius:20px;background:#111;z-index:5}
+.sbar{height:54px;display:flex;justify-content:space-between;align-items:center;padding:8px 30px 0;font-size:14px;font-weight:600}
+.label{font-size:14.5px;font-weight:600;margin-bottom:8px}
+.input{border:1.5px solid #e7e6e4;border-radius:10px;padding:0 14px;font-size:17px;background:#fff;height:46px;display:flex;align-items:center}
+.cursor{position:absolute;left:0;top:0;width:34px;height:34px;z-index:50}
+.side{width:250px;background:#f8f8f7;border-right:1px solid #e7e6e4;padding:18px 12px;display:flex;flex-direction:column;gap:4px;font-size:15px}
+.side .it{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;color:#3a3836}
+.side .it.act{background:rgba(0,0,0,.06);font-weight:600}
+.side .gl{font-size:12.5px;color:#6b6762;padding:14px 10px 6px;display:flex;justify-content:space-between}
+.sq{width:18px;height:18px;border-radius:5px;background:rgba(0,0,0,.07);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.badge{margin-left:auto;font-size:12px;color:#6b6762}
+.win{position:absolute;left:56px;top:160px;width:1040px;height:760px;overflow:hidden;display:flex;flex-direction:column}
+.tbar{height:40px;border-bottom:1px solid #e7e6e4;display:flex;align-items:center;gap:8px;padding:0 16px;background:#fbfbfa;flex-shrink:0}
+.url{margin:0 auto;font-size:13px;color:#6b6762;background:#f0efed;border-radius:7px;padding:4px 60px}
+</style>
+  <div id="root" data-composition-id="s05" data-width="1920" data-height="1080">
+    <div class="stage">
+<div id="s05-ed" class="abs" style="left:76px;top:200px;width:1000px;border-radius:18px;background:#1d1b1a;box-shadow:0 40px 80px -40px rgba(0,0,0,.6);overflow:hidden">
+  <div style="display:flex;gap:6px;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.08);font-size:16px;color:#a8a29e;align-items:center">
+    <span id="s05-t0" style="padding:8px 15px;border-radius:9px">SwiftUI</span><span id="s05-t1" style="padding:8px 15px;border-radius:9px">Kotlin</span><span id="s05-t2" style="padding:8px 15px;border-radius:9px">Flutter</span><span id="s05-t3" style="padding:8px 15px;border-radius:9px">React</span><span id="s05-t4" style="padding:8px 15px;border-radius:9px">Next.js</span><span id="s05-t5" style="padding:8px 15px;border-radius:9px">Laravel</span>
+    <span class="mono" style="margin-left:auto;font-size:14px">lib/main.dart</span>
+  </div>
+  <div class="mono" style="padding:28px 32px;font-size:21px;line-height:1.75;color:#ececea;white-space:pre"><div class="s05-cl"><span style="color:#57534e;display:inline-block;width:38px">1</span><span style="color:#c792ea">import</span> <span style="color:#ff9a5c">'package:fewchurs/fewchurs.dart'</span>;</div><div class="s05-cl"><span style="color:#57534e;display:inline-block;width:38px">2</span></div><div class="s05-cl"><span style="color:#57534e;display:inline-block;width:38px">3</span><span style="color:#c792ea">void</span> main() {</div><div class="s05-cl"><span style="color:#57534e;display:inline-block;width:38px">4</span>  Fewchurs.configure(apiKey: <span style="color:#ff9a5c">'fr_live_xxx'</span>);</div><div class="s05-cl"><span style="color:#57534e;display:inline-block;width:38px">5</span>  runApp(<span style="color:#c792ea">const</span> MyApp());</div><div class="s05-cl"><span style="color:#57534e;display:inline-block;width:38px">6</span>}</div><div class="s05-cl"><span style="color:#57534e;display:inline-block;width:38px">7</span></div><div class="s05-cl"><span style="color:#57534e;display:inline-block;width:38px">8</span><span style="color:#78716c;font-style:italic">// Anywhere in your app</span></div><div class="s05-cl"><span style="color:#57534e;display:inline-block;width:38px">9</span>Fewchurs.showBoard(context);</div></div>
+</div>
+<div id="s05-ok" class="card abs" style="left:76px;top:760px;padding:20px 26px;display:flex;align-items:center;gap:16px;border-radius:18px">
+  <span style="width:16px;height:16px;border-radius:50%;background:#10b981;box-shadow:0 0 0 7px rgba(16,185,129,.18)"></span>
+  <span style="font-size:24px;font-weight:700">SDK connected</span><span style="color:#6b6762;font-size:18px">Habit Tracker · just now</span>
+</div>
+    </div>
+  </div>
+  <script>
+const tl = gsap.timeline({ paused: true });
+const $ = (s) => document.querySelector(s);
+function typeText(sel, text, at, dur) {
+  const el = $(sel); const o = { n: 0 };
+  tl.fromTo(o, { n: 0 }, { n: text.length, duration: dur, ease: "none", immediateRender: false,
+    onUpdate() { el.textContent = text.slice(0, Math.round(o.n)); } }, at);
+}
+function countUp(sel, from, to, at, dur, dec) {
+  const el = $(sel); const o = { v: from };
+  tl.fromTo(o, { v: from }, { v: to, duration: dur, ease: "power2.out", immediateRender: false,
+    onUpdate() { el.textContent = o.v.toFixed(dec || 0); } }, at);
+}
+function enter(sel, at, opts) {
+  opts = opts || {};
+  tl.fromTo(sel, Object.assign({ opacity: 0, filter: "blur(10px)", scale: opts.scale || 0.96 }, opts.from || {}),
+    Object.assign({ opacity: 1, filter: "blur(0px)", scale: 1, duration: opts.dur || 0.8, ease: "expo.out" }, opts.to || {}), at);
+}
+function leave(sel, at, opts) {
+  opts = opts || {};
+  tl.to(sel, Object.assign({ opacity: 0, filter: "blur(10px)", duration: 0.28, ease: "power3.in" }, opts), at);
+}
+function cursorTo(sel, x, y, at, dur) { tl.to(sel, { x: x, y: y, duration: dur || 0.6, ease: "power2.inOut" }, at); }
+function press(sel, at) { tl.to(sel, { scale: 0.94, duration: 0.08, ease: "power2.out" }, at).to(sel, { scale: 1, duration: 0.16, ease: "power2.out" }, at + 0.08); }
+function pop(sel, at, from) { tl.fromTo(sel, { opacity: 0, scale: from || 0.6 }, { opacity: 1, scale: 1, duration: 0.45, ease: "back.out(1.7)" }, at); }
+
+tl.fromTo("#s05-ed", { opacity: 0, x: -60, filter: "blur(14px)" }, { opacity: 1, x: 0, filter: "blur(0px)", duration: 0.7, ease: "expo.out" }, 0.05);
+tl.fromTo(".s05-cl", { opacity: 0 }, { opacity: 1, duration: 0.05, stagger: 0.2 }, 1.2);
+tl.to("#s05-t0", { backgroundColor: "rgba(237,95,24,.9)", color: "#ffffff", duration: 0.12 }, 2.99); tl.to("#s05-t0", { backgroundColor: "rgba(0,0,0,0)", color: "#a8a29e", duration: 0.12 }, 3.68);
+tl.to("#s05-t1", { backgroundColor: "rgba(237,95,24,.9)", color: "#ffffff", duration: 0.12 }, 3.68); tl.to("#s05-t1", { backgroundColor: "rgba(0,0,0,0)", color: "#a8a29e", duration: 0.12 }, 4.46);
+tl.to("#s05-t2", { backgroundColor: "rgba(237,95,24,.9)", color: "#ffffff", duration: 0.12 }, 4.46); tl.to("#s05-t2", { backgroundColor: "rgba(0,0,0,0)", color: "#a8a29e", duration: 0.12 }, 5.05);
+tl.to("#s05-t3", { backgroundColor: "rgba(237,95,24,.9)", color: "#ffffff", duration: 0.12 }, 5.05); tl.to("#s05-t3", { backgroundColor: "rgba(0,0,0,0)", color: "#a8a29e", duration: 0.12 }, 5.8);
+tl.to("#s05-t4", { backgroundColor: "rgba(237,95,24,.9)", color: "#ffffff", duration: 0.12 }, 5.8); tl.to("#s05-t4", { backgroundColor: "rgba(0,0,0,0)", color: "#a8a29e", duration: 0.12 }, 7.29);
+tl.to("#s05-t5", { backgroundColor: "rgba(237,95,24,.9)", color: "#ffffff", duration: 0.12 }, 7.29); tl.to("#s05-t5", { backgroundColor: "rgba(0,0,0,0)", color: "#a8a29e", duration: 0.15 }, 8.1);
+tl.to("#s05-t2", { backgroundColor: "rgba(255,255,255,.12)", color: "#ffffff", duration: 0.15 }, 8.1);
+pop("#s05-ok", 8.95, 0.85);
+leave(["#s05-ed", "#s05-ok"], 9.95);
+
+window.__timelines["s05"] = tl;
+  </script>
+</template>

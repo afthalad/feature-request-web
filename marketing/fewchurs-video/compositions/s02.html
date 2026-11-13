@@ -1,0 +1,105 @@
+<template>
+  <style>@font-face{font-family:'Be Vietnam Pro';font-weight:400;font-style:normal;src:url('assets/fonts/BeVietnamPro-400.woff2') format('woff2');}@font-face{font-family:'Be Vietnam Pro';font-weight:500;font-style:normal;src:url('assets/fonts/BeVietnamPro-500.woff2') format('woff2');}@font-face{font-family:'Be Vietnam Pro';font-weight:600;font-style:normal;src:url('assets/fonts/BeVietnamPro-600.woff2') format('woff2');}@font-face{font-family:'Be Vietnam Pro';font-weight:700;font-style:normal;src:url('assets/fonts/BeVietnamPro-700.woff2') format('woff2');}@font-face{font-family:'Be Vietnam Pro';font-weight:800;font-style:normal;src:url('assets/fonts/BeVietnamPro-800.woff2') format('woff2');}
+#root{position:absolute;inset:0;font-family:'Be Vietnam Pro',sans-serif;color:#2a2826;-webkit-font-smoothing:antialiased}
+#root *{box-sizing:border-box;margin:0;padding:0}
+.stage{position:absolute;left:0;top:0;width:1152px;height:1080px}
+.abs{position:absolute}
+.card{background:#fff;border-radius:22px;border:1px solid #e7e6e4;box-shadow:0 1px 2px rgba(0,0,0,.05),0 30px 70px -40px rgba(0,0,0,.35)}
+.mono{font-family:'JetBrains Mono',monospace}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;background:#ed5f18;color:#fff;font-weight:600;border-radius:10px;font-size:17px}
+.chip{display:flex;align-items:center;justify-content:center;gap:8px;border:1.5px solid #e7e6e4;border-radius:10px;font-size:16px;font-weight:500;background:#fff;height:44px}
+.vote{width:48px;height:48px;border-radius:10px;background:rgba(237,95,24,.1);color:#ed5f18;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:14px;font-weight:600;gap:1px;flex-shrink:0}
+.row{background:rgba(0,0,0,.045);border-radius:12px;padding:15px 18px;display:flex;align-items:center;gap:14px}
+.row .t{font-weight:600;font-size:18px}
+.row .d{color:#6b6762;font-size:14.5px;margin-top:3px}
+.row .m{color:#6b6762;font-size:13px;margin-top:6px;display:flex;gap:16px}
+.status{display:inline-flex;align-items:center;gap:8px;font-size:15px;border:1px solid #e7e6e4;border-radius:9px;padding:7px 12px;background:#fff;white-space:nowrap}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+.phone{width:400px;height:820px;border-radius:56px;background:#111;padding:13px;box-shadow:0 50px 90px -40px rgba(0,0,0,.55)}
+.screen{width:100%;height:100%;border-radius:44px;background:#fff;overflow:hidden;position:relative}
+.notch{position:absolute;top:12px;left:137px;width:100px;height:30px;border-radius:20px;background:#111;z-index:5}
+.sbar{height:54px;display:flex;justify-content:space-between;align-items:center;padding:8px 30px 0;font-size:14px;font-weight:600}
+.label{font-size:14.5px;font-weight:600;margin-bottom:8px}
+.input{border:1.5px solid #e7e6e4;border-radius:10px;padding:0 14px;font-size:17px;background:#fff;height:46px;display:flex;align-items:center}
+.cursor{position:absolute;left:0;top:0;width:34px;height:34px;z-index:50}
+.side{width:250px;background:#f8f8f7;border-right:1px solid #e7e6e4;padding:18px 12px;display:flex;flex-direction:column;gap:4px;font-size:15px}
+.side .it{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;color:#3a3836}
+.side .it.act{background:rgba(0,0,0,.06);font-weight:600}
+.side .gl{font-size:12.5px;color:#6b6762;padding:14px 10px 6px;display:flex;justify-content:space-between}
+.sq{width:18px;height:18px;border-radius:5px;background:rgba(0,0,0,.07);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.badge{margin-left:auto;font-size:12px;color:#6b6762}
+.win{position:absolute;left:56px;top:160px;width:1040px;height:760px;overflow:hidden;display:flex;flex-direction:column}
+.tbar{height:40px;border-bottom:1px solid #e7e6e4;display:flex;align-items:center;gap:8px;padding:0 16px;background:#fbfbfa;flex-shrink:0}
+.url{margin:0 auto;font-size:13px;color:#6b6762;background:#f0efed;border-radius:7px;padding:4px 60px}
+</style>
+  <div id="root" data-composition-id="s02" data-width="1920" data-height="1080">
+    <div class="stage">
+<div id="s02-build" class="card abs" style="left:146px;top:150px;width:860px;height:150px;padding:28px 34px">
+  <div id="s02-progress" class="abs" style="left:34px;top:28px;right:34px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-size:26px;font-weight:800">Building: AI chat assistant</div><div style="font-size:19px;color:#6b6762;font-weight:600">Month <span id="s02-month">1</span> of 6</div></div>
+    <div style="height:16px;border-radius:8px;background:#f0efed;margin-top:22px;overflow:hidden"><div id="s02-bar" style="height:100%;width:100%;background:#2a2826;border-radius:8px"></div></div>
+  </div>
+  <div id="s02-shipped" class="abs" style="left:34px;top:28px;right:34px;display:flex;align-items:center;gap:20px">
+    <div id="s02-badge" style="width:84px;height:84px;border-radius:22px;background:#ed5f18;color:#fff;display:flex;align-items:center;justify-content:center"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+    <div><div style="font-size:30px;font-weight:800">Shipped: AI chat assistant</div><div style="color:#6b6762;font-size:18px;margin-top:4px">6 months of work · 4 engineers</div></div>
+  </div>
+</div>
+<div id="s02-graph" class="card abs" style="left:146px;top:340px;width:860px;padding:34px 40px">
+  <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-size:21px;font-weight:700">Feature usage</div><div style="font-size:54px;font-weight:800;color:#e5484d"><span id="s02-pct">100</span>%</div></div>
+  <div style="color:#6b6762;font-size:16px;margin-bottom:14px">Daily active users who opened it</div>
+  <svg width="780" height="330" viewBox="0 0 780 330">
+    <line x1="0" x2="780" y1="20" y2="20" stroke="#eee" stroke-width="2"/><line x1="0" x2="780" y1="92" y2="92" stroke="#eee" stroke-width="2"/><line x1="0" x2="780" y1="164" y2="164" stroke="#eee" stroke-width="2"/><line x1="0" x2="780" y1="236" y2="236" stroke="#eee" stroke-width="2"/><line x1="0" x2="780" y1="308" y2="308" stroke="#eee" stroke-width="2"/>
+    <path id="s02-line" pathLength="100" stroke-dasharray="100 120" stroke-dashoffset="110" d="M0 300 C 60 255, 110 240, 160 266 S 260 296, 320 300 S 520 304, 780 306" fill="none" stroke="#e5484d" stroke-width="6" stroke-linecap="round"/>
+    <circle id="s02-dot" cx="160" cy="266" r="9" fill="#e5484d"/>
+    <text id="s02-launch" x="118" y="236" font-size="18" font-weight="600" fill="#6b6762" font-family="Be Vietnam Pro">Launch day</text>
+  </svg>
+</div>
+<div id="s02-inbox" class="card abs" style="left:146px;top:900px;padding:16px 22px;display:flex;align-items:center;gap:14px;border-radius:16px">
+  <span style="color:#6b6762"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.5 5.1 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.5-6.9A2 2 0 0 0 16.8 4H7.2a2 2 0 0 0-1.7 1.1z"/></svg></span><span style="font-size:20px;font-weight:700">0 user requests</span><span style="font-size:17px;color:#6b6762">for this feature</span>
+</div>
+    </div>
+  </div>
+  <script>
+const tl = gsap.timeline({ paused: true });
+const $ = (s) => document.querySelector(s);
+function typeText(sel, text, at, dur) {
+  const el = $(sel); const o = { n: 0 };
+  tl.fromTo(o, { n: 0 }, { n: text.length, duration: dur, ease: "none", immediateRender: false,
+    onUpdate() { el.textContent = text.slice(0, Math.round(o.n)); } }, at);
+}
+function countUp(sel, from, to, at, dur, dec) {
+  const el = $(sel); const o = { v: from };
+  tl.fromTo(o, { v: from }, { v: to, duration: dur, ease: "power2.out", immediateRender: false,
+    onUpdate() { el.textContent = o.v.toFixed(dec || 0); } }, at);
+}
+function enter(sel, at, opts) {
+  opts = opts || {};
+  tl.fromTo(sel, Object.assign({ opacity: 0, filter: "blur(10px)", scale: opts.scale || 0.96 }, opts.from || {}),
+    Object.assign({ opacity: 1, filter: "blur(0px)", scale: 1, duration: opts.dur || 0.8, ease: "expo.out" }, opts.to || {}), at);
+}
+function leave(sel, at, opts) {
+  opts = opts || {};
+  tl.to(sel, Object.assign({ opacity: 0, filter: "blur(10px)", duration: 0.28, ease: "power3.in" }, opts), at);
+}
+function cursorTo(sel, x, y, at, dur) { tl.to(sel, { x: x, y: y, duration: dur || 0.6, ease: "power2.inOut" }, at); }
+function press(sel, at) { tl.to(sel, { scale: 0.94, duration: 0.08, ease: "power2.out" }, at).to(sel, { scale: 1, duration: 0.16, ease: "power2.out" }, at + 0.08); }
+function pop(sel, at, from) { tl.fromTo(sel, { opacity: 0, scale: from || 0.6 }, { opacity: 1, scale: 1, duration: 0.45, ease: "back.out(1.7)" }, at); }
+
+enter("#s02-build", 0.1, { from: { y: -24 }, to: { y: 0 } });
+tl.fromTo("#s02-bar", { scaleX: 0, transformOrigin: "left center" }, { scaleX: 1, duration: 1.6, ease: "power1.inOut" }, 0.3);
+countUp("#s02-month", 1, 6, 0.3, 1.6, 0);
+gsap.set("#s02-shipped", { opacity: 0 });
+tl.to("#s02-progress", { opacity: 0, filter: "blur(6px)", duration: 0.15 }, 1.95);
+tl.fromTo("#s02-shipped", { opacity: 0 }, { opacity: 1, duration: 0.2 }, 2.0);
+pop("#s02-badge", 2.0, 0.4);
+tl.fromTo("#s02-graph", { opacity: 0, scale: 0.9, filter: "blur(12px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.8, ease: "expo.out" }, 2.5);
+tl.fromTo("#s02-line", { strokeDashoffset: 110 }, { strokeDashoffset: 0, duration: 2.8, ease: "power1.inOut" }, 2.8);
+pop("#s02-dot", 3.2, 0.2);
+tl.fromTo("#s02-launch", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 3.25);
+countUp("#s02-pct", 100, 0.4, 3.0, 2.6, 1);
+pop("#s02-inbox", 6.05, 0.8);
+leave(["#s02-build", "#s02-graph", "#s02-inbox"], 7.85);
+
+window.__timelines["s02"] = tl;
+  </script>
+</template>

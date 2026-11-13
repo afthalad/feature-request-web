@@ -1,0 +1,96 @@
+<template>
+  <style>@font-face{font-family:'Be Vietnam Pro';font-weight:400;font-style:normal;src:url('assets/fonts/BeVietnamPro-400.woff2') format('woff2');}@font-face{font-family:'Be Vietnam Pro';font-weight:500;font-style:normal;src:url('assets/fonts/BeVietnamPro-500.woff2') format('woff2');}@font-face{font-family:'Be Vietnam Pro';font-weight:600;font-style:normal;src:url('assets/fonts/BeVietnamPro-600.woff2') format('woff2');}@font-face{font-family:'Be Vietnam Pro';font-weight:700;font-style:normal;src:url('assets/fonts/BeVietnamPro-700.woff2') format('woff2');}@font-face{font-family:'Be Vietnam Pro';font-weight:800;font-style:normal;src:url('assets/fonts/BeVietnamPro-800.woff2') format('woff2');}
+#root{position:absolute;inset:0;font-family:'Be Vietnam Pro',sans-serif;color:#2a2826;-webkit-font-smoothing:antialiased}
+#root *{box-sizing:border-box;margin:0;padding:0}
+.stage{position:absolute;left:0;top:0;width:1152px;height:1080px}
+.abs{position:absolute}
+.card{background:#fff;border-radius:22px;border:1px solid #e7e6e4;box-shadow:0 1px 2px rgba(0,0,0,.05),0 30px 70px -40px rgba(0,0,0,.35)}
+.mono{font-family:'JetBrains Mono',monospace}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;background:#ed5f18;color:#fff;font-weight:600;border-radius:10px;font-size:17px}
+.chip{display:flex;align-items:center;justify-content:center;gap:8px;border:1.5px solid #e7e6e4;border-radius:10px;font-size:16px;font-weight:500;background:#fff;height:44px}
+.vote{width:48px;height:48px;border-radius:10px;background:rgba(237,95,24,.1);color:#ed5f18;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:14px;font-weight:600;gap:1px;flex-shrink:0}
+.row{background:rgba(0,0,0,.045);border-radius:12px;padding:15px 18px;display:flex;align-items:center;gap:14px}
+.row .t{font-weight:600;font-size:18px}
+.row .d{color:#6b6762;font-size:14.5px;margin-top:3px}
+.row .m{color:#6b6762;font-size:13px;margin-top:6px;display:flex;gap:16px}
+.status{display:inline-flex;align-items:center;gap:8px;font-size:15px;border:1px solid #e7e6e4;border-radius:9px;padding:7px 12px;background:#fff;white-space:nowrap}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+.phone{width:400px;height:820px;border-radius:56px;background:#111;padding:13px;box-shadow:0 50px 90px -40px rgba(0,0,0,.55)}
+.screen{width:100%;height:100%;border-radius:44px;background:#fff;overflow:hidden;position:relative}
+.notch{position:absolute;top:12px;left:137px;width:100px;height:30px;border-radius:20px;background:#111;z-index:5}
+.sbar{height:54px;display:flex;justify-content:space-between;align-items:center;padding:8px 30px 0;font-size:14px;font-weight:600}
+.label{font-size:14.5px;font-weight:600;margin-bottom:8px}
+.input{border:1.5px solid #e7e6e4;border-radius:10px;padding:0 14px;font-size:17px;background:#fff;height:46px;display:flex;align-items:center}
+.cursor{position:absolute;left:0;top:0;width:34px;height:34px;z-index:50}
+.side{width:250px;background:#f8f8f7;border-right:1px solid #e7e6e4;padding:18px 12px;display:flex;flex-direction:column;gap:4px;font-size:15px}
+.side .it{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;color:#3a3836}
+.side .it.act{background:rgba(0,0,0,.06);font-weight:600}
+.side .gl{font-size:12.5px;color:#6b6762;padding:14px 10px 6px;display:flex;justify-content:space-between}
+.sq{width:18px;height:18px;border-radius:5px;background:rgba(0,0,0,.07);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.badge{margin-left:auto;font-size:12px;color:#6b6762}
+.win{position:absolute;left:56px;top:160px;width:1040px;height:760px;overflow:hidden;display:flex;flex-direction:column}
+.tbar{height:40px;border-bottom:1px solid #e7e6e4;display:flex;align-items:center;gap:8px;padding:0 16px;background:#fbfbfa;flex-shrink:0}
+.url{margin:0 auto;font-size:13px;color:#6b6762;background:#f0efed;border-radius:7px;padding:4px 60px}
+</style>
+  <div id="root" data-composition-id="s07" data-width="1920" data-height="1080">
+    <div class="stage">
+<div id="s07-sheet" class="card abs" style="left:56px;top:250px;width:430px;padding:22px">
+  <div style="display:flex;align-items:center;gap:10px;font-size:17px;font-weight:700;margin-bottom:14px"><span style="width:26px;height:26px;border-radius:6px;background:#1d7a45"></span>roadmap_final_v3.xlsx</div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px"><div style="height:26px;border-radius:3px;background:#e3f1e8"></div><div style="height:26px;border-radius:3px;background:#e3f1e8"></div><div style="height:26px;border-radius:3px;background:#e3f1e8"></div><div style="height:26px;border-radius:3px;background:#e3f1e8"></div><div style="height:26px;border-radius:3px;background:#f3f3f2"></div><div style="height:26px;border-radius:3px;background:#f3f3f2"></div><div style="height:26px;border-radius:3px;background:#f3f3f2"></div><div style="height:26px;border-radius:3px;background:#f3f3f2"></div><div style="height:26px;border-radius:3px;background:#f3f3f2"></div><div style="height:26px;border-radius:3px;background:#f3f3f2"></div><div style="height:26px;border-radius:3px;background:#f3f3f2"></div><div style="height:26px;border-radius:3px;background:#f3f3f2"></div><div style="height:26px;border-radius:3px;background:#f3f3f2"></div><div style="height:26px;border-radius:3px;background:#f3f3f2"></div><div style="height:26px;border-radius:3px;background:#f3f3f2"></div><div style="height:26px;border-radius:3px;background:#f3f3f2"></div><div style="height:26px;border-radius:3px;background:#f3f3f2"></div><div style="height:26px;border-radius:3px;background:#f3f3f2"></div><div style="height:26px;border-radius:3px;background:#f3f3f2"></div><div style="height:26px;border-radius:3px;background:#f3f3f2"></div><div style="height:26px;border-radius:3px;background:#f3f3f2"></div><div style="height:26px;border-radius:3px;background:#f3f3f2"></div><div style="height:26px;border-radius:3px;background:#f3f3f2"></div><div style="height:26px;border-radius:3px;background:#f3f3f2"></div></div>
+  <div id="s07-strike" class="abs" style="left:14px;right:14px;top:110px;height:8px;border-radius:4px;background:#e5484d"></div>
+</div>
+<div id="s07-note" class="abs" style="left:90px;top:620px;width:290px;height:190px;background:#fbcfe8;border-radius:4px;box-shadow:0 18px 30px -16px rgba(0,0,0,.35);padding:28px 26px;font-size:28px;font-weight:700;line-height:1.3;color:#3b3226;font-family:'Marker Felt','Comic Sans MS',cursive">Maybe users want themes?</div>
+<div id="s07-phone" class="phone abs" style="left:620px;top:130px"><div class="screen"><div class="notch"></div><div class="sbar"><span>9:41</span><span style="letter-spacing:2px">▮▮▮</span></div>
+  <div style="padding:6px 22px"><div style="font-size:24px;font-weight:800;margin:10px 0 4px">Feature requests</div><div style="color:#6b6762;font-size:14px">Vote for what you want next</div></div>
+  <div id="s07-r0" class="abs" style="left:18px;right:18px;top:150px;display:flex;gap:12px;align-items:center;padding:13px;border-radius:14px;background:#f6f5f3;"><div class="vote"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg><span id="s07-c0">84</span></div><div><div style="font-weight:600;font-size:16px">Apple Watch app</div><div style="color:#6b6762;font-size:13px;margin-top:2px">Check off habits from my wrist</div></div></div><div id="s07-r1" class="abs" style="left:18px;right:18px;top:236px;display:flex;gap:12px;align-items:center;padding:13px;border-radius:14px;background:#f6f5f3;"><div class="vote"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg><span id="s07-c1">48</span></div><div><div style="font-weight:600;font-size:16px">Weekly streak reminders</div><div style="color:#6b6762;font-size:13px;margin-top:2px">A nudge on Sunday evening</div></div></div><div id="s07-r2" class="abs" style="left:18px;right:18px;top:322px;display:flex;gap:12px;align-items:center;padding:13px;border-radius:14px;background:#f6f5f3;"><div class="vote"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg><span id="s07-c2">23</span></div><div><div style="font-weight:600;font-size:16px">Export to CSV</div><div style="color:#6b6762;font-size:13px;margin-top:2px">Back up my history</div></div></div><div id="s07-r3" class="abs" style="left:18px;right:18px;top:408px;display:flex;gap:12px;align-items:center;padding:13px;border-radius:14px;background:#f6f5f3;"><div class="vote"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg><span id="s07-c3">12</span></div><div><div style="font-weight:600;font-size:16px">Custom habit icons</div><div style="color:#6b6762;font-size:13px;margin-top:2px">Pick an emoji per habit</div></div></div><div id="s07-r4" class="abs" style="left:18px;right:18px;top:494px;display:flex;gap:12px;align-items:center;padding:13px;border-radius:14px;background:#fff;border:1.5px solid #eee"><div class="vote"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg><span id="s07-c4">1</span></div><div><div style="font-weight:600;font-size:16px">Dark mode<span style="background:#ed5f18;color:#fff;border-radius:999px;font-size:10px;font-weight:600;padding:3px 7px;margin-left:8px;vertical-align:middle">New</span></div><div style="color:#6b6762;font-size:13px;margin-top:2px">Easier on the eyes at night</div></div></div></div></div>
+    </div>
+  </div>
+  <script>
+const tl = gsap.timeline({ paused: true });
+const $ = (s) => document.querySelector(s);
+function typeText(sel, text, at, dur) {
+  const el = $(sel); const o = { n: 0 };
+  tl.fromTo(o, { n: 0 }, { n: text.length, duration: dur, ease: "none", immediateRender: false,
+    onUpdate() { el.textContent = text.slice(0, Math.round(o.n)); } }, at);
+}
+function countUp(sel, from, to, at, dur, dec) {
+  const el = $(sel); const o = { v: from };
+  tl.fromTo(o, { v: from }, { v: to, duration: dur, ease: "power2.out", immediateRender: false,
+    onUpdate() { el.textContent = o.v.toFixed(dec || 0); } }, at);
+}
+function enter(sel, at, opts) {
+  opts = opts || {};
+  tl.fromTo(sel, Object.assign({ opacity: 0, filter: "blur(10px)", scale: opts.scale || 0.96 }, opts.from || {}),
+    Object.assign({ opacity: 1, filter: "blur(0px)", scale: 1, duration: opts.dur || 0.8, ease: "expo.out" }, opts.to || {}), at);
+}
+function leave(sel, at, opts) {
+  opts = opts || {};
+  tl.to(sel, Object.assign({ opacity: 0, filter: "blur(10px)", duration: 0.28, ease: "power3.in" }, opts), at);
+}
+function cursorTo(sel, x, y, at, dur) { tl.to(sel, { x: x, y: y, duration: dur || 0.6, ease: "power2.inOut" }, at); }
+function press(sel, at) { tl.to(sel, { scale: 0.94, duration: 0.08, ease: "power2.out" }, at).to(sel, { scale: 1, duration: 0.16, ease: "power2.out" }, at + 0.08); }
+function pop(sel, at, from) { tl.fromTo(sel, { opacity: 0, scale: from || 0.6 }, { opacity: 1, scale: 1, duration: 0.45, ease: "back.out(1.7)" }, at); }
+
+tl.fromTo("#s07-phone", { opacity: 0, x: 80, filter: "blur(12px)" }, { opacity: 1, x: 0, filter: "blur(0px)", duration: 0.75, ease: "expo.out" }, 0.05);
+gsap.set(["#s07-sheet", "#s07-note"], { opacity: 0 });
+countUp("#s07-c0", 84, 89, 0.9, 1.6, 0);
+countUp("#s07-c1", 48, 51, 0.96, 1.6, 0);
+countUp("#s07-c2", 23, 24, 1.02, 1.6, 0);
+
+countUp("#s07-c4", 1, 127, 1.1400000000000001, 2.3, 0);
+tl.to("#s07-r4", { y: -4 * 86, duration: 0.75, ease: "power2.inOut" }, 3.2);
+tl.to("#s07-r0", { y: 86, duration: 0.6, ease: "power2.inOut" }, 3.3);
+tl.to("#s07-r1", { y: 86, duration: 0.6, ease: "power2.inOut" }, 3.3499999999999996);
+tl.to("#s07-r2", { y: 86, duration: 0.6, ease: "power2.inOut" }, 3.4);
+tl.to("#s07-r3", { y: 86, duration: 0.6, ease: "power2.inOut" }, 3.4499999999999997);
+tl.to("#s07-r4", { boxShadow: "0 0 0 3px #ed5f18, 0 16px 30px -14px rgba(237,95,24,.6)", borderColor: "#ed5f18", duration: 0.3 }, 3.95);
+tl.fromTo("#s07-sheet", { opacity: 0, x: -40, filter: "blur(10px)" }, { opacity: 1, x: 0, filter: "blur(0px)", duration: 0.6, ease: "expo.out" }, 4.85);
+tl.fromTo("#s07-strike", { scaleX: 0, transformOrigin: "left center", rotation: -8 }, { scaleX: 1, rotation: -8, duration: 0.3, ease: "power2.out" }, 5.35);
+tl.to("#s07-sheet", { y: 60, rotation: -6, opacity: 0, duration: 0.45, ease: "power3.in" }, 6.0);
+tl.fromTo("#s07-note", { opacity: 0, scale: 1.3, rotation: 12 }, { opacity: 1, scale: 1, rotation: 5, duration: 0.45, ease: "back.out(1.6)" }, 5.55);
+tl.to("#s07-note", { scale: 0, rotation: 120, opacity: 0, duration: 0.35, ease: "power3.in" }, 7.25);
+leave("#s07-phone", 7.6);
+
+window.__timelines["s07"] = tl;
+  </script>
+</template>
