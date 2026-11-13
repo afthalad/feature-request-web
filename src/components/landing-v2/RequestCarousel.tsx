@@ -7,9 +7,9 @@ type Status = "open" | "planned" | "in_progress" | "done";
 
 const STATUS: Record<Status, { label: string; dot: string }> = {
   open: { label: "Pending", dot: "bg-zinc-400" },
-  planned: { label: "Planned", dot: "bg-blue-400" },
-  in_progress: { label: "In progress", dot: "bg-amber-400" },
-  done: { label: "Done", dot: "bg-emerald-400" },
+  planned: { label: "Planned", dot: "bg-blue-500" },
+  in_progress: { label: "In progress", dot: "bg-amber-500" },
+  done: { label: "Done", dot: "bg-emerald-500" },
 };
 
 // Example boards. Made-up apps, to show what a top request looks like.
@@ -115,20 +115,18 @@ function RequestCard({ app, platform, title, votes, status, hue }: (typeof CARDS
   const bars = [0.35, 0.5, 0.42, 0.62, 0.7, 0.85, 1];
   return (
     <div
-      className="relative flex h-[300px] flex-col overflow-hidden rounded-2xl border border-white/10 p-4 shadow-2xl shadow-black/60"
-      style={{
-        background: `radial-gradient(120% 80% at 80% 0%, oklch(0.42 0.12 ${hue} / 0.55), transparent 60%), linear-gradient(180deg, oklch(0.24 0.02 ${hue}), oklch(0.17 0.01 ${hue}))`,
-      }}
+      className="v2-rcard relative flex h-[300px] flex-col overflow-hidden rounded-2xl p-4"
+      style={{ "--h": hue } as React.CSSProperties}
     >
-      <p className="text-[11px] font-semibold tracking-wide text-white/55 uppercase">{app}</p>
+      <p className="text-[11px] font-semibold tracking-wide uppercase opacity-60">{app}</p>
       <div className="mt-5 flex items-center gap-3">
         <span className="grid size-12 place-items-center rounded-xl bg-[#ff5a14] text-white shadow-lg shadow-[#ff5a14]/30">
           <ChevronUp className="size-6" strokeWidth={3} />
         </span>
-        <span className="text-4xl font-extrabold tracking-[-0.04em] text-white tabular-nums">{votes}</span>
+        <span className="text-4xl font-extrabold tracking-[-0.04em] tabular-nums">{votes}</span>
       </div>
-      <p className="mt-4 text-xl leading-tight font-bold tracking-[-0.02em] text-balance text-white">{title}</p>
-      <span className="mt-3 inline-flex w-fit items-center gap-1.5 rounded-full bg-black/30 px-2.5 py-1 text-[11px] font-medium text-white/85">
+      <p className="mt-4 text-xl leading-tight font-bold tracking-[-0.02em] text-balance">{title}</p>
+      <span className="v2-rchip mt-3 inline-flex w-fit items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium">
         <span className={`size-1.5 rounded-full ${s.dot}`} />
         {s.label}
       </span>
@@ -137,11 +135,11 @@ function RequestCard({ app, platform, title, votes, status, hue }: (typeof CARDS
           <span
             key={i}
             className="flex-1 rounded-sm"
-            style={{ height: `${b * 100}%`, background: `oklch(0.75 0.12 ${hue} / ${0.25 + b * 0.5})` }}
+            style={{ height: `${b * 100}%`, background: `oklch(var(--bar-l) 0.13 ${hue} / ${0.25 + b * 0.5})` }}
           />
         ))}
       </div>
-      <p className="mt-3 text-center text-xs font-semibold text-white/80 [text-shadow:0_1px_8px_rgb(0_0_0/60%)]">
+      <p className="mt-3 text-center text-xs font-semibold opacity-80">
         {platform}
       </p>
     </div>

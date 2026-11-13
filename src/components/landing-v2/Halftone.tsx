@@ -42,7 +42,7 @@ export function Halftone({ mode = "corners", className }: { mode?: "corners" | "
           t *= 0.6 + hash(x, y) * 0.7;
           if (t < 0.1) continue;
           t = Math.min(t, 1);
-          ctx.globalAlpha = 0.25 + t * 0.75;
+          ctx.globalAlpha = (0.2 + t * 0.8) * 0.55; // kept dim so the dots sit behind the content
           ctx.fillStyle = "#ff5a14";
           const r = 0.5 + t * (gap * 0.22);
           ctx.fillRect(x - r, y - r, r * 2, r * 2);

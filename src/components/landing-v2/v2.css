@@ -1,10 +1,91 @@
 /* Styles for the experimental landing page at /home-v2 only. */
 
+/* Light is the default; the site's .dark class on <html> switches the tokens. */
 .v2-root {
-  --v2-bg: oklch(0.145 0 0);
   --v2-orange: #ff5a14;
+  --v2-bg: oklch(0.985 0.004 70);
+  --v2-fg: oklch(0.2 0.006 60);
+  --v2-fg-2: oklch(0.4 0.008 60); /* body copy */
+  --v2-fg-3: oklch(0.56 0.008 60); /* captions */
+  --v2-line: oklch(0.2 0.01 60 / 10%);
+  --v2-line-strong: oklch(0.2 0.01 60 / 18%);
+  --v2-card: oklch(1 0 0);
+  --v2-chip: oklch(0.2 0.01 60 / 4.5%);
+  --v2-tile: oklch(1 0 0);
+  --v2-raised: oklch(1 0 0);
+  --v2-shadow: 0 1px 2px oklch(0.2 0 0 / 5%), 0 18px 40px -24px oklch(0.2 0 0 / 22%);
+  --v2-orange-wash: oklch(0.96 0.035 55);
+
+  /* the board inside the phone */
+  --p-bg: oklch(0.975 0.003 70);
+  --p-fg: oklch(0.2 0.006 60);
+  --p-fg-2: oklch(0.5 0.008 60);
+  --p-line: oklch(0.2 0.01 60 / 10%);
+  --p-chip: oklch(0.2 0.01 60 / 5%);
+  --p-active: oklch(1 0 0);
+
   background: var(--v2-bg);
+  color: var(--v2-fg);
   font-family: var(--font-jakarta), var(--font-be-vietnam-pro), sans-serif;
+}
+
+.dark .v2-root {
+  --v2-bg: oklch(0.145 0 0);
+  --v2-fg: oklch(1 0 0);
+  --v2-fg-2: oklch(1 0 0 / 65%);
+  --v2-fg-3: oklch(1 0 0 / 45%);
+  --v2-line: oklch(1 0 0 / 10%);
+  --v2-line-strong: oklch(1 0 0 / 18%);
+  --v2-card: oklch(1 0 0 / 2.5%);
+  --v2-chip: oklch(1 0 0 / 5%);
+  --v2-tile: oklch(0.22 0 0);
+  --v2-raised: oklch(0.2 0 0);
+  --v2-shadow: 0 24px 60px -24px oklch(0 0 0 / 70%);
+  --v2-orange-wash: oklch(0.66 0.2 40 / 7%);
+
+  --p-bg: oklch(0.19 0 0);
+  --p-fg: oklch(1 0 0);
+  --p-fg-2: oklch(1 0 0 / 50%);
+  --p-line: oklch(1 0 0 / 10%);
+  --p-chip: oklch(1 0 0 / 5%);
+  --p-active: oklch(1 0 0 / 10%);
+}
+
+/* The resizing mobile/web frame around the board. */
+.v2-frame {
+  border-color: oklch(0.88 0.006 60);
+  background: var(--p-bg);
+  box-shadow: 0 30px 80px -40px oklch(0.2 0.02 60 / 35%);
+}
+.dark .v2-frame {
+  border-color: oklch(0.27 0 0);
+  box-shadow: 0 30px 80px -30px oklch(0 0 0 / 80%);
+}
+
+/* Example request cards in the hero carousel; --h is each card's hue. */
+.v2-rcard {
+  --bar-l: 0.66;
+  color: oklch(0.24 0.03 var(--h));
+  border: 1px solid oklch(0.2 0.02 var(--h) / 10%);
+  background:
+    radial-gradient(120% 80% at 80% 0%, oklch(0.86 0.09 var(--h) / 0.7), transparent 60%),
+    linear-gradient(180deg, oklch(0.975 0.015 var(--h)), oklch(0.93 0.035 var(--h)));
+  box-shadow: 0 24px 50px -24px oklch(0.3 0.05 var(--h) / 45%);
+}
+.dark .v2-rcard {
+  --bar-l: 0.75;
+  color: oklch(1 0 0);
+  border-color: oklch(1 0 0 / 10%);
+  background:
+    radial-gradient(120% 80% at 80% 0%, oklch(0.42 0.12 var(--h) / 0.55), transparent 60%),
+    linear-gradient(180deg, oklch(0.24 0.02 var(--h)), oklch(0.17 0.01 var(--h)));
+  box-shadow: 0 30px 60px -20px oklch(0 0 0 / 70%);
+}
+.v2-rchip {
+  background: oklch(1 0 0 / 65%);
+}
+.dark .v2-rchip {
+  background: oklch(0 0 0 / 30%);
 }
 
 .v2-root h1,
