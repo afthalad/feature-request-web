@@ -59,14 +59,14 @@ export default function DocsOverviewPage() {
       </Section>
 
       <Section id="pick-your-stack" title="Pick your stack">
-        <ul className="grid border-t border-l border-border sm:grid-cols-2">
+        <ul className="grid gap-3 sm:grid-cols-2">
           {STACKS.map((stack) => (
-            <li key={stack.href} className="border-r border-b border-border">
+            <li key={stack.href}>
               <Link
                 href={stack.href}
-                className="group relative flex h-full items-start gap-4 p-5 transition-colors hover:bg-muted/50"
+                className="group flex h-full items-start gap-4 rounded-2xl bg-[var(--v2-card)] p-5 shadow-[var(--v2-shadow)] transition-transform duration-300 hover:-translate-y-0.5"
               >
-                <span className="grid size-10 shrink-0 place-items-center rounded-lg border border-border bg-background transition-transform duration-300 group-hover:-translate-y-0.5">
+                <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-[var(--v2-chip)]">
                   <BrandIcon
                     path={stack.icon.path}
                     color={`#${stack.icon.hex}`}
@@ -77,10 +77,10 @@ export default function DocsOverviewPage() {
                   />
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className="block font-semibold tracking-[-0.01em]">{stack.name}</span>
-                  <span className="mt-0.5 block text-sm text-muted-foreground">{stack.line}</span>
+                  <span className="block font-bold tracking-[-0.01em]">{stack.name}</span>
+                  <span className="mt-0.5 block text-sm text-[var(--v2-fg-3)]">{stack.line}</span>
                 </span>
-                <ArrowUpRight className="mt-0.5 size-4 shrink-0 text-muted-foreground transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-primary" />
+                <ArrowUpRight className="mt-0.5 size-4 shrink-0 text-[var(--v2-fg-3)] transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[var(--v2-orange)]" />
               </Link>
             </li>
           ))}

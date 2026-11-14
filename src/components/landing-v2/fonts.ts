@@ -1,6 +1,6 @@
 import { Plus_Jakarta_Sans } from "next/font/google";
 
-/** The display/body font of the v2 pages (home-v2 and docs-v2). */
+/** The display/body font of the home page and the docs. */
 export const jakarta = Plus_Jakarta_Sans({
   variable: "--font-jakarta",
   subsets: ["latin"],

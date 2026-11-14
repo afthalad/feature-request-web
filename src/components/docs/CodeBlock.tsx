@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Check, Copy } from "lucide-react";
 
-/** A code sample with a copy button, in the light card style of the home page. */
+/** A code sample on a dark card (in both themes), with a copy button. */
 export function CodeBlock({ code, filename }: { code: string; filename?: string }) {
   const [copied, setCopied] = useState(false);
   const lines = code.split("\n");
@@ -20,28 +20,32 @@ export function CodeBlock({ code, filename }: { code: string; filename?: string 
   }
 
   return (
-    <div className="relative overflow-hidden rounded-xl border border-border bg-popover text-popover-foreground">
-      <div className="flex items-center justify-between gap-3 border-b border-border bg-muted/40 py-1 pr-1.5 pl-4 font-mono text-[11px] text-muted-foreground">
+    <div className="v2-code relative overflow-hidden rounded-2xl">
+      <div className="flex items-center justify-between gap-3 py-1.5 pr-1.5 pl-4 font-mono text-[11px] text-white/50">
         <span className="flex min-w-0 items-center gap-2">
-          <span aria-hidden className="size-1.5 shrink-0 bg-primary" />
-          {filename && <span className="truncate">{filename}</span>}
+          <span aria-hidden className="flex gap-1">
+            <span className="size-2 rounded-full bg-white/15" />
+            <span className="size-2 rounded-full bg-white/15" />
+            <span className="size-2 rounded-full bg-[var(--v2-orange)]" />
+          </span>
+          {filename && <span className="truncate pl-1">{filename}</span>}
         </span>
         <button
           type="button"
           onClick={copy}
           aria-label={copied ? "Copied" : "Copy code"}
-          className="flex items-center gap-1.5 rounded-md px-2 py-1 transition-colors hover:bg-muted hover:text-foreground"
+          className="flex items-center gap-1.5 rounded-lg px-2.5 py-1 transition-colors hover:bg-white/10 hover:text-white"
         >
-          {copied ? <Check className="size-3.5 text-primary" /> : <Copy className="size-3.5" />}
+          {copied ? <Check className="size-3.5 text-[var(--v2-orange)]" /> : <Copy className="size-3.5" />}
           {copied ? "Copied" : "Copy"}
         </button>
       </div>
-      <pre className="overflow-x-auto py-3.5 pr-4 font-mono text-[13px] leading-6">
+      <pre className="overflow-x-auto pt-1 pr-4 pb-4 font-mono text-[13px] leading-6 text-white/90">
         <code>
           {lines.map((line, i) => (
             <span key={i} className="block pl-4">
               {numbered && (
-                <span aria-hidden className="mr-4 inline-block w-5 text-right text-muted-foreground/50 select-none">
+                <span aria-hidden className="mr-4 inline-block w-5 text-right text-white/25 select-none">
                   {i + 1}
                 </span>
               )}
@@ -61,14 +65,14 @@ function highlight(line: string) {
     if (!part) return null;
     if (/^\s*(\/\/|#)/.test(part)) {
       return (
-        <span key={i} className="text-muted-foreground italic">
+        <span key={i} className="text-white/40 italic">
           {part}
         </span>
       );
     }
     if (/^["']/.test(part)) {
       return (
-        <span key={i} className="text-primary">
+        <span key={i} className="text-[#ff9a62]">
           {part}
         </span>
       );

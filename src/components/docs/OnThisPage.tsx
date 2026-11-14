@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Eyebrow } from "@/components/landing/Frame";
 import { cn } from "@/lib/utils";
 
 /** Right-hand table of contents that highlights the section you're reading. */
@@ -38,24 +37,32 @@ export function OnThisPage({ items }: { items: { id: string; label: string }[] }
 
   return (
     <div className="sticky top-24 space-y-4">
-      <Eyebrow>On this page</Eyebrow>
-      <ul className="space-y-0.5 border-l border-border text-sm">
-        {items.map((item) => (
-          <li key={item.id}>
-            <a
-              href={`#${item.id}`}
-              aria-current={active === item.id ? "location" : undefined}
-              className={cn(
-                "-ml-px block border-l py-1.5 pl-3.5 leading-snug transition-colors",
-                active === item.id
-                  ? "border-primary font-medium text-foreground"
-                  : "border-transparent text-muted-foreground hover:text-foreground",
-              )}
-            >
-              {item.label}
-            </a>
-          </li>
-        ))}
+      <p className="font-mono text-xs font-medium tracking-[0.18em] text-[var(--v2-orange)] uppercase">On this page</p>
+      <ul className="space-y-0.5 text-sm">
+        {items.map((item) => {
+          const on = active === item.id;
+          return (
+            <li key={item.id}>
+              <a
+                href={`#${item.id}`}
+                aria-current={on ? "location" : undefined}
+                className={cn(
+                  "flex items-center gap-2.5 py-1.5 leading-snug transition-colors",
+                  on ? "font-semibold text-[var(--v2-fg)]" : "text-[var(--v2-fg-3)] hover:text-[var(--v2-fg)]",
+                )}
+              >
+                <span
+                  aria-hidden
+                  className={cn(
+                    "size-1.5 shrink-0 rounded-full transition-colors",
+                    on ? "bg-[var(--v2-orange)] shadow-[0_0_8px_var(--v2-orange)]" : "bg-[var(--v2-line-strong)]",
+                  )}
+                />
+                {item.label}
+              </a>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );

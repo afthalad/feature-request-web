@@ -8,11 +8,7 @@ import { BrandIcon } from "@/components/marketing/BrandIcon";
 import { DOCS_NAV, DOCS_PAGES } from "@/lib/docs/nav";
 import { cn } from "@/lib/utils";
 
-/**
- * An icon in front of every docs link, so a stack can be spotted at a glance.
- * Apple and Next.js logos are black, so they follow the text colour instead
- * of their brand colour (otherwise they vanish in dark mode).
- */
+/** Apple and Next.js logos are black, so they follow the text colour instead. */
 const ICONS: Record<string, { brand: SimpleIcon; mono?: boolean } | { lucide: LucideIcon }> = {
   "/docs": { lucide: BookOpen },
   "/docs/concepts": { lucide: Workflow },
@@ -30,15 +26,10 @@ function NavIcon({ href, active }: { href: string; active: boolean }) {
   if (!icon) return null;
   if ("lucide" in icon) {
     const Icon = icon.lucide;
-    return <Icon aria-hidden className={cn("size-4 shrink-0", active && "text-primary")} strokeWidth={1.75} />;
+    return <Icon aria-hidden className={cn("size-4 shrink-0", active && "text-[var(--v2-orange)]")} strokeWidth={2} />;
   }
   return (
-    <BrandIcon
-      aria-hidden
-      path={icon.brand.path}
-      color={icon.mono ? undefined : `#${icon.brand.hex}`}
-      className="size-4 shrink-0"
-    />
+    <BrandIcon aria-hidden path={icon.brand.path} color={icon.mono ? undefined : `#${icon.brand.hex}`} className="size-4 shrink-0" />
   );
 }
 
@@ -49,10 +40,10 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
     <nav aria-label="Docs" className="space-y-7 text-sm">
       {DOCS_NAV.map((group) => (
         <div key={group.title}>
-          <p className="mb-2 px-3 font-mono text-[10.5px] tracking-[0.16em] text-muted-foreground uppercase">
-            <span className="text-primary">[</span> {group.title} <span className="text-primary">]</span>
+          <p className="mb-2 px-3 font-mono text-[10.5px] font-medium tracking-[0.16em] text-[var(--v2-fg-3)] uppercase">
+            {group.title}
           </p>
-          <ul className="space-y-px">
+          <ul className="space-y-0.5">
             {group.items.map((item) => {
               const active = pathname === item.href;
               return (
@@ -62,13 +53,12 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
                     onClick={onNavigate}
                     aria-current={active ? "page" : undefined}
                     className={cn(
-                      "relative flex items-center gap-2.5 rounded-md px-3 py-1.5 transition-colors",
+                      "flex items-center gap-2.5 rounded-xl px-3 py-2 transition-colors",
                       active
-                        ? "bg-primary/[0.08] font-medium text-foreground"
-                        : "text-muted-foreground hover:bg-muted/60 hover:text-foreground",
+                        ? "bg-[var(--v2-orange)]/12 font-semibold text-[var(--v2-fg)]"
+                        : "text-[var(--v2-fg-2)] hover:bg-[var(--v2-chip)] hover:text-[var(--v2-fg)]",
                     )}
                   >
-                    {active && <span aria-hidden className="absolute inset-y-1.5 left-0 w-0.5 rounded-full bg-primary" />}
                     <NavIcon href={item.href} active={active} />
                     {item.label}
                   </Link>
@@ -85,8 +75,8 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
 /** Left column on large screens. */
 export function DocsSidebar() {
   return (
-    <aside className="hidden border-r border-border lg:block">
-      <div className="sticky top-16 max-h-[calc(100dvh-4rem)] overflow-y-auto px-4 py-10">
+    <aside className="hidden lg:block">
+      <div className="sticky top-16 max-h-[calc(100dvh-4rem)] overflow-y-auto py-12 pr-2">
         <NavLinks />
       </div>
     </aside>
@@ -99,15 +89,15 @@ export function DocsMobileNav() {
   const current = DOCS_PAGES.find((page) => page.href === pathname);
 
   return (
-    <details className="group border-b border-border lg:hidden" data-docs-menu>
-      <summary className="flex cursor-pointer list-none items-center justify-between px-5 py-3.5 text-sm font-medium sm:px-10 [&::-webkit-details-marker]:hidden">
+    <details className="group mt-4 rounded-2xl bg-[var(--v2-card)] shadow-[var(--v2-shadow)] lg:hidden" data-docs-menu>
+      <summary className="flex cursor-pointer list-none items-center justify-between px-5 py-3.5 text-sm font-semibold [&::-webkit-details-marker]:hidden">
         <span>
-          <span className="font-normal text-muted-foreground">Docs / </span>
+          <span className="font-normal text-[var(--v2-fg-3)]">Docs / </span>
           {current?.label ?? "Menu"}
         </span>
-        <ChevronDown className="size-4 text-muted-foreground transition-transform group-open:rotate-180" />
+        <ChevronDown className="size-4 text-[var(--v2-fg-3)] transition-transform group-open:rotate-180" />
       </summary>
-      <div className="border-t border-border px-2 py-5 sm:px-7">
+      <div className="px-2 pt-1 pb-5">
         <NavLinks
           onNavigate={() => {
             document.querySelector<HTMLDetailsElement>("details[data-docs-menu]")?.removeAttribute("open");

@@ -6,9 +6,8 @@ import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { PLATFORMS } from "@/lib/platforms";
 import { cn } from "@/lib/utils";
 
-import { V2_HOME, v2Docs } from "@/components/landing-v2/links";
 
-/** Header and footer shared by the v2 preview pages. */
+/** Header and footer shared by the home page and the docs. */
 
 /** Platforms on the way. Bubble has no icon in simple-icons, so it gets a monogram. */
 export const COMING_SOON: { id: string; name: string; path?: string; color?: string }[] = [
@@ -17,7 +16,7 @@ export const COMING_SOON: { id: string; name: string; path?: string; color?: str
   { id: "bubble", name: "Bubble" },
 ];
 
-export function V2Nav({ links, sticky = false }: { links: { href: string; label: string }[]; sticky?: boolean }) {
+export function SiteNav({ links, sticky = false }: { links: { href: string; label: string }[]; sticky?: boolean }) {
   return (
     <header
       className={cn(
@@ -28,7 +27,7 @@ export function V2Nav({ links, sticky = false }: { links: { href: string; label:
       )}
     >
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4">
-        <Link href={V2_HOME} className="flex items-center gap-2 text-lg font-extrabold tracking-[-0.03em]">
+        <Link href="/" className="flex items-center gap-2 text-lg font-extrabold tracking-[-0.03em]">
           <Image src="/logo-mark.svg" alt="" width={28} height={28} priority className="size-7" />
           fewchurs
         </Link>
@@ -52,7 +51,7 @@ export function V2Nav({ links, sticky = false }: { links: { href: string; label:
   );
 }
 
-export function V2Footer() {
+export function SiteFooter() {
   return (
     <footer className="border-t border-[var(--v2-line)] px-4 sm:px-8">
       <div className="mx-auto grid max-w-6xl gap-10 py-14 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
@@ -64,14 +63,14 @@ export function V2Footer() {
           <p className="max-w-xs text-sm text-[var(--v2-fg-3)]">Feature requests, votes and a public roadmap for your app.</p>
         </div>
         <FooterCol title="Product">
-          <FooterLink href={`${V2_HOME}#how`}>How it works</FooterLink>
-          <FooterLink href={`${V2_HOME}#pricing`}>Pricing</FooterLink>
-          <FooterLink href="/docs-preview">Docs</FooterLink>
+          <FooterLink href="/#how">How it works</FooterLink>
+          <FooterLink href="/pricing">Pricing</FooterLink>
+          <FooterLink href="/docs">Docs</FooterLink>
           <FooterLink href="/login">Log in</FooterLink>
         </FooterCol>
         <FooterCol title="Platforms">
           {PLATFORMS.map((p) => (
-            <FooterLink key={p.id} href={v2Docs(p.href ?? "/docs")}>
+            <FooterLink key={p.id} href={p.href ?? "/docs"}>
               {p.name}
             </FooterLink>
           ))}

@@ -22,13 +22,16 @@ const nextConfig: NextConfig = {
   // <title>/<meta description> into the <body> for regular browsers. Always put
   // them in the <head>, where every crawler and audit tool expects them.
   htmlLimitedBots: /.*/,
-  // The new home page and docs were previewed at /landing and /docs-v2 before
-  // they went live; keep any shared preview links working.
+  // Home page and docs redesigns were previewed at these paths before they
+  // went live; keep any shared preview links working.
   async redirects() {
     return [
       { source: "/landing", destination: "/", permanent: true },
+      { source: "/home-v2", destination: "/", permanent: true },
       { source: "/docs-v2", destination: "/docs", permanent: true },
       { source: "/docs-v2/:path*", destination: "/docs/:path*", permanent: true },
+      { source: "/docs-preview", destination: "/docs", permanent: true },
+      { source: "/docs-preview/:path*", destination: "/docs/:path*", permanent: true },
     ];
   },
 };

@@ -1,4 +1,4 @@
-/* Styles for the experimental landing page at /home-v2 only. */
+/* Styles for the home page and the docs. */
 
 /* Light is the default; the site's .dark class on <html> switches the tokens. */
 .v2-root {
@@ -164,7 +164,7 @@
   }
 }
 
-/* ---------- docs-v2 ---------- */
+/* ---------- docs ---------- */
 
 /* Page content still uses a few site tokens (borders, muted text): point them at v2's. */
 .v2-docs {

@@ -1,33 +1,36 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { ArrowRight, Check, ChevronUp, Mail } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { BrandIcon } from "@/components/marketing/BrandIcon";
 import { PricingPlans } from "@/components/pricing/PricingPlans";
 import { PLATFORMS } from "@/lib/platforms";
+import { getSessionUser } from "@/lib/auth/requireUser";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE } from "@/lib/site";
+import { HomeStructuredData } from "@/components/seo/StructuredData";
 import { Halftone } from "@/components/landing-v2/Halftone";
 import { RequestCarousel } from "@/components/landing-v2/RequestCarousel";
 import { ResponsiveBoard } from "@/components/landing-v2/ResponsiveBoard";
-import { COMING_SOON, V2Footer, V2Nav } from "@/components/landing-v2/Chrome";
+import { COMING_SOON, SiteFooter, SiteNav } from "@/components/landing-v2/Chrome";
 import { jakarta } from "@/components/landing-v2/fonts";
 import { Reveal } from "@/components/landing-v2/Reveal";
+import { Eyebrow, FaqSection } from "@/components/landing-v2/Sections";
 import "@/components/landing-v2/v2.css";
 
-/*
- * Experimental redesign of the home page. Lives at /home-v2 so the live home
- * page at / is untouched; kept out of search until it replaces it.
- */
-
 export const metadata: Metadata = {
-  title: "Home (preview)",
-  robots: { index: false, follow: false },
+  // The home page spells the brand and the category out in full; every other page uses the template.
+  title: { absolute: `${SITE_NAME} — ${SITE_TAGLINE}` },
+  description: SITE_DESCRIPTION,
+  alternates: { canonical: "/" },
+  openGraph: { url: "/", title: `${SITE_NAME} — ${SITE_TAGLINE}`, description: SITE_DESCRIPTION },
 };
 
 const NAV = [
   { href: "#how", label: "How it works" },
   { href: "#board", label: "The board" },
   { href: "#pricing", label: "Pricing" },
-  { href: "/docs-preview", label: "Docs" },
+  { href: "/docs", label: "Docs" },
 ];
 
 const HERO_ICONS = ["swiftui", "kotlin", "flutter", "react"];
@@ -52,28 +55,22 @@ const DIY = [
   { what: "Admin dashboard", note: "Triage, statuses, export", time: "~1 week" },
 ];
 
-const FAQ = [
-  { q: "Do I need a backend?", a: "No. Fewchurs is the backend. Add the SDK and you're done." },
-  {
-    q: "What's on the free plan?",
-    a: "One app on one platform, the first 5 feature requests visible, unlimited votes and comments. Free forever.",
-  },
-  { q: "Can users vote without an account?", a: "Yes, anonymously by device. No login required for anyone but you." },
-  { q: "Do I need to build the UI?", a: "No. The SDK renders the whole board. On Pro you can also link to a public web board." },
-  { q: "Can I remove the badge?", a: 'Yes, on Starter and Pro. The "Powered by" badge only shows on Free.' },
-];
-
 function iconFill(color: string) {
   // Next.js's brand colour is black, which would vanish in dark mode: use the text colour.
   return color.toLowerCase() === "#000000" ? undefined : color;
 }
 
-export default function HomeV2() {
+export default async function Home() {
+  // Signed-in developers go straight to their dashboard.
+  const user = await getSessionUser();
+  if (user) redirect("/dashboard");
+
   const heroIcons = HERO_ICONS.map((id) => PLATFORMS.find((p) => p.id === id)!).filter(Boolean);
 
   return (
     <div className={`${jakarta.variable} v2-root flex flex-1 flex-col overflow-x-clip`}>
-      <V2Nav links={NAV} />
+      <HomeStructuredData />
+      <SiteNav links={NAV} />
 
       <main className="flex-1">
         {/* Hero */}
@@ -318,29 +315,7 @@ export default function HomeV2() {
           </div>
         </section>
 
-        {/* FAQ */}
-        <section className="px-4 pb-20 sm:px-8 sm:pb-28">
-          <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.8fr_1.2fr]">
-            <div>
-              <Eyebrow>FAQ</Eyebrow>
-              <h2 className="mt-3 text-4xl leading-[1.05] tracking-[-0.04em]">Questions, answered.</h2>
-            </div>
-            <div className="divide-y divide-[var(--v2-line)] border-y border-[var(--v2-line)]">
-              {FAQ.map((f) => (
-                <details key={f.q} className="group py-1">
-                  <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-4 font-semibold [&::-webkit-details-marker]:hidden">
-                    {f.q}
-                    <span
-                      aria-hidden
-                      className="relative size-3 shrink-0 before:absolute before:inset-x-0 before:top-1/2 before:h-px before:bg-current after:absolute after:inset-y-0 after:left-1/2 after:w-px after:bg-current after:transition-transform after:duration-300 group-open:after:scale-y-0"
-                    />
-                  </summary>
-                  <p className="pb-5 text-[var(--v2-fg-2)]">{f.a}</p>
-                </details>
-              ))}
-            </div>
-          </div>
-        </section>
+        <FaqSection />
 
         {/* CTA */}
         <section className="px-4 pb-20 sm:px-8 sm:pb-24">
@@ -362,7 +337,7 @@ export default function HomeV2() {
                     Start free
                     <ArrowRight className="size-4" />
                   </Link>
-                  <Link href="/docs-preview" className="px-3 text-sm font-semibold text-[var(--v2-fg)] hover:text-[var(--v2-fg)]">
+                  <Link href="/docs" className="px-3 text-sm font-semibold text-[var(--v2-fg)] hover:text-[var(--v2-fg)]">
                     Read the docs
                   </Link>
                 </div>
@@ -399,13 +374,9 @@ export default function HomeV2() {
         </section>
       </main>
 
-      <V2Footer />
+      <SiteFooter />
     </div>
   );
-}
-
-function Eyebrow({ children }: { children: React.ReactNode }) {
-  return <p className="font-mono text-xs font-medium tracking-[0.18em] text-[var(--v2-orange)] uppercase">{children}</p>;
 }
 
 function StepCard({ n, title, body, children }: { n: string; title: string; body: string; children: React.ReactNode }) {
