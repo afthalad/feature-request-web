@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { COMPETITORS } from "@/lib/compare";
 import { DOCS_PAGES } from "@/lib/docs/nav";
 import { absoluteUrl } from "@/lib/site";
 
@@ -8,6 +9,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     { url: absoluteUrl("/"), lastModified: now, changeFrequency: "weekly", priority: 1 },
     { url: absoluteUrl("/pricing"), lastModified: now, changeFrequency: "monthly", priority: 0.8 },
+    { url: absoluteUrl("/compare"), lastModified: now, changeFrequency: "monthly", priority: 0.6 },
+    ...COMPETITORS.map((c) => ({
+      url: absoluteUrl(`/compare/${c.slug}`),
+      lastModified: now,
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    })),
     ...DOCS_PAGES.map((page) => ({
       url: absoluteUrl(page.href),
       lastModified: now,

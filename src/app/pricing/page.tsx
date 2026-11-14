@@ -101,6 +101,7 @@ export default function PricingPage() {
               </p>
             </div>
             <div className="v2-appear" style={{ "--d": "240ms" } as React.CSSProperties}>
+              <h2 className="sr-only">Plans</h2>
               <PricingPlans />
             </div>
           </div>

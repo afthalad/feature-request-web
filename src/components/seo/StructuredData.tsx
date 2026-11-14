@@ -85,3 +85,38 @@ export function DocsBreadcrumbs({ path, title }: { path: string; title: string }
     />
   );
 }
+
+/** Breadcrumbs for any page, e.g. Fewchurs › Compare › Canny. */
+export function BreadcrumbStructuredData({ items }: { items: { name: string; path: string }[] }) {
+  return (
+    <JsonLd
+      data={{
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: items.map((item, i) => ({
+          "@type": "ListItem",
+          position: i + 1,
+          name: item.name,
+          item: absoluteUrl(item.path),
+        })),
+      }}
+    />
+  );
+}
+
+/** The questions and answers shown on the page, as an FAQPage. */
+export function FaqStructuredData({ items }: { items: { q: string; a: string }[] }) {
+  return (
+    <JsonLd
+      data={{
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: items.map((f) => ({
+          "@type": "Question",
+          name: f.q,
+          acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
+      }}
+    />
+  );
+}

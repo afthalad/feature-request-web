@@ -5,7 +5,7 @@ import { NavAccount } from "@/components/landing/NavAccount";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { PLATFORMS } from "@/lib/platforms";
 import { cn } from "@/lib/utils";
-
+import { COMPETITORS } from "@/lib/compare";
 
 /** Header and footer shared by the home page and the docs. */
 
@@ -54,7 +54,7 @@ export function SiteNav({ links, sticky = false }: { links: { href: string; labe
 export function SiteFooter() {
   return (
     <footer className="border-t border-[var(--v2-line)] px-4 sm:px-8">
-      <div className="mx-auto grid max-w-6xl gap-10 py-14 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
+      <div className="mx-auto grid max-w-6xl gap-10 py-14 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr_1fr]">
         <div className="space-y-3">
           <span className="flex items-center gap-2 text-lg font-extrabold tracking-[-0.03em]">
             <Image src="/logo-mark.svg" alt="" width={24} height={24} className="size-6" />
@@ -79,6 +79,14 @@ export function SiteFooter() {
               {p.name} <span className="text-[10px] font-bold tracking-wide text-[var(--v2-orange)] uppercase">Soon</span>
             </li>
           ))}
+        </FooterCol>
+        <FooterCol title="Compare">
+          {COMPETITORS.map((c) => (
+            <FooterLink key={c.slug} href={`/compare/${c.slug}`}>
+              vs {c.name}
+            </FooterLink>
+          ))}
+          <FooterLink href="/compare">All comparisons</FooterLink>
         </FooterCol>
         <FooterCol title="Support">
           <li>
