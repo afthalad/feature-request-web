@@ -32,7 +32,7 @@ const TOC = [
 
 const PUB_URL = "https://pub.dev/packages/fewchurs";
 // Latest version of the fewchurs package on pub.dev. Bump it here when a new version ships.
-const VERSION = "1.5.2";
+const VERSION = "1.7.1";
 
 const PUB_ADD = `flutter pub add fewchurs`;
 
@@ -56,7 +56,11 @@ const SHOW = `FilledButton(
   child: const Text('Suggest a feature'),
 )`;
 
-const SHEET = `Fewchurs.showBoardSheet(context);`;
+const SHEET = `Fewchurs.showBoardSheet(context);
+
+// Always a side sheet, or always a bottom sheet
+Fewchurs.showBoardSheet(context, position: FewchursSheetPosition.side);
+Fewchurs.showBoardSheet(context, position: FewchursSheetPosition.bottom);`;
 
 const WIDGET = `// In a tab or a page that has its own app bar
 const FewchursBoard(showAppBar: false)`;
@@ -136,7 +140,12 @@ export default function FlutterDocsPage() {
           the Top and New tabs, votes, comments and new requests.
         </P>
         <CodeBlock code={SHOW} />
-        <P>Or as a bottom sheet:</P>
+        <P>
+          Or as a sheet. It&apos;s a bottom sheet on phones. On screens 840 px
+          and wider, like the web and tablets in landscape, it slides in from
+          the side at full height, and requests and the submit form open
+          inside it.
+        </P>
         <CodeBlock code={SHEET} />
         <P>
           Or put <C>FewchursBoard</C> anywhere, like a tab or a route:
@@ -194,11 +203,19 @@ export default function FlutterDocsPage() {
           settings or read anything private.
         </P>
         <P>
-          The key only works in the apps you added in the dashboard. Your
-          Android package name is the <C>applicationId</C> in{" "}
+          The key only works in the apps you added in the dashboard. The
+          package sends your app&apos;s ID for you: the Bundle ID on iOS and the
+          package name on Android. On the web the browser sends your domain.
+          Your Android package name is the <C>applicationId</C> in{" "}
           <C>android/app/build.gradle</C>. Your iOS Bundle ID is in Xcode under
           Runner → General. See{" "}
           <A href="/docs/concepts#app-ids">find your app IDs</A>.
+        </P>
+        <P>
+          If the board says &quot;This API key is not set up for …&quot;, add
+          the ID it names to your app in the dashboard. If you just added the
+          package and the app ID can&apos;t be read, fully restart the app
+          instead of hot reloading.
         </P>
         <Note>
           The package gives each device a random ID and saves it on the device.
