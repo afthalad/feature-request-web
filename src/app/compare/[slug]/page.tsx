@@ -56,7 +56,7 @@ export default async function ComparePage({ params }: { params: Promise<{ slug: 
           <Halftone mode="corners" className="-z-10 h-[560px]" />
           <div className="mx-auto max-w-3xl text-center">
             <div className="v2-appear mb-8">
-              <VsLockup logo={c.logo} />
+              <VsLockup logo={c.logo} name={c.name} />
             </div>
             <nav aria-label="Breadcrumb" className="v2-appear mb-5 text-sm text-[var(--v2-fg-3)]">
               <Link href="/compare" className="hover:text-[var(--v2-fg)]">
@@ -117,7 +117,7 @@ export default async function ComparePage({ params }: { params: Promise<{ slug: 
                       </th>
                       <th scope="col" className="px-5 py-4 text-base font-bold">
                         <span className="flex items-center gap-2.5">
-                          <ProductIcon src={c.logo} size={26} />
+                          <ProductIcon src={c.logo} name={c.name} size={26} />
                           {c.name}
                         </span>
                       </th>
@@ -144,15 +144,15 @@ export default async function ComparePage({ params }: { params: Promise<{ slug: 
                     <dt className="font-bold">{row.label}</dt>
                     <dd className="mt-3 space-y-3 text-sm leading-relaxed">
                       <p>
-                        <span className="mb-1 flex items-center gap-2 font-mono text-[11px] tracking-[0.14em] text-[var(--v2-orange)] uppercase">
+                        <span className="mb-1 flex items-center gap-2 font-mono text-xs tracking-[0.14em] text-[var(--v2-orange)] uppercase">
                           <FewchursIcon size={18} className="shadow-none" />
                           Fewchurs
                         </span>
                         {row.fewchurs}
                       </p>
                       <p className="text-[var(--v2-fg-2)]">
-                        <span className="mb-1 flex items-center gap-2 font-mono text-[11px] tracking-[0.14em] text-[var(--v2-fg-3)] uppercase">
-                          <ProductIcon src={c.logo} size={18} />
+                        <span className="mb-1 flex items-center gap-2 font-mono text-xs tracking-[0.14em] text-[var(--v2-fg-3)] uppercase">
+                          <ProductIcon src={c.logo} name={c.name} size={18} />
                           {c.name}
                         </span>
                         {row.them}
@@ -183,7 +183,7 @@ export default async function ComparePage({ params }: { params: Promise<{ slug: 
           <div className="mx-auto grid max-w-5xl gap-4 md:grid-cols-2">
             <Reveal className="rounded-2xl bg-[var(--v2-card)] p-6 shadow-[var(--v2-shadow)] sm:p-8">
               <h2 className="flex items-center gap-3 text-2xl tracking-[-0.03em]">
-                <ProductIcon src={c.logo} size={32} />
+                <ProductIcon src={c.logo} name={c.name} size={32} />
                 Pick {c.name} if
               </h2>
               <ul className="mt-5 space-y-3 text-[var(--v2-fg-2)]">
@@ -225,7 +225,7 @@ export default async function ComparePage({ params }: { params: Promise<{ slug: 
                   href={`/compare/${o.slug}`}
                   className="group flex items-center justify-between gap-4 rounded-2xl bg-[var(--v2-card)] p-5 shadow-[var(--v2-shadow)] transition-transform duration-300 hover:-translate-y-0.5"
                 >
-                  <ProductIcon src={o.logo} size={44} />
+                  <ProductIcon src={o.logo} name={o.name} size={44} />
                   <span className="flex-1">
                     <span className="block font-bold">Fewchurs vs {o.name}</span>
                     <span className="mt-1 block text-sm text-[var(--v2-fg-2)]">{o.blurb}</span>
@@ -256,7 +256,7 @@ export default async function ComparePage({ params }: { params: Promise<{ slug: 
                   Start free
                   <ArrowRight className="size-4" />
                 </Link>
-                <Link href="/pricing" className="px-3 text-sm font-semibold text-[var(--v2-fg)] hover:text-[var(--v2-orange)]">
+                <Link href="/pricing" className="px-3 py-3 text-sm font-semibold text-[var(--v2-fg)] hover:text-[var(--v2-orange)]">
                   See pricing
                 </Link>
               </div>

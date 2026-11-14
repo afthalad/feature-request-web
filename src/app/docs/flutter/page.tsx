@@ -16,7 +16,7 @@ import {
 export const metadata: Metadata = pageMetadata({
   title: "Flutter SDK",
   description:
-    "Add a feature request board to your Flutter app on iOS, Android and the web.",
+    "Add a native feature request board to your Flutter app on iOS, Android and the web. One package, one line of setup.",
   path: "/docs/flutter",
 });
 

@@ -17,7 +17,7 @@ import {
 export const metadata: Metadata = pageMetadata({
   title: "Laravel SDK",
   description:
-    "Add a feature request board to your Laravel app with one Blade tag, or call Fewchurs from PHP to create requests, votes and comments.",
+    "Add a feature request board to your Laravel app with one Blade tag, or use the PHP client to create requests, votes and comments.",
   path: "/docs/laravel",
 });
 

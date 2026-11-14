@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Rocket, Sparkles, Sprout } from "lucide-react";
 import { toast } from "sonner";
-import { auth } from "@/lib/firebase/client";
+import { loadAuth } from "@/lib/firebase/lazy";
+import { whenIdle } from "@/lib/idle";
 import { PlanCard } from "@/components/pricing/PlanCard";
 import { cn } from "@/lib/utils";
 import { captureError, identifyUser, track } from "@/lib/analytics/client";
@@ -49,8 +50,11 @@ export function PricingPlans() {
   const [loadingPlan, setLoadingPlan] = useState<PaidPlan | null>(null);
 
   useEffect(() => {
+    // Firebase (to know if the visitor is signed in) loads once the page is idle.
     let cancelled = false;
-    auth.authStateReady().then(() => {
+    const cancelIdle = whenIdle(async () => {
+      const auth = await loadAuth();
+      await auth.authStateReady();
       if (cancelled) return;
       const user = auth.currentUser;
       if (user) identifyUser(user);
@@ -58,6 +62,7 @@ export function PricingPlans() {
     });
     return () => {
       cancelled = true;
+      cancelIdle();
     };
   }, []);
 
@@ -69,6 +74,7 @@ export function PricingPlans() {
   async function handleUpgrade(plan: PaidPlan) {
     // Right after a page load Firebase is still restoring the signed-in user, and currentUser
     // is null until it has: without waiting, a quick click sent signed-in people to /login.
+    const auth = await loadAuth();
     await auth.authStateReady();
     track("upgrade_clicked", {
       plan,
@@ -155,7 +161,7 @@ export function PricingPlans() {
             >
               {value === "monthly" ? "Monthly" : "Yearly"}
               {value === "yearly" && (
-                <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[11px] font-semibold text-emerald-700 dark:text-emerald-400">
+                <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-xs font-semibold text-emerald-700 dark:text-emerald-400">
                   {YEARLY_SAVING}
                 </span>
               )}

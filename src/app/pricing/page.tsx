@@ -15,7 +15,7 @@ import "@/components/landing-v2/v2.css";
 export const metadata: Metadata = pageMetadata({
   title: "Pricing",
   description:
-    "Free forever for one app. Starter is $9 a month for 3 apps, Pro is $24 a month for 5 apps with a public board. Yearly gets 2 months free.",
+    "Free forever for one app. Starter is $9/mo for 3 apps, Pro is $24/mo for 5 apps and a public board. Yearly gets 2 months free.",
   path: "/pricing",
 });
 
@@ -123,7 +123,7 @@ export default function PricingPage() {
                   <thead>
                     <tr className="bg-[var(--v2-chip)]">
                       <th scope="col" className="w-[34%] px-3 py-4 font-semibold sm:w-[40%] sm:px-6">
-                        <span className="font-mono text-[11px] font-medium tracking-[0.14em] text-[var(--v2-fg-3)] uppercase">
+                        <span className="font-mono text-xs font-medium tracking-[0.14em] text-[var(--v2-fg-3)] uppercase">
                           Feature
                         </span>
                       </th>
@@ -191,7 +191,7 @@ export default function PricingPage() {
                   Start free
                   <ArrowRight className="size-4" />
                 </Link>
-                <Link href="/docs" className="px-3 text-sm font-semibold text-[var(--v2-fg)] hover:text-[var(--v2-orange)]">
+                <Link href="/docs" className="px-3 py-3 text-sm font-semibold text-[var(--v2-fg)] hover:text-[var(--v2-orange)]">
                   Read the docs
                 </Link>
               </div>

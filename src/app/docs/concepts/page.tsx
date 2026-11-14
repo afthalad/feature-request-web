@@ -15,7 +15,7 @@ import {
 export const metadata: Metadata = pageMetadata({
   title: "How it works",
   description:
-    "The few ideas behind Fewchurs: apps, API keys, requests, votes, statuses and device IDs.",
+    "The few ideas behind Fewchurs: apps, API keys, feature requests, votes, statuses, and how device IDs let anyone vote.",
   path: "/docs/concepts",
 });
 

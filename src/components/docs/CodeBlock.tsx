@@ -21,7 +21,7 @@ export function CodeBlock({ code, filename }: { code: string; filename?: string 
 
   return (
     <div className="v2-code relative overflow-hidden rounded-2xl">
-      <div className="flex items-center justify-between gap-3 py-1.5 pr-1.5 pl-4 font-mono text-[11px] text-white/50">
+      <div className="flex items-center justify-between gap-3 py-1.5 pr-1.5 pl-4 font-mono text-xs text-white/50">
         <span className="flex min-w-0 items-center gap-2">
           <span aria-hidden className="flex gap-1">
             <span className="size-2 rounded-full bg-white/15" />

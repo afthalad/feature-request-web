@@ -40,7 +40,7 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
     <nav aria-label="Docs" className="space-y-7 text-sm">
       {DOCS_NAV.map((group) => (
         <div key={group.title}>
-          <p className="mb-2 px-3 font-mono text-[10.5px] font-medium tracking-[0.16em] text-[var(--v2-fg-3)] uppercase">
+          <p className="mb-2 px-3 font-mono text-xs font-medium tracking-[0.16em] text-[var(--v2-fg-3)] uppercase">
             {group.title}
           </p>
           <ul className="space-y-0.5">

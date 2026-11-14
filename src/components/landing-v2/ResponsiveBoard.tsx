@@ -205,7 +205,7 @@ function Ruler({ axis, label, style }: { axis: "x" | "y"; label: string; style: 
       <span className={cn("absolute bg-[var(--v2-line-strong)]", x ? "top-0 right-0 h-full w-px" : "bottom-0 left-0 h-px w-full")} />
       <span
         className={cn(
-          "absolute bg-[var(--v2-bg)] px-1.5 font-mono text-[10px] text-[var(--v2-fg-3)] tabular-nums",
+          "absolute bg-[var(--v2-bg)] px-1.5 font-mono text-xs text-[var(--v2-fg-3)] tabular-nums",
           x ? "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" : "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-90",
         )}
       >

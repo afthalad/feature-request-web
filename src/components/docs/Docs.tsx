@@ -167,7 +167,7 @@ export function Table({ head, rows }: { head: string[]; rows: ReactNode[][] }) {
             {head.map((h) => (
               <th
                 key={h}
-                className="px-4 py-3 font-mono text-[11px] font-medium tracking-[0.12em] whitespace-nowrap text-[var(--v2-fg-3)] uppercase"
+                className="px-4 py-3 font-mono text-xs font-medium tracking-[0.12em] whitespace-nowrap text-[var(--v2-fg-3)] uppercase"
               >
                 {h}
               </th>
@@ -201,7 +201,7 @@ function PrevNext({ path }: { path: string }) {
     <nav aria-label="Previous and next page" className="mt-20 grid gap-4 sm:grid-cols-2">
       {prev ? (
         <Link href={prev.href} className={card}>
-          <span className="flex items-center gap-1.5 font-mono text-[11px] tracking-[0.14em] text-[var(--v2-fg-3)] uppercase">
+          <span className="flex items-center gap-1.5 font-mono text-xs tracking-[0.14em] text-[var(--v2-fg-3)] uppercase">
             <ArrowLeft className="size-3 transition-transform group-hover:-translate-x-0.5" /> Previous
           </span>
           <span className="mt-1.5 block text-lg font-bold tracking-[-0.02em]">{prev.label}</span>
@@ -211,7 +211,7 @@ function PrevNext({ path }: { path: string }) {
       )}
       {next && (
         <Link href={next.href} className={cn(card, "text-right")}>
-          <span className="flex items-center justify-end gap-1.5 font-mono text-[11px] tracking-[0.14em] text-[var(--v2-fg-3)] uppercase">
+          <span className="flex items-center justify-end gap-1.5 font-mono text-xs tracking-[0.14em] text-[var(--v2-fg-3)] uppercase">
             Next <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
           </span>
           <span className="mt-1.5 block text-lg font-bold tracking-[-0.02em]">{next.label}</span>

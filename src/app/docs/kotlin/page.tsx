@@ -6,7 +6,7 @@ import { A, C, DocsPage, Note, P, Section, Step, Steps, Table } from "@/componen
 export const metadata: Metadata = pageMetadata({
   title: "Android SDK (Kotlin)",
   description:
-    "Add a feature request board to your Android app with Kotlin and Jetpack Compose.",
+    "Add a native feature request board to your Android app with Kotlin and Jetpack Compose. Users suggest and vote in your app.",
   path: "/docs/kotlin",
 });
 

@@ -15,7 +15,7 @@ import "@/components/landing-v2/v2.css";
 export const metadata: Metadata = pageMetadata({
   title: "Fewchurs alternatives and comparisons",
   description:
-    "How Fewchurs compares with Canny, Featurebase and WishKit for in-app feature requests: native SDKs, platforms, pricing and when each one fits.",
+    "How Fewchurs compares with Canny, Featurebase and WishKit for in-app feature requests: native SDKs, platforms and pricing.",
   path: "/compare",
 });
 
@@ -66,7 +66,7 @@ export default function CompareIndex() {
                 className="group flex flex-col rounded-2xl bg-[var(--v2-card)] p-6 shadow-[var(--v2-shadow)] transition-transform duration-300 hover:-translate-y-0.5"
               >
                 <div className="mb-5 flex justify-start">
-                  <VsLockup logo={c.logo} size={44} />
+                  <VsLockup logo={c.logo} name={c.name} size={44} />
                 </div>
                 <h2 className="text-2xl tracking-[-0.03em]">Fewchurs vs {c.name}</h2>
                 <p className="mt-3 flex-1 text-sm leading-relaxed text-[var(--v2-fg-2)]">{c.blurb}</p>

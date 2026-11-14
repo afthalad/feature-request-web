@@ -9,7 +9,7 @@ export const SITE_NAME = "Fewchurs";
 export const SITE_TAGLINE = "Feature request SDK for iOS, Android and web apps";
 
 export const SITE_DESCRIPTION =
-  "Add a feature request board to your app. Users suggest and vote, you ship what they want most. SDKs for SwiftUI, Kotlin, Flutter, React, Next.js and Laravel.";
+  "Add a feature request board to your app. Users suggest and vote, you ship what they want most. SDKs for iOS, Android and web.";
 
 /** Official package and source pages, used as the organization's "sameAs" links. */
 export const SITE_PROFILES = [

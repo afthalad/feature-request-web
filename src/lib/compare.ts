@@ -54,7 +54,7 @@ export const COMPETITORS: Competitor[] = [
     blurb: "Feedback boards for product teams, priced by tracked users. Mobile apps use a web view.",
     title: "Fewchurs vs Canny: a Canny alternative for apps",
     description:
-      "Fewchurs vs Canny compared: native iOS, Android and Flutter SDKs instead of a web view, and per-app pricing from $0 instead of $79 a month.",
+      "Fewchurs vs Canny: native iOS, Android and Flutter SDKs instead of a web view, and per-app pricing from $0, not $79 a month.",
     headline: "Fewchurs vs Canny",
     intro:
       "Canny is a feedback tool for product teams that lives on the web. Fewchurs is a feature request board you drop inside your own app, with native SDKs for mobile and web.",
@@ -123,7 +123,7 @@ export const COMPETITORS: Competitor[] = [
     blurb: "Feedback, help center and support inbox, priced per seat. Mobile apps embed the portal in a web view.",
     title: "Fewchurs vs Featurebase: native in-app boards",
     description:
-      "Fewchurs vs Featurebase compared: native mobile SDKs instead of a web view portal, and per-app pricing instead of paying for each seat.",
+      "Fewchurs vs Featurebase: native mobile SDKs instead of a portal in a web view, and one price per app instead of per seat.",
     headline: "Fewchurs vs Featurebase",
     intro:
       "Featurebase bundles feedback boards, a help center, surveys and a support inbox. Fewchurs does one thing: a feature request board inside your app, with native SDKs.",
@@ -187,7 +187,7 @@ export const COMPETITORS: Competitor[] = [
     blurb: "A SwiftUI feature request SDK for Apple platforms. No Android or web SDK.",
     title: "Fewchurs vs WishKit: iOS, Android and web",
     description:
-      "Fewchurs vs WishKit compared: both are native in-app feature request SDKs, but Fewchurs also covers Android, Flutter and the web.",
+      "Fewchurs vs WishKit: both are native in-app feature request SDKs, but Fewchurs also covers Android, Flutter and the web.",
     headline: "Fewchurs vs WishKit",
     intro:
       "WishKit and Fewchurs both put a native feature request board inside your app. The difference is reach: WishKit is Apple-only, Fewchurs covers iOS, Android, Flutter and the web.",

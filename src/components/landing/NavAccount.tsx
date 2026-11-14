@@ -3,9 +3,10 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { onAuthStateChanged, signOut, type User } from "firebase/auth";
+import type { User } from "firebase/auth";
 import { resetAnalytics } from "@/lib/analytics/client";
-import { auth } from "@/lib/firebase/client";
+import { loadAuth } from "@/lib/firebase/lazy";
+import { whenIdle } from "@/lib/idle";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { buttonVariants } from "@/components/ui/button";
 import {
@@ -19,12 +20,26 @@ import {
 /**
  * Right side of the header: "Log in" and "Start free" for visitors, the
  * account menu for signed-in developers (e.g. while they read the docs).
+ * Firebase is loaded once the page is idle, so visitors get the buttons
+ * straight away and the sign-in check never delays the first paint.
  */
 export function NavAccount() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
 
-  useEffect(() => onAuthStateChanged(auth, setUser), []);
+  useEffect(() => {
+    let unsubscribe: (() => void) | undefined;
+    let cancelled = false;
+    const cancelIdle = whenIdle(async () => {
+      const [auth, { onAuthStateChanged }] = await Promise.all([loadAuth(), import("firebase/auth")]);
+      if (!cancelled) unsubscribe = onAuthStateChanged(auth, setUser);
+    });
+    return () => {
+      cancelled = true;
+      cancelIdle();
+      unsubscribe?.();
+    };
+  }, []);
 
   if (!user) {
     return (
@@ -45,6 +60,7 @@ export function NavAccount() {
   const initial = user.displayName?.[0] ?? user.email?.[0] ?? "?";
 
   async function handleSignOut() {
+    const [auth, { signOut }] = await Promise.all([loadAuth(), import("firebase/auth")]);
     await signOut(auth);
     resetAnalytics();
     await fetch("/api/auth/session", { method: "DELETE" });

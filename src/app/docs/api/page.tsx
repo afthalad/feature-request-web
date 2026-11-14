@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 export const metadata: Metadata = pageMetadata({
   title: "REST API",
   description:
-    "Use Fewchurs from any language with plain HTTP requests: list feature requests, create new ones, vote and comment with your app's API key.",
+    "Use Fewchurs from any language over HTTP: list and create feature requests, vote and comment with your app's API key.",
   path: "/docs/api",
 });
 

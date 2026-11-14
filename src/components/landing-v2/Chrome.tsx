@@ -28,8 +28,9 @@ export function SiteNav({ links, sticky = false }: { links: { href: string; labe
     >
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4">
         <Link href="/" className="flex items-center gap-2 text-lg font-extrabold tracking-[-0.03em]">
-          <Image src="/logo-mark.svg" alt="" width={28} height={28} priority className="size-7" />
-          fewchurs
+          {/* The image carries the name; the wordmark beside it is hidden from screen readers. */}
+          <Image src="/logo-mark.svg" alt="Fewchurs" width={28} height={28} priority className="size-7" />
+          <span aria-hidden>fewchurs</span>
         </Link>
         <nav aria-label="Main" className="hidden items-center gap-1 text-sm font-semibold md:flex">
           {links.map((l) => (
@@ -57,8 +58,8 @@ export function SiteFooter() {
       <div className="mx-auto grid max-w-6xl gap-10 py-14 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr_1fr]">
         <div className="space-y-3">
           <span className="flex items-center gap-2 text-lg font-extrabold tracking-[-0.03em]">
-            <Image src="/logo-mark.svg" alt="" width={24} height={24} className="size-6" />
-            fewchurs
+            <Image src="/logo-mark.svg" alt="Fewchurs" width={24} height={24} className="size-6" />
+            <span aria-hidden>fewchurs</span>
           </span>
           <p className="max-w-xs text-sm text-[var(--v2-fg-3)]">Feature requests, votes and a public roadmap for your app.</p>
         </div>
@@ -75,8 +76,8 @@ export function SiteFooter() {
             </FooterLink>
           ))}
           {COMING_SOON.map((p) => (
-            <li key={p.id} className="text-[var(--v2-fg-3)]">
-              {p.name} <span className="text-[10px] font-bold tracking-wide text-[var(--v2-orange)] uppercase">Soon</span>
+            <li key={p.id} className="py-1.5 text-[var(--v2-fg-3)] sm:py-0">
+              {p.name} <span className="text-xs font-bold tracking-wide text-[var(--v2-orange)] uppercase">Soon</span>
             </li>
           ))}
         </FooterCol>
@@ -90,7 +91,7 @@ export function SiteFooter() {
         </FooterCol>
         <FooterCol title="Support">
           <li>
-            <a className="text-[var(--v2-fg-2)] hover:text-[var(--v2-fg)]" href="mailto:support@fewchurs.com">
+            <a className="inline-block py-1.5 text-[var(--v2-fg-2)] hover:text-[var(--v2-fg)] sm:py-0" href="mailto:support@fewchurs.com">
               support@fewchurs.com
             </a>
           </li>
@@ -106,8 +107,8 @@ export function SiteFooter() {
 function FooterCol({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div>
-      <p className="mb-3 font-mono text-[11px] tracking-[0.16em] text-[var(--v2-fg-3)] uppercase">{title}</p>
-      <ul className="space-y-2 text-sm">{children}</ul>
+      <p className="mb-3 font-mono text-xs tracking-[0.16em] text-[var(--v2-fg-3)] uppercase">{title}</p>
+      <ul className="space-y-1 text-sm sm:space-y-2">{children}</ul>
     </div>
   );
 }
@@ -115,7 +116,8 @@ function FooterCol({ title, children }: { title: string; children: React.ReactNo
 function FooterLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
     <li>
-      <Link className="text-[var(--v2-fg-2)] hover:text-[var(--v2-fg)]" href={href}>
+      {/* Taller on phones so each link is an easy tap target. */}
+      <Link className="inline-block py-1.5 text-[var(--v2-fg-2)] hover:text-[var(--v2-fg)] sm:py-0" href={href}>
         {children}
       </Link>
     </li>

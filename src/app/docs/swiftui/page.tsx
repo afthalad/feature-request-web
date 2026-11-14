@@ -6,7 +6,7 @@ import { A, C, DocsPage, Note, P, Section, Step, Steps, Table } from "@/componen
 export const metadata: Metadata = pageMetadata({
   title: "iOS SDK (SwiftUI)",
   description:
-    "Add an in-app feature request board to your iOS app with the Fewchurs SwiftUI SDK. Users suggest and vote on ideas without leaving your app.",
+    "Add a native feature request board to your iOS app with the Fewchurs SwiftUI SDK. Users suggest and vote without leaving your app.",
   path: "/docs/swiftui",
 });
 

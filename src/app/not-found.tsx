@@ -33,7 +33,7 @@ export default function NotFound() {
             Back to home
             <ArrowRight className="size-4" />
           </Link>
-          <Link href="/docs" className="px-3 text-sm font-semibold text-[var(--v2-fg)] hover:text-[var(--v2-orange)]">
+          <Link href="/docs" className="px-3 py-3 text-sm font-semibold text-[var(--v2-fg)] hover:text-[var(--v2-orange)]">
             Read the docs
           </Link>
         </div>

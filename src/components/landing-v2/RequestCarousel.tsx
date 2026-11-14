@@ -43,12 +43,13 @@ export function RequestCarousel() {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const total = CARDS.length * SPACING;
     let offset = 0;
-    let last = performance.now();
+    let last = 0;
     let raf = 0;
-    let visible = true;
+    let running = false;
+    // Width is cached (and updated on resize) so each frame only writes styles, never reads layout.
+    let half = el.clientWidth / 2 + CARD_W;
 
     const place = () => {
-      const half = el.clientWidth / 2 + CARD_W;
       cards.current.forEach((card, i) => {
         if (!card) return;
         let x = (((i * SPACING - offset) % total) + total) % total;
@@ -68,18 +69,35 @@ export function RequestCarousel() {
     const tick = (now: number) => {
       const dt = Math.min(now - last, 64) / 1000;
       last = now;
-      if (visible && !reduce) offset += SPEED * dt;
+      offset += SPEED * dt;
       place();
       raf = requestAnimationFrame(tick);
     };
 
-    const io = new IntersectionObserver(([e]) => (visible = e.isIntersecting));
-    io.observe(el);
-    place();
-    raf = requestAnimationFrame(tick);
-    return () => {
+    // The loop only runs while the carousel is on screen: scrolled past, it costs nothing.
+    const start = () => {
+      if (running || reduce) return;
+      running = true;
+      last = performance.now();
+      raf = requestAnimationFrame(tick);
+    };
+    const stop = () => {
+      running = false;
       cancelAnimationFrame(raf);
+    };
+
+    const io = new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop()));
+    io.observe(el);
+    const ro = new ResizeObserver(() => {
+      half = el.clientWidth / 2 + CARD_W;
+      if (!running) place();
+    });
+    ro.observe(el);
+    place();
+    return () => {
+      stop();
       io.disconnect();
+      ro.disconnect();
     };
   }, []);
 
@@ -118,7 +136,7 @@ function RequestCard({ app, platform, title, votes, status, hue }: (typeof CARDS
       className="v2-rcard relative flex h-[300px] flex-col overflow-hidden rounded-2xl p-4"
       style={{ "--h": hue } as React.CSSProperties}
     >
-      <p className="text-[11px] font-semibold tracking-wide uppercase opacity-60">{app}</p>
+      <p className="text-xs font-semibold tracking-wide uppercase opacity-60">{app}</p>
       <div className="mt-5 flex items-center gap-3">
         <span className="grid size-12 place-items-center rounded-xl bg-[#ff5a14] text-white shadow-lg shadow-[#ff5a14]/30">
           <ChevronUp className="size-6" strokeWidth={3} />
@@ -126,7 +144,7 @@ function RequestCard({ app, platform, title, votes, status, hue }: (typeof CARDS
         <span className="text-4xl font-extrabold tracking-[-0.04em] tabular-nums">{votes}</span>
       </div>
       <p className="mt-4 text-xl leading-tight font-bold tracking-[-0.02em] text-balance">{title}</p>
-      <span className="v2-rchip mt-3 inline-flex w-fit items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium">
+      <span className="v2-rchip mt-3 inline-flex w-fit items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium">
         <span className={`size-1.5 rounded-full ${s.dot}`} />
         {s.label}
       </span>

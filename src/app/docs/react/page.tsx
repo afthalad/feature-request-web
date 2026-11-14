@@ -6,7 +6,7 @@ import { A, C, DocsPage, Note, P, Section, Step, Steps, Sub, Table } from "@/com
 export const metadata: Metadata = pageMetadata({
   title: "React SDK",
   description:
-    "Add a floating button to any React app that opens your feature request board in a sheet.",
+    "Add a floating button to any React app that opens your feature request board in a sheet. Users suggest and vote on ideas.",
   path: "/docs/react",
 });
 

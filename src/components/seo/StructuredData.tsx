@@ -1,9 +1,13 @@
-import { absoluteUrl, SITE_DESCRIPTION, SITE_NAME, SITE_PROFILES, SITE_URL } from "@/lib/site";
+import { absoluteUrl, SITE_NAME, SITE_PROFILES, SITE_URL } from "@/lib/site";
 
 /**
  * schema.org data that tells search engines what Fewchurs is: the site's
- * name (shown above the result), the organization and its logo, and the
- * product with its real prices. Only facts that are true on the site go here.
+ * name (shown above the result) and the organization with its logo. Only
+ * facts that are true on the site go here.
+ *
+ * There's deliberately no SoftwareApplication block: Google only accepts one
+ * with a real aggregateRating or reviews, and reports it as invalid without.
+ * Add it back once Fewchurs has genuine ratings to point to.
  */
 
 function JsonLd({ data }: { data: object }) {
@@ -40,22 +44,6 @@ export function HomeStructuredData() {
             alternateName: ["fewchurs.com", "Fewchurs feature request SDK"],
             url: absoluteUrl("/"),
             publisher: { "@id": ORG_ID },
-          },
-          {
-            "@type": "SoftwareApplication",
-            name: SITE_NAME,
-            url: absoluteUrl("/"),
-            description: SITE_DESCRIPTION,
-            applicationCategory: "DeveloperApplication",
-            operatingSystem: "iOS, Android, Web",
-            publisher: { "@id": ORG_ID },
-            offers: {
-              "@type": "AggregateOffer",
-              priceCurrency: "USD",
-              lowPrice: "0",
-              highPrice: "24",
-              offerCount: 3,
-            },
           },
         ],
       }}

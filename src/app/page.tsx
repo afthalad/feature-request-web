@@ -337,7 +337,7 @@ export default async function Home() {
                     Start free
                     <ArrowRight className="size-4" />
                   </Link>
-                  <Link href="/docs" className="px-3 text-sm font-semibold text-[var(--v2-fg)] hover:text-[var(--v2-fg)]">
+                  <Link href="/docs" className="px-3 py-3 text-sm font-semibold text-[var(--v2-fg)] hover:text-[var(--v2-orange)]">
                     Read the docs
                   </Link>
                 </div>
@@ -360,7 +360,7 @@ export default async function Home() {
                       </span>
                       <span>
                         <span className="block text-sm font-bold">{k.t}</span>
-                        <span className="flex items-center gap-1.5 text-[11px] text-[var(--v2-fg-3)]">
+                        <span className="flex items-center gap-1.5 text-xs text-[var(--v2-fg-3)]">
                           <span className={`size-1.5 rounded-full ${k.c}`} />
                           {k.s}
                         </span>
