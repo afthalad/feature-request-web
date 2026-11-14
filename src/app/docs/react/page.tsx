@@ -25,6 +25,9 @@ const TOC = [
   { id: "badge", label: "The \"Powered by\" badge" },
 ];
 
+// Latest version of @fewchurs/react on npm. Bump it here when a new version ships.
+const VERSION = "1.7.2";
+
 const INSTALL = `npm install @fewchurs/react`;
 
 const UPGRADE = `npm install @fewchurs/react@latest`;
@@ -140,6 +143,9 @@ export default function ReactDocsPage() {
     >
       <Section id="install" title="Install">
         <CodeBlock code={INSTALL} />
+        <P>
+          {VERSION} is the latest version.
+        </P>
         <P>
           Using Next.js? Follow the <A href="/docs/nextjs">Next.js guide</A> instead. It keeps
           your key on the server.

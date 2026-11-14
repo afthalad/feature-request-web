@@ -20,6 +20,9 @@ const TOC = [
   { id: "badge", label: "The \"Powered by\" badge" },
 ];
 
+// Latest version of @fewchurs/next on npm. Bump it here when a new version ships.
+const VERSION = "1.7.2";
+
 const INSTALL = `npm install @fewchurs/next`;
 
 const ENV = `FEWCHURS_API_KEY=fr_live_xxx`;
@@ -120,6 +123,7 @@ export default function NextJsDocsPage() {
         <Steps>
           <Step title="Install the package">
             <CodeBlock code={INSTALL} />
+            <P>{VERSION} is the latest version.</P>
           </Step>
           <Step title="Add your API key">
             <P>
