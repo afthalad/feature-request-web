@@ -62,6 +62,7 @@ export function SiteFooter() {
             <span aria-hidden>fewchurs</span>
           </span>
           <p className="max-w-xs text-sm text-[var(--v2-fg-3)]">Feature requests, votes and a public roadmap for your app.</p>
+          <ProductHuntBadge />
         </div>
         <FooterCol title="Product">
           <FooterLink href="/#how">How it works</FooterLink>
@@ -101,6 +102,26 @@ export function SiteFooter() {
         © {new Date().getFullYear()} Fewchurs
       </div>
     </footer>
+  );
+}
+
+/** Product Hunt launch post (Nov 16, 2026); the badge image is served by Product Hunt. */
+const PH_POST_ID = "1317266";
+const PH_URL =
+  "https://www.producthunt.com/products/fewchurs?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-fewchurs";
+const phBadge = (theme: "light" | "dark") =>
+  `https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=${PH_POST_ID}&theme=${theme}`;
+
+function ProductHuntBadge() {
+  const alt = "Fewchurs - Feature requests and voting board for your app | Product Hunt";
+  return (
+    <a href={PH_URL} target="_blank" rel="noopener noreferrer" className="inline-block pt-2">
+      {/* Plain <img>: an external SVG that Product Hunt updates, so next/image adds nothing. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={phBadge("light")} alt={alt} width={250} height={54} loading="lazy" className="h-[54px] w-[250px] dark:hidden" />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={phBadge("dark")} alt={alt} width={250} height={54} loading="lazy" className="hidden h-[54px] w-[250px] dark:block" />
+    </a>
   );
 }
 
