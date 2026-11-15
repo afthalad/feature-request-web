@@ -15,6 +15,7 @@ import { ResponsiveBoard } from "@/components/landing-v2/ResponsiveBoard";
 import { COMING_SOON, SiteFooter, SiteNav } from "@/components/landing-v2/Chrome";
 import { jakarta } from "@/components/landing-v2/fonts";
 import { Reveal } from "@/components/landing-v2/Reveal";
+import { SdkPill } from "@/components/landing-v2/SdkPill";
 import { Eyebrow, FaqSection } from "@/components/landing-v2/Sections";
 import "@/components/landing-v2/v2.css";
 
@@ -77,21 +78,18 @@ export default async function Home() {
         <section className="relative isolate pt-28 sm:pt-36">
           <Halftone mode="corners" className="-z-10 h-[760px]" />
           <div className="mx-auto flex max-w-4xl flex-col items-center px-4 text-center">
-            <div
-              className="v2-appear flex items-center gap-2.5 rounded-full bg-[var(--v2-card)] shadow-sm py-1.5 pr-4 pl-1.5 text-sm text-[var(--v2-fg-2)]"
+            <SdkPill
+              className="v2-appear"
               style={{ "--d": "0ms" } as React.CSSProperties}
-            >
-              <span className="flex -space-x-1.5">
-                {PLATFORMS.slice(0, 4).map((p) => (
-                  <span key={p.id} className="grid size-6 place-items-center rounded-full border border-[var(--v2-bg)] bg-[var(--v2-tile)] shadow-sm">
-                    <BrandIcon path={p.iconPath} color={iconFill(p.iconColor)} className="size-3" />
-                  </span>
-                ))}
-              </span>
-              <span>
-                <b className="font-bold text-[var(--v2-fg)]">6 SDKs</b>, one board
-              </span>
-            </div>
+              platforms={PLATFORMS.map((p) => ({
+                id: p.id,
+                name: p.name,
+                iconPath: p.iconPath,
+                iconColor: iconFill(p.iconColor),
+                href: p.href,
+              }))}
+              soon={COMING_SOON.map((p) => p.name)}
+            />
 
             <h1
               className="v2-appear mt-7 text-[2.6rem] leading-[1.08] tracking-[-0.04em] text-balance sm:text-6xl lg:text-7xl"
