@@ -25,6 +25,7 @@ interface PlanCardProps {
   ctaDisabledLabel?: string;
   onCtaClick?: () => void;
   ctaLoading?: boolean;
+  ctaFootnote?: string;
 }
 
 function formatPrice(amount: number) {
@@ -49,6 +50,7 @@ export function PlanCard({
   ctaDisabledLabel,
   onCtaClick,
   ctaLoading,
+  ctaFootnote,
 }: PlanCardProps) {
   const { dollars, cents } = formatPrice(price);
   const ctaVariant = highlight ? "default" : "outline";
@@ -138,6 +140,9 @@ export function PlanCard({
           >
             {ctaDisabledLabel ?? ctaLabel}
           </span>
+        )}
+        {ctaFootnote && (
+          <p className="text-muted-foreground mt-2.5 text-center text-xs">{ctaFootnote}</p>
         )}
       </div>
 

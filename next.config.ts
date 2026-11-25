@@ -26,6 +26,7 @@ const nextConfig: NextConfig = {
   // went live; keep any shared preview links working.
   async redirects() {
     return [
+      { source: "/signup", destination: "/login", permanent: false },
       { source: "/landing", destination: "/", permanent: true },
       { source: "/home-v2", destination: "/", permanent: true },
       { source: "/docs-v2", destination: "/docs", permanent: true },

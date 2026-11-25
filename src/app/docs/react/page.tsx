@@ -4,9 +4,9 @@ import { CodeBlock } from "@/components/docs/CodeBlock";
 import { A, C, DocsPage, Note, P, Section, Step, Steps, Sub, Table } from "@/components/docs/Docs";
 
 export const metadata: Metadata = pageMetadata({
-  title: "React SDK",
+  title: "React integration – feature request board SDK",
   description:
-    "Add a floating button to any React app that opens your feature request board in a sheet. Users suggest and vote on ideas.",
+    "Add a feature request board to any React app in about five minutes. Users suggest and vote on ideas from a floating button, and you see what to build next.",
   path: "/docs/react",
 });
 

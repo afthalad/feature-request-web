@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowRight, Info, TriangleAlert } from "lucide-react";
 import { DOCS_NAV, DOCS_PAGES } from "@/lib/docs/nav";
 import { OnThisPage } from "@/components/docs/OnThisPage";
 import { DocsBreadcrumbs } from "@/components/seo/StructuredData";
+import { DocsSignUpCard, DocsSignUpFooter } from "@/components/docs/DocsSignUp";
 import { cn } from "@/lib/utils";
 
 /* Small building blocks so every docs page has the same rhythm. */
@@ -56,13 +57,15 @@ export function DocsPage({
           )}
         </header>
         <div className="space-y-16">{children}</div>
+        <DocsSignUpFooter />
         <PrevNext path={path} />
       </article>
-      {toc && toc.length > 0 && (
-        <aside className="hidden w-52 shrink-0 xl:block">
-          <OnThisPage items={toc} />
-        </aside>
-      )}
+      <aside className="hidden w-52 shrink-0 xl:block">
+        <div className="sticky top-24 space-y-8">
+          {toc && toc.length > 0 && <OnThisPage items={toc} />}
+          <DocsSignUpCard />
+        </div>
+      </aside>
     </div>
   );
 }
@@ -198,7 +201,7 @@ function PrevNext({ path }: { path: string }) {
     "group rounded-2xl bg-[var(--v2-card)] p-5 shadow-[var(--v2-shadow)] transition-transform duration-300 hover:-translate-y-0.5";
 
   return (
-    <nav aria-label="Previous and next page" className="mt-20 grid gap-4 sm:grid-cols-2">
+    <nav aria-label="Previous and next page" className="mt-10 grid gap-4 sm:grid-cols-2">
       {prev ? (
         <Link href={prev.href} className={card}>
           <span className="flex items-center gap-1.5 font-mono text-xs tracking-[0.14em] text-[var(--v2-fg-3)] uppercase">

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, Check, ChevronUp } from "lucide-react";
 import { Logo } from "@/components/layout/Logo";
@@ -9,6 +10,12 @@ const PREVIEW_ROWS = [
   { title: "Sync with calendar", votes: 18, status: "Pending", dot: "bg-muted-foreground" },
   { title: "Export to CSV", votes: 9, status: "Done", dot: "bg-emerald-500" },
 ];
+
+export const metadata: Metadata = {
+  title: "Log in",
+  description: "Log in to Fewchurs or create your free account with Google. No credit card needed.",
+  alternates: { canonical: "/login" },
+};
 
 const PERKS = ["Free forever for one app", "No credit card needed", "Three lines of code to set up"];
 
@@ -71,7 +78,7 @@ export default function LoginPage() {
               </p>
             </div>
 
-            <div className="bg-card space-y-2 rounded-2xl border border-border p-3 shadow-lift">
+            <div aria-hidden className="bg-card pointer-events-none space-y-2 rounded-2xl border border-border p-3 shadow-lift select-none">
               {PREVIEW_ROWS.map((row) => (
                 <div
                   key={row.title}

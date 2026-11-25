@@ -2,20 +2,23 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Check, Minus } from "lucide-react";
 import { pageMetadata } from "@/lib/site";
+import { PLAN_PRICES } from "@/lib/plans/prices";
+import { PLATFORMS } from "@/lib/platforms";
+import { BrandIcon } from "@/components/marketing/BrandIcon";
+import { FaqStructuredData, PricingStructuredData } from "@/components/seo/StructuredData";
 import { buttonVariants } from "@/components/ui/button";
 import { PricingPlans } from "@/components/pricing/PricingPlans";
 import { SiteFooter, SiteNav } from "@/components/landing-v2/Chrome";
 import { Halftone } from "@/components/landing-v2/Halftone";
 import { Reveal } from "@/components/landing-v2/Reveal";
-import { Eyebrow, FaqSection } from "@/components/landing-v2/Sections";
+import { Eyebrow, FAQ, FaqSection } from "@/components/landing-v2/Sections";
 import { jakarta } from "@/components/landing-v2/fonts";
 import { cn } from "@/lib/utils";
 import "@/components/landing-v2/v2.css";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Pricing",
-  description:
-    "Free forever for one app. Starter is $9/mo for 3 apps, Pro is $24/mo for 5 apps and a public board. Yearly gets 2 months free.",
+  title: "Pricing – free plan, Starter and Pro",
+  description: `Free forever for one app, no credit card required. Starter is $${PLAN_PRICES.starter.monthly}/mo for 3 apps, Pro is $${PLAN_PRICES.pro.monthly}/mo for 5 apps and a public board. Cancel anytime.`,
   path: "/pricing",
 });
 
@@ -48,6 +51,37 @@ const ROWS: PlanRow[] = [
   { label: "Export to CSV", free: false, starter: false, pro: true },
 ];
 
+const PRICING_FAQ = [
+  {
+    q: "Are there any setup fees?",
+    a: "No. There are no setup fees and no charges per request, vote or seat. Sales tax or VAT may be added at checkout depending on where you live.",
+  },
+  {
+    q: "What happens when I hit my limit?",
+    a: "Nothing breaks. Your users can keep posting, voting and commenting, and every request is saved. Your boards, dashboard and emails show the first 5 requests per app on Free, or the first 200 on Starter. Upgrade and the rest show up.",
+  },
+  {
+    q: "Can I change plans later?",
+    a: "Yes, anytime. Upgrade, downgrade or cancel from Billing in your dashboard. If you cancel, you keep your paid plan until the end of the period you paid for.",
+  },
+  {
+    q: "Can I get a refund?",
+    a: "Yes. Every paid plan has a 30-day money-back guarantee. If Fewchurs isn't right for you, email support@fewchurs.com within 30 days of your first payment and we'll refund it in full.",
+  },
+  { q: "Do I need a credit card for the free plan?", a: "No. Sign in with Google and start. The free plan never expires." },
+  ...FAQ.filter((f) => f.q !== "What's on the free plan?"),
+];
+
+const PRICING_OFFERS = [
+  { name: "Free", price: 0, description: "1 app on one platform, free forever." },
+  { name: "Starter", price: PLAN_PRICES.starter.monthly, description: "3 apps on every platform, billed monthly." },
+  { name: "Pro", price: PLAN_PRICES.pro.monthly, description: "5 apps, a public board and CSV export, billed monthly." },
+];
+
+function iconFill(color: string) {
+  return color.toLowerCase() === "#000000" ? undefined : color;
+}
+
 const PLAN_COLUMNS = [
   { key: "free", label: "Free" },
   { key: "starter", label: "Starter" },
@@ -77,6 +111,8 @@ function Cell({ value }: { value: string | boolean }) {
 export default function PricingPage() {
   return (
     <div className={`${jakarta.variable} v2-root flex flex-1 flex-col overflow-x-clip`}>
+      <PricingStructuredData plans={PRICING_OFFERS} />
+      <FaqStructuredData items={PRICING_FAQ} />
       <SiteNav links={NAV} />
 
       <main className="flex-1">
@@ -90,14 +126,39 @@ export default function PricingPage() {
                 className="v2-appear mt-4 text-[2.6rem] leading-[1.06] tracking-[-0.04em] text-balance sm:text-6xl"
                 style={{ "--d": "80ms" } as React.CSSProperties}
               >
-                Start free. Upgrade when you&apos;re shipping.
+                Start collecting feature requests in minutes.
               </h1>
               <p
                 className="v2-appear mx-auto mt-6 max-w-xl text-base leading-relaxed text-balance text-[var(--v2-fg-2)] sm:text-lg"
                 style={{ "--d": "160ms" } as React.CSSProperties}
               >
-                Free forever for a hobby project. Every plan collects unlimited requests, votes and comments, emails
-                you about each one, and lets you use your own colours.
+                Know what to build next. Pick the plan that fits your apps. Every plan collects unlimited requests, votes and comments, emails
+                you about each one, and lets you use your own colours. No setup fees, no credit card to start.
+              </p>
+            </div>
+            <div
+              className="v2-appear flex flex-col items-center gap-4"
+              style={{ "--d": "200ms" } as React.CSSProperties}
+            >
+              <p className="font-mono text-xs tracking-[0.14em] text-[var(--v2-fg-3)] uppercase">
+                Works with your stack
+              </p>
+              <ul className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
+                {PLATFORMS.map((platform) => (
+                  <li key={platform.id}>
+                    <Link
+                      href={platform.href ?? "/docs"}
+                      className="flex items-center gap-2 text-sm font-semibold text-[var(--v2-fg-2)] hover:text-[var(--v2-fg)]"
+                    >
+                      <BrandIcon path={platform.iconPath} color={iconFill(platform.iconColor)} className="size-5" />
+                      {platform.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              <p className="text-center text-sm text-[var(--v2-fg-3)]">
+                Featured on <span className="font-semibold text-[var(--v2-fg-2)]">Product Hunt</span> · SDKs on npm,
+                pub.dev, Maven Central and Packagist
               </p>
             </div>
             <div className="v2-appear" style={{ "--d": "240ms" } as React.CSSProperties}>
@@ -170,7 +231,7 @@ export default function PricingPage() {
           </div>
         </section>
 
-        <FaqSection />
+        <FaqSection items={PRICING_FAQ} />
 
         {/* CTA */}
         <section className="px-4 pb-20 sm:px-8 sm:pb-24">
@@ -185,7 +246,7 @@ export default function PricingPage() {
               </p>
               <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
                 <Link
-                  href="/login"
+                  href="/login?from=pricing"
                   className={buttonVariants({ size: "lg", className: "h-12 rounded-xl px-6 text-base font-bold" })}
                 >
                   Start free

@@ -1,4 +1,4 @@
-import { absoluteUrl, SITE_NAME, SITE_PROFILES, SITE_URL } from "@/lib/site";
+import { absoluteUrl, SITE_DESCRIPTION, SITE_NAME, SITE_PROFILES, SITE_URL } from "@/lib/site";
 
 /**
  * schema.org data that tells search engines what Fewchurs is: the site's
@@ -103,6 +103,31 @@ export function FaqStructuredData({ items }: { items: { q: string; a: string }[]
           "@type": "Question",
           name: f.q,
           acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
+      }}
+    />
+  );
+}
+
+export function PricingStructuredData({ plans }: { plans: { name: string; price: number; description: string }[] }) {
+  return (
+    <JsonLd
+      data={{
+        "@context": "https://schema.org",
+        "@type": "Product",
+        name: SITE_NAME,
+        description: SITE_DESCRIPTION,
+        url: absoluteUrl("/pricing"),
+        image: absoluteUrl("/apple-icon.png"),
+        brand: { "@type": "Brand", name: SITE_NAME },
+        offers: plans.map((plan) => ({
+          "@type": "Offer",
+          name: plan.name,
+          description: plan.description,
+          price: String(plan.price),
+          priceCurrency: "USD",
+          availability: "https://schema.org/InStock",
+          url: absoluteUrl("/pricing"),
         })),
       }}
     />

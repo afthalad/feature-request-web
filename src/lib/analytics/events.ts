@@ -12,6 +12,8 @@ export type AnalyticsEvent =
   | "pricing_viewed"
   | "pricing_period_changed" // switched the monthly/yearly toggle
   | "sign_in_clicked"
+  | "sign_in_cancelled"
+  | "sign_in_failed"
   // Acquisition (server): only the first sign-in of a new account
   | "signed_up"
   | "welcome_email_sent"

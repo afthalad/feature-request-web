@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import type { User } from "firebase/auth";
 import { toast } from "sonner";
 import { identifyUser, track } from "@/lib/analytics/client";
+import { isInAppBrowser } from "@/lib/device/inAppBrowser";
 
 /**
  * Firebase Auth is one of the biggest modules on the page, so it isn't part of the first bundle:
@@ -151,7 +152,12 @@ export function useGoogleSignIn({ resumeSession = false }: { resumeSession?: boo
     stageRef.current = "popup";
     setIsSigningIn(true);
     watchForCancel(attempt);
-    track("sign_in_clicked", { page: window.location.pathname });
+    const signInSource = {
+      page: window.location.pathname,
+      from: new URLSearchParams(window.location.search).get("from") ?? undefined,
+      in_app_browser: isInAppBrowser(navigator.userAgent),
+    };
+    track("sign_in_clicked", signInSource);
 
     let FirebaseError: Awaited<ReturnType<typeof loadFirebase>>["FirebaseError"] | null = null;
     try {
@@ -173,7 +179,11 @@ export function useGoogleSignIn({ resumeSession = false }: { resumeSession?: boo
       reset(attempt);
       if (!FirebaseError) firebaseModules = null; // The chunk failed to load; retry next click.
       const code = FirebaseError && error instanceof FirebaseError ? error.code : null;
-      if (code && CANCEL_CODES.has(code)) return;
+      if (code && CANCEL_CODES.has(code)) {
+        track("sign_in_cancelled", { ...signInSource, code });
+        return;
+      }
+      track("sign_in_failed", { ...signInSource, code: code ?? "unknown" });
       if (code === "auth/popup-blocked") {
         toast.error("Your browser blocked the sign-in popup. Allow popups for this site and try again.");
         return;

@@ -9,6 +9,7 @@ import { whenIdle } from "@/lib/idle";
 import { PlanCard } from "@/components/pricing/PlanCard";
 import { cn } from "@/lib/utils";
 import { captureError, identifyUser, track } from "@/lib/analytics/client";
+import { PLAN_PRICES } from "@/lib/plans/prices";
 
 const FREE_FEATURES = [
   "1 app on one platform",
@@ -33,12 +34,6 @@ const PRO_FEATURES = [
   "CSV export",
 ];
 
-// Keep in sync with the Polar products (amounts in dollars).
-// Yearly is ten months of monthly (two months free).
-const PRICES = {
-  starter: { monthly: 9, yearly: 90 },
-  pro: { monthly: 24, yearly: 240 },
-};
 const YEARLY_SAVING = "2 months free";
 
 type Period = "monthly" | "yearly";
@@ -83,7 +78,7 @@ export function PricingPlans() {
       signed_in: Boolean(auth.currentUser),
     });
     if (!auth.currentUser) {
-      router.push("/login");
+      router.push("/login?from=pricing");
       return;
     }
 
@@ -114,8 +109,8 @@ export function PricingPlans() {
   }
 
   const paidProps = (plan: PaidPlan) => {
-    const monthly = PRICES[plan].monthly;
-    const yearly = PRICES[plan].yearly;
+    const monthly = PLAN_PRICES[plan].monthly;
+    const yearly = PLAN_PRICES[plan].yearly;
     return period === "monthly"
       ? {
           price: monthly,
@@ -177,10 +172,11 @@ export function PricingPlans() {
           tagline="For a side project or trying it out."
           price={0}
           period="forever"
-          note="No credit card needed."
+          note="Free forever."
           features={FREE_FEATURES}
           ctaLabel="Get started free"
-          ctaHref="/login"
+          ctaHref="/login?from=pricing"
+          ctaFootnote="No credit card required"
         />
         <PlanCard
           name="Starter"
@@ -190,6 +186,7 @@ export function PricingPlans() {
           featuresLead="Everything in Free, plus"
           features={STARTER_FEATURES}
           ctaLabel="Upgrade to Starter"
+          ctaFootnote="30-day money-back guarantee"
           ctaHref={null}
           onCtaClick={() => handleUpgrade("starter")}
           ctaLoading={loadingPlan === "starter"}
@@ -203,6 +200,7 @@ export function PricingPlans() {
           featuresLead="Everything in Starter, plus"
           features={PRO_FEATURES}
           ctaLabel="Upgrade to Pro"
+          ctaFootnote="30-day money-back guarantee"
           ctaHref={null}
           onCtaClick={() => handleUpgrade("pro")}
           ctaLoading={loadingPlan === "pro"}

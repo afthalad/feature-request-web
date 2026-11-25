@@ -8,9 +8,9 @@ import { A, C, DocsPage, P, Section, Step, Steps } from "@/components/docs/Docs"
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Docs",
+  title: "Documentation – get started in minutes",
   description:
-    "Add a feature request board to your app. Guides for iOS, Android, Flutter, React, Next.js and Laravel.",
+    "Add a feature request board to your app in minutes. Guides for React, Next.js, iOS (SwiftUI), Android (Kotlin), Flutter, Laravel and the REST API.",
   path: "/docs",
 });
 

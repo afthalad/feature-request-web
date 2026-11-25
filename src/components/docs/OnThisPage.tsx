@@ -36,7 +36,7 @@ export function OnThisPage({ items }: { items: { id: string; label: string }[] }
   }, [items]);
 
   return (
-    <div className="sticky top-24 space-y-4">
+    <div className="space-y-4">
       <p className="font-mono text-xs font-medium tracking-[0.18em] text-[var(--v2-orange)] uppercase">On this page</p>
       <ul className="space-y-0.5 text-sm">
         {items.map((item) => {
